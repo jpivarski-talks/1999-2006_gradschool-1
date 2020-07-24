@@ -1,0 +1,44 @@
+Decay vpho 
+1.000  Upsilon(2S) gamma          VECTORISR 0.999999 0.999999;
+Enddecay
+
+Decay  Upsilon(2S)
+0.1880    Upsilon  pi+  pi-                PHSP;
+0.0900    Upsilon  pi0  pi0                PHSP;
+# V-> gamma S    Partial wave (L,S)=(0,1)
+0.0380    gamma  chi_b0   HELAMP 1. 0. +1. 0.;
+# V-> gamma V    Partial wave (L,S)=(0,1)
+0.0680    gamma  chi_b1   HELAMP 1. 0. 1. 0. -1. 0. -1. 0.;
+# V-> gamma T    Partial wave (L,S)=(0,1)
+0.0700    gamma  chi_b2   HELAMP 2.4494897 0. 1.7320508 0. 1. 0.
+                                 1. 0. 1.7320508 0. 2.4494897 0.;
+Enddecay
+
+Decay chi_b0
+# S-> gamma V    Partial wave (L,S)=(0,0)
+0.0500    gamma  Upsilon       HELAMP 1. 0. 1. 0.;
+0.9500         rndmflav        anti-rndmflav   JETSET         12;
+Enddecay
+
+Decay chi_b1
+# V-> gamma V    Partial wave (L,S)=(0,1)
+0.3500    gamma  Upsilon  HELAMP 1. 0. 1. 0. -1. 0. -1. 0.;
+0.6500         g       g       JETSET         32;
+Enddecay
+
+Decay chi_b2
+# T-> gamma V    Partial wave (L,S)=(0,2)   Use PHSP. 
+0.2200    gamma  Upsilon       PHSP;
+0.7800         g       g       JETSET         32;
+Enddecay
+
+Decay  Upsilon
+0.00963         d       anti-d  JETSET         32;
+0.03852         u       anti-u  JETSET         32;
+0.00963         s       anti-s  JETSET         32;
+0.03852         c       anti-c  JETSET         32;
+0.8757         g       g       g       JETSET         4;
+0.0280         gamma           g       g       JETSET         4;
+Enddecay
+
+End

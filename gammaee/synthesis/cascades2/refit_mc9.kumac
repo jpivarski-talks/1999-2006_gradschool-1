@@ -1,0 +1,10 @@
+message REFITTING MC with [1]
+
+h/cr/1d 100 '[p]^+![p]^-! recoil mass (in GeV)' 78 $SIGMA(s1) $SIGMA(s4)
+nt/plot //mc/UPSLNGMMEECSCDES/1.m $2&&([1])&&(axial>1) ! ! ! ! 100
+ve/cr mp(3)
+ve/cr me(3)
+ve/inp mp 0. 0. 0.
+h/fit 100 casfunc9.f 'E' 3 mp ! ! ! me
+sigma ds = (24225256894.2*mp(1)+0.00000200114*mp(2)+mp(3))
+sigma ds = -41643.9356190+(10088558029.6*mp(1)*100000-10192746.1964*mp(2))/ds

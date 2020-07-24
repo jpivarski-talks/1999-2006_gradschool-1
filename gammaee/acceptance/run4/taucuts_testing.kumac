@@ -1,0 +1,120 @@
+h/cr/1d 1000001 'd0close' 50 -0.01 0.01
+h/cr/1d 1000002 'd0close' 50 -0.01 0.01
+h/cr/1d 1000003 'd0close' 50 -0.01 0.01
+h/cr/1d 1000004 'd0close' 50 -0.01 0.01
+h/cr/1d 1000005 'd0close' 50 -0.01 0.01
+nt/plot //mc/cuts/1.d0close $1 ! ! ! 'N' 1000001
+nt/plot //peak/cuts/1.d0close $1 ! ! ! 'N' 1000002
+nt/plot //cont/cuts/1.d0close $1 ! ! ! 'N' 1000003
+sub 1000001 1000001 1000005 $SIGMA(ptomc) 0. 'e'
+sub 1000002 1000003 1000004 1. $SIGMA(ptoc) 'e'
+max 1000005 19000
+min 1000005 -2000
+h/plot 1000005 'hist'
+h/plot 1000004 's'
+set ltyp 3
+dline 0.005 0.005 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline -0.005 -0.005 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+h/cr/1d 2000001 'e1' 60 0. 1.2
+h/cr/1d 2000002 'e1' 60 0. 1.2
+h/cr/1d 2000003 'e1' 60 0. 1.2
+h/cr/1d 2000004 'e1' 60 0. 1.2
+h/cr/1d 2000005 'e1' 60 0. 1.2
+nt/plot //mc/cuts/1.e1 $1&&$2 ! ! ! 'N' 2000001
+nt/plot //peak/cuts/1.e1 $1&&$2 ! ! ! 'N' 2000002
+nt/plot //cont/cuts/1.e1 $1&&$2 ! ! ! 'N' 2000003
+sub 2000001 2000001 2000005 $SIGMA(ptomc) 0. 'e'
+sub 2000002 2000003 2000004 1. $SIGMA(ptoc) 'e'
+min 2000005 -1000
+max 2000005 5000
+h/plot 2000005 'hist'
+h/plot 2000004 's'
+set ltyp 3
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+h/cr/1d 3000001 'p2' 60 0. 1.2
+h/cr/1d 3000002 'p2' 60 0. 1.2
+h/cr/1d 3000003 'p2' 60 0. 1.2
+h/cr/1d 3000004 'p2' 60 0. 1.2
+h/cr/1d 3000005 'p2' 60 0. 1.2
+nt/plot //mc/cuts/1.p2 $1&&$2&&$3 ! ! ! 'N' 3000001
+nt/plot //peak/cuts/1.p2 $1&&$2&&$3 ! ! ! 'N' 3000002
+nt/plot //cont/cuts/1.p2 $1&&$2&&$3 ! ! ! 'N' 3000003
+sub 3000001 3000001 3000005 $SIGMA(ptomc) 0. 'e'
+sub 3000002 3000003 3000004 1. $SIGMA(ptoc) 'e'
+min 3000005 -1000
+max 3000005 5000
+h/plot 3000005 'hist'
+h/plot 3000004 's'
+set ltyp 3
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+h/cr/1d 1500001 'wz' 60 -0.3 0.3
+h/cr/1d 1500002 'wz' 60 -0.3 0.3
+h/cr/1d 1500003 'wz' 60 -0.3 0.3
+h/cr/1d 1500004 'wz' 60 -0.3 0.3
+h/cr/1d 1500005 'wz' 60 -0.3 0.3
+nt/plot //mc/cuts/1.wz $1&&$2&&$3&&$4 ! ! ! 'N' 1500001
+nt/plot //peak/cuts/1.wz $1&&$2&&$3&&$4 ! ! ! 'N' 1500002
+nt/plot //cont/cuts/1.wz $1&&$2&&$3&&$4 ! ! ! 'N' 1500003
+sub 1500001 1500001 1500005 $SIGMA(ptomc) 0. 'e'
+sub 1500002 1500003 1500004 1. $SIGMA(ptoc) 'e'
+max 1500005 19000
+min 1500005 -2000
+h/plot 1500005 'hist'
+h/plot 1500004 's'
+set ltyp 3
+dline 0.075 0.075 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline -0.075 -0.075 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+h/cr/1d 6000001 'visen' 60 0. 1.2
+h/cr/1d 6000002 'visen' 60 0. 1.2
+h/cr/1d 6000003 'visen' 60 0. 1.2
+h/cr/1d 6000004 'visen' 60 0. 1.2
+h/cr/1d 6000005 'visen' 60 0. 1.2
+nt/plot //mc/cuts/1.visen $1&&$2&&$3&&$4&&$5 ! ! ! 'N' 6000001
+nt/plot //peak/cuts/1.visen $1&&$2&&$3&&$4&&$5 ! ! ! 'N' 6000002
+nt/plot //cont/cuts/1.visen $1&&$2&&$3&&$4&&$5 ! ! ! 'N' 6000003
+sub 6000001 6000001 6000005 $SIGMA(ptomc) 0. 'e'
+sub 6000002 6000003 6000004 1. $SIGMA(ptoc) 'e'
+min 6000005 -1000
+max 6000005 3000
+h/plot 6000005 'hist'
+h/plot 6000004 's'
+set ltyp 3
+dline 0.2 0.2 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+h/cr/1d 4000001 'ccen' 60 0. 1.2
+h/cr/1d 4000002 'ccen' 60 0. 1.2
+h/cr/1d 4000003 'ccen' 60 0. 1.2
+h/cr/1d 4000004 'ccen' 60 0. 1.2
+h/cr/1d 4000005 'ccen' 60 0. 1.2
+nt/plot //mc/cuts/1.ccen $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 4000001
+nt/plot //peak/cuts/1.ccen $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 4000002
+nt/plot //cont/cuts/1.ccen $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 4000003
+sub 4000001 4000001 4000005 $SIGMA(ptomc) 0. 'e'
+sub 4000002 4000003 4000004 1. $SIGMA(ptoc) 'e'
+min 4000005 -1000
+max 4000005 3000
+h/plot 4000005 'hist'
+h/plot 4000004 's'
+set ltyp 3
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+h/cr/1d 5000001 'tracks' 19 -0.5 18.5
+h/cr/1d 5000002 'tracks' 19 -0.5 18.5
+h/cr/1d 5000003 'tracks' 19 -0.5 18.5
+h/cr/1d 5000004 'tracks' 19 -0.5 18.5
+h/cr/1d 5000005 'tracks' 19 -0.5 18.5
+nt/plot //mc/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6&&$7 ! ! ! 'N' 5000001
+nt/plot //peak/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6&&$7 ! ! ! 'N' 5000002
+nt/plot //cont/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6&&$7 ! ! ! 'N' 5000003
+sub 5000001 5000001 5000005 $SIGMA(ptomc) 0. 'e'
+sub 5000002 5000003 5000004 1. $SIGMA(ptoc) 'e'
+min 5000005 -1000
+max 5000005 6000
+h/plot 5000005 'hist'
+h/plot 5000004 's'
+set ltyp 3
+dline 1.5 1.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')

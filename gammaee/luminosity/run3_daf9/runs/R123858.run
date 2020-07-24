@@ -1,0 +1,19 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/relatives_123858.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/luminosity/run3/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_DB=18
+export USER_RUN=123858
+
+suez -f relatives.tcl
+# | tee /cdat/tem/mccann/tmp_123858.log
+rm -f core
+# fgrep PYTHON /cdat/tem/mccann/tmp_123858.log >> daf9/relatives.py
+# rm -f /cdat/tem/mccann/tmp_123858.log
+
+exit

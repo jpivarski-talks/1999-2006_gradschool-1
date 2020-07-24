@@ -1,0 +1,10 @@
+#$ -l calibration
+#$ -o /cdat/tem/mccann/testtrigger.out
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/dipion_decays/run
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Mar20_03_P2
+
+suez -f testtrigger.tcl > /cdat/tem/mccann/testtrigger.log

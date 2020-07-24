@@ -1,0 +1,133 @@
+DABoolean BigNTuple2::calc_intersections(
+   double& x, double& sigx, double& y, double& sigy,
+   KTHelix& a, KTHelix& b )
+{
+   // see intersections4.m and my "Resonance Studies" notebook for a derivation
+
+   double ra( 1./2./a.curvature() );
+   double xa( -(a.d0() + ra) * sin(a.phi0()) );
+   double ya( (a.d0() + ra) * cos(a.phi0()) );
+
+   double rb( 1./2./b.curvature() );
+   double xb( -(b.d0() + rb) * sin(b.phi0()) );
+   double yb( (b.d0() + rb) * cos(b.phi0()) );
+
+   // zero or infinitely many solutions
+   // I don't want to deal with either case
+   if ( xa == xb  &&  ya == yb ) return false;
+
+   double disc( (pow(4*pow(ra,2)*(xa - xb) - 
+		     4*(pow(rb,2)*(xa - xb) + 
+			(xa + xb)*(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2)))
+		     ,2) - 16*(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2))*
+		 (pow(xa,4) - 2*pow(xa,2)*pow(xb,2) + pow(xb,4) + 
+		  2*pow(xb,2)*(pow(ra,2) - pow(rb,2) + pow(ya - yb,2)) + 
+		  2*pow(xa,2)*(-pow(ra,2) + pow(rb,2) + pow(ya - yb,2)) + 
+		  pow(-pow(ra,2) + pow(rb,2) + pow(ya - yb,2),2) - 
+		  4*pow(rb,2)*pow(ya - yb,2)))/
+		(64.*pow(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2),2)) );
+   // no real solutions
+   if ( disc < 0 ) return false;
+
+   double pre( (pow(rb,2)*(xa - xb) + pow(ra,2)*(-xa + xb) + 
+		(xa + xb)*(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2)))/
+	       (2.*(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2))) );
+
+   // The two x solutions
+   double xsol1( pre + sqrt( disc ) );
+   double xsol2( pre - sqrt( disc ) );
+
+   double ysol1a( yb + sqrt( sqr(rb)
+
+
+
+
+   // now for the derivatives
+   double dpre_dra( (ra*(-xa + xb))/(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2)) );
+   double dpre_dxa( (pow(ra,2)*(pow(xa,2) - 2*xa*xb + pow(xb,2) - pow(ya - yb,2)) + 
+		     pow(rb,2)*(-pow(xa,2) + 2*xa*xb - pow(xb,2) + pow(ya - yb,2)) + 
+		     pow(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2),2))/
+		    (2.*pow(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2),2)) );
+   double dpre_dya( ((pow(ra,2) - pow(rb,2))*(xa - xb)*(ya - yb))/
+		    pow(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2),2) );
+   double dpre_drb( (rb*(xa - xb))/(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2)) );
+   double dpre_dxb( (pow(rb,2)*(pow(xa,2) - 2*xa*xb + pow(xb,2) - pow(ya - yb,2)) + 
+		     pow(ra,2)*(-pow(xa,2) + 2*xa*xb - pow(xb,2) + pow(ya - yb,2)) + 
+		     pow(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2),2))/
+		    (2.*pow(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2),2)) );
+   double dpre_dyb( -(((pow(ra,2) - pow(rb,2))*(xa - xb)*(ya - yb))/
+		      pow(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2),2)) );
+
+   double ddisc_dra( (ra*pow(ya - yb,2)*(-pow(ra,2) + pow(rb,2) + pow(xa,2) - 2*xa*xb + 
+					 pow(xb,2) + pow(ya,2) - 2*ya*yb + pow(yb,2)))/
+		     pow(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2),2) );
+   double ddisc_dxa( -(((xa - xb)*pow(ya - yb,2)*
+			(-pow(ra,4) + pow(rb,2)*
+			 (-pow(rb,2) + pow(xa,2) - 2*xa*xb + pow(xb,2) + 
+			  pow(ya,2) - 2*ya*yb + pow(yb,2)) + 
+			 pow(ra,2)*(2*pow(rb,2) + pow(xa,2) - 2*xa*xb + pow(xb,2) + 
+				    pow(ya,2) - 2*ya*yb + pow(yb,2))))/
+		       pow(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2),3)) );
+   double ddisc_dya( ((-pow(4*pow(ra,2)*(xa - xb) - 
+			    4*(pow(rb,2)*(xa - xb) + 
+			       (xa + xb)*(pow(xa,2) - 2*xa*xb + pow(xb,2) + 
+					  pow(ya - yb,2))),2) + 
+		       4*(-((xa + xb)*(4*pow(ra,2)*(xa - xb) - 
+				       4*(pow(rb,2)*(xa - xb) + 
+					  (xa + xb)*(pow(xa,2) - 2*xa*xb + pow(xb,2) + 
+						     pow(ya - yb,2))))) - 
+			  4*(-pow(ra,2) - pow(rb,2) + pow(xa,2) + pow(xb,2) + 
+			     pow(ya - yb,2))*
+			  (pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2)) - 
+			  2*(pow(xa,4) - 2*pow(xa,2)*pow(xb,2) + pow(xb,4) + 
+			     2*pow(xb,2)*(pow(ra,2) - pow(rb,2) + pow(ya - yb,2)) + 
+			     2*pow(xa,2)*(-pow(ra,2) + pow(rb,2) + pow(ya - yb,2)) + 
+			     pow(-pow(ra,2) + pow(rb,2) + pow(ya - yb,2),2) - 
+			     4*pow(rb,2)*pow(ya - yb,2)))*
+		       (pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2)) + 
+		       16*(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2))*
+		       (pow(xa,4) - 2*pow(xa,2)*pow(xb,2) + pow(xb,4) + 
+			2*pow(xb,2)*(pow(ra,2) - pow(rb,2) + pow(ya - yb,2)) + 
+			2*pow(xa,2)*(-pow(ra,2) + pow(rb,2) + pow(ya - yb,2)) + 
+			pow(-pow(ra,2) + pow(rb,2) + pow(ya - yb,2),2) - 
+			4*pow(rb,2)*pow(ya - yb,2)))*(ya - yb))/
+		     (16.*pow(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2),3)) );
+   double ddisc_drb( (rb*pow(ya - yb,2)*(pow(ra,2) - pow(rb,2) + pow(xa,2) - 2*xa*xb + 
+					 pow(xb,2) + pow(ya,2) - 2*ya*yb + pow(yb,2)))/
+		     pow(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2),2) );
+   double ddisc_dxb( ((xa - xb)*pow(ya - yb,2)*(-pow(ra,4) + 
+						pow(rb,2)*(-pow(rb,2) + pow(xa,2)
+							   - 2*xa*xb + pow(xb,2) + 
+							   pow(ya,2) - 2*ya*yb + pow(yb,2)) + 
+						pow(ra,2)*(2*pow(rb,2) + pow(xa,2)
+							   - 2*xa*xb + pow(xb,2) + 
+							   pow(ya,2) - 2*ya*yb + pow(yb,2))))/
+		     pow(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2),3) );
+   double ddisc_dyb( ((pow(4*pow(ra,2)*(xa - xb) - 
+			   4*(pow(rb,2)*(xa - xb) + 
+			      (xa + xb)*(pow(xa,2) - 2*xa*xb + pow(xb,2) + 
+					 pow(ya - yb,2))),2) + 
+		       4*((xa + xb)*(4*pow(ra,2)*(xa - xb) - 
+				     4*(pow(rb,2)*(xa - xb) + 
+					(xa + xb)*(pow(xa,2) - 2*xa*xb + pow(xb,2) + 
+						   pow(ya - yb,2)))) - 
+			  4*(pow(ra,2) + pow(rb,2) - pow(xa,2) - pow(xb,2) - 
+			     pow(ya - yb,2))*
+			  (pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2)) + 
+			  2*(pow(xa,4) - 2*pow(xa,2)*pow(xb,2) + pow(xb,4) + 
+			     2*pow(xb,2)*(pow(ra,2) - pow(rb,2) + pow(ya - yb,2)) + 
+			     2*pow(xa,2)*(-pow(ra,2) + pow(rb,2) + pow(ya - yb,2)) + 
+			     pow(-pow(ra,2) + pow(rb,2) + pow(ya - yb,2),2) - 
+			     4*pow(rb,2)*pow(ya - yb,2)))*
+		       (pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2)) - 
+		       16*(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2))*
+		       (pow(xa,4) - 2*pow(xa,2)*pow(xb,2) + pow(xb,4) + 
+			2*pow(xb,2)*(pow(ra,2) - pow(rb,2) + pow(ya - yb,2)) + 
+			2*pow(xa,2)*(-pow(ra,2) + pow(rb,2) + pow(ya - yb,2)) + 
+			pow(-pow(ra,2) + pow(rb,2) + pow(ya - yb,2),2) - 
+			4*pow(rb,2)*pow(ya - yb,2)))*(ya - yb))/
+		     (16.*pow(pow(xa,2) - 2*xa*xb + pow(xb,2) + pow(ya - yb,2),3)) );
+
+   
+}
+

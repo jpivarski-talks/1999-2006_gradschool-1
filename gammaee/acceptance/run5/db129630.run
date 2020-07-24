@@ -1,0 +1,24 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/db129630.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/acceptance/run5/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Apr18_03_P2
+
+export USER_DB=25
+export USER_RUN=129630
+export USER_EA=true
+
+suez -f getraw.tcl
+rm -f core
+
+c3rel Dec10_03
+
+suez -f trigger_only.tcl
+rm -f core
+
+exit
+
+# export USER_DB=25 ; export USER_RUN=129630 ; export USER_EA=true ; rm -f /cdat/tem/mccann/db129630.log ; c3rel Apr18_03_P2 ; suez -f getraw.tcl | tee /cdat/tem/mccann/db129630.log ; c3rel Dec10_03 ; suez -f trigger_only.tcl | tee /cdat/tem/mccann/db129630.log

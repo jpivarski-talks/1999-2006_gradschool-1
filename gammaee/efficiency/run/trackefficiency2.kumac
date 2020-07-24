@@ -1,0 +1,1078 @@
+h/file 1 y3s-trackhistos.rzn
+h/file 2 /cdat/sol300/disk5/mccann/mcres17_01-track.rzn
+
+* Standard cuts
+nt/cuts $1 fit>0
+nt/cuts $2 dof>0&&chi2/dof<100
+nt/cuts $3 expect>0&&0.5<layers/expect<1.2
+nt/cuts $4 abs(d0)<0.03
+nt/cuts $5 abs(z0*1.02)<0.18
+nt/cuts $6 0.051776<p<7.7664
+nt/cuts $7 abs(cotth)<3.0424
+nt/cuts $8 errct<0.5
+nt/cuts $9 errz0<0.25
+
+* * Not the standard cuts!  These are to make MC match data!
+* nt/cuts $1 fit>0
+* nt/cuts $2 dof>0&&chi2/dof<100
+* nt/cuts $3 expect>0&&0.55<layers/expect<1.05
+* nt/cuts $4 abs(d0)<0.022
+* nt/cuts $5 abs(z0)<0.14
+* nt/cuts $6 0.051776<p<7.7664
+* nt/cuts $7 abs(cotth)<2.5
+* nt/cuts $8 sqrt(abs(errct))<0.5
+* nt/cuts $9 sqrt(abs(errz0))<0.25
+ 
+cd //lun2/trackefficiency
+
+h/cr/1d 1000 'noFitAbort' 2 -0.5 1.5
+h/cr/1d 2000 'noFitAbort cut' 2 -0.5 1.5
+h/cr/1d 3000 'noFitAbort all cuts' 2 -0.5 1.5
+h/cr/1d 4000 'noFitAbort other cuts applied' 2 -0.5 1.5
+nt/plot 1.fit ! ! ! ! 'N' 1000
+nt/plot 1.fit $1 ! ! ! 'N' 2000
+nt/plot 1.fit $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3000
+nt/plot 1.fit (($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 4000
+
+h/cr/1d 1001 'reduced chi2' 60 -100. 200.
+h/cr/1d 2001 'reduced chi2 cut' 60 -100. 200.
+h/cr/1d 3001 'reduced chi2 all cuts' 60 -100. 200.
+h/cr/1d 4001 'reduced chi2 other cuts applied' 60 -100. 200.
+nt/plot 1.chi2/dof dof>0 ! ! ! 'N' 1001
+nt/project 1001 1.0 dof<=0
+nt/plot 1.chi2/dof $2 ! ! ! 'N' 2001
+nt/project 2001 1.0 dof<=0
+nt/plot 1.chi2/dof $1&&(($2))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3001
+nt/project 3001 1.0 $1&&((dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+nt/plot 1.chi2/dof $1&&((dof>0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 4001
+nt/project 4001 1.0 $1&&((dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+
+h/cr/1d 1002 'hitFraction' 64 0. 1.6
+h/cr/1d 2002 'hitFraction cut' 64 0. 1.6
+h/cr/1d 3002 'hitFraction all cuts' 64 0. 1.6
+h/cr/1d 4002 'hitFraction other cuts applied' 64 0. 1.6
+nt/plot 1.layers/expect expect>0 ! ! ! 'N' 1002
+nt/project 1002 1.0 expect<=0
+nt/plot 1.layers/expect $3 ! ! ! 'N' 2002
+nt/plot 1.layers/expect $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3002
+nt/plot 1.layers/expect $1&&(($2).or.(dof<=0))&&expect>0&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 4002
+nt/project 4002 1.0 $1&&(($2).or.(dof<=0))&&expect<=0&&$4&&$5&&$6&&$7&&$8&&$9
+
+h/cr/1d 1003 'd0' 40 -0.06 0.06
+h/cr/1d 2003 'd0 cut' 40 -0.06 0.06
+h/cr/1d 3003 'd0 all cuts' 40 -0.06 0.06
+h/cr/1d 4003 'd0 other cuts applied' 40 -0.06 0.06
+nt/plot 1.d0 ! ! ! ! 'N' 1003
+nt/plot 1.d0 $4 ! ! ! 'N' 2003
+nt/plot 1.d0 $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3003
+nt/plot 1.d0 $1&&(($2).or.(dof<=0))&&$3&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 4003
+
+h/cr/1d 1004 'z0' 40 -0.36 0.36
+h/cr/1d 2004 'z0 cut' 40 -0.36 0.36
+h/cr/1d 3004 'z0 all cuts' 40 -0.36 0.36
+h/cr/1d 4004 'z0 other cuts applied' 40 -0.36 0.36
+nt/plot 1.z0*1.02 ! ! ! ! 'N' 1004
+nt/plot 1.z0*1.02 $5 ! ! ! 'N' 2004
+nt/plot 1.z0*1.02 $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3004
+nt/plot 1.z0*1.02 $1&&(($2).or.(dof<=0))&&$3&&$4&&$6&&$7&&$8&&$9 ! ! ! 'N' 4004
+
+h/cr/1d 1005 'momentum' 40 0. 10.3552
+h/cr/1d 2005 'momentum cut' 40 0. 10.3552
+h/cr/1d 3005 'momentum all cuts' 40 0. 10.3552
+h/cr/1d 4005 'momentum other cuts applied' 40 0. 10.3552
+nt/plot 1.p ! ! ! ! 'N' 1005
+nt/plot 1.p $6 ! ! ! 'N' 2005
+nt/plot 1.p $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3005
+nt/plot 1.p $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$7&&$8&&$9 ! ! ! 'N' 4005
+
+h/cr/1d 1006 'cotTheta' 40 -6.0848 6.0848
+h/cr/1d 2006 'cotTheta cut' 40 -6.0848 6.0848
+h/cr/1d 3006 'cotTheta all cuts' 40 -6.0848 6.0848
+h/cr/1d 4006 'cotTheta other cuts applied' 40 -6.0848 6.0848
+nt/plot 1.cotth ! ! ! ! 'N' 1006
+nt/plot 1.cotth $7 ! ! ! 'N' 2006
+nt/plot 1.cotth $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3006
+nt/plot 1.cotth $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' 4006
+
+h/cr/1d 1007 'err in cotTheta' 50 0. 1.0
+h/cr/1d 2007 'err in cotTheta cut' 50 0. 1.0
+h/cr/1d 3007 'err in cotTheta all cuts' 50 0. 1.0
+h/cr/1d 4007 'err in cotTheta other cuts applied' 50 0. 1.0
+nt/plot 1.sqrt(abs(errct)) ! ! ! ! 'N' 1007
+nt/plot 1.sqrt(abs(errct)) $8 ! ! ! 'N' 2007
+nt/plot 1.sqrt(abs(errct)) $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3007
+nt/plot 1.sqrt(abs(errct)) $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$9 ! ! ! 'N' 4007
+
+h/cr/1d 1008 'err in z0' 50 0. 0.5
+h/cr/1d 2008 'err in z0 cut' 50 0. 0.5
+h/cr/1d 3008 'err in z0 all cuts' 50 0. 0.5
+h/cr/1d 4008 'err in z0 other cuts applied' 50 0. 0.5
+nt/plot 1.sqrt(abs(errz0)) ! ! ! ! 'N' 1008
+nt/plot 1.sqrt(abs(errz0)) $9 ! ! ! 'N' 2008
+nt/plot 1.sqrt(abs(errz0)) $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3008
+nt/plot 1.sqrt(abs(errz0)) $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8 ! ! ! 'N' 4008
+
+normalize 1000
+normalize 2000
+normalize 3000
+normalize 4000
+normalize 1001
+normalize 2001
+normalize 3001
+normalize 4001
+normalize 1002
+normalize 2002
+normalize 3002
+normalize 4002
+normalize 1003
+normalize 2003
+normalize 3003
+normalize 4003
+normalize 1004
+normalize 2004
+normalize 3004
+normalize 4004
+normalize 1005
+normalize 2005
+normalize 3005
+normalize 4005
+normalize 1006
+normalize 2006
+normalize 3006
+normalize 4006
+normalize 1007
+normalize 2007
+normalize 3007
+normalize 4007
+normalize 1008
+normalize 2008
+normalize 3008
+normalize 4008
+
+cd //lun1
+zone 1 2
+h/cr/title ' '
+opt liny
+
+fortran/file 65 'y3s-trackefficiency.ps'
+graphics/metafile 65 -111
+igset mtype 1
+
+normalize 1000
+normalize 1100
+normalize 1200
+normalize 1300
+normalize 1400
+normalize 1500
+normalize 1600
+normalize 1700
+normalize 1800
+normalize 1900
+normalize 2000
+normalize 2100
+normalize 2200
+normalize 2300
+normalize 2400
+normalize 2500
+normalize 2600
+normalize 2700
+normalize 2800
+normalize 2900
+normalize 3000
+normalize 3100
+normalize 3200
+normalize 3300
+normalize 3400
+normalize 3500
+normalize 3600
+normalize 3700
+normalize 3800
+normalize 3900
+normalize 4000
+normalize 4100
+normalize 4200
+normalize 4300
+normalize 4400
+normalize 4500
+normalize 4600
+normalize 4700
+normalize 4800
+normalize 4900
+h/plot 1100
+h/plot 1200 's'
+h/plot 1300 's'
+h/plot 1400 's'
+h/plot 1500 's'
+h/plot 1600 's'
+h/plot 1700 's'
+h/plot 1800 's'
+h/plot 1900 's'
+h/plot 1000 's'
+set ltyp 3
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counter 0 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 1100 2100 1
+exec trackefficiency_macros#counter 'data17 MC' 1200 2200 2
+exec trackefficiency_macros#counter 'nov29-01' 1300 2300 3
+exec trackefficiency_macros#counter 'dec06-01' 1400 2400 4
+exec trackefficiency_macros#counter 'dec13-01' 1500 2500 5
+exec trackefficiency_macros#counter 'dec20-01' 1600 2600 6
+exec trackefficiency_macros#counter 'dec25-01' 1700 2700 7
+exec trackefficiency_macros#counter 'jan03-02' 1800 2800 8
+exec trackefficiency_macros#counter 'jan10-02' 1900 2900 9
+exec trackefficiency_macros#counter 'recut MC' 1000 2000 10
+h/plot 4100
+h/plot 4200 's'
+h/plot 4300 's'
+h/plot 4400 's'
+h/plot 4500 's'
+h/plot 4600 's'
+h/plot 4700 's'
+h/plot 4800 's'
+h/plot 4900 's'
+h/plot 4000 's'
+set ltyp 3
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counterb 0 0 0 0 0
+exec trackefficiency_macros#counterb 'data16 MC' 4100 3100 1
+exec trackefficiency_macros#counterb 'data17 MC' 4200 3200 2
+exec trackefficiency_macros#counterb 'nov29-01' 4300 3300 3
+exec trackefficiency_macros#counterb 'dec06-01' 4400 3400 4
+exec trackefficiency_macros#counterb 'dec13-01' 4500 3500 5
+exec trackefficiency_macros#counterb 'dec20-01' 4600 3600 6
+exec trackefficiency_macros#counterb 'dec25-01' 4700 3700 7
+exec trackefficiency_macros#counterb 'jan03-02' 4800 3800 8
+exec trackefficiency_macros#counterb 'jan10-02' 4900 3900 9
+exec trackefficiency_macros#counterb 'recut MC' 4000 3000 10
+
+normalize 1001
+normalize 1101
+normalize 1201
+normalize 1301
+normalize 1401
+normalize 1501
+normalize 1601
+normalize 1701
+normalize 1801
+normalize 1901
+normalize 2001
+normalize 2101
+normalize 2201
+normalize 2301
+normalize 2401
+normalize 2501
+normalize 2601
+normalize 2701
+normalize 2801
+normalize 2901
+normalize 3001
+normalize 3101
+normalize 3201
+normalize 3301
+normalize 3401
+normalize 3501
+normalize 3601
+normalize 3701
+normalize 3801
+normalize 3901
+normalize 4001
+normalize 4101
+normalize 4201
+normalize 4301
+normalize 4401
+normalize 4501
+normalize 4601
+normalize 4701
+normalize 4801
+normalize 4901
+h/plot 1101
+h/plot 1201 's'
+h/plot 1301 's'
+h/plot 1401 's'
+h/plot 1501 's'
+h/plot 1601 's'
+h/plot 1701 's'
+h/plot 1801 's'
+h/plot 1901 's'
+h/plot 1001 's'
+set ltyp 3
+dline 100 100 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counter 0 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 1101 2101 1
+exec trackefficiency_macros#counter 'data17 MC' 1201 2201 2
+exec trackefficiency_macros#counter 'nov29-01' 1301 2301 3
+exec trackefficiency_macros#counter 'dec06-01' 1401 2401 4
+exec trackefficiency_macros#counter 'dec13-01' 1501 2501 5
+exec trackefficiency_macros#counter 'dec20-01' 1601 2601 6
+exec trackefficiency_macros#counter 'dec25-01' 1701 2701 7
+exec trackefficiency_macros#counter 'jan03-02' 1801 2801 8
+exec trackefficiency_macros#counter 'jan10-02' 1901 2901 9
+exec trackefficiency_macros#counter 'recut MC' 1001 2001 10
+h/plot 4101
+h/plot 4201 's'
+h/plot 4301 's'
+h/plot 4401 's'
+h/plot 4501 's'
+h/plot 4601 's'
+h/plot 4701 's'
+h/plot 4801 's'
+h/plot 4901 's'
+h/plot 4001 's'
+set ltyp 3
+dline 100 100 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counterb 0 0 0 0 0
+exec trackefficiency_macros#counterb 'data16 MC' 4101 3101 1
+exec trackefficiency_macros#counterb 'data17 MC' 4201 3201 2
+exec trackefficiency_macros#counterb 'nov29-01' 4301 3301 3
+exec trackefficiency_macros#counterb 'dec06-01' 4401 3401 4
+exec trackefficiency_macros#counterb 'dec13-01' 4501 3501 5
+exec trackefficiency_macros#counterb 'dec20-01' 4601 3601 6
+exec trackefficiency_macros#counterb 'dec25-01' 4701 3701 7
+exec trackefficiency_macros#counterb 'jan03-02' 4801 3801 8
+exec trackefficiency_macros#counterb 'jan10-02' 4901 3901 9
+exec trackefficiency_macros#counterb 'recut MC' 4001 3001 10
+
+normalize 1002
+normalize 1102
+normalize 1202
+normalize 1302
+normalize 1402
+normalize 1502
+normalize 1602
+normalize 1702
+normalize 1802
+normalize 1902
+normalize 2002
+normalize 2102
+normalize 2202
+normalize 2302
+normalize 2402
+normalize 2502
+normalize 2602
+normalize 2702
+normalize 2802
+normalize 2902
+normalize 3002
+normalize 3102
+normalize 3202
+normalize 3302
+normalize 3402
+normalize 3502
+normalize 3602
+normalize 3702
+normalize 3802
+normalize 3902
+normalize 4002
+normalize 4102
+normalize 4202
+normalize 4302
+normalize 4402
+normalize 4502
+normalize 4602
+normalize 4702
+normalize 4802
+normalize 4902
+h/plot 1102
+h/plot 1202 's'
+h/plot 1302 's'
+h/plot 1402 's'
+h/plot 1502 's'
+h/plot 1602 's'
+h/plot 1702 's'
+h/plot 1802 's'
+h/plot 1902 's'
+h/plot 1002 's'
+set ltyp 3
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 1.2 1.2 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counter 0 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 1102 2102 1
+exec trackefficiency_macros#counter 'data17 MC' 1202 2202 2
+exec trackefficiency_macros#counter 'nov29-01' 1302 2302 3
+exec trackefficiency_macros#counter 'dec06-01' 1402 2402 4
+exec trackefficiency_macros#counter 'dec13-01' 1502 2502 5
+exec trackefficiency_macros#counter 'dec20-01' 1602 2602 6
+exec trackefficiency_macros#counter 'dec25-01' 1702 2702 7
+exec trackefficiency_macros#counter 'jan03-02' 1801 2802 8
+exec trackefficiency_macros#counter 'jan10-02' 1902 2902 9
+exec trackefficiency_macros#counter 'recut MC' 1002 2002 10
+h/plot 4102
+h/plot 4202 's'
+h/plot 4302 's'
+h/plot 4402 's'
+h/plot 4502 's'
+h/plot 4602 's'
+h/plot 4702 's'
+h/plot 4802 's'
+h/plot 4902 's'
+h/plot 4002 's'
+set ltyp 3
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 1.2 1.2 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counterb 0 0 0 0 0
+exec trackefficiency_macros#counterb 'data16 MC' 4102 3102 1
+exec trackefficiency_macros#counterb 'data17 MC' 4202 3202 2
+exec trackefficiency_macros#counterb 'nov29-01' 4302 3302 3
+exec trackefficiency_macros#counterb 'dec06-01' 4402 3402 4
+exec trackefficiency_macros#counterb 'dec13-01' 4502 3502 5
+exec trackefficiency_macros#counterb 'dec20-01' 4602 3602 6
+exec trackefficiency_macros#counterb 'dec25-01' 4702 3702 7
+exec trackefficiency_macros#counterb 'jan03-02' 4801 3802 8
+exec trackefficiency_macros#counterb 'jan10-02' 4902 3902 9
+exec trackefficiency_macros#counterb 'recut MC' 4002 3002 10
+
+normalize 1003
+normalize 1103
+normalize 1203
+normalize 1303
+normalize 1403
+normalize 1503
+normalize 1603
+normalize 1703
+normalize 1803
+normalize 1903
+normalize 2003
+normalize 2103
+normalize 2203
+normalize 2303
+normalize 2403
+normalize 2503
+normalize 2603
+normalize 2703
+normalize 2803
+normalize 2903
+normalize 3003
+normalize 3103
+normalize 3203
+normalize 3303
+normalize 3403
+normalize 3503
+normalize 3603
+normalize 3703
+normalize 3803
+normalize 3903
+normalize 4003
+normalize 4103
+normalize 4203
+normalize 4303
+normalize 4403
+normalize 4503
+normalize 4603
+normalize 4703
+normalize 4803
+normalize 4903
+h/plot 1103
+h/plot 1203 's'
+h/plot 1303 's'
+h/plot 1403 's'
+h/plot 1503 's'
+h/plot 1603 's'
+h/plot 1703 's'
+h/plot 1803 's'
+h/plot 1903 's'
+h/plot 1003 's'
+set ltyp 3
+dline -0.03 -0.03 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 0.03 0.03 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counter 0 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 1103 2103 1
+exec trackefficiency_macros#counter 'data17 MC' 1203 2203 2
+exec trackefficiency_macros#counter 'nov29-01' 1303 2303 3
+exec trackefficiency_macros#counter 'dec06-01' 1403 2403 4
+exec trackefficiency_macros#counter 'dec13-01' 1503 2503 5
+exec trackefficiency_macros#counter 'dec20-01' 1603 2603 6
+exec trackefficiency_macros#counter 'dec25-01' 1703 2703 7
+exec trackefficiency_macros#counter 'jan03-02' 1803 2803 8
+exec trackefficiency_macros#counter 'jan10-02' 1903 2903 9
+exec trackefficiency_macros#counter 'recut MC' 1003 2003 10
+h/plot 4103
+h/plot 4203 's'
+h/plot 4303 's'
+h/plot 4403 's'
+h/plot 4503 's'
+h/plot 4603 's'
+h/plot 4703 's'
+h/plot 4803 's'
+h/plot 4903 's'
+h/plot 4003 's'
+set ltyp 3
+dline -0.03 -0.03 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 0.03 0.03 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counterb 0 0 0 0 0
+exec trackefficiency_macros#counterb 'data16 MC' 4103 3103 1
+exec trackefficiency_macros#counterb 'data17 MC' 4203 3203 2
+exec trackefficiency_macros#counterb 'nov29-01' 4303 3303 3
+exec trackefficiency_macros#counterb 'dec06-01' 4403 3403 4
+exec trackefficiency_macros#counterb 'dec13-01' 4503 3503 5
+exec trackefficiency_macros#counterb 'dec20-01' 4603 3603 6
+exec trackefficiency_macros#counterb 'dec25-01' 4703 3703 7
+exec trackefficiency_macros#counterb 'jan03-02' 4803 3803 8
+exec trackefficiency_macros#counterb 'jan10-02' 4903 3903 9
+exec trackefficiency_macros#counterb 'recut MC' 4003 3003 10
+
+normalize 1004
+normalize 1104
+normalize 1204
+normalize 1304
+normalize 1404
+normalize 1504
+normalize 1604
+normalize 1704
+normalize 1804
+normalize 1904
+normalize 2004
+normalize 2104
+normalize 2204
+normalize 2304
+normalize 2404
+normalize 2504
+normalize 2604
+normalize 2704
+normalize 2804
+normalize 2904
+normalize 3004
+normalize 3104
+normalize 3204
+normalize 3304
+normalize 3404
+normalize 3504
+normalize 3604
+normalize 3704
+normalize 3804
+normalize 3904
+normalize 4004
+normalize 4104
+normalize 4204
+normalize 4304
+normalize 4404
+normalize 4504
+normalize 4604
+normalize 4704
+normalize 4804
+normalize 4904
+h/plot 1104
+h/plot 1204 's'
+h/plot 1304 's'
+h/plot 1404 's'
+h/plot 1504 's'
+h/plot 1604 's'
+h/plot 1704 's'
+h/plot 1804 's'
+h/plot 1904 's'
+h/plot 1004 's'
+set ltyp 3
+dline -0.18 -0.18 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 0.18 0.18 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counter 0 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 1104 2104 1
+exec trackefficiency_macros#counter 'data17 MC' 1204 2204 2
+exec trackefficiency_macros#counter 'nov29-01' 1304 2304 3
+exec trackefficiency_macros#counter 'dec06-01' 1404 2404 4
+exec trackefficiency_macros#counter 'dec13-01' 1504 2504 5
+exec trackefficiency_macros#counter 'dec20-01' 1604 2604 6
+exec trackefficiency_macros#counter 'dec25-01' 1704 2704 7
+exec trackefficiency_macros#counter 'jan03-02' 1804 2804 8
+exec trackefficiency_macros#counter 'jan10-02' 1904 2904 9
+exec trackefficiency_macros#counter 'recut MC' 1004 2004 10
+h/plot 4104
+h/plot 4204 's'
+h/plot 4304 's'
+h/plot 4404 's'
+h/plot 4504 's'
+h/plot 4604 's'
+h/plot 4704 's'
+h/plot 4804 's'
+h/plot 4904 's'
+h/plot 4004 's'
+set ltyp 3
+dline -0.18 -0.18 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 0.18 0.18 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counterb 0 0 0 0 0
+exec trackefficiency_macros#counterb 'data16 MC' 4104 3104 1
+exec trackefficiency_macros#counterb 'data17 MC' 4204 3204 2
+exec trackefficiency_macros#counterb 'nov29-01' 4304 3304 3
+exec trackefficiency_macros#counterb 'dec06-01' 4404 3404 4
+exec trackefficiency_macros#counterb 'dec13-01' 4504 3504 5
+exec trackefficiency_macros#counterb 'dec20-01' 4604 3604 6
+exec trackefficiency_macros#counterb 'dec25-01' 4704 3704 7
+exec trackefficiency_macros#counterb 'jan03-02' 4804 3804 8
+exec trackefficiency_macros#counterb 'jan10-02' 4904 3904 9
+exec trackefficiency_macros#counterb 'recut MC' 4004 3004 10
+
+normalize 1005
+normalize 1105
+normalize 1205
+normalize 1305
+normalize 1405
+normalize 1505
+normalize 1605
+normalize 1705
+normalize 1805
+normalize 1905
+normalize 2005
+normalize 2105
+normalize 2205
+normalize 2305
+normalize 2405
+normalize 2505
+normalize 2605
+normalize 2705
+normalize 2805
+normalize 2905
+normalize 3005
+normalize 3105
+normalize 3205
+normalize 3305
+normalize 3405
+normalize 3505
+normalize 3605
+normalize 3705
+normalize 3805
+normalize 3905
+normalize 4005
+normalize 4105
+normalize 4205
+normalize 4305
+normalize 4405
+normalize 4505
+normalize 4605
+normalize 4705
+normalize 4805
+normalize 4905
+h/plot 1105
+h/plot 1205 's'
+h/plot 1305 's'
+h/plot 1405 's'
+h/plot 1505 's'
+h/plot 1605 's'
+h/plot 1705 's'
+h/plot 1805 's'
+h/plot 1905 's'
+h/plot 1005 's'
+set ltyp 3
+dline 0.051776 0.051776 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 7.7664 7.7664 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counter 0 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 1105 2105 1
+exec trackefficiency_macros#counter 'data17 MC' 1205 2205 2
+exec trackefficiency_macros#counter 'nov29-01' 1305 2305 3
+exec trackefficiency_macros#counter 'dec06-01' 1405 2405 4
+exec trackefficiency_macros#counter 'dec13-01' 1505 2505 5
+exec trackefficiency_macros#counter 'dec20-01' 1605 2605 6
+exec trackefficiency_macros#counter 'dec25-01' 1705 2705 7
+exec trackefficiency_macros#counter 'jan03-02' 1805 2805 8
+exec trackefficiency_macros#counter 'jan10-02' 1905 2905 9
+exec trackefficiency_macros#counter 'recut MC' 1005 2005 10
+h/plot 4105
+h/plot 4205 's'
+h/plot 4305 's'
+h/plot 4405 's'
+h/plot 4505 's'
+h/plot 4605 's'
+h/plot 4705 's'
+h/plot 4805 's'
+h/plot 4905 's'
+h/plot 4005 's'
+set ltyp 3
+dline 0.051776 0.051776 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 7.7664 7.7664 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counterb 0 0 0 0 0
+exec trackefficiency_macros#counterb 'data16 MC' 4105 3105 1
+exec trackefficiency_macros#counterb 'data17 MC' 4205 3205 2
+exec trackefficiency_macros#counterb 'nov29-01' 4305 3305 3
+exec trackefficiency_macros#counterb 'dec06-01' 4405 3405 4
+exec trackefficiency_macros#counterb 'dec13-01' 4505 3505 5
+exec trackefficiency_macros#counterb 'dec20-01' 4605 3605 6
+exec trackefficiency_macros#counterb 'dec25-01' 4705 3705 7
+exec trackefficiency_macros#counterb 'jan03-02' 4805 3805 8
+exec trackefficiency_macros#counterb 'jan10-02' 4905 3905 9
+exec trackefficiency_macros#counterb 'recut MC' 4005 3005 10
+
+normalize 1006
+normalize 1106
+normalize 1206
+normalize 1306
+normalize 1406
+normalize 1506
+normalize 1606
+normalize 1706
+normalize 1806
+normalize 1906
+normalize 2006
+normalize 2106
+normalize 2206
+normalize 2306
+normalize 2406
+normalize 2506
+normalize 2606
+normalize 2706
+normalize 2806
+normalize 2906
+normalize 3006
+normalize 3106
+normalize 3206
+normalize 3306
+normalize 3406
+normalize 3506
+normalize 3606
+normalize 3706
+normalize 3806
+normalize 3906
+normalize 4006
+normalize 4106
+normalize 4206
+normalize 4306
+normalize 4406
+normalize 4506
+normalize 4606
+normalize 4706
+normalize 4806
+normalize 4906
+h/plot 1106
+h/plot 1206 's'
+h/plot 1306 's'
+h/plot 1406 's'
+h/plot 1506 's'
+h/plot 1606 's'
+h/plot 1706 's'
+h/plot 1806 's'
+h/plot 1906 's'
+h/plot 1006 's'
+set ltyp 3
+dline -3.0424 -3.0424 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 3.0424 3.0424 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counter 0 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 1106 2106 1
+exec trackefficiency_macros#counter 'data17 MC' 1206 2206 2
+exec trackefficiency_macros#counter 'nov29-01' 1306 2306 3
+exec trackefficiency_macros#counter 'dec06-01' 1406 2406 4
+exec trackefficiency_macros#counter 'dec13-01' 1506 2506 5
+exec trackefficiency_macros#counter 'dec20-01' 1606 2606 6
+exec trackefficiency_macros#counter 'dec25-01' 1706 2706 7
+exec trackefficiency_macros#counter 'jan03-02' 1806 2806 8
+exec trackefficiency_macros#counter 'jan10-02' 1906 2906 9
+exec trackefficiency_macros#counter 'recut MC' 1006 2006 10
+h/plot 4106
+h/plot 4206 's'
+h/plot 4306 's'
+h/plot 4406 's'
+h/plot 4506 's'
+h/plot 4606 's'
+h/plot 4706 's'
+h/plot 4806 's'
+h/plot 4906 's'
+h/plot 4006 's'
+set ltyp 3
+dline -3.0424 -3.0424 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 3.0424 3.0424 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counterb 0 0 0 0 0
+exec trackefficiency_macros#counterb 'data16 MC' 4106 3106 1
+exec trackefficiency_macros#counterb 'data17 MC' 4206 3206 2
+exec trackefficiency_macros#counterb 'nov29-01' 4306 3306 3
+exec trackefficiency_macros#counterb 'dec06-01' 4406 3406 4
+exec trackefficiency_macros#counterb 'dec13-01' 4506 3506 5
+exec trackefficiency_macros#counterb 'dec20-01' 4606 3606 6
+exec trackefficiency_macros#counterb 'dec25-01' 4706 3706 7
+exec trackefficiency_macros#counterb 'jan03-02' 4806 3806 8
+exec trackefficiency_macros#counterb 'jan10-02' 4906 3906 9
+exec trackefficiency_macros#counterb 'recut MC' 4006 3006 10
+
+normalize 1007
+normalize 1107
+normalize 1207
+normalize 1307
+normalize 1407
+normalize 1507
+normalize 1607
+normalize 1707
+normalize 1807
+normalize 1907
+normalize 2007
+normalize 2107
+normalize 2207
+normalize 2307
+normalize 2407
+normalize 2507
+normalize 2607
+normalize 2707
+normalize 2807
+normalize 2907
+normalize 3007
+normalize 3107
+normalize 3207
+normalize 3307
+normalize 3407
+normalize 3507
+normalize 3607
+normalize 3707
+normalize 3807
+normalize 3907
+normalize 4007
+normalize 4107
+normalize 4207
+normalize 4307
+normalize 4407
+normalize 4507
+normalize 4607
+normalize 4707
+normalize 4807
+normalize 4907
+h/plot 1107
+h/plot 1207 's'
+h/plot 1307 's'
+h/plot 1407 's'
+h/plot 1507 's'
+h/plot 1607 's'
+h/plot 1707 's'
+h/plot 1807 's'
+h/plot 1907 's'
+h/plot 1007 's'
+set ltyp 3
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counter 0 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 1107 2107 1
+exec trackefficiency_macros#counter 'data17 MC' 1207 2207 2
+exec trackefficiency_macros#counter 'nov29-01' 1307 2307 3
+exec trackefficiency_macros#counter 'dec06-01' 1407 2407 4
+exec trackefficiency_macros#counter 'dec13-01' 1507 2507 5
+exec trackefficiency_macros#counter 'dec20-01' 1607 2607 6
+exec trackefficiency_macros#counter 'dec25-01' 1707 2707 7
+exec trackefficiency_macros#counter 'jan03-02' 1807 2807 8
+exec trackefficiency_macros#counter 'jan10-02' 1907 2907 9
+exec trackefficiency_macros#counter 'recut MC' 1007 2007 10
+h/plot 4107
+h/plot 4207 's'
+h/plot 4307 's'
+h/plot 4407 's'
+h/plot 4507 's'
+h/plot 4607 's'
+h/plot 4707 's'
+h/plot 4807 's'
+h/plot 4907 's'
+h/plot 4007 's'
+set ltyp 3
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counterb 0 0 0 0 0
+exec trackefficiency_macros#counterb 'data16 MC' 4107 3107 1
+exec trackefficiency_macros#counterb 'data17 MC' 4207 3207 2
+exec trackefficiency_macros#counterb 'nov29-01' 4307 3307 3
+exec trackefficiency_macros#counterb 'dec06-01' 4407 3407 4
+exec trackefficiency_macros#counterb 'dec13-01' 4507 3507 5
+exec trackefficiency_macros#counterb 'dec20-01' 4607 3607 6
+exec trackefficiency_macros#counterb 'dec25-01' 4707 3707 7
+exec trackefficiency_macros#counterb 'jan03-02' 4807 3807 8
+exec trackefficiency_macros#counterb 'jan10-02' 4907 3907 9
+exec trackefficiency_macros#counterb 'recut MC' 4007 3007 10
+
+normalize 1008
+normalize 1108
+normalize 1208
+normalize 1308
+normalize 1408
+normalize 1508
+normalize 1608
+normalize 1708
+normalize 1808
+normalize 1908
+normalize 2008
+normalize 2108
+normalize 2208
+normalize 2308
+normalize 2408
+normalize 2508
+normalize 2608
+normalize 2708
+normalize 2808
+normalize 2908
+normalize 3008
+normalize 3108
+normalize 3208
+normalize 3308
+normalize 3408
+normalize 3508
+normalize 3608
+normalize 3708
+normalize 3808
+normalize 3908
+normalize 4008
+normalize 4108
+normalize 4208
+normalize 4308
+normalize 4408
+normalize 4508
+normalize 4608
+normalize 4708
+normalize 4808
+normalize 4908
+h/plot 1108
+h/plot 1208 's'
+h/plot 1308 's'
+h/plot 1408 's'
+h/plot 1508 's'
+h/plot 1608 's'
+h/plot 1708 's'
+h/plot 1808 's'
+h/plot 1908 's'
+h/plot 1008 's'
+set ltyp 3
+dline 0.25 0.25 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counter 0 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 1108 2108 1
+exec trackefficiency_macros#counter 'data17 MC' 1208 2208 2
+exec trackefficiency_macros#counter 'nov29-01' 1308 2308 3
+exec trackefficiency_macros#counter 'dec06-01' 1408 2408 4
+exec trackefficiency_macros#counter 'dec13-01' 1508 2508 5
+exec trackefficiency_macros#counter 'dec20-01' 1608 2608 6
+exec trackefficiency_macros#counter 'dec25-01' 1708 2708 7
+exec trackefficiency_macros#counter 'jan03-02' 1808 2808 8
+exec trackefficiency_macros#counter 'jan10-02' 1908 2908 9
+exec trackefficiency_macros#counter 'recut MC' 1008 2008 10
+h/plot 4108
+h/plot 4208 's'
+h/plot 4308 's'
+h/plot 4408 's'
+h/plot 4508 's'
+h/plot 4608 's'
+h/plot 4708 's'
+h/plot 4808 's'
+h/plot 4908 's'
+h/plot 4008 's'
+set ltyp 3
+dline 0.25 0.25 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counterb 0 0 0 0 0
+exec trackefficiency_macros#counterb 'data16 MC' 4108 3108 1
+exec trackefficiency_macros#counterb 'data17 MC' 4208 3208 2
+exec trackefficiency_macros#counterb 'nov29-01' 4308 3308 3
+exec trackefficiency_macros#counterb 'dec06-01' 4408 3408 4
+exec trackefficiency_macros#counterb 'dec13-01' 4508 3508 5
+exec trackefficiency_macros#counterb 'dec20-01' 4608 3608 6
+exec trackefficiency_macros#counterb 'dec25-01' 4708 3708 7
+exec trackefficiency_macros#counterb 'jan03-02' 4808 3808 8
+exec trackefficiency_macros#counterb 'jan10-02' 4908 3908 9
+exec trackefficiency_macros#counterb 'recut MC' 4008 3008 10
+
+zone 1 2
+null 0 1 0 1
+exec trackefficiency_macros#counter 0 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 1101 3101 1
+exec trackefficiency_macros#counter 'data17 MC' 1201 3201 2
+exec trackefficiency_macros#counter 'nov29-01' 1301 3301 3
+exec trackefficiency_macros#counter 'dec06-01' 1401 3401 4
+exec trackefficiency_macros#counter 'dec13-01' 1501 3501 5
+exec trackefficiency_macros#counter 'dec20-01' 1601 3601 6
+exec trackefficiency_macros#counter 'dec25-01' 1701 3701 7
+exec trackefficiency_macros#counter 'jan03-02' 1801 3801 8
+exec trackefficiency_macros#counter 'jan10-02' 1901 3901 9
+exec trackefficiency_macros#counter 'recut MC' 1001 3001 10
+null 0 1 0 1
+text 0.5 0.5 'combination of all cuts' ! ! 'c'
+
+h/cr/title 'solid is MC, dashed is data'
+zone 1 2
+opt logy
+
+min 1000 1
+max 1000 2e5
+min 4000 1
+max 4000 2e5
+h/plot 1000
+h/plot 1300 's'
+h/plot 4000
+h/plot 4300 's'
+set ltyp 3
+dline 0.5 0.5 1 2e5
+
+min 1001 1
+max 1001 2e5
+min 4001 1
+max 4001 2e5
+h/plot 1001
+h/plot 1301 's'
+h/plot 4001
+h/plot 4301 's'
+set ltyp 3
+dline 100 100 1 2e5
+
+min 1002 1
+max 1002 2e5
+min 4002 1
+max 4002 2e5
+h/plot 1002
+h/plot 1302 's'
+h/plot 4002
+h/plot 4302 's'
+set ltyp 3
+dline 0.5 0.5 1 2e5
+dline 1.2 1.2 1 2e5
+
+min 1001 1
+max 1001 2e5
+min 4001 1
+max 4001 2e5
+h/plot 1003
+h/plot 1303 's'
+h/plot 4003
+h/plot 4303 's'
+set ltyp 3
+dline -0.03 -0.03 1 2e5
+dline 0.03 0.03 1 2e5
+
+min 1002 1
+max 1002 2e5
+min 4002 1
+max 4002 2e5
+h/plot 1004
+h/plot 1304 's'
+h/plot 4004
+h/plot 4304 's'
+set ltyp 3
+dline -0.18 -0.18 1 2e5
+dline 0.18 0.18 1 2e5
+
+min 1001 1
+max 1001 2e5
+min 4001 1
+max 4001 2e5
+h/plot 1005
+h/plot 1305 's'
+h/plot 4005
+h/plot 4305 's'
+set ltyp 3
+dline 0.051776 0.051776 1 2e5
+dline 7.7664 7.7664 1 2e5
+
+min 1002 1
+max 1002 2e5
+min 4002 1
+max 4002 2e5
+h/plot 1006
+h/plot 1306 's'
+h/plot 4006
+h/plot 4306 's'
+set ltyp 3
+dline -3.0424 -3.0424 1 2e5
+dline 3.0424 3.0424 1 2e5
+
+min 1001 1
+max 1001 2e5
+min 4001 1
+max 4001 2e5
+h/plot 1007
+h/plot 1307 's'
+h/plot 4007
+h/plot 4307 's'
+set ltyp 3
+dline 0.5 0.5 1 2e5
+
+min 1002 1
+max 1002 2e5
+min 4002 1
+max 4002 2e5
+h/plot 1008
+h/plot 1308 's'
+h/plot 4008
+h/plot 4308 's'
+set ltyp 3
+dline 0.25 0.25 1 2e5
+
+close 65

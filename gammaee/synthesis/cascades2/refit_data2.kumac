@@ -1,0 +1,9 @@
+message REFITTING DATA2 with [1]
+
+h/cr/1d 100 '[p]^+![p]^-! recoil mass (in GeV)' 78 $SIGMA(s1) $SIGMA(s4)
+nt/plot //data2/UPSLNGMMEECSCDES/1.m $2&&([1]) ! ! ! ! 100
+ve/cr d2p(3)
+ve/cr d2e(3)
+ve/inp d2p 0. 0. 0.
+h/fit 100 casfunc.f 'E' 3 d2p ! ! ! d2e
+sigma d2s = (0.85714285*d2p(1) + 0.0039795918*d2p(2) - 0.00015388419*d2p(3))/d2p(1)

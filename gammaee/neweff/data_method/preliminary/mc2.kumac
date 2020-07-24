@@ -1,0 +1,433 @@
+h/file 1 ../data_method_rzn/mctypical2.rzn
+h/file 2 ../data_method_rzn/mcrare2.rzn
+sigma ebeam = 5.17765
+
+*       "mc",
+*       "rawtk", "eptk", "tmtk",
+*       "ccen", "visen", "acop", "ect30", "ect25", "ect20", "ect15",
+*       "p1", "p2", "p3", "p4",
+*       "d1", "d2", "d3", "d4",
+*       "z1", "z2", "z3", "z4",
+*       "t1", "t2", "t3", "t4",
+*       "f1", "f2", "f3", "f4",
+*       "me1", "me2", "me3", "me4",
+*       "md1", "md2", "md3", "md4",
+*       "e1", "e2", "e3", "e4",
+*       "st1", "st2", "st3", "st4",
+*       "p2x", "p2y", "p2z",
+*       "p4x", "p4y", "p4z",
+*       "pallx", "pally", "pallz",
+*       "pepx", "pepy", "pepz"};
+
+opt sta
+nt/plot //lun2/supercuts/1.t1/sqrt(t1**2+1) abs(t1)<2.5&&abs(t2)<2.5
+
+
+nt/plot //lun2/supercuts/1.t1/sqrt(t1**2+1) t1/sqrt(t1**2+1)<0.9&&$1&&$2
+
+
+
+nt/plot //lun2/supercuts/1.cos(st2) abs(st1)<2.5&&abs(st2)<2.5
+
+
+
+
+
+
+nt/plot //lun1/supercuts/1.sin(st1+st2) abs(st2)<10
+nt/plot //lun2/supercuts/1.sin(st1+st2) abs(st2)<10
+
+cuts $1 e1/$SIGMA(ebeam)>(-8./3.)*e2/$SIGMA(ebeam)+2.
+nt/cuts $2 p2/$SIGMA(ebeam)>0.75
+nt/cuts $4 visen/2/$SIGMA(ebeam)<0.2
+
+
+nt/plot //lun2/supercuts/1.sin(st1+st2) abs(st2)<10&&((p2/5.17765<0.95)&&(e1/5.17765<(-8/3)*e2/5.17765+2.)&&(visen/2/5.17765>0.05))
+
+
+opt logy
+nt/plot //lun1/supercuts/1.ect20 ((p2/5.17765<0.75)&&(e1/5.17765<(-8/3)*e2/5.17765+2.)&&(visen/2/5.17765>0.20))
+nt/plot //lun2/supercuts/1.ect20 ((p2/5.17765<0.75)&&(e1/5.17765<(-8/3)*e2/5.17765+2.)&&(visen/2/5.17765>0.20)) ! ! ! 's'
+
+opt sta
+nt/plot //lun1/supercuts/1.ect20 ect20>4
+nt/plot //lun2/supercuts/1.ect20 ect20>4
+
+nt/plot //lun2/supercuts/1.ect20/ccen ccen>0&&((p2/5.17765<0.75)&&(e1/5.17765<(-8/3)*e2/5.17765+2.)&&(visen/2/5.17765>0.20))
+
+
+nt/plot //lun2/supercuts/1.cos(st1) st2<10&&p1>0&&me1/p1>0.8
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+fortran/file 65 'mc2.ps'
+graphics/metafile 65 -111
+igset mtype 1
+
+zone 1 1
+h/cr/title 'solid = ell+ell-, dashed = hadron and tau'
+opt logy
+opt sta
+set stat 0110010
+h/cr/1d 100 '("B#p1"B# + "B#p2"B#) / eCM (NOTE: logy)' 120 0. 1.2
+h/cr/1d 200 '("B#p1"B# + "B#p2"B#) / eCM' 120 0. 1.2
+nt/plot //lun2/supercuts/1.(p1+p2)/2/$SIGMA(ebeam) ! ! ! !  !  100
+nt/plot //lun1/supercuts/1.(p1+p2)/2/$SIGMA(ebeam) ! ! ! ! 's' 200
+opt liny
+opt nsta
+
+h/cr/title '(correlation of two highest momentae)'
+zone 2 2
+opt logz
+h/cr/2d 100 '"B#p1"B# / eBeam VS "B#p2"B# / eBeam' 120 0 1.2 120 0 1.2
+h/cr/2d 200 '"B#p1"B# / eBeam VS "B#p2"B# / eBeam' 120 0 1.2 120 0 1.2
+nt/plot //lun2/supercuts/1.p1/$SIGMA(ebeam)%p2/$SIGMA(ebeam) ! ! ! ! 'cont'  100
+text 0.75 0.65 'ell+ell- final state' ! ! 'c'
+text 0.45 1.05 '(second lost down beampipe)' 0.2 ! 'c'
+text 0.5 0.1 '(both lost down beampipe)' 0.2 ! 'c'
+text 1.12 0.97 '[U](3S)' 0.2 ! 'c'
+text 1.07 0.92 '[U](2S)' 0.2 ! 'c'
+text 1.00 0.85 '[U](1S)' 0.2 ! 'c'
+nt/plot //lun1/supercuts/1.p1/$SIGMA(ebeam)%p2/$SIGMA(ebeam) ! ! ! ! 'cont' 200
+text 0.75 0.2 'hadrons and taus' ! ! 'c'
+nt/plot //lun2/supercuts/1.p1/$SIGMA(ebeam)%p2/$SIGMA(ebeam) ! ! ! ! 'cont'  100
+nt/plot //lun1/supercuts/1.p1/$SIGMA(ebeam)%p2/$SIGMA(ebeam) ! ! ! ! 'scont' 200
+opt linz
+nt/plot //lun2/supercuts/1.p1/$SIGMA(ebeam)%p2/$SIGMA(ebeam) ! ! ! ! 'cont'  100
+nt/plot //lun1/supercuts/1.p1/$SIGMA(ebeam)%p2/$SIGMA(ebeam) ! ! ! ! 'scont' 200
+text 0.75 0.5 '(linear z scale)' ! ! 'c'
+zone 1 1
+
+h/cr/title 'solid = ell+ell-, dashed = hadron and tau'
+opt logy
+h/cr/1d 100 'cos[Q] 0.9 "L B#p1"B#/eBeam "L# 1.1 and "B#p2"B#/eBeam "L# 0.5' 100 -1. 1.
+h/cr/1d 200 'cos[Q] 0.9 "L B#p1"B#/eBeam "L# 1.1 and "B#p2"B#/eBeam "L# 0.5' 100 -1. 1.
+nt/plot //lun2/supercuts/1.t1/sqrt(t1**2+1) 0.9<p1/$SIGMA(ebeam)<1.1&&p2/$SIGMA(ebeam)<0.5 ! ! ! ! 100
+nt/plot //lun1/supercuts/1.t1/sqrt(t1**2+1) 0.9<p1/$SIGMA(ebeam)<1.1&&p2/$SIGMA(ebeam)<0.5 ! ! ! 's' 200
+h/cr/1d 100 'sin[Q] "B#p2"B#/eBeam "L# 0.5' 100 -1. 1.
+h/cr/1d 200 'sin[Q] "B#p2"B#/eBeam "L# 0.5' 100 -1. 1.
+nt/plot //lun2/supercuts/1.t1/sqrt(t1**2+1)/abs(t1) p2/$SIGMA(ebeam)<0.5 ! ! ! ! 100
+nt/plot //lun1/supercuts/1.t1/sqrt(t1**2+1)/abs(t1) p2/$SIGMA(ebeam)<0.5 ! ! ! 's' 200
+opt liny
+
+h/cr/title '(correlation of two highest-p matched energies)'
+zone 2 2
+opt logz
+h/cr/2d 100 '"B#me1"B# / eBeam VS "B#me2"B# / eBeam' 120 0 1.2 120 0 1.2
+h/cr/2d 200 '"B#me1"B# / eBeam VS "B#me2"B# / eBeam' 120 0 1.2 120 0 1.2
+nt/plot //lun2/supercuts/1.me1/$SIGMA(ebeam)%me2/$SIGMA(ebeam) ! ! ! ! 'cont'  100
+text 0.75 0.65 'ell+ell- final state' ! ! 'c'
+text 0.45 1.05 '(second lost down beampipe)' 0.2 ! 'c'
+text 0.65 0.1 '(both lost down beampipe and mupairs)' 0.2 ! 'c'
+text 1.12 0.97 '[U](3S)' 0.2 ! 'c'
+text 1.07 0.92 '[U](2S)' 0.2 ! 'c'
+text 1.00 0.85 '[U](1S)' 0.2 ! 'c'
+nt/plot //lun1/supercuts/1.me1/$SIGMA(ebeam)%me2/$SIGMA(ebeam) ! ! ! ! 'cont' 200
+text 0.75 0.2 'hadrons and taus' ! ! 'c'
+nt/plot //lun2/supercuts/1.me1/$SIGMA(ebeam)%me2/$SIGMA(ebeam) ! ! ! ! 'cont'  100
+nt/plot //lun1/supercuts/1.me1/$SIGMA(ebeam)%me2/$SIGMA(ebeam) ! ! ! ! 'scont' 200
+opt linz
+nt/plot //lun2/supercuts/1.me1/$SIGMA(ebeam)%me2/$SIGMA(ebeam) ! ! ! ! 'cont'  100
+nt/plot //lun1/supercuts/1.me1/$SIGMA(ebeam)%me2/$SIGMA(ebeam) ! ! ! ! 'scont' 200
+text 0.75 0.5 '(linear z scale)' ! ! 'c'
+zone 1 1
+
+h/cr/title '(correlation of two highest energy showers)'
+zone 2 2
+opt logz
+h/cr/2d 100 '"B#e1"B# / eBeam VS "B#e2"B# / eBeam' 120 0 1.2 120 0 1.2
+h/cr/2d 200 '"B#e1"B# / eBeam VS "B#e2"B# / eBeam' 120 0 1.2 120 0 1.2
+nt/plot //lun2/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) ! ! ! ! 'cont'  100
+text 0.75 0.65 'ell+ell- final state' ! ! 'c'
+text 0.45 1.05 '(second lost down beampipe)' 0.2 ! 'c'
+text 0.65 0.1 '(both lost down beampipe and mupairs)' 0.2 ! 'c'
+text 1.12 0.97 '[U](3S)' 0.2 ! 'c'
+text 1.07 0.92 '[U](2S)' 0.2 ! 'c'
+text 1.00 0.85 '[U](1S)' 0.2 ! 'c'
+nt/plot //lun1/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) ! ! ! ! 'cont' 200
+text 0.75 0.2 'hadrons and taus' ! ! 'c'
+nt/plot //lun2/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) ! ! ! ! 'cont'  100
+nt/plot //lun1/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) ! ! ! ! 'scont' 200
+set ltyp 2
+dline 0.3 0.75 1.2 0
+text 0.9 0.3 'A-HA"E#' ! ! 'c'
+opt linz
+nt/plot //lun2/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) ! ! ! ! 'cont'  100
+nt/plot //lun1/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) ! ! ! ! 'scont' 200
+text 0.75 0.5 '(linear z scale)' ! ! 'c'
+zone 1 1
+
+cuts $1 e1/$SIGMA(ebeam)>(-8./3.)*e2/$SIGMA(ebeam)+2.
+
+h/cr/title 'solid = ell+ell- AFTER FIRST CUT, dashed = hadron, tau'
+opt logy
+opt sta
+h/cr/1d 100 'CC total energy' 150 0. 1.5
+h/cr/1d 200 'CC total energy' 150 0. 1.5
+nt/plot //lun2/supercuts/1.ccen/2/$SIGMA(ebeam) !$1 ! ! ! ! 100
+nt/plot //lun1/supercuts/1.ccen/2/$SIGMA(ebeam) !$1 ! ! ! 's' 200
+opt liny
+opt nsta
+
+opt logy
+opt sta
+h/cr/1d 100 'visible energy' 150 0. 1.5
+h/cr/1d 200 'visible energy' 150 0. 1.5
+nt/plot //lun2/supercuts/1.visen/2/$SIGMA(ebeam) !$1 ! ! ! ! 100
+nt/plot //lun1/supercuts/1.visen/2/$SIGMA(ebeam) !$1 ! ! ! 's' 200
+opt liny
+opt nsta
+
+h/cr/title '(correlation of track energy to shower energy, AFTER FIRST CUT)'
+zone 2 2
+opt logz
+h/cr/2d 100 'e1 + e2 VS "B#p1"B# + "B#p2"B#' 120 0. 1.2 120 0. 1.2
+h/cr/2d 200 'e1 + e2 VS "B#p1"B# + "B#p2"B#' 120 0. 1.2 120 0. 1.2
+nt/plot //lun2/supercuts/1.(e1+e2)/2/$SIGMA(ebeam)%(p1+p2)/2/$SIGMA(ebeam) !$1 ! ! ! 'cont' 100
+nt/plot //lun1/supercuts/1.(e1+e2)/2/$SIGMA(ebeam)%(p1+p2)/2/$SIGMA(ebeam) !$1 ! ! ! 'cont' 200
+nt/plot //lun2/supercuts/1.(e1+e2)/2/$SIGMA(ebeam)%(p1+p2)/2/$SIGMA(ebeam) !$1 ! ! ! 'cont' 100
+nt/plot //lun1/supercuts/1.(e1+e2)/2/$SIGMA(ebeam)%(p1+p2)/2/$SIGMA(ebeam) !$1 ! ! ! 'scont' 200
+opt linz
+nt/plot //lun2/supercuts/1.(e1+e2)/2/$SIGMA(ebeam)%(p1+p2)/2/$SIGMA(ebeam) !$1 ! ! ! 'cont' 100
+nt/plot //lun1/supercuts/1.(e1+e2)/2/$SIGMA(ebeam)%(p1+p2)/2/$SIGMA(ebeam) !$1 ! ! ! 'scont' 200
+text 0.5 1.0 '(linear z scale)' ! ! 'c'
+zone 1 1
+
+close 65
+
+
+********************** after Ritchie's plots, before talking to her
+
+opt logz
+nt/plot //lun1/supercuts/1.e2%ccen !$1 ! ! ! 'cont'
+nt/plot //lun2/supercuts/1.e2%ccen !$1 ! ! ! 'scont'
+opt linz
+
+opt logy
+nt/plot //lun2/supercuts/1.sin(f1-f2) rawtk==2&&!$1
+nt/plot //lun1/supercuts/1.sin(f1-f2) rawtk==2&&!$1 ! ! ! 's'
+
+h/cr/1d 100 '"B# p1 + p2 "B# / eBeam' 120 0. 1.2
+h/cr/1d 200 '"B# p1 + p2 "B# / eBeam' 120 0. 1.2
+nt/plot //lun2/supercuts/1.sqrt(p2x**2+p2y**2+p2z**2)/$SIGMA(ebeam) !$1&&rawtk==2 ! ! ! ! 100
+nt/plot //lun1/supercuts/1.sqrt(p2x**2+p2y**2+p2z**2)/$SIGMA(ebeam) !$1&&rawtk==2 ! ! ! 's' 200
+
+nt/plot //lun2/supercuts/1.me1/p1 rawtk>1&&!$1 ! ! ! ! 100
+nt/plot //lun1/supercuts/1.me1/p1 rawtk>1&&!$1 ! ! ! 's' 200
+
+nt/plot //lun2/supercuts/1.me2/p2 rawtk>1&&!$1 ! ! ! ! 100
+nt/plot //lun1/supercuts/1.me2/p2 rawtk>1&&!$1 ! ! ! 's' 200
+
+h/cr/2d 100 'me1/p1 VS me2/p2' 150 0. 1.5 150 0. 1.5
+h/cr/2d 200 'me1/p1 VS me2/p2' 150 0. 1.5 150 0. 1.5
+nt/plot //lun2/supercuts/1.me1/p1%me2/p2 rawtk>1&&!$1 ! ! ! 'cont' 100
+nt/plot //lun1/supercuts/1.me1/p1%me2/p2 rawtk>1&&!$1 ! ! ! 'scont' 200
+
+
+
+
+
+
+h/cr/title 'a muon cut"H#'
+opt logz
+h/cr/2d 100 'me1/p1 VS me2/p2' 100 0. 0.2 100 0. 0.2
+h/cr/2d 200 'me1/p1 VS me2/p2' 100 0. 0.2 100 0. 0.2
+nt/plot //lun2/supercuts/1.me1/p1%me2/p2 rawtk>1&&!$1 ! ! ! 'cont' 100
+nt/plot //lun1/supercuts/1.me1/p1%me2/p2 rawtk>1&&!$1 ! ! ! 'scont' 200
+
+
+
+
+nt/cuts $2 p2/$SIGMA(ebeam)>0.75
+
+h/cr/title '(two showers with "B#p2"B# / ebeam "G# 0.75)'
+zone 2 2
+opt logz
+h/cr/2d 100 '"B#e1"B# / eBeam VS "B#e2"B# / eBeam' 120 0 1.2 120 0 1.2
+h/cr/2d 200 '"B#e1"B# / eBeam VS "B#e2"B# / eBeam' 120 0 1.2 120 0 1.2
+nt/plot //lun2/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) $2 ! ! ! 'cont'  100
+text 0.75 0.65 'ell+ell- final state' ! ! 'c'
+text 0.45 1.05 '(second lost down beampipe)' 0.2 ! 'c'
+text 0.65 0.1 '(both lost down beampipe and mupairs)' 0.2 ! 'c'
+text 1.12 0.97 '[U](3S)' 0.2 ! 'c'
+text 1.07 0.92 '[U](2S)' 0.2 ! 'c'
+text 1.00 0.85 '[U](1S)' 0.2 ! 'c'
+nt/plot //lun1/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) $2 ! ! ! 'cont' 200
+text 0.75 0.2 'hadrons and taus' ! ! 'c'
+nt/plot //lun2/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) $2 ! ! ! 'cont'  100
+nt/plot //lun1/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) $2 ! ! ! 'scont' 200
+set ltyp 2
+dline 0 1.2 0.6 0.6
+opt linz
+nt/plot //lun2/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) $2 ! ! ! 'cont'  100
+nt/plot //lun1/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) $2 ! ! ! 'scont' 200
+text 0.75 0.5 '(linear z scale)' ! ! 'c'
+zone 1 1
+
+nt/cuts $3 e1/$SIGMA(ebeam)>0.6
+
+
+
+
+h/cr/title 'a muon cut"H#'
+opt logz
+h/cr/2d 100 'me1/p1 VS me2/p2' 100 0. 0.2 100 0. 0.2
+h/cr/2d 200 'me1/p1 VS me2/p2' 100 0. 0.2 100 0. 0.2
+nt/plot //lun2/supercuts/1.me1/p1%me2/p2 rawtk>1&&!($1||$2) ! ! ! 'cont' 100
+nt/plot //lun1/supercuts/1.me1/p1%me2/p2 rawtk>1&&!($1||$2) ! ! ! 'scont' 200
+
+
+
+h/cr/title 'low energy cut'
+
+nt/plot //lun2/supercuts/1.visen/2/$SIGMA(ebeam) !($1||$2)
+nt/plot //lun1/supercuts/1.visen/2/$SIGMA(ebeam) !($1||$2) ! ! ! 's'
+set ltyp 2
+dline 0.2 0.2 0.5 3500
+
+nt/plot //lun2/supercuts/1.ccen/2/$SIGMA(ebeam) !($1||$2)
+nt/plot //lun1/supercuts/1.ccen/2/$SIGMA(ebeam) !($1||$2) ! ! ! 's'
+
+
+
+
+opt sta
+nt/plot //lun1/supercuts/1.visen/2/$SIGMA(ebeam)
+nt/plot //lun1/supercuts/1.visen/2/$SIGMA(ebeam) !($1||$2)
+nt/plot //lun1/supercuts/1.visen/2/$SIGMA(ebeam) visen/2/$SIGMA(ebeam)>0.2&&!($1||$2)
+
+nt/plot //lun2/supercuts/1.visen/2/$SIGMA(ebeam)
+nt/plot //lun2/supercuts/1.visen/2/$SIGMA(ebeam) !($1||$2)
+nt/plot //lun2/supercuts/1.visen/2/$SIGMA(ebeam) visen/2/$SIGMA(ebeam)>0.2&&!($1||$2)
+
+
+nt/cuts $4 visen/2/$SIGMA(ebeam)<0.2
+
+
+h/cr/1d 100 'raw number of tracks' 7 -0.5 6.5
+h/cr/1d 200 'raw number of tracks' 7 -0.5 6.5
+nt/plot //lun2/supercuts/1.rawtk !($1||$2||$4) ! ! !  !  100
+nt/plot //lun1/supercuts/1.rawtk !($1||$2||$4) ! ! ! 's' 200
+
+nt/plot //lun1/supercuts/1.t1-t2 abs(t1-t2)<10
+nt/plot //lun2/supercuts/1.t1-t2 abs(t1-t2)<10 ! ! ! 's'
+
+
+
+
+
+h/cr/title '(two showers all cuts so far)'
+zone 2 2
+opt logz
+h/cr/2d 100 '"B#e1"B# / eBeam VS "B#e2"B# / eBeam' 120 0 1.2 120 0 1.2
+h/cr/2d 200 '"B#e1"B# / eBeam VS "B#e2"B# / eBeam' 120 0 1.2 120 0 1.2
+nt/plot //lun2/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) !($1.or.$2.or.$4) ! ! ! 'cont'  100
+text 0.75 0.65 'ell+ell- final state' ! ! 'c'
+text 0.45 1.05 '(second lost down beampipe)' 0.2 ! 'c'
+text 0.65 0.1 '(both lost down beampipe and mupairs)' 0.2 ! 'c'
+text 1.12 0.97 '[U](3S)' 0.2 ! 'c'
+text 1.07 0.92 '[U](2S)' 0.2 ! 'c'
+text 1.00 0.85 '[U](1S)' 0.2 ! 'c'
+nt/plot //lun1/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) !($1.or.$2.or.$4) ! ! ! 'cont' 200
+text 0.75 0.2 'hadrons and taus' ! ! 'c'
+nt/plot //lun2/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) !($1.or.$2.or.$4) ! ! ! 'cont'  100
+nt/plot //lun1/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) !($1.or.$2.or.$4) ! ! ! 'scont' 200
+opt linz
+nt/plot //lun2/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) !($1.or.$2.or.$4) ! ! ! 'cont'  100
+nt/plot //lun1/supercuts/1.e1/$SIGMA(ebeam)%e2/$SIGMA(ebeam) !($1.or.$2.or.$4) ! ! ! 'scont' 200
+text 0.75 0.5 '(linear z scale)' ! ! 'c'
+zone 1 1
+
+h/cr/title '(two tracks all cuts so far)'
+zone 2 2
+opt logz
+h/cr/2d 100 '"B#p1"B# / eBeam VS "B#p2"B# / eBeam' 120 0 1.2 120 0 1.2
+h/cr/2d 200 '"B#p1"B# / eBeam VS "B#p2"B# / eBeam' 120 0 1.2 120 0 1.2
+nt/plot //lun2/supercuts/1.p1/$SIGMA(ebeam)%p2/$SIGMA(ebeam) !($1.or.$2.or.$4) ! ! ! 'cont'  100
+text 0.75 0.65 'ell+ell- final state' ! ! 'c'
+text 0.45 1.05 '(second lost down beampipe)' 0.2 ! 'c'
+text 0.65 0.1 '(both lost down beampipe and mupairs)' 0.2 ! 'c'
+text 1.12 0.97 '[U](3S)' 0.2 ! 'c'
+text 1.07 0.92 '[U](2S)' 0.2 ! 'c'
+text 1.00 0.85 '[U](1S)' 0.2 ! 'c'
+nt/plot //lun1/supercuts/1.p1/$SIGMA(ebeam)%p2/$SIGMA(ebeam) !($1.or.$2.or.$4) ! ! ! 'cont' 200
+text 0.75 0.2 'hadrons and taus' ! ! 'c'
+nt/plot //lun2/supercuts/1.p1/$SIGMA(ebeam)%p2/$SIGMA(ebeam) !($1.or.$2.or.$4) ! ! ! 'cont'  100
+nt/plot //lun1/supercuts/1.p1/$SIGMA(ebeam)%p2/$SIGMA(ebeam) !($1.or.$2.or.$4) ! ! ! 'scont' 200
+opt linz
+nt/plot //lun2/supercuts/1.p1/$SIGMA(ebeam)%p2/$SIGMA(ebeam) !($1.or.$2.or.$4) ! ! ! 'cont'  100
+nt/plot //lun1/supercuts/1.p1/$SIGMA(ebeam)%p2/$SIGMA(ebeam) !($1.or.$2.or.$4) ! ! ! 'scont' 200
+text 0.75 0.5 '(linear z scale)' ! ! 'c'
+zone 1 1
+
+nt/plot //lun2/supercuts/1.(p1-p2)/p1 rawtk>1
+nt/plot //lun1/supercuts/1.(p1-p2)/p1 rawtk>1&&!($1.or.$2.or.$4) ! ! ! 's'
+
+nt/plot //lun2/supercuts/1.p1 rawtk>1&&!($1.or.$2.or.$4)
+nt/plot //lun1/supercuts/1.p1 rawtk>1&&!($1.or.$2.or.$4) ! ! ! 's'
+
+nt/plot //lun2/supercuts/1.p2 rawtk>1&&!($1.or.$2.or.$4)
+nt/plot //lun1/supercuts/1.p2 rawtk>1&&!($1.or.$2.or.$4) ! ! ! 's'
+
+nt/plot //lun2/supercuts/1.e1/p1 rawtk>1&&!($1.or.$2.or.$4)
+nt/plot //lun1/supercuts/1.e1/p1 rawtk>1&&!($1.or.$2.or.$4) ! ! ! 's'
+
+nt/plot //lun2/supercuts/1.e2/p2 rawtk>1&&!($1.or.$2.or.$4)
+nt/plot //lun1/supercuts/1.e2/p2 rawtk>1&&!($1.or.$2.or.$4) ! ! ! 's'
+
+nt/plot //lun1/supercuts/1.p1 rawtk==0
+
+
+
+
+
+
+zone 1 2
+opt sta
+set stat 0100010
+h/cr/1d 100 'EventProperties ntracks, hadron failing cuts' 8 -0.5 7.5
+h/cr/1d 200 'EventProperties ntracks, ellell passing cuts' 8 -0.5 7.5
+nt/plot //lun1/supercuts/1.eptk !((p2/5.17765<0.95)&&(e1/5.17765<(-8/3)*e2/5.17765+2.)&&(visen/2/5.17765>0.05)) ! ! ! ! 100
+nt/plot //lun2/supercuts/1.eptk (p2/5.17765<0.95)&&(e1/5.17765<(-8/3)*e2/5.17765+2.)&&(visen/2/5.17765>0.05) ! ! ! ! 200
+* pict/print 'ineff_vs_contam.ps'
+
+
+
+
+h/file 3 ../data_method_rzn/mc.rzn
+cd //lun3/supercuts
+nt/recover 1
+nt/plot 1.mc mc>0
+nt/plot 1.mc
+
+
+
+
+opt liny
+opt sta
+set stat 0110010
+cd //lun1/beamgasfilter
+min 100 0
+max 100 10
+min 201 0
+max 201 10
+zone 1 2
+h/plot 100
+set ltyp 2
+dline 0.01 0.01 0 10
+h/plot 201
+set ltyp 2
+dline 0.05 0.05 0 10
+dline -0.05 -0.05 0 10
+pict/print 'bgcuts.ps'

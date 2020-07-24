@@ -1,0 +1,138 @@
+nt/chain mc3 ../rzn4/cleo3mc_deeper2.rzn
+nt/chain bh3 ../rzn4/cleo3bha_deeper2.rzn
+* nt/chain da3 ../rzn4/cleo3data_deeper2.rzn
+nt/chain mcc ../rzn4/cleocmc_deeper2.rzn
+* nt/chain dac ../rzn4/cleocdata_deeper2.rzn
+
+* The "subset" (e2>0.4, p1<0.6)
+nt/chain mc3 ../rzn4/cleo3mc_deeper.rzn
+nt/chain bh3 ../rzn4/cleo3bha_deeper.rzn
+nt/chain da3 ../rzn4/cleo3data_deeper.rzn
+nt/chain mcc ../rzn4/cleocmc_deeper.rzn
+nt/chain dac ../rzn4/cleocdata_deeper.rzn
+
+* "tracks", "oldtk", "trig", "eltrack", "ebeam",
+* "e1", "e1cos", "e1cot", "e1phi",
+* "e2", "e2cos", "e2cot", "e2phi", "acop",
+* "cnum", "cen", "cbig", "cang", "ccos", "cacop",
+* "epho", "mcvx", "mcvy", "mcvz",
+* "vchi2", "vx", "vy", "vz",
+* "t1px", "t1py", "t1pz", "t1d0", "t1z0",
+* "t2px", "t2py", "t2pz", "t2d0", "t2z0",
+* "t3px", "t3py", "t3pz", "t3d0", "t3z0",
+* "svrad", "svphi", "svd", "visen"/2, "known"};
+
+* 187989 gamgams  1.876 nb
+*  12398 bhabhas 18.47  nb
+* NO!  There's an implicit cut in my ntuple, so I can't use these numbers.
+* When I did this before, I found the ratio between bhabhas and
+* gamgams to be 190183/180172*18.47/1.876 = 10.392
+* (Confirmed for this dataset by looking at SummaryModule in the log
+* files.)
+
+fortran/file 65 'look3_subset.ps'
+graphics/metafile 65 -111
+igset mtype 1
+
+zone 1 1
+
+nt/cuts $1 (e1>0.9&&tracks>1&&abs(e1cos)<0.7&&abs(t1pz/sqrt(t1px**2+t1py**2+t1pz**2)-t2pz/sqrt(t2px**2+t2py**2+t2pz**2))>0.)
+
+h/cr/1d 100 'difference in track cos([Q]) (CLEO-III)' 50 -3 $SIGMA(log10(2.))
+h/cr/1d 101 'difference in track cos([Q]) (CLEO-III)' 50 -3 $SIGMA(log10(2.))
+h/cr/1d 102 'difference in track cos([Q]) (CLEO-III)' 50 -3 $SIGMA(log10(2.))
+nt/plot //da3/convert/1.log10(abs(t1pz/sqrt(t1px**2+t1py**2+t1pz**2)-t2pz/sqrt(t2px**2+t2py**2+t2pz**2))) $1 ! ! ! 'N' 100
+nt/plot //mc3/convert/1.log10(abs(t1pz/sqrt(t1px**2+t1py**2+t1pz**2)-t2pz/sqrt(t2px**2+t2py**2+t2pz**2))) 0.4439*$1 ! ! ! 'N' 101
+nt/plot //bh3/convert/1.log10(abs(t1pz/sqrt(t1px**2+t1py**2+t1pz**2)-t2pz/sqrt(t2px**2+t2py**2+t2pz**2))) 0.4439*10.392*$1 ! ! ! 'N' 102
+
+opt logx
+null 0.001 2 0 40
+opt linx
+set hcol 1
+h/plot 100 'es'
+set hcol 1005
+h/plot 101 'shist'
+set hcol 1003
+h/plot 102 'shist'
+set hcol 1
+h/plot 100 'es'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline $SIGMA(log10(0.025)) $SIGMA(log10(0.025)) $SIGMA(bot) $SIGMA(top) 
+sigma left = $GRAFINFO('WNXMIN')
+sigma right = $GRAFINFO('WNXMAX')
+text $SIGMA((right-left)/2+left) $SIGMA(bot-0.085*(top-bot)) 'difference in track cos([Q]) (CLEO-III)' ! ! 'c'
+
+h/cr/1d 200 'difference in track cos([Q]) (CLEO-c)' 50 -3 $SIGMA(log10(2.))
+h/cr/1d 201 'difference in track cos([Q]) (CLEO-c)' 50 -3 $SIGMA(log10(2.))
+h/cr/1d 202 'difference in track cos([Q]) (CLEO-c)' 50 -3 $SIGMA(log10(2.))
+nt/plot //dac/convert/1.log10(abs(t1pz/sqrt(t1px**2+t1py**2+t1pz**2)-t2pz/sqrt(t2px**2+t2py**2+t2pz**2))) $1 ! ! ! 'N' 200
+nt/plot //mcc/convert/1.log10(abs(t1pz/sqrt(t1px**2+t1py**2+t1pz**2)-t2pz/sqrt(t2px**2+t2py**2+t2pz**2))) 0.1434*$1 ! ! ! 'N' 201
+
+opt logx
+null 0.001 2 0 20
+opt linx
+set hcol 1
+h/plot 200 'es'
+set hcol 1005
+h/plot 201 'shist'
+set hcol 1
+h/plot 200 'es'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline $SIGMA(log10(0.025)) $SIGMA(log10(0.025)) $SIGMA(bot) $SIGMA(top) 
+sigma left = $GRAFINFO('WNXMIN')
+sigma right = $GRAFINFO('WNXMAX')
+text $SIGMA((right-left)/2+left) $SIGMA(bot-0.085*(top-bot)) 'difference in track cos([Q]) (CLEO-c)' ! ! 'c'
+
+nt/cuts $1 (e1>0.9&&tracks>1&&abs(e1cos)<0.7&&abs(t1pz/sqrt(t1px**2+t1py**2+t1pz**2)-t2pz/sqrt(t2px**2+t2py**2+t2pz**2))<0.025)
+
+h/cr/1d 300 '[f] distribution of converted track pair (CLEO-III)' 60 -3.1415926 3.1415926
+h/cr/1d 301 '[f] distribution of converted track pair (CLEO-III)' 60 -3.1415926 3.1415926
+h/cr/1d 310 '1/sin([Q]) of converted track pair (CLEO-III)' 28 1 1.4
+h/cr/1d 311 '1/sin([Q]) of converted track pair (CLEO-III)' 28 1 1.4
+nt/plot //da3/convert/1.atan2(t1py+t2py,t1px+t2px) $1 ! ! ! 'N' 300
+nt/plot //mc3/convert/1.atan2(t1py+t2py,t1px+t2px) 0.4439*$1 ! ! ! 'N' 301
+nt/plot //da3/convert/1.sqrt((t1px+t2px)**2+(t1py+t2py)**2+(t1pz+t2pz)**2)/sqrt((t1px+t2px)**2+(t1py+t2py)**2) $1 ! ! ! 'N' 310
+nt/plot //mc3/convert/1.sqrt((t1px+t2px)**2+(t1py+t2py)**2+(t1pz+t2pz)**2)/sqrt((t1px+t2px)**2+(t1py+t2py)**2) 0.4439*$1 ! ! ! 'N' 311
+
+zone 1 2
+set hcol 1
+h/plot 300 'e'
+set hcol 1005
+h/plot 301 's'
+set hcol 1
+h/plot 300 'se'
+set hcol 1
+h/plot 310 'e'
+set hcol 1005
+h/plot 311 's'
+set hcol 1
+h/plot 310 'se'
+
+h/cr/1d 400 '[f] distribution of converted track pair (CLEO-c)' 60 -3.1415926 3.1415926
+h/cr/1d 401 '[f] distribution of converted track pair (CLEO-c)' 60 -3.1415926 3.1415926
+h/cr/1d 410 '1/sin([Q]) of converted track pair (CLEO-c)' 28 1 1.4
+h/cr/1d 411 '1/sin([Q]) of converted track pair (CLEO-c)' 28 1 1.4
+nt/plot //dac/convert/1.atan2(t1py+t2py,t1px+t2px) $1 ! ! ! 'N' 400
+nt/plot //mcc/convert/1.atan2(t1py+t2py,t1px+t2px) 0.1434*$1 ! ! ! 'N' 401
+nt/plot //dac/convert/1.sqrt((t1px+t2px)**2+(t1py+t2py)**2+(t1pz+t2pz)**2)/sqrt((t1px+t2px)**2+(t1py+t2py)**2) $1 ! ! ! 'N' 410
+nt/plot //mcc/convert/1.sqrt((t1px+t2px)**2+(t1py+t2py)**2+(t1pz+t2pz)**2)/sqrt((t1px+t2px)**2+(t1py+t2py)**2) 0.1434*$1 ! ! ! 'N' 411
+
+zone 1 2
+set hcol 1
+h/plot 400 'e'
+set hcol 1005
+h/plot 401 's'
+set hcol 1
+h/plot 400 'se'
+set hcol 1
+h/plot 410 'e'
+set hcol 1005
+h/plot 411 's'
+set hcol 1
+h/plot 410 'se'
+
+close 65

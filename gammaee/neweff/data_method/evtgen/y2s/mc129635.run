@@ -1,0 +1,16 @@
+#$ -l sigmc=1
+#$ -o /cdat/tem/mccann/mc129635.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/neweff/data_method/evtgen
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_RUN=129635
+rm -f ../../data_method_rzn/evtgen/cleog_.pds
+rm -f ../../data_method_rzn/evtgen/mcpass2_.pds
+
+# export C3_SHLIB=../../build_legacy/shlib:/nfs/cleo3/Offline/rel/Dec10_03/shlib/SunOS/CC
+suez -f cleog.tcl
+suez -f mcpass2.tcl

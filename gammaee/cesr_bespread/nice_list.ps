@@ -1,0 +1,707 @@
+%!PS-Adobe-1.0
+/$a2psdict 100 dict def
+$a2psdict begin
+% Initialize page description variables.
+/inch {72 mul} bind def
+/landscape false def
+/twinpage false def
+/sheetheight 11 inch def
+/sheetwidth 8.5 inch def
+/margin 1.2 inch def
+/noborder true def
+/noheader true def
+/headersize 0.0 def
+/bodyfontsize 9 def
+/lines 77 def
+/columns 96 def
+/date (Oct  4 2005 16:56:16) def
+%!  PostScript Source Code
+%
+%  File: imag:/users/local/a2ps/header.ps
+%  Created: Tue Nov 29 12:14:02 1988 by miguel@imag (Miguel Santana)
+%  Version: 2.0
+%  Description: PostScript prolog for a2ps ascii to PostScript program.
+% 
+%  Edit History:
+%  - Original version by evan@csli (Evan Kirshenbaum).
+%  - Modified by miguel@imag to:
+%    1) Correct an overflow bug when printing page number 10 (operator
+%	cvs).
+%    2) Define two other variables (sheetwidth, sheetheight) describing
+%	the physical page (by default A4 format).
+%    3) Minor changes (reorganization, comments, etc).
+%  - Modified by tullemans@apolloway.prl.philips.nl
+%    1) Correct stack overflows with regard to operators cvs and copy.
+%       The resulting substrings where in some cases not popped off 
+%       the stack, what can result in a stack overflow.
+%    2) Replaced copypage and erasepage by showpage. Page througput
+%       degrades severely (see red book page 140) on our ps-printer
+%       after printing sheet 16 (i.e. page 8) of a file which was 
+%       actually bigger. For this purpose the definitions of startdoc
+%       and startpage are changed.
+%  - Modified by Tim Clark <T.Clark@uk.ac.warwick> to:
+%    1) Print one page per sheet (portrait) as an option.
+%    2) Reduce size of file name heading, if it's too big.
+%    3) Save and restore PostScript state at begining/end. It now uses
+%	conventional %%Page %%Trailer markers.
+%    4) Print one wide page per sheet in landscape mode as an option.
+%  - Modified by miguel@imag.fr to
+%    1) Add new option to print n copies of a file.
+%    2) Add new option to suppress heading printing.
+%    3) Add new option to suppress page surrounding border printing.
+%    4) Add new option to change font size. Number of lines and columns
+%	are now automatically adjusted, depending on font size and
+%	printing mode used.
+%    5) Minor changes (best layout, usage message, etc).
+%
+
+% Copyright (c) 1988, Miguel Santana, miguel@imag.imag.fr
+%
+% Permission is granted to copy and distribute this file in modified
+% or unmodified form, for noncommercial use, provided (a) this copyright
+% notice is preserved, (b) no attempt is made to restrict redistribution
+% of this file, and (c) this file is not distributed as part of any
+% collection whose redistribution is restricted by a compilation copyright.
+%
+
+
+% General macros.
+/xdef {exch def} bind def
+/getfont {exch findfont exch scalefont} bind def
+
+% Page description variables and inch function are defined by a2ps program.
+
+% Character size for differents fonts.
+   landscape
+   { /filenamefontsize 12 def }
+   { /filenamefontsize 16 def }
+ifelse
+/datefontsize filenamefontsize 0.8 mul def
+/headermargin filenamefontsize 0.25 mul def
+/bodymargin bodyfontsize 0.7 mul def
+
+% Font assignment to differents kinds of "objects"
+/filenamefontname /Helvetica-Bold def
+/stdfilenamefont filenamefontname filenamefontsize getfont def
+/datefont /Helvetica datefontsize getfont def
+/bodyfont /Courier bodyfontsize getfont def
+
+% Logical page attributs (a half of a real page or sheet).
+/pagewidth
+   bodyfont setfont (0) stringwidth pop columns mul bodymargin dup add add
+   def
+/pageheight
+   bodyfontsize lines mul bodymargin dup add add headersize add
+   def
+
+% Coordinates for upper corner of a logical page and for sheet number.
+% Coordinates depend on format mode used.
+% In twinpage mode, coordinate x of upper corner is not the same for left
+% and right pages: upperx is an array of two elements, indexed by sheetside.
+/rightmargin margin 3 div def
+/leftmargin margin 2 mul 3 div def
+/topmargin margin twinpage {3} {2} ifelse div def
+landscape
+{  % Landscape format
+   /uppery rightmargin pageheight add bodymargin add def
+   /sheetnumbery sheetwidth leftmargin pageheight add datefontsize add sub def
+   twinpage
+   {  % Two logical pages
+      /upperx [ topmargin			% upperx for left page
+		dup 2 mul pagewidth add		% upperx for right page
+	      ] def
+      /sheetnumberx sheetheight topmargin sub def
+   }
+   {  /upperx [ topmargin dup ] def
+      /sheetnumberx sheetheight topmargin sub datefontsize sub def
+   }
+   ifelse
+}
+{  % Portrait format
+   /uppery topmargin pageheight add def
+   /upperx [ leftmargin dup ] def
+   /sheetnumberx sheetwidth rightmargin sub datefontsize sub def
+   /sheetnumbery
+	 sheetheight 
+	 topmargin pageheight add datefontsize add headermargin add
+      sub
+      def
+
+}
+ifelse
+
+% Strings used to make easy printing numbers
+/pnum 12 string def
+/empty 12 string def
+
+% Other initializations.
+/datewidth date stringwidth pop def
+/filenameroom
+         pagewidth
+	 filenamefontsize 4 mul datewidth add (Page 999) stringwidth pop add
+      sub
+   def
+
+
+% Function startdoc: initializes printer and global variables.
+/startdoc
+    { /sheetside 0 def			% sheet side that contains current page
+      /sheet 1 def			% sheet number
+   } bind def
+
+% Function newfile: init file name and reset page number for each new file.
+/newfile
+    { cleanup
+      /filename xdef
+      /filenamewidth filename stringwidth pop def
+      /filenamefont
+	 filenamewidth filenameroom gt
+	 {
+	       filenamefontname
+	       filenamefontsize filenameroom mul filenamewidth div
+	    getfont
+	 }
+	 {  stdfilenamefont }
+	 ifelse
+	 def
+      /pagenum 1 def
+    } bind def
+
+% Function printpage: Print a physical page.
+/printpage
+    { /sheetside 0 def
+      twinpage
+      {  noborder not
+	    { sheetnumber }
+	 if
+      }
+      {  noheader noborder not and
+	    { sheetnumber }
+	 if
+      }
+      ifelse
+      showpage 
+%      pagesave restore
+      /sheet sheet 1 add def
+    } bind def
+
+% Function cleanup: terminates printing, flushing last page if necessary.
+/cleanup
+    { twinpage sheetside 1 eq and
+         { printpage }
+      if
+    } bind def
+
+%
+% Function startpage: prints page header and page border and initializes
+% printing of the file lines.
+/startpage
+    { sheetside 0 eq
+	{ % /pagesave save def
+	  landscape
+	    { sheetwidth 0 inch translate	% new coordinates system origin
+	      90 rotate				% landscape format
+	    } if
+	} if
+      noborder not { printborder } if
+      noheader not { printheader } if
+	 upperx sheetside get  bodymargin  add
+	    uppery
+	    bodymargin bodyfontsize add  noheader {0} {headersize} ifelse  add
+	 sub
+      moveto
+      bodyfont setfont
+    } bind def
+
+% Function printheader: prints page header.
+/printheader
+    { upperx sheetside get  uppery headersize sub 1 add  moveto
+      datefont setfont
+      gsave
+        datefontsize headermargin rmoveto
+	date show					% date/hour
+      grestore
+      gsave
+	pagenum pnum cvs pop
+	   pagewidth (Page 999) stringwidth pop sub
+	   headermargin
+	rmoveto
+        (Page ) show pnum show				% page number
+      grestore
+      empty pnum copy pop
+      gsave
+        filenamefont setfont
+	      filenameroom filename stringwidth pop sub 2 div datewidth add
+	      bodymargin 2 mul 
+	   add 
+	   headermargin
+	rmoveto
+        filename show						% file name
+      grestore
+    } bind def
+
+% Function printborder: prints border page.
+/printborder 
+    { upperx sheetside get uppery moveto
+      gsave					% print the four sides
+        pagewidth 0 rlineto			% of the square
+        0 pageheight neg rlineto
+        pagewidth neg 0 rlineto
+        closepath stroke
+      grestore
+      noheader not
+         { 0 headersize neg rmoveto pagewidth 0 rlineto stroke }
+      if
+    } bind def
+
+%
+% Function endpage: adds a sheet number to the page (footnote) and prints
+% the formatted page (physical impression). Activated at the end of each
+% source page (lines reached or FF character).
+/endpage
+   { /pagenum pagenum 1 add def
+     twinpage  sheetside 0 eq  and
+        { /sheetside 1 def }
+        { printpage }
+     ifelse
+   } bind def
+
+% Function sheetnumber: prints the sheet number.
+/sheetnumber
+    { sheetnumberx sheetnumbery moveto
+      datefont setfont
+      sheet pnum cvs
+	 dup stringwidth pop (0) stringwidth pop sub neg 0 rmoveto show
+      empty pnum copy pop
+    } bind def
+
+% Function s: print a source line
+/s  { gsave
+        show
+      grestore
+      0 bodyfontsize neg rmoveto
+    } bind def
+%%EndProlog
+
+/docsave save def
+startdoc
+(nice_list.txt) newfile
+/sheet 1 def
+%%Page: 1 1
+startpage
+( *'s are HSP VOLT, HBND CUR, and HORZ CUR, respectively) s
+( ?'s when I couldn't FTP the file) s
+( ) s
+( 3S_nov28 --------------------------------------------------------------------) s
+(    Wed Nov 28 23:08:04 2001 *   STANDARD 3S_ON HEP             77165 -> 77166) s
+(    Wed Nov 28 23:40:44 2001 *   STANDARD 3S_ON HEP             77166 -> 77167) s
+(    Thu Nov 29 12:25:39 2001     STANDARD 3S_ON HEP             77167 -> 77170) s
+(    Thu Nov 29 12:46:08 2001 ??? STANDARD 3S_OFF CESR_RF        76177 -> 77171) s
+(    Thu Nov 29 12:51:18 2001 *** STANDARD 3S_OFF HEP            76874 -> 77172) s
+(    Thu Nov 29 15:10:52 2001 ??? STANDARD 3S_OFF CESR_RF        77171 -> 76177) s
+(    Thu Nov 29 16:47:18 2001 *   STANDARD 3S_OFF HEP            77172 -> 77177) s
+(    Thu Nov 29 16:52:51 2001 *   STANDARD 3S_OFF HEP            77177 -> 77178) s
+(    Thu Nov 29 17:16:47 2001     STANDARD 3S_OFF HEP            77178 -> 77180) s
+(    Thu Nov 29 17:53:56 2001 *   STANDARD 3S_OFF HEP            77180 -> 77186) s
+(    Thu Nov 29 20:35:52 2001 ??? STANDARD 3S_OFF CESR_RF        76177 -> 77188) s
+(    Fri Nov 30 08:41:58 2001 ??? STANDARD 3S_ON BIGGRP          76831 -> 77191) s
+(    Fri Nov 30 13:03:22 2001 ??? STANDARD 3S_ON CESR_RF         76867 -> 77193) s
+(    Fri Nov 30 14:27:16 2001 *   STANDARD 3S_ON HEP             77170 -> 77195) s
+(    Fri Nov 30 20:58:25 2001 *   STANDARD 3S_ON HEP             77195 -> 77170) s
+( 3S_dec05 --------------------------------------------------------------------) s
+(    Thu Dec  6 11:31:43 2001 ??? STANDARD 3S_ON BIGGRP          77191 -> 77318) s
+(    Thu Dec  6 16:08:31 2001 ??? STANDARD 3S_OFF CESR_RF        77188 -> 77319) s
+(    Thu Dec  6 16:18:08 2001 ??? STANDARD 3S_OFF CESR_RF        77319 -> 77320) s
+(    Fri Dec  7 08:20:08 2001 *   STANDARD 3S_ON HEP             77307 -> 77322) s
+(    Fri Dec  7 11:56:54 2001 ??? STANDARD 3S_ON CESR_RF         77320 -> 77329) s
+(    Fri Dec  7 12:02:38 2001 ??? STANDARD 3S_ON CESR_RF         77329 -> 77320) s
+(    Fri Dec  7 14:09:26 2001 * * STANDARD 3S_ON HEP             77322 -> 77330) s
+(    Fri Dec  7 15:36:36 2001 *   STANDARD 3S_ON HEP             77330 -> 77331) s
+(    Fri Dec  7 17:56:11 2001 *   STANDARD 3S_ON HEP             77331 -> 77327) s
+( 3S_dec12 --------------------------------------------------------------------) s
+(    Thu Dec 13 12:29:33 2001     STANDARD 3S_ON ELCSR           77414 -> 77453) s
+(    Thu Dec 13 12:30:53 2001 *   STANDARD 3S_ON HEP             77350 -> 77454) s
+(    Thu Dec 13 13:56:51 2001 *   STANDARD 3S_OFF HEP            77316 -> 77455) s
+(    Thu Dec 13 18:16:46 2001     STANDARD 3S_OFF HEP            77455 -> 77466) s
+(    Thu Dec 13 18:52:18 2001 *   STANDARD 3S_OFF HEP            77466 -> 77472) s
+(    Thu Dec 13 19:41:02 2001     STANDARD 3S_OFF POSCSR         76718 -> 77475) s
+(    Thu Dec 13 19:41:41 2001 *   STANDARD 3S_OFF HEP            77472 -> 77474) s
+(    Thu Dec 13 19:53:16 2001 *   STANDARD 3S_OFF HEP            77474 -> 77479) s
+(    Thu Dec 13 20:29:03 2001 *   STANDARD 3S_OFF HEP            77479 -> 77480) s
+(    Thu Dec 13 21:10:41 2001     STANDARD 3S_ON POSCSR          77415 -> 77482) s
+(    Thu Dec 13 21:14:24 2001     STANDARD 3S_ON ELCSR           77453 -> 77483) s
+(    Thu Dec 13 21:16:52 2001 *   STANDARD 3S_ON HEP             77454 -> 77484) s
+(    Thu Dec 13 21:31:25 2001 *   STANDARD 3S_ON HEP             77484 -> 77485) s
+(    Thu Dec 13 21:40:07 2001     STANDARD 3S_ON HEP             77485 -> 77486) s
+(    Thu Dec 13 21:50:58 2001 *   STANDARD 3S_ON HEP             77486 -> 77488) s
+(    Thu Dec 13 22:19:25 2001     STANDARD 3S_ON HEP             77488 -> 77490) s
+(    Thu Dec 13 23:06:23 2001     STANDARD 3S_ON HEP             77490 -> 77491) s
+(    Fri Dec 14 04:10:58 2001 *   STANDARD 3S_ON HEP             77491 -> 77495) s
+(    Fri Dec 14 09:52:04 2001 *   STANDARD 3S_ON HEP             77495 -> 77491) s
+(    Fri Dec 14 10:23:33 2001 *   STANDARD 3S_ON HEP             77491 -> 77498) s
+(    Fri Dec 14 11:26:27 2001 *   STANDARD 3S_ON HEP             77498 -> 77499) s
+(    Fri Dec 14 12:29:03 2001 *   STANDARD 3S_ON HEP             77499 -> 77500) s
+(    Fri Dec 14 12:56:40 2001   * STANDARD 3S_ON HEP             77500 -> 77502) s
+( 3S_dec19 --------------------------------------------------------------------) s
+(    Thu Dec 20 05:48:35 2001  ** ENCAL 3S_-05 ELCSR             77630 -> 77625) s
+(    Thu Dec 20 07:44:29 2001  ** ENCAL 3S_-05 ELCSR             77625 -> 77630) s
+(    Thu Dec 20 09:17:01 2001     ENCAL 3S_-05 POSCSR            76974 -> 77636) s
+(    Thu Dec 20 09:19:26 2001     ENCAL 3S_-05 ELCSR             77630 -> 77637) s
+(    Thu Dec 20 14:35:21 2001 *   STANDARD 3S_OFF HEP            77480 -> 77639) s
+(    Thu Dec 20 14:38:05 2001     STANDARD 3S_OFF HEP            77639 -> 77640) s
+(    Thu Dec 20 14:40:56 2001     STANDARD 3S_OFF HEP            77640 -> 77641) s
+(    Thu Dec 20 16:13:48 2001     STANDARD 3S_OFF POSCSR         77475 -> 77646) s
+(    Thu Dec 20 16:25:29 2001     STANDARD 3S_OFF ELCSR          76719 -> 77649) s
+(    Thu Dec 20 17:53:22 2001 *   STANDARD 3S_OFF HEP            77641 -> 77664) s
+(    Fri Dec 21 10:05:09 2001     STANDARD 3S_ON POSCSR          77482 -> 77668) s
+(    Fri Dec 21 14:37:34 2001 ??? STANDARD 3S_ON CESR_RF         77320 -> 77675) s
+(    Fri Dec 21 15:43:31 2001   * STANDARD 3S_ON COLLIDE         77271 -> 77676) s
+(    Fri Dec 21 15:55:01 2001 *   STANDARD 3S_ON HEP             77611 -> 77677) s
+(    Fri Dec 21 19:39:56 2001     STANDARD 3S_ON HEP             77677 -> 77712) s
+( 3S_dec26 --------------------------------------------------------------------) s
+(    Tue Dec 25 16:02:13 2001     ENCAL 3S_-02 POSCSR            77418 -> 77775) s
+(    Tue Dec 25 16:12:32 2001 *   ENCAL 3S_-02 HEP               77634 -> 77776) s
+(    Tue Dec 25 17:04:07 2001     ENCAL 3S_+11 POSCSR            77622 -> 77777) s
+(    Tue Dec 25 17:11:20 2001 *   ENCAL 3S_+11 HEP               77624 -> 77778) s
+(    Tue Dec 25 18:06:55 2001     ENCAL 3S_-05 POSCSR            77636 -> 77779) s
+(    Tue Dec 25 18:12:21 2001     ENCAL 3S_-05 HEP               77631 -> 77782) s
+(    Tue Dec 25 19:21:40 2001     ENCAL 3S_+03 POSCSR            77619 -> 77783) s
+endpage
+%%Page: 2 2
+startpage
+(    Tue Dec 25 19:28:58 2001 *   ENCAL 3S_+03 HEP               77621 -> 77785) s
+(    Tue Dec 25 20:23:32 2001     ENCAL 3S_-07 POSCSR            77434 -> 77786) s
+(    Tue Dec 25 20:31:26 2001 *   ENCAL 3S_-07 HEP               77627 -> 77787) s
+(    Tue Dec 25 21:25:55 2001     ENCAL 3S_+06 POSCSR            77437 -> 77788) s
+(    Tue Dec 25 21:35:20 2001     ENCAL 3S_+06 HEP               77633 -> 77790) s
+(    Tue Dec 25 22:28:57 2001     ENCAL 3S_+09 POSCSR            77443 -> 77791) s
+(    Tue Dec 25 22:31:05 2001     ENCAL 3S_+09 ELCSR             77628 -> 77792) s
+(    Tue Dec 25 22:35:16 2001 *   ENCAL 3S_+09 HEP               77629 -> 77793) s
+(    Tue Dec 25 22:35:51 2001 *   ENCAL 3S_+09 HEP               77793 -> 77794) s
+(    Tue Dec 25 22:38:52 2001     ENCAL 3S_+09 HEP               77794 -> 77795) s
+(    Wed Dec 26 09:00:26 2001 *** ENCAL 3S_+20 POSCSR            77777 -> 77798) s
+(    Wed Dec 26 09:01:25 2001     ENCAL 3S_+20 POSCSR            77798 -> 77799) s
+(    Wed Dec 26 09:05:05 2001 *** ENCAL 3S_+20 COLLIDE           77047 -> 77800) s
+(    Wed Dec 26 09:07:58 2001 *** ENCAL 3S_+20 HEP               77778 -> 77801) s
+(    Wed Dec 26 09:35:46 2001     ENCAL 3S_+20 ELCSR             77796 -> 77802) s
+(    Wed Dec 26 10:04:19 2001     ENCAL 3S_+20 POSCSR            77799 -> 77803) s
+(    Wed Dec 26 10:04:34 2001 *   ENCAL 3S_+20 HEP               77801 -> 77804) s
+(    Wed Dec 26 10:10:28 2001     ENCAL 3S_+20 ELCSR             77802 -> 77805) s
+(    Wed Dec 26 12:59:26 2001     ENCAL 3S_+20 HEP               77804 -> 77806) s
+(    Wed Dec 26 16:53:47 2001 *   ENCAL 3S_+20 HEP               77806 -> 77807) s
+(    Wed Dec 26 19:14:30 2001     ENCAL 3S_+20 HEP               77807 -> 77809) s
+(    Wed Dec 26 20:48:10 2001 *   STANDARD 3S_ON HEP             77770 -> 77611) s
+(    Wed Dec 26 21:13:23 2001     STANDARD 3S_ON HEP             77611 -> 77815) s
+(    Wed Dec 26 22:23:41 2001 * * STANDARD 3S_ON HEP             77815 -> 77512) s
+(    Wed Dec 26 22:31:04 2001 * * STANDARD 3S_ON HEP             77512 -> 77770) s
+(    Wed Dec 26 23:11:47 2001 *** STANDARD 3S_OFF HEP            77664 -> 77822) s
+(    Wed Dec 26 23:27:32 2001  ** STANDARD 3S_OFF COLLIDE        76720 -> 77826) s
+(    Wed Dec 26 23:38:27 2001     STANDARD 3S_OFF COLLIDE        77826 -> 77828) s
+(    Wed Dec 26 23:56:35 2001 *   STANDARD 3S_OFF HEP            77822 -> 77831) s
+( 3S_jan02 --------------------------------------------------------------------) s
+(    Wed Jan  2 18:42:26 2002 * * ENCAL 3S_-02 HEP               77776 -> 77922) s
+(    Thu Jan  3 08:27:53 2002 ??? STANDARD 3S_ON ELLIN           77917 -> 77923) s
+(    Thu Jan  3 09:34:27 2002 *   STANDARD 3S_OFF HEP            77836 -> 77927) s
+(    Thu Jan  3 12:22:17 2002 *   STANDARD 3S_OFF HEP            77927 -> 77937) s
+(    Fri Jan  4 09:31:38 2002 ??? STANDARD 3S_ON POSLIN          0 -> 77949) s
+(    Fri Jan  4 09:33:27 2002 ??? STANDARD 3S_ON POSSYN          0 -> 77950) s
+(    Fri Jan  4 09:34:04 2002 ??? STANDARD 3S_ON ELLIN           0 -> 77727) s
+(    Fri Jan  4 09:34:45 2002 ??? STANDARD 3S_ON ELSYN           0 -> 77728) s
+(    Fri Jan  4 09:38:23 2002 *   STANDARD 3S_ON HEP             77893 -> 77958) s
+(    Fri Jan  4 10:48:25 2002     STANDARD 3S_ON ELCSR           77883 -> 77962) s
+(    Fri Jan  4 13:26:32 2002 *   STANDARD 3S_ON HEP             77958 -> 77968) s
+( 3S_jan09 --------------------------------------------------------------------) s
+(    Thu Jan 10 11:30:57 2002     STANDARD 3S_OFF ELCSR          77649 -> 78150) s
+(    Thu Jan 10 12:44:49 2002 ??? STANDARD 3S_OFF POSSYN         78006 -> 78152) s
+(    Thu Jan 10 12:45:16 2002 ??? STANDARD 3S_OFF POSLIN         78005 -> 78151) s
+(    Thu Jan 10 14:20:43 2002 *   STANDARD 3S_OFF HEP            77937 -> 78154) s
+(    Thu Jan 10 14:36:33 2002 *   STANDARD 3S_OFF HEP            78154 -> 78155) s
+(    Thu Jan 10 22:30:29 2002     STANDARD 3S_ON HEP             77982 -> 78156) s
+(    Fri Jan 11 15:26:06 2002 *   STANDARD 3S_ON HEP             78156 -> 78158) s
+( 1S_jan30 --------------------------------------------------------------------) s
+(    Thu Jan 31 12:34:57 2002     STANDARD 1S_ON HEP             78654 -> 78779) s
+(    Thu Jan 31 12:37:00 2002 ??? STANDARD 1S_ON POSSYN          78714 -> 78785) s
+(    Thu Jan 31 12:38:12 2002 ??? STANDARD 1S_ON POSLIN          78713 -> 78784) s
+( 1S_feb06 --------------------------------------------------------------------) s
+(    Thu Feb  7 12:23:09 2002 *   STANDARD 1S_OFF ELCSR          78573 -> 78888) s
+(    Thu Feb  7 12:30:52 2002     STANDARD 1S_OFF POSCSR         78862 -> 78890) s
+(    Thu Feb  7 12:41:53 2002 ??? STANDARD 1S_OFF POSLIN         78863 -> 78889) s
+(    Thu Feb  7 12:42:54 2002 ??? STANDARD 1S_OFF POSSYN         78864 -> 78891) s
+(    Thu Feb  7 12:46:47 2002     STANDARD 1S_OFF ELCSR          78888 -> 78892) s
+(    Thu Feb  7 12:59:14 2002 ??? STANDARD 1S_OFF BIGGRP         78200 -> 78893) s
+(    Thu Feb  7 13:38:03 2002 ??? STANDARD 1S_OFF ELSYN          78866 -> 78895) s
+(    Thu Feb  7 13:38:36 2002 ??? STANDARD 1S_OFF ELLIN          78865 -> 78894) s
+(    Thu Feb  7 14:06:45 2002     STANDARD 1S_OFF HEP            78870 -> 78898) s
+(    Thu Feb  7 14:16:41 2002     STANDARD 1S_OFF COLLIDE        78763 -> 78899) s
+(    Thu Feb  7 14:26:12 2002 *   STANDARD 1S_OFF HEP            78898 -> 78900) s
+(    Thu Feb  7 14:28:08 2002 ??? STANDARD 1S_OFF POSLIN         78863 -> 78896) s
+(    Thu Feb  7 14:28:35 2002 ??? STANDARD 1S_OFF POSSYN         78864 -> 78897) s
+(    Thu Feb  7 14:34:52 2002 *   STANDARD 1S_OFF HEP            78900 -> 78901) s
+(    Thu Feb  7 17:58:31 2002 ??? STANDARD 1S_OFF CESR_RF        78237 -> 78902) s
+(    Fri Feb  8 09:42:07 2002 *   STANDARD 1S_ON HEP             78879 -> 78909) s
+(    Fri Feb  8 10:32:45 2002 ??? STANDARD 1S_ON POSLIN          78863 -> 78905) s
+(    Fri Feb  8 10:33:06 2002 ??? STANDARD 1S_ON POSSYN          78864 -> 78906) s
+(    Fri Feb  8 10:33:36 2002 ??? STANDARD 1S_ON ELLIN           78865 -> 78907) s
+(    Fri Feb  8 10:33:58 2002 ??? STANDARD 1S_ON ELSYN           78866 -> 78908) s
+(    Fri Feb  8 11:10:03 2002     STANDARD 1S_ON HEP             78909 -> 78910) s
+(    Fri Feb  8 11:21:50 2002 *** STANDARD 1S_ON HEP             78910 -> 78914) s
+(    Fri Feb  8 13:11:38 2002 *   STANDARD 1S_ON HEP             78914 -> 78915) s
+endpage
+%%Page: 3 3
+startpage
+(    Fri Feb  8 13:27:08 2002 *   STANDARD 1S_ON HEP             78915 -> 78916) s
+(    Fri Feb  8 14:14:57 2002 ??? STANDARD 1S_ON POSSYN          78906 -> 78918) s
+(    Fri Feb  8 14:15:28 2002 ??? STANDARD 1S_ON POSLIN          78905 -> 78917) s
+( 1S_feb13 --------------------------------------------------------------------) s
+(    Tue Feb 19 22:40:14 2002 *   ENCAL 1S_-1.5 HEP              78750 -> 79188) s
+(    Tue Feb 19 23:18:16 2002     ENCAL 1S_-1.5 HEP              79188 -> 79189) s
+(    Tue Feb 19 23:37:20 2002 *   ENCAL 1S_+8 HEP                78757 -> 79190) s
+(    Wed Feb 20 05:54:56 2002 *   ENCAL 1S_+2 HEP                78754 -> 79191) s
+( 1S_feb20 --------------------------------------------------------------------) s
+(    Wed Feb 20 22:15:17 2002     ENCAL 1S_-1.5 HEP              79189 -> 79221) s
+(    Thu Feb 21 08:41:16 2002     STANDARD 1S_OFF HEP            79048 -> 79222) s
+(    Thu Feb 21 10:22:10 2002     STANDARD 1S_OFF HEP            79222 -> 79223) s
+(    Thu Feb 21 12:13:30 2002     STANDARD 1S_OFF ELCSR          78892 -> 79224) s
+(    Thu Feb 21 15:00:40 2002     STANDARD 1S_OFF HEP            79223 -> 79227) s
+(    Thu Feb 21 15:01:37 2002     STANDARD 1S_OFF HEP            79227 -> 79227) s
+(    Thu Feb 21 15:12:09 2002 *   STANDARD 1S_OFF HEP            79227 -> 79229) s
+(    Thu Feb 21 15:22:25 2002 *   STANDARD 1S_OFF HEP            79229 -> 79230) s
+(    Fri Feb 22 09:10:34 2002 *   STANDARD 1S_ON HEP             79216 -> 79231) s
+(    Fri Feb 22 09:20:10 2002 *   STANDARD 1S_ON HEP             79231 -> 79232) s
+(    Fri Feb 22 10:44:37 2002     STANDARD 1S_ON HEP             79232 -> 79233) s
+(    Fri Feb 22 15:27:39 2002     STANDARD 1S_ON HEP             79233 -> 79234) s
+( 1S_feb27 --------------------------------------------------------------------) s
+(    Thu Feb 28 10:09:02 2002     STANDARD 1S_OFF POSCSR         78890 -> 79369) s
+(    Thu Feb 28 10:22:56 2002 ??? STANDARD 1S_OFF CESR_RF        78902 -> 79370) s
+(    Thu Feb 28 13:40:01 2002 *   STANDARD 1S_OFF HEP            79230 -> 79378) s
+(    Thu Feb 28 13:44:44 2002 *   STANDARD 1S_OFF HEP            79378 -> 79379) s
+(    Thu Feb 28 19:42:32 2002 *   STANDARD 1S_OFF HEP            79379 -> 79381) s
+(    Fri Mar  1 10:35:54 2002 *   STANDARD 1S_ON HEP             79333 -> 79383) s
+(    Fri Mar  1 10:39:48 2002 ??? STANDARD 1S_ON Sen1 setting    1795 -> 1795) s
+(    Fri Mar  1 12:16:30 2002 *   STANDARD 1S_ON HEP             79383 -> 79388) s
+(    Fri Mar  1 13:43:50 2002     STANDARD 1S_ON POSCSR          79109 -> 79389) s
+(    Fri Mar  1 15:14:06 2002 *   STANDARD 1S_ON HEP             79388 -> 79391) s
+( 1S_mar06 --------------------------------------------------------------------) s
+(    Thu Mar  7 10:43:56 2002     STANDARD 1S_OFF ELCSR          79224 -> 79545) s
+(    Thu Mar  7 11:01:17 2002 *   STANDARD 1S_OFF HEP            79381 -> 79547) s
+(    Thu Mar  7 11:01:46 2002     STANDARD 1S_OFF ELCSR          79545 -> 79546) s
+(    Thu Mar  7 12:35:49 2002 *   STANDARD 1S_OFF HEP            79547 -> 79549) s
+(    Thu Mar  7 13:02:49 2002 *   STANDARD 1S_OFF HEP            79549 -> 79550) s
+(    Thu Mar  7 13:36:18 2002 *** STANDARD 1S_OFF HEP            79550 -> 79552) s
+(    Thu Mar  7 13:37:49 2002 ??? STANDARD 1S_OFF ELSYN          79179 -> 79553) s
+(    Thu Mar  7 13:38:24 2002 ??? STANDARD 1S_OFF POSLIN         79539 -> 79543) s
+(    Thu Mar  7 13:38:48 2002 ??? STANDARD 1S_OFF POSSYN         79540 -> 79544) s
+(    Thu Mar  7 14:51:07 2002 ??? STANDARD 1S_OFF POSLIN         79543 -> 79555) s
+(    Thu Mar  7 14:51:46 2002 ??? STANDARD 1S_OFF POSSYN         79544 -> 79554) s
+(    Fri Mar  8 08:11:01 2002 * * STANDARD 1S_OFF HEP            79552 -> 79558) s
+(    Fri Mar  8 08:14:18 2002 *** STANDARD 1S_OFF COLLIDE        78899 -> 79552) s
+(    Fri Mar  8 08:59:40 2002     STANDARD 1S_ON HEP             79471 -> 79561) s
+(    Fri Mar  8 09:21:29 2002     STANDARD 1S_ON HEP             79561 -> 79562) s
+(    Fri Mar  8 09:46:05 2002 ??? STANDARD 1S_ON ELSYN           79553 -> 79563) s
+(    Fri Mar  8 09:46:38 2002 ??? STANDARD 1S_ON ELLIN           79178 -> 79559) s
+(    Fri Mar  8 10:52:30 2002 *   STANDARD 1S_ON HEP             79562 -> 79567) s
+(    Fri Mar  8 12:01:43 2002 *   STANDARD 1S_ON HEP             79567 -> 79569) s
+(    Fri Mar  8 14:36:13 2002 ??? STANDARD 1S_ON POSSYN          79554 -> 79576) s
+(    Fri Mar  8 14:36:48 2002 ??? STANDARD 1S_ON POSLIN          79555 -> 79565) s
+(    Fri Mar  8 14:38:13 2002 ??? STANDARD 1S_ON POSLIN          79565 -> 79575) s
+(    Fri Mar  8 14:54:01 2002 *   STANDARD 1S_ON HEP             79569 -> 79577) s
+(    Fri Mar  8 16:14:35 2002     STANDARD 1S_ON HEP             79577 -> 79578) s
+( 1S_mar13 --------------------------------------------------------------------) s
+(    Thu Mar 14 08:43:37 2002     ENCAL 1S_-1.5 HEP              79716 -> 79717) s
+(    Thu Mar 14 08:58:14 2002 ??? ENCAL 1S_-1.5 POSLIN           79710 -> 79718) s
+(    Thu Mar 14 08:58:56 2002 ??? ENCAL 1S_-1.5 POSSYN           79711 -> 79719) s
+(    Thu Mar 14 10:07:43 2002 ??? STANDARD 1S_ON POSLIN          79718 -> 79720) s
+(    Thu Mar 14 10:08:53 2002 ??? STANDARD 1S_ON POSSYN          79719 -> 79721) s
+(    Thu Mar 14 10:14:24 2002 ??? STANDARD 1S_ON POSLIN          79720 -> 79722) s
+(    Thu Mar 14 10:14:33 2002 ??? STANDARD 1S_ON POSSYN          79721 -> 79723) s
+(    Thu Mar 14 11:16:41 2002     STANDARD 1S_OFF ELCSR          79546 -> 79726) s
+(    Thu Mar 14 11:34:52 2002 *   STANDARD 1S_OFF HEP            79558 -> 79728) s
+(    Thu Mar 14 12:04:39 2002 ??? STANDARD 1S_OFF POSLIN         79722 -> 79724) s
+(    Thu Mar 14 12:05:02 2002 ??? STANDARD 1S_OFF POSSYN         79723 -> 79725) s
+(    Thu Mar 14 12:58:26 2002     STANDARD 1S_OFF COLLIDE        79552 -> 79734) s
+(    Thu Mar 14 15:13:14 2002 ??? STANDARD 1S_OFF POSLIN         79724 -> 79739) s
+(    Thu Mar 14 15:13:26 2002 ??? STANDARD 1S_OFF POSSYN         79725 -> 79740) s
+(    Fri Mar 15 09:33:54 2002     STANDARD 1S_ON POSCSR          79405 -> 79744) s
+(    Fri Mar 15 10:04:49 2002 *   STANDARD 1S_ON HEP             79607 -> 79745) s
+(    Fri Mar 15 11:34:03 2002 *   STANDARD 1S_ON HEP             79745 -> 79746) s
+(    Fri Mar 15 12:45:58 2002     STANDARD 1S_ON HEP             79746 -> 79749) s
+(    Fri Mar 15 14:08:38 2002 *   STANDARD 1S_ON HEP             79749 -> 79751) s
+endpage
+%%Page: 4 4
+startpage
+( 1S_apr10 --------------------------------------------------------------------) s
+(    Wed Apr 10 20:52:58 2002 *** ENCAL 1S_-1.5 HEP              79717 -> 80483) s
+(    Wed Apr 10 21:44:42 2002 ??? ENCAL 1S_+8 ELLIN              80412 -> 80484) s
+(    Wed Apr 10 21:44:52 2002 ??? ENCAL 1S_+8 ELSYN              80411 -> 80485) s
+(    Wed Apr 10 21:45:23 2002     ENCAL 1S_+8 ELCSR              79686 -> 80486) s
+(    Wed Apr 10 22:14:12 2002 * * ENCAL 1S_+8 HEP                79707 -> 80488) s
+(    Wed Apr 10 22:53:31 2002     ENCAL 1S_-4 ELCSR              79681 -> 80489) s
+(    Wed Apr 10 23:20:13 2002 * * ENCAL 1S_-4 HEP                79709 -> 80490) s
+(    Wed Apr 10 23:21:37 2002 *   ENCAL 1S_-4 HEP                80490 -> 80491) s
+(    Thu Apr 11 08:06:09 2002     STANDARD 1S_ON ELCSR           80408 -> 80494) s
+(    Thu Apr 11 08:12:12 2002     STANDARD 1S_ON ELCSR           80494 -> 80496) s
+(    Thu Apr 11 08:33:13 2002     STANDARD 1S_ON ELCSR           80496 -> 80408) s
+(    Thu Apr 11 09:09:52 2002     STANDARD 1S_ON POSCSR          79912 -> 79912) s
+(    Thu Apr 11 09:10:12 2002     STANDARD 1S_ON ELCSR           80408 -> 80197) s
+(    Thu Apr 11 09:10:43 2002     STANDARD 1S_ON COLLIDE         80299 -> 80299) s
+(    Thu Apr 11 09:11:09 2002 *   STANDARD 1S_ON HEP             80409 -> 80329) s
+(    Thu Apr 11 10:54:10 2002 *   STANDARD 1S_ON HEP             80329 -> 80500) s
+(    Thu Apr 11 21:35:00 2002 *   STANDARD 1S_ON HEP             80500 -> 80507) s
+(    Thu Apr 11 21:35:20 2002 *   STANDARD 1S_ON HEP             80507 -> 80508) s
+(    Thu Apr 11 21:51:59 2002 *   STANDARD 1S_ON HEP             80508 -> 80507) s
+(    Thu Apr 11 22:47:05 2002 *   STANDARD 1S_ON HEP             80507 -> 80510) s
+(    Fri Apr 12 12:56:29 2002  ** STANDARD 1S_ON HEP             80510 -> 80511) s
+(    Fri Apr 12 15:20:08 2002  ** STANDARD 1S_ON HEP             80511 -> 80510) s
+(    Fri Apr 12 16:27:11 2002 ??? STANDARD 1S_ON SCIR            80259 -> 80514) s
+(    Fri Apr 12 16:39:39 2002     STANDARD 1S_ON HEP             80510 -> 80520) s
+(    Fri Apr 12 16:39:57 2002 ??? STANDARD 1S_ON SCIR            80514 -> 80514) s
+(    Fri Apr 12 16:50:49 2002 ??? STANDARD 1S_ON SCIR            80514 -> 80514) s
+(    Fri Apr 12 18:06:24 2002 *   STANDARD 1S_ON HEP             80510 -> 80530) s
+(    Fri Apr 12 18:07:04 2002 ??? STANDARD 1S_ON SCIR            80514 -> 80526) s
+(    Fri Apr 12 18:27:59 2002 *   STANDARD 1S_ON HEP             80530 -> 80533) s
+( 2S_may29 --------------------------------------------------------------------) s
+(    Wed May 29 19:23:35 2002 *** STANDARD 2S_-6 ELCSR           82526 -> 82579) s
+(    Wed May 29 19:27:07 2002 *   STANDARD 2S_-6 HEP             82501 -> 82580) s
+(    Wed May 29 19:43:11 2002     STANDARD 2S_+5 ELCSR           82530 -> 82581) s
+(    Wed May 29 19:59:31 2002 *   STANDARD 2S_+5 HEP             82509 -> 82582) s
+(    Wed May 29 20:08:47 2002 *   STANDARD 2S_+5 HEP             82582 -> 82583) s
+(    Wed May 29 20:12:43 2002     STANDARD 2S_+5 ELCSR           82581 -> 82584) s
+(    Wed May 29 20:22:24 2002 *** STANDARD 2S_+8 ELCSR           82531 -> 82585) s
+(    Wed May 29 20:43:42 2002 *** STANDARD 2S_+8 ELCSR           82585 -> 82531) s
+(    Wed May 29 20:52:46 2002     STANDARD 2S_+8 ELCSR           82531 -> 82586) s
+(    Wed May 29 21:12:54 2002     STANDARD 2S_+8 ELCSR           82586 -> 82588) s
+(    Wed May 29 21:16:25 2002 *   STANDARD 2S_+8 HEP             82511 -> 82589) s
+(    Wed May 29 21:46:33 2002     STANDARD 2S_OFF ELCSR          82525 -> 82590) s
+(    Wed May 29 21:51:38 2002 *   STANDARD 2S_OFF HEP            82499 -> 82591) s
+(    Wed May 29 22:06:07 2002     STANDARD 2S_-6 ELCSR           82579 -> 82592) s
+(    Wed May 29 22:21:55 2002     STANDARD 2S_+3 ELCSR           82564 -> 82593) s
+(    Thu May 30 06:58:23 2002     STANDARD 2S_-2 ELCSR           82578 -> 82595) s
+(    Thu May 30 07:04:36 2002 *   STANDARD 2S_-2 HEP             82559 -> 82596) s
+(    Thu May 30 08:15:37 2002     STANDARD 2S_-2 ELCSR           82595 -> 82578) s
+(    Thu May 30 08:42:26 2002     STANDARD 2S_-2 ELCSR           82578 -> 82595) s
+(    Thu May 30 10:45:03 2002     STANDARD 2S_OFF ELCSR          82590 -> 82597) s
+(    Thu May 30 12:17:14 2002 *   STANDARD 2S_OFF HEP            82591 -> 82598) s
+(    Thu May 30 12:47:28 2002 ??? STANDARD 2S_OFF POSLIN         82543 -> 82599) s
+(    Thu May 30 13:01:47 2002 ??? STANDARD 2S_OFF POSLIN         82543 -> 82601) s
+(    Thu May 30 13:02:04 2002 ??? STANDARD 2S_OFF POSSYN         82544 -> 82602) s
+(    Thu May 30 14:05:27 2002 *   STANDARD 2S_OFF ELCSR          82597 -> 82603) s
+(    Thu May 30 14:13:16 2002   * STANDARD 2S_OFF ELCSR          82603 -> 82604) s
+(    Thu May 30 15:13:49 2002 ??? STANDARD 2S_OFF POSLIN         82601 -> 82607) s
+(    Thu May 30 15:14:25 2002 ??? STANDARD 2S_OFF POSSYN         82602 -> 82608) s
+(    Thu May 30 21:21:04 2002 ??? STANDARD 2S_OFF POSSYN         82544 -> 82600) s
+(    Fri May 31 09:34:25 2002     STANDARD 2S_ON ELCSR           82440 -> 82609) s
+(    Fri May 31 10:25:17 2002 *   STANDARD 2S_ON ELCSR           82609 -> 82610) s
+(    Fri May 31 10:35:55 2002     STANDARD 2S_ON POSCSR          82429 -> 82611) s
+(    Fri May 31 10:40:55 2002     STANDARD 2S_ON ELCSR           82610 -> 82612) s
+(    Fri May 31 10:51:07 2002     STANDARD 2S_ON ELCSR           82612 -> 82613) s
+(    Fri May 31 11:06:48 2002 *   STANDARD 2S_ON HEP             82454 -> 82614) s
+(    Fri May 31 11:07:10 2002     STANDARD 2S_ON HEP             82614 -> 82615) s
+(    Fri May 31 12:52:39 2002 *   STANDARD 2S_ON HEP             82615 -> 82616) s
+(    Fri May 31 14:17:00 2002     STANDARD 2S_ON ELCSR           82613 -> 82617) s
+(    Fri May 31 17:14:35 2002     STANDARD 2S_ON HEP             82616 -> 82620) s
+( 2S_jun11 --------------------------------------------------------------------) s
+(    Tue Jun 11 21:17:12 2002 ??? STANDARD 2S_-2 POSLIN          82924 -> 82952) s
+(    Tue Jun 11 21:17:23 2002 ??? STANDARD 2S_-2 POSSYN          82925 -> 82953) s
+(    Tue Jun 11 21:24:38 2002 *   STANDARD 2S_-2 HEP             82936 -> 82954) s
+( 2S_jun12 --------------------------------------------------------------------) s
+(    Wed Jun 12 19:01:04 2002     STANDARD 2S_+3 HEP             82996 -> 82997) s
+(    Wed Jun 12 19:53:09 2002 *   STANDARD 2S_+3 ELCSR           82937 -> 82999) s
+endpage
+%%Page: 5 5
+startpage
+(    Wed Jun 12 20:12:58 2002     STANDARD 2S_+8 HEP             82946 -> 83000) s
+(    Wed Jun 12 21:29:25 2002 *   STANDARD 2S_-6 HEP             82929 -> 83003) s
+(    Wed Jun 12 22:33:09 2002 *   STANDARD 2S_+5 ELCSR           82994 -> 82941) s
+(    Wed Jun 12 23:35:48 2002 *** STANDARD 2S_+5 ELCSR           82941 -> 83007) s
+(    Wed Jun 12 23:41:01 2002     STANDARD 2S_+5 HEP             82995 -> 83008) s
+(    Thu Jun 13 03:16:54 2002 *   STANDARD 2S_-2 ELCSR           82935 -> 83010) s
+(    Thu Jun 13 08:18:21 2002 *   STANDARD 2S_ON HEP             82923 -> 82874) s
+(    Thu Jun 13 10:33:48 2002 ??? STANDARD 2S_OFF POSLIN         82952 -> 83011) s
+(    Thu Jun 13 10:33:59 2002 ??? STANDARD 2S_OFF POSSYN         82953 -> 83012) s
+(    Thu Jun 13 11:49:16 2002     STANDARD 2S_OFF ELCSR          82840 -> 83013) s
+(    Thu Jun 13 12:10:10 2002 ??? STANDARD 2S_OFF POSLIN         83011 -> 83014) s
+(    Thu Jun 13 12:10:20 2002 ??? STANDARD 2S_OFF POSSYN         83012 -> 83015) s
+(    Thu Jun 13 12:17:48 2002 *   STANDARD 2S_OFF HEP            82841 -> 83017) s
+(    Thu Jun 13 13:35:04 2002 ??? STANDARD 2S_OFF POSLIN         83014 -> 83019) s
+(    Thu Jun 13 13:35:12 2002 ??? STANDARD 2S_OFF POSSYN         83015 -> 83020) s
+(    Thu Jun 13 13:39:07 2002  ** STANDARD 2S_OFF ELCSR          83013 -> 83016) s
+(    Thu Jun 13 13:50:11 2002 ??? STANDARD 2S_OFF SCIR           82822 -> 83022) s
+(    Thu Jun 13 16:21:13 2002     STANDARD 2S_OFF POSCSR         82826 -> 82826) s
+(    Thu Jun 13 16:31:11 2002  ** STANDARD 2S_OFF ELCSR          83016 -> 83025) s
+(    Thu Jun 13 16:31:30 2002     STANDARD 2S_OFF POSCSR         82826 -> 83024) s
+(    Thu Jun 13 18:25:02 2002 *   STANDARD 2S_OFF HEP            83017 -> 83029) s
+(    Thu Jun 13 18:40:24 2002     STANDARD 2S_OFF ELCSR          83025 -> 83030) s
+(    Thu Jun 13 18:41:25 2002 *   STANDARD 2S_OFF HEP            83029 -> 83031) s
+(    Thu Jun 13 18:48:13 2002     STANDARD 2S_OFF HEP            83031 -> 83031) s
+(    Thu Jun 13 19:03:24 2002     STANDARD 2S_OFF HEP            83031 -> 83031) s
+(    Thu Jun 13 22:39:23 2002     STANDARD 2S_OFF HEP            83031 -> 83034) s
+(    Fri Jun 14 08:27:12 2002 ??? STANDARD 2S_ON POSLIN          83019 -> 83036) s
+(    Fri Jun 14 08:27:20 2002 ??? STANDARD 2S_ON POSSYN          83020 -> 83037) s
+(    Fri Jun 14 08:32:09 2002     STANDARD 2S_ON ELCSR           82922 -> 83038) s
+(    Fri Jun 14 08:42:54 2002 ??? STANDARD 2S_ON SCIR            82853 -> 83039) s
+(    Fri Jun 14 08:43:31 2002 *   STANDARD 2S_ON HEP             82874 -> 83040) s
+(    Fri Jun 14 09:21:55 2002 ??? STANDARD 2S_ON POSLIN          83036 -> 83041) s
+(    Fri Jun 14 09:22:02 2002 ??? STANDARD 2S_ON POSSYN          83037 -> 83042) s
+(    Fri Jun 14 09:49:40 2002 ??? STANDARD 2S_ON POSLIN          83041 -> 83043) s
+(    Fri Jun 14 09:49:52 2002 ??? STANDARD 2S_ON POSSYN          83042 -> 83044) s
+(    Fri Jun 14 09:50:46 2002     STANDARD 2S_ON ELCSR           83038 -> 83045) s
+(    Fri Jun 14 12:01:19 2002     STANDARD 2S_ON HEP             83040 -> 83040) s
+(    Fri Jun 14 12:48:00 2002     STANDARD 2S_ON HEP             83040 -> 83040) s
+(    Fri Jun 14 13:07:26 2002 ??? STANDARD 2S_ON POSSYN          83044 -> 83049) s
+(    Fri Jun 14 13:07:49 2002 ??? STANDARD 2S_ON POSLIN          83043 -> 83048) s
+(    Fri Jun 14 13:56:58 2002     STANDARD 2S_ON ELCSR           83045 -> 83055) s
+(    Fri Jun 14 13:57:23 2002 ??? STANDARD 2S_ON POSLIN          83048 -> 83054) s
+(    Fri Jun 14 13:58:15 2002 ??? STANDARD 2S_ON POSSYN          83049 -> 83053) s
+(    Fri Jun 14 14:49:51 2002 *   STANDARD 2S_ON HEP             83040 -> 83057) s
+( 2S_jul10 --------------------------------------------------------------------) s
+(    Wed Jul 10 19:56:39 2002 *   STANDARD 2S_-2 HEP             82954 -> 83626) s
+(    Wed Jul 10 21:02:16 2002 ??? STANDARD 2S_-2 ELLIN           83586 -> 83627) s
+(    Wed Jul 10 21:02:23 2002 ??? STANDARD 2S_-2 ELSYN           83587 -> 83628) s
+(    Wed Jul 10 21:27:33 2002 *   STANDARD 2S_-2 HEP             83626 -> 83629) s
+(    Thu Jul 11 00:05:02 2002     STANDARD 2S_+1 POSCSR          82938 -> 83630) s
+(    Thu Jul 11 00:08:45 2002     STANDARD 2S_+1 ELCSR           82999 -> 83631) s
+(    Thu Jul 11 00:23:55 2002 *   STANDARD 2S_+1 HEP             82997 -> 83632) s
+(    Thu Jul 11 08:42:25 2002     STANDARD 2S_+5 POSCSR          82521 -> 83633) s
+(    Thu Jul 11 08:49:38 2002     STANDARD 2S_+5 ELCSR           83007 -> 83634) s
+(    Thu Jul 11 08:51:54 2002     STANDARD 2S_+5 ELCSR           83634 -> 83636) s
+(    Thu Jul 11 09:13:35 2002 *   STANDARD 2S_+5 HEP             83008 -> 83639) s
+(    Thu Jul 11 09:15:08 2002     STANDARD 2S_+5 ELCSR           83636 -> 83634) s
+(    Thu Jul 11 09:29:17 2002     STANDARD 2S_+5 HEP             83639 -> 83641) s
+(    Thu Jul 11 10:21:53 2002     STANDARD 2S_-2 POSCSR          83619 -> 83642) s
+(    Thu Jul 11 10:25:52 2002     STANDARD 2S_-2 ELCSR           83622 -> 83643) s
+(    Thu Jul 11 10:32:18 2002     STANDARD 2S_-2 HEP             83629 -> 83644) s
+(    Thu Jul 11 12:54:09 2002 ??? STANDARD 2S_-2 BIGGRP          82418 -> 83648) s
+(    Thu Jul 11 13:53:39 2002 *   STANDARD 2S_-2 ELCSR           83643 -> 83651) s
+(    Thu Jul 11 14:06:04 2002 *   STANDARD 2S_-2 HEP             83644 -> 83654) s
+(    Thu Jul 11 15:29:43 2002     STANDARD 2S_+1 ELCSR           83055 -> 83669) s
+(    Thu Jul 11 15:37:04 2002  *  STANDARD 2S_+1 HEP             83585 -> 83672) s
+(    Thu Jul 11 15:37:41 2002 ??? STANDARD 2S_+1 SCIR            83039 -> 83761) s
+(    Thu Jul 11 15:38:14 2002 ??? STANDARD 2S_+1 SCIR            83761 -> 83671) s
+(    Thu Jul 11 15:41:22 2002     STANDARD 2S_+1 HEP             83672 -> 83673) s
+(    Thu Jul 11 15:46:59 2002 ??? STANDARD 2S_+1 SCIR            83671 -> 83674) s
+(    Thu Jul 11 15:48:56 2002 ??? STANDARD 2S_+1 BIGGRP          83615 -> 83675) s
+(    Thu Jul 11 15:58:58 2002 ??? STANDARD 2S_ON BIGGRP          83615 -> 83675) s
+(    Thu Jul 11 16:01:16 2002     STANDARD 2S_ON ELCSR           83055 -> 83669) s
+(    Thu Jul 11 16:05:51 2002     STANDARD 2S_ON HEP             83585 -> 83670) s
+(    Thu Jul 11 17:08:39 2002 ??? STANDARD 2S_ON POSLIN          83616 -> 83684) s
+(    Thu Jul 11 17:08:48 2002 ??? STANDARD 2S_ON POSSYN          83618 -> 83685) s
+(    Thu Jul 11 17:09:05 2002     STANDARD 2S_ON POSCSR          82611 -> 83686) s
+endpage
+%%Page: 6 6
+startpage
+(    Thu Jul 11 17:16:33 2002 *   STANDARD 2S_ON HEP             83670 -> 83687) s
+(    Thu Jul 11 17:17:00 2002 ??? STANDARD 2S_ON SCIR            83039 -> 83688) s
+( 2S_aug07 --------------------------------------------------------------------) s
+(    Wed Aug  7 18:56:38 2002 ??? STANDARD 2S_ON_UP BIGGRP       83675 -> 84604) s
+(    Wed Aug  7 19:13:21 2002 *   STANDARD 2S_ON_UP HEP          84602 -> 84603) s
+(    Wed Aug  7 19:58:23 2002 *   STANDARD 2S_ON_UP HEP          84603 -> 84605) s
+(    Wed Aug  7 20:47:57 2002     STANDARD 2S_+1 POSCSR          84073 -> 84607) s
+(    Wed Aug  7 20:57:25 2002 *   STANDARD 2S_+1 HEP             84584 -> 84608) s
+(    Wed Aug  7 22:14:53 2002     STANDARD 2S_-4 ELCSR           84586 -> 84609) s
+(    Thu Aug  8 03:01:01 2002 *   STANDARD 2S_ON_DN HEP          84579 -> 84610) s
+(    Thu Aug  8 03:53:16 2002 *   STANDARD 2S_ON_DN HEP          84610 -> 84611) s
+endpage
+
+%%Trailer
+cleanup
+docsave restore end

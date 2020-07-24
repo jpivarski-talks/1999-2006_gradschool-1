@@ -1,0 +1,12 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/db10.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/acceptance/run3/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_DB=10
+
+suez -f lookfor_wierdtrigger.tcl 

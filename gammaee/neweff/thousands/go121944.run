@@ -1,0 +1,13 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/thousands/go121944.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/neweff/thousands/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_RUN=121944
+export USER_DB=16
+
+suez -f run.tcl

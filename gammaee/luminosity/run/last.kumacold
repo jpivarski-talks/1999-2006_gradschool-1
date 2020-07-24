@@ -1,0 +1,52 @@
+*** Begin of history file: Mon Nov 15 13:36:49 2004
+exec /tmp/pawtmp-2176.kumac
+nt/plot //dat/lumi/1.abs(t1costh-t2costh)/2-abs(s1costh-s2costh)/2 s2costh>=-1&&abs(s1costh-s2costh)/2<0.2&&$1 ! ! ! 'N' 102
+zone 1 1
+h/plot 102
+nt/plot //dat/lumi/1.abs(t1costh-t2costh)/2-abs(s1costh-s2costh)/2 s2costh>=-1&&0.6<abs(s1costh-s2costh)/2<0.8&&$1 ! ! ! 'N' 102
+zone 1 1
+h/plot 102
+nt/plot //gam/lumi/1.(s1wide+s2wide)/2. s2costh>=-1&&abs(s1costh-s2costh)/2<0.8 ! ! ! 'N' 300
+h/plot 300
+opt nsta
+h/cr/1d 300 'Shower width in m ([gg])' 100 0. 0.1
+h/cr/1d 301 'Shower width in m (selected MC e^+!e^-!)' 100 0. 0.1
+h/cr/1d 302 'Shower width in m (selected e^+!e^-!)' 100 0. 0.1
+nt/plot //gam/lumi/1.(s1wide+s2wide)/2. s2costh>=-1&&abs(s1costh-s2costh)/2<0.8 ! ! ! 'N' 300
+nt/plot //bha/lumi/1.(s1wide+s2wide)/2. s2costh>=-1&&abs(s1costh-s2costh)/2<0.8&&$1 ! ! ! 'N' 301
+nt/plot //dat/lumi/1.(s1wide+s2wide)/2. s2costh>=-1&&abs(s1costh-s2costh)/2<0.8&&$1 ! ! ! 'N' 302
+zone 1 2
+opt nsta
+h/plot 300
+h/plot 301
+zone 1 1
+opt nsta
+h/plot 300
+h/plot 301 's'
+normalize 300
+normalize 301
+h/plot 300
+h/plot 301 's'
+h/cr/1d 300 'Shower width in meters ([gg] solid, selected MC e^+!e^-! dashed)' 100 0. 0.1
+h/cr/1d 301 'Shower width in meters (selected MC e^+!e^-!)' 100 0. 0.1
+nt/plot //gam/lumi/1.(s1wide+s2wide)/2. s2costh>=-1&&abs(s1costh-s2costh)/2<0.8 ! ! ! 'N' 300
+nt/plot //bha/lumi/1.(s1wide+s2wide)/2. s2costh>=-1&&abs(s1costh-s2costh)/2<0.8&&$1 ! ! ! 'N' 301
+zone 1 1
+opt nsta
+normalize 300
+normalize 301
+h/plot 300
+h/plot 301 's'
+pict/print 'ggtrig6.eps'
+nt/plot //gam/lumi/1.e9oe25
+nt/plot //gam/lumi/1.s1e925
+pict/print 'ggtrig6.ps'
+zone 1 1
+opt nsta
+normalize 300
+normalize 301
+h/plot 300
+h/plot 301 's'
+pict/print 'ggtrig6.eps'
+zone 1 1
+*** End   of history file: Mon Nov 15 13:50:21 2004

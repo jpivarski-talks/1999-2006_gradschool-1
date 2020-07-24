@@ -1,0 +1,85 @@
+h/delete $SIGMA(pre+10)
+h/delete $SIGMA(pre+11)
+h/delete $SIGMA(pre+12)
+h/delete $SIGMA(pre+20)
+h/delete $SIGMA(pre+90)
+do i = 1, 3
+  h/delete $SIGMA(pre+20+[i])
+  h/delete $SIGMA(pre+30+[i])
+  h/delete $SIGMA(pre+40+[i])
+  h/delete $SIGMA(pre+50+[i])
+enddo
+
+sub $SIGMA(pre+03) $SIGMA(pre+04) $SIGMA(pre+10) 1. $SIGMA(ptoc) 'e'
+sub $SIGMA(pre+03) $SIGMA(pre+04) $SIGMA(pre+11) 1. $SIGMA(ptocup) 'e'
+sub $SIGMA(pre+03) $SIGMA(pre+04) $SIGMA(pre+12) 1. $SIGMA(ptocdo) 'e'
+sub $SIGMA(pre+02) $SIGMA(pre+02) $SIGMA(pre+20) $SIGMA(ptomc) 0. 'e'
+sub $SIGMA(pre+09) $SIGMA(pre+09) $SIGMA(pre+90) $SIGMA(ptomc) 0. 'e'
+do i = 1, 3
+  sub $SIGMA(pre+01) $SIGMA(pre+01) $SIGMA(pre+20+[i]) $SIGMA(ptomcy([i])) 0. 'e'
+  add $SIGMA(pre+20+[i]) $SIGMA(pre+05) $SIGMA(pre+30+[i]) 1. $SIGMA(ptobge-ptocy([i])*ctobge) 'e'
+  add $SIGMA(pre+30+[i]) $SIGMA(pre+06) $SIGMA(pre+40+[i]) 1. $SIGMA(ptobgp-ptocy([i])*ctobgp) 'e'
+  add $SIGMA(pre+40+[i]) $SIGMA(pre+07) $SIGMA(pre+50+[i]) 1. $SIGMA(cosy([i])) 'e'
+enddo
+if $SIGMA(top).eq.$SIGMA(bot) then
+  sigma top1 = max(max($HINFO($SIGMA(pre+51),'MAX'), $HINFO($SIGMA(pre+52),'MAX')), $HINFO($SIGMA(pre+53),'MAX'))
+  sigma top2 = max(max($HINFO($SIGMA(pre+21),'MAX'), $HINFO($SIGMA(pre+22),'MAX')), $HINFO($SIGMA(pre+23),'MAX'))
+  sigma top = max(max(max(top1, top2), $HINFO($SIGMA(pre+21),'MAX')), $HINFO($SIGMA(pre+10),'MAX'))
+
+  sigma bot1 = min(min($HINFO($SIGMA(pre+51),'MIN'), $HINFO($SIGMA(pre+52),'MIN')), $HINFO($SIGMA(pre+53),'MIN'))
+  sigma bot2 = min(min($HINFO($SIGMA(pre+21),'MIN'), $HINFO($SIGMA(pre+22),'MIN')), $HINFO($SIGMA(pre+23),'MIN'))
+  sigma bot = min(min(min(bot1, bot2), $HINFO($SIGMA(pre+21),'MIN')), $HINFO($SIGMA(pre+10),'MIN'))
+
+  if $SIGMA(bot).gt.0 then
+    min $SIGMA(pre+22) $SIGMA(0.2*bot)
+    max $SIGMA(pre+22) $SIGMA(1.2*top)
+  else
+    min $SIGMA(pre+22) $SIGMA((top+bot)/2-1.2*(top-bot)/2)
+    max $SIGMA(pre+22) $SIGMA((top+bot)/2+1.2*(top-bot)/2)
+  endif
+else
+  min $SIGMA(pre+22) $SIGMA(bot)
+  max $SIGMA(pre+22) $SIGMA(top)
+endif
+
+* ve/cr backup([1])
+* ve/cr backdo([1])
+* ve/cr fluff([1])
+* h/get_vect/contents $SIGMA(pre+51) backup
+* h/get_vect/contents $SIGMA(pre+53) backdo
+* h/get_vect/errors $SIGMA(pre+52) fluff
+* do i = 1, [1]
+*   sigma oops = sqrt(((backup([i]) - backdo([i]))/2)**2 + fluff([i])**2)
+*   ve/inp fluff([i]) $SIGMA(oops)
+* enddo
+* h/put_vect/errors $SIGMA(pre+52) fluff
+
+set dmod 1
+set hcol 1407
+if $SIGMA(left).eq.$SIGMA(right) then
+  h/plot $SIGMA(pre+22) 'hist'
+else
+  h/plot $SIGMA(pre+22)($SIGMA(left):$SIGMA(right)) 'hist'
+endif
+set hcol 1403
+h/plot $SIGMA(pre+90) 'shist'
+set hcol 1400
+h/plot $SIGMA(pre+20) 'shist'
+set hcol 9
+h/plot $SIGMA(pre+12) 'se2'
+h/plot $SIGMA(pre+11) 'se2'
+set hcol 4
+h/plot $SIGMA(pre+22) 'shist'
+h/plot $SIGMA(pre+90) 'shist'
+h/plot $SIGMA(pre+20) 'shist'
+set hwid 4
+set hcol 1
+h/plot $SIGMA(pre+10) 'se0'
+set hwid 4
+set hcol 2
+h/plot $SIGMA(pre+52) 's'
+set hwid 1
+set hcol 1
+h/plot $SIGMA(pre+08) 's'
+set ltyp 1
+box $GRAFINFO('WNXMIN') $GRAFINFO('WNXMAX') $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')

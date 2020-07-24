@@ -1,0 +1,81 @@
+*** Begin of history file: Tue Apr  2 13:17:25 2002
+h/file 1 simple_124831_begin.rzn
+h/file 2 simple_124831_end.rzn
+h/file 3 simple_124870_begin.rzn
+h/file 4 simple_124870_end.rzn
+help normaliz
+cd //lun1/simplez0cut
+h/copy 200 1200
+cd //lun2/simplez0cut
+h/copy 200 2200
+cd //lun3/simplez0cut
+h/copy 200 3200
+cd //lun4/simplez0cut
+h/copy 200 4200
+cd //pawc
+h/list
+cd //lun1/simplez0cut
+help h/copy
+h/copy 200 1200 '124831 begin'
+cd //lun2/simplez0cut
+h/copy 200 2200 '124831 end'
+cd //lun3/simplez0cut
+h/copy 200 3200 '124870 begin'
+cd //lun4/simplez0cut
+h/copy 200 4200 '124870 end'
+ cd //pawc
+h/list
+help normalize
+normalize 1200 4461
+normalize 2200 1091
+normalize 3200 4368
+normalize 4200 1287
+zone 1 2
+h/plot 1200
+opt sta
+zone 2 2
+h/plot 1200
+max 1200 2000
+max 2200 2000
+max 3200 2000
+max 4200 2000
+zone 2 2
+h/plot 1200
+h/plot 2200
+h/plot 3200
+h/plot 4200
+max 1200 2000
+max 2200 2000
+max 3200 2000
+max 4200 2000
+min 1200 0
+min 2200 0
+min 3200 0
+min 4200 0
+h/plot 1200
+max 2200 2000
+h/plot 2200
+h/plot 3200
+h/plot 4200
+pict/print
+zone 1 2
+h/plot 1200
+h/plot 2200 s
+opt logy
+zone 1 2
+h/plot 1200(-0.3:0.3)
+h/plot 2200(-0.3:0.3) s
+h/plot 3200(-0.3:0.3)
+h/plot 3200(-0.3:0.3) s
+h/plot 4200(-0.3:0.3) s
+min 1200 1
+min 2200 1
+min 3200 1
+min 4200 1
+h/plot 1200(-0.3:0.3)
+h/plot 2200(-0.3:0.3) s
+h/plot 3200(-0.3:0.3)
+h/plot 4200(-0.3:0.3) s
+pict/print
+exit
+*** End   of history file: Tue Apr  2 13:38:15 2002

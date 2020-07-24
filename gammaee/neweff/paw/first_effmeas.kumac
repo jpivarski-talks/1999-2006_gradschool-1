@@ -1,0 +1,50 @@
+h/file 1 ../thrzn/peak1.rzn
+h/file 2 ../thrzn/cont.rzn
+h/file 3 ../thrzn/eg1.rzn
+h/file 20 ../thrzn/peak3.rzn
+h/file 21 ../thrzn/eg3.rzn
+
+* d0close, z0close,
+* ebeam, ntracks,
+* e1, e2, p1, p2, pmiss, pnext, pfound,
+* shxy, shz, shphi1, shphi2, shcosth1, shcosth2,
+* ephalf, epwhole, epdouble,
+* trxy, trz, d0miss, z0miss, trphi1, trphi2, trcosth1, trcosth2,
+* trperp1, trperp2, trperp3, trperp4,
+* rawntracks, visen, ccen, neue, q, wrphi, wz, pass, trigger, trax
+
+nt/cuts $1 5<trigger<15
+nt/cuts $2 (rawntrac>=2&&!(pmiss<0.025&&abs(2-abs(p1)-abs(p2)-pmiss)<0.2)).or.rawntrac<2
+nt/cuts $3 trperp1>-0.999998&&trperp2>-0.999998&&trperp4>-0.999998
+nt/cuts $4 sqrt((e1-1)**2+(e2-1)**2)>0.1
+
+h/cr/1d 100 'Number of Tracks' 21 -0.5 20.5
+nt/plot //lun1/cuts/1.ntracks $1 ! ! ! ! 100
+nt/plot //lun1/cuts/1.ntracks $1&&$2&&$3&&$4 ! ! ! 's' 100
+
+opt nsta
+h/cr/1d 101 'MC Number of Tracks' 21 -0.5 20.5
+h/cr/1d 102 'MC Number of Tracks' 21 -0.5 20.5
+nt/plot //lun3/cuts/1.ntracks ! ! ! ! ! 101
+nt/plot //lun3/cuts/1.ntracks $2&&$3&&$4 ! ! ! ! 102
+h/cr/1d 103 'Ratio of MC Number of Tracks' 21 -0.5 20.5
+div 102 101 103
+min 103 0.95
+max 103 1.05
+h/plot 103
+
+
+
+nt/plot //lun20/cuts/1.twopions 0.8949-0.1<twopions<0.8949+0.1
+nt/plot //lun1/cuts/1.twopions 0.8949-0.1<twopions<0.8949+0.1 ! ! ! 's'
+
+nt/plot 1.twopions 0.8949-0.05<twopions<0.8949+0.05
+nt/plot 1.twopions 0.875-0.025<twopions<0.875+0.025
+
+cd //lun21/cuts
+nt/recover 1
+nt/plot 1.sqrt((pi1x+pi2x)**2+(pi1y+pi2y)**2+(pi1z+pi2z)**2) 0<abs(pi1x)<1&&0<abs(pi1y)<1&&0<abs(pi1z)<1&&0<abs(pi2x)<1&&0<abs(pi2y)<1&&0<abs(pi2z)<1
+
+cd //lun20/cuts
+nt/plot 1.twopions 0.8949-0.1<twopions<0.8949+0.1&&sqrt((pi1x+pi2x)**2+(pi1y+pi2y)**2+(pi1z+pi2z)**2)<0.7&&0<abs(pi1x)<1&&0<abs(pi1y)<1&&0<abs(pi1z)<1&&0<abs(pi2x)<1&&0<abs(pi2y)<1&&0<abs(pi2z)<1
+

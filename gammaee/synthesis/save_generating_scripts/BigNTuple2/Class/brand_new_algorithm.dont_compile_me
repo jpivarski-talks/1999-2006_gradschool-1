@@ -1,0 +1,114 @@
+class IntersectionVertex
+{
+   public:
+
+      enum CircleVars {
+	 kRa, kXa, kYa, kRb, kXb, kYb, kNumCirc
+      };
+      enum TrackVars {
+	 kCurva, kD0a, kPhi0a, kCurvb, kD0b, kPhi0b, kNumTrack
+      };
+
+      IntersectionVertex();
+      IntersectionVertex( Frame& iFrame, double rmscut, double tailcut );
+      ~IntersectionVertex();
+      
+      DABoolean good() const { return m_good; };
+      double x() const { return m_vertex_x; };
+      double y() const { return m_vertex_y; };
+      double sigx() const { return m_vertex_sigx; };
+      double sigy() const { return m_vertex_sigy; };
+
+   protected:
+
+      DABoolean intersect( int i, int j );
+      DABoolean uncertainties( int i, int j );
+      double arclength( int i );
+      double zsep( int i, int j );
+      double rms( int i );
+      
+   private:
+      
+      DABoolean m_good;
+      double m_vertex_x;
+      double m_vertex_y;
+      double m_vertex_sigx;
+      double m_vertex_sigy;
+
+      double m_rmscut;
+      double m_tailcut;
+
+      vector< KTHelix* > m_helix;
+      vector< pair< double, double > > m_intersection;
+      
+      double m_x;
+      double m_y;
+      double m_sig2x;
+      double m_sig2y;
+      double m_sig2xy;
+
+};
+
+IntersectionVertex::IntersectionVertex()
+   : m_good( false )
+   , m_vertex_x( 0. )
+   , m_vertex_y( 0. )
+   , m_vertex_sigx( 0. )
+   , m_vertex_sigy( 0. )
+{ }
+
+IntersectionVertex::IntersectionVertex( Frame& iFrame, double rmscut, double tailcut )
+   : m_good( false )
+   , m_vertex_x( 0. )
+   , m_vertex_y( 0. )
+   , m_vertex_sigx( 0. )
+   , m_vertex_sigy( 0. )
+{
+   // First we need to get some tracks.
+   FATable< NavTrack > navtracks;
+   extract( iFrame.record( Stream::kEvent ), navtracks );
+   if ( navtracks.size() < 2 ) return;
+   FATable< NavTrack >::const_iterator tracks_end = navtracks.end();
+
+   FATable< DoitSeedQuality > doit_qualities;
+   extract( iFrame.record( Stream::kEvent ), doit_qualities );
+
+   for ( FATable< NavTrack >::const_iterator track_iter = navtracks.begin();
+	 track_iter != tracks_end;
+	 track_iter++ ) {
+      FATable< DoitSeedQuality >::const_iterator doit_quality(
+	 doit_qualities.find( track_iter->identifier() ) );
+
+      if ( ! doit_quality->inwardDoitCurler()      &&
+	   ! track_iter->pionQuality()->fitAbort()    ) {
+	 m_helix.push_back( new KTHelix( *track_iter->pionHelix() ) );
+	 
+	 if ( doit_quality->originUsed()  ||  ! doit_quality->goodZ() ) {
+	    HepSymMatrix tmpmatrix( m_helix[m_helix.size()-1].errorMatrix() );
+
+	    tmpmatrix(KTHelix::kCotTheta, KTHelix::kCotTheta) *= 100.;
+	    tmpmatrix(KTHelix::kCotTheta, KTHelix::kZ0) *= 100.;
+	    tmpmatrix(KTHelix::kZ0, KTHelix::kZ0) *= 100.;
+
+	    m_helix[m_helix.size()-1].setErrorMatrix( tmpmatrix );
+	 } // end error matrix inflating
+
+      } // end track exclusion
+   } // end loop over all tracks
+
+   // This loop will throw away at most one helix. I want don't want
+   // to throw any away if I am left with only three helixes--- this
+   // is the minimum for a good vertex.
+   //
+   // If we enter this point with only two helixes (because the event
+   // had only two tracks), we skip this loop entirely. It's the best
+   // we can do.
+   while ( helix.size() > 3 ) {
+      
+	    
+
+
+
+	 
+
+}

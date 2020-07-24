@@ -1,0 +1,73 @@
+nt/chain bge /home/mccann/acceptance/rzn4/bgneg.rzn
+nt/chain bgp /home/mccann/acceptance/rzn4/bgpos.rzn
+nt/chain cos /home/mccann/acceptance/rzn4/cosmic.rzn
+
+* Beamgas cuts:
+nt/cut $20 abs(d0close)<0.02&&0.075<abs(wz)<0.4&&-0.9<trperp1<0.9
+* The cosmic region
+* You also implicitly cut on 0<=ccen<=0.2 !!!
+nt/cut $30 0.04<d0close<0.1
+
+zone 1 2
+opt sta
+h/cr/1d 100 'Electron single-beam sample Z momentum' 100 -5. 5.
+h/cr/1d 200 'Electron single-beam sample Z momentum' 100 -5. 5.
+h/cr/1d 300 'Electron single-beam sample Z momentum' 100 -5. 5.
+nt/plot //bge/cuts/1.wpz ! ! ! ! 'N' 100
+nt/plot //bge/cuts/1.wpz $30&&0<=ccen<=0.2 ! ! ! 'N' 200
+nt/plot //bge/cuts/1.wpz $20 ! ! ! 'N' 300
+* total of 209261
+*           37001 pass cosmic cuts
+*            5064 pass bge cuts
+opt nsta
+opt logy
+h/delete 1000
+h/delete 2000
+h/delete 3000
+add 100 100 1000 1. 0.
+add 200 200 2000 $SIGMA(0.92*209261./37001.) 0.
+add 200 300 3000 $SIGMA(0.92*209261./37001.) $SIGMA(0.08*209261./5064.)
+set hcol 1
+h/plot 1000
+set hcol 1202
+h/plot 3000 's'
+set hcol 1505
+h/plot 2000 's'
+set hcol 1
+h/plot 1000 's'
+text 0.5 50000 '92"Y# cosmic rays (yellow)' !
+text 0.5 20000 '8"Y# electron beamgas (red)' !
+* cosmics cut is 37001/192520.12 = 19.2% efficient
+* bge cut is 5064/16740.88 = 30.2% efficient
+opt sta
+h/cr/1d 101 'Positron single-beam sample Z momentum' 100 -5. 5.
+h/cr/1d 201 'Positron single-beam sample Z momentum' 100 -5. 5.
+h/cr/1d 301 'Positron single-beam sample Z momentum' 100 -5. 5.
+nt/plot //bgp/cuts/1.wpz ! ! ! ! 'N' 101
+nt/plot //bgp/cuts/1.wpz $30&&0<=ccen<=0.2 ! ! ! 'N' 201
+nt/plot //bgp/cuts/1.wpz $20 ! ! ! 'N' 301
+* total of 43612
+*           6212 pass cosmic cuts
+*           3866 pass bgp cuts
+opt nsta
+opt logy
+h/delete 1001
+h/delete 2001
+h/delete 3001
+add 101 101 1001 1. 0.
+add 201 201 2001 $SIGMA(0.75*43612./6212.) 0.
+add 201 301 3001 $SIGMA(0.75*43612./6212.) $SIGMA(0.25*43612./3866.)
+set hcol 1
+h/plot 1001
+set hcol 1404
+h/plot 3001 's'
+set hcol 1505
+h/plot 2001 's'
+set hcol 1
+h/plot 1001 's'
+text 0.5 10000 '75"Y# cosmic rays (yellow)' !
+text 0.5 4000 '25"Y# positron beamgas (blue)' !
+* cosmics cut is 6212/32709.0 = 19.0% efficient
+* bge cut is 3866/10903.0 = 35.5% efficient
+
+pict/print 'single_beam_accounting.eps'

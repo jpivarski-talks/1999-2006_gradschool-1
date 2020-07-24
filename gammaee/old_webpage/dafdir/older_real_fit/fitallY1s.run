@@ -1,0 +1,85 @@
+#!/usr/bin/sh
+
+awk '($2=="S"){ print $3*2, $4, $5 }' ../../fits/jan16-02/pass1/data.dat > ../../fits/jan16-02/pass1/datause.dat
+
+awk '($2=="S" || $2=="P"){ print $3*2, $4, $5 }' ../../fits/jan30-02/pass1/data.dat > ../../fits/jan30-02/pass1/datause.dat
+
+for tag in feb06-02 feb20-02 feb28-02 mar06-02 mar14-02 apr02-02 apr08-02
+do
+    awk '{ print $3*2, $4, $5 }' ../../fits/$tag/pass1/data.dat > ../../fits/$tag/pass1/datause.dat
+done
+
+for tag in jan16-02 jan30-02 feb06-02 feb20-02 feb28-02 mar06-02 mar14-02 apr02-02 apr08-02
+do
+    echo fitting $tag
+    cp ../../fits/$tag/pass1/datause.dat expt.dat
+    /cdat/tem/ritchie/bin/fitY1s < expt.dat | tee tmp.log
+#    grep theo tmp.log | awk '{ print $2/1000, $3 }' > theo.dat
+    awk -f present.awk tmp.log > ../../fits/$tag/pass1/real.txt
+    gnuplot << EOF
+set xlabel 'Energy in GeV'
+set ylabel 'Hadronic Cross-Section in nb'
+set nokey
+set term postscript eps
+set output 'tmp.eps'
+plot [9.42:9.58][0:22] "expt.dat" with errorbars 1 4, "theo.dat" with lines
+exit
+EOF
+    mv -f tmp.eps ../../fits/$tag/pass1/real.eps
+    mv -f theo.dat ../../fits/$tag/pass1/real.theo
+    mv -f tmp.log ../../fits/$tag/pass1/real.log
+    rm -f expt.dat
+done
+
+perl mass_shift.pl jan16-02 jan30-02 feb06-02 feb20-02 feb28-02 mar06-02 mar14-02 apr02-02 apr08-02 > fullexpt.dat
+awk '($2=="C"){ print $3*2, $4, $5 }' ../../fits/feb14-02/pass1/data.dat >> fullexpt.dat
+awk '($2=="C" || $2=="H"){ print $3*2, $4, $5 }' ../../fits/mar21-02/pass1/data.dat >> fullexpt.dat
+
+echo fitting full data
+/cdat/tem/ritchie/bin/fitY1s < fullexpt.dat | tee tmp.log
+# grep theo tmp.log | awk '{ print $2/1000, $3 }' > theo.dat
+awk -f present.awk tmp.log > ../../fits/realY1s.txt
+gnuplot << EOF
+set xlabel 'Energy in GeV'
+set ylabel 'Hadronic Cross-Section in nb'
+set title 'Kuraev-Fadin Fit to All Y(1s) Data'
+set nokey
+set term postscript eps
+set output 'tmp.eps'
+plot [9.42:9.58][0:22] "fullexpt.dat" with errorbars 1 4, "theo.dat" with lines
+EOF
+mv -f tmp.eps ../../fits/realY1s.eps
+
+awk -f combineY1s.awk fullexpt.dat > combexpt.dat
+awk '($1<9.52){ print $0 }' combexpt.dat > highdrop.dat
+gnuplot << EOF
+set xlabel 'Energy in GeV'
+set ylabel 'Hadronic Cross-Section in nb'
+set title 'Kuraev-Fadin Fit to All Y(1s) Data'
+set nokey
+set term postscript eps
+set output 'tmp.eps'
+plot [9.42:9.58][0:22] "combexpt.dat" with errorbars 1 4, "theo.dat" with lines
+set term postscript landscape color solid
+set output 'tmp.ps'
+plot [9.42:9.58][0:22] "combexpt.dat" with errorbars 1 4, "theo.dat" with lines
+set output 'tmp2.ps'
+plot [9.43:9.49][0:22] "highdrop.dat" with errorbars 1 4, "theo.dat" with lines
+set term pbm color
+set output 'tmp.pbm'
+plot [9.42:9.58][0:22] "combexpt.dat" with errorbars 1 4, "theo.dat" with lines
+set term fig color
+set output 'tmp.fig'
+plot [9.42:9.58][0:22] "combexpt.dat" with errorbars 1 4, "theo.dat" with lines
+EOF
+mv -f tmp.eps ../../fits/realY1s_comb.eps
+mv -f tmp.ps ../../fits/realY1s_comb.ps
+mv -f tmp2.ps ../../fits/realY1s_detail.ps
+mv -f tmp.pbm ../../fits/realY1s_comb.pbm
+$USER_DAF/software/pbmplus/ppmtogif ../../fits/realY1s_comb.pbm > ../../fits/realY1s_comb.gif
+mv -f tmp.fig ../../fits/realY1s_comb.fig
+
+cp -f fullexpt.dat ../../fits/realY1s.fullexpt
+cp -f combexpt.dat ../../fits/realY1s.combexpt
+mv -f theo.dat ../../fits/realY1s.theo
+mv -f tmp.log ../../fits/realY1s.log

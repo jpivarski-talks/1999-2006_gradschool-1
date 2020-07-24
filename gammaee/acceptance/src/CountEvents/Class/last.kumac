@@ -1,0 +1,21 @@
+*** Begin of history file: Thu Jul 15 13:08:00 2004
+nt/chain mc1 /home/mccann/acceptance/rzn4/db18mc.rzn
+nt/chain mc1 /home/mccann/acceptance/rzn4/db19mc.rzn
+nt/chain mc2 /home/mccann/acceptance/rzn4/db21mc.rzn
+nt/chain mc2 /home/mccann/acceptance/rzn4/db23mc.rzn
+nt/chain mc3 /home/mccann/acceptance/rzn4/db16mc.rzn
+nt/cuts $2 visen>0.2
+nt/cuts $3 (tracks>=5).or.(ccen<0.75).or.(e1<0.75)
+nt/cuts $4 (tracks>=5).or.(ccen>0.15)
+nt/cuts $5 tracks>=3
+nt/cuts $6 l4dec>0
+nt/cuts $7 (ci<0.005).and.(abs(wz)<0.05)
+zone 1 2
+opt sta
+nt/plot //mc1/cuts/1.tracks
+nt/plot //mc1/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$7
+message $SIGMA(138888/155321)
+nt/plot //mc1/cuts/1.tracks $2&&$3&&$4&&$5&&$6
+nt/plot //mc1/cuts/1.tracks $2&&$3&&$4&&$5
+exit
+*** End   of history file: Thu Jul 15 13:49:02 2004

@@ -1,0 +1,2053 @@
+>>> for s in allscandef_order:
+...   print "Working on: "+s
+... 
+...   allscanen[s] = []
+...   allscancs[s] = []
+...   allscancs_err[s] = []
+...   
+...   print "  Continuum point"
+...   runlist = []
+...   for r in initialrunlist:
+...     if allscandef[s](r) and r not in mybadruns and runsummary[r].kind == 'c':
+...       runlist.append(r)
+...   if len(runlist) > 0:
+...     e, cs, cs_err = get_runs(runlist)
+...     allscanen[s].append(e)
+...     allscancs[s].append(cs)
+...     allscancs_err[s].append(cs_err)
+...   else:
+...     print "  (there isn't one)"
+... 
+...   print "  High-energy tail point"
+...   runlist = []
+...   for r in initialrunlist:
+...     if allscandef[s](r) and r not in mybadruns and runsummary[r].kind == 'h':
+...       runlist.append(r)
+...   if len(runlist) > 0:
+...     e, cs, cs_err = get_runs(runlist)
+...     allscanen[s].append(e)
+...     allscancs[s].append(cs)
+...     allscancs_err[s].append(cs_err)
+...   else:
+...     print "  (there isn't one)"
+...     
+...   print "  See if there are any peak/scan points..."
+...   runlist = {}
+...   for r in initialrunlist:
+...     if allscandef[s](r) and r not in mybadruns and (runsummary[r].kind == 'p' or runsummary[r].kind == 's'):
+...       round_energy = int(round(runsummary[r].energy*10000))
+...       if round_energy not in runlist:
+...         runlist[round_energy] = [r]
+...       else:
+...         runlist[round_energy].append(r)
+...   for round_energy in runlist:
+...     print "  Peak points near", 1.*round_energy/10., "MeV", "(there are", len(runlist[round_energy]), "of them)"
+...     if len(runlist[round_energy]) == 0: raise Exception
+...     e, cs, cs_err = get_runs(runlist[round_energy])
+...     allscanen[s].append(e)
+...     allscancs[s].append(cs)
+...     allscancs_err[s].append(cs_err)
+Working on: u1s
+  Continuum point
+    run 123369 energy = 4.71674 gamgams = 1567
+    run 123370 energy = 4.71671 gamgams = 1790
+    run 123378 energy = 4.7167 gamgams = 1220
+    run 123380 energy = 4.71666 gamgams = 1435
+    run 123382 energy = 4.71669 gamgams = 1225
+    run 123565 energy = 4.71666 gamgams = 686
+    run 123566 energy = 4.71672 gamgams = 1677
+    run 123567 energy = 4.71667 gamgams = 1820
+    run 123568 energy = 4.71668 gamgams = 1744
+    run 123569 energy = 4.71668 gamgams = 1650
+    run 123570 energy = 4.71667 gamgams = 1769
+    run 123591 energy = 4.71664 gamgams = 908
+    run 123592 energy = 4.71671 gamgams = 1166
+    run 123767 energy = 4.71614 gamgams = 619
+    run 123768 energy = 4.71626 gamgams = 1308
+    run 123771 energy = 4.7156 gamgams = 1504
+    run 123772 energy = 4.71642 gamgams = 1549
+    run 123773 energy = 4.71605 gamgams = 1523
+    run 123774 energy = 4.71637 gamgams = 1390
+    run 123775 energy = 4.7164 gamgams = 1245
+    run 123793 energy = 4.71673 gamgams = 495
+    run 123794 energy = 4.71676 gamgams = 2849
+    run 123796 energy = 4.7162 gamgams = 914
+    run 123800 energy = 4.71681 gamgams = 1826
+    run 123803 energy = 4.71678 gamgams = 1912
+    run 123809 energy = 4.71681 gamgams = 1303
+    run 123810 energy = 4.71682 gamgams = 2027
+    run 123811 energy = 4.71682 gamgams = 1954
+    run 123812 energy = 4.71686 gamgams = 1905
+    run 123813 energy = 4.7168 gamgams = 2016
+    run 123814 energy = 4.71683 gamgams = 2054
+    run 123815 energy = 4.71683 gamgams = 1897
+    run 123816 energy = 4.71685 gamgams = 1904
+    run 123817 energy = 4.71685 gamgams = 2013
+    run 123818 energy = 4.71682 gamgams = 1840
+    run 123820 energy = 4.71686 gamgams = 1671
+    run 123938 energy = 4.71682 gamgams = 1293
+    run 123939 energy = 4.71684 gamgams = 1921
+    run 123941 energy = 4.71682 gamgams = 779
+    run 123944 energy = 4.71683 gamgams = 777
+    run 123945 energy = 4.71682 gamgams = 1413
+    run 123951 energy = 4.71664 gamgams = 523
+    run 123952 energy = 4.71664 gamgams = 1705
+    run 123953 energy = 4.71667 gamgams = 1463
+    run 123955 energy = 4.7167 gamgams = 1723
+    run 123956 energy = 4.71667 gamgams = 1771
+    run 123958 energy = 4.71668 gamgams = 1694
+    run 123959 energy = 4.71664 gamgams = 1783
+    run 123960 energy = 4.71667 gamgams = 1824
+    run 123961 energy = 4.71666 gamgams = 1916
+    run 123962 energy = 4.71667 gamgams = 1692
+    run 124113 energy = 4.71668 gamgams = 1530
+    run 124114 energy = 4.71671 gamgams = 1821
+    run 124115 energy = 4.71671 gamgams = 1845
+    run 124117 energy = 4.71674 gamgams = 399
+    run 124121 energy = 4.71671 gamgams = 978
+    run 124123 energy = 4.71671 gamgams = 1860
+    run 124125 energy = 4.71668 gamgams = 1901
+    run 124126 energy = 4.71671 gamgams = 1662
+    run 124127 energy = 4.71671 gamgams = 1831
+    run 124128 energy = 4.71671 gamgams = 1783
+    run 124129 energy = 4.71671 gamgams = 1824
+    run 124132 energy = 4.71671 gamgams = 987
+    run 124134 energy = 4.71671 gamgams = 894
+    run 124137 energy = 4.71674 gamgams = 1947
+    run 124138 energy = 4.71674 gamgams = 1960
+    run 124139 energy = 4.71674 gamgams = 1881
+    run 124140 energy = 4.71674 gamgams = 1850
+    run 124141 energy = 4.71674 gamgams = 1845
+    run 124299 energy = 4.71673 gamgams = 644
+    run 124300 energy = 4.71673 gamgams = 1244
+    run 124301 energy = 4.71624 gamgams = 1462
+    run 124302 energy = 4.71678 gamgams = 1466
+    run 124309 energy = 4.71678 gamgams = 1554
+    run 124311 energy = 4.71678 gamgams = 383
+    run 124312 energy = 4.71622 gamgams = 1774
+    run 124313 energy = 4.71677 gamgams = 1828
+    run 124314 energy = 4.71677 gamgams = 1844
+    run 124315 energy = 4.71678 gamgams = 1672
+    run 124318 energy = 4.7168 gamgams = 989
+    run 124319 energy = 4.7168 gamgams = 1832
+    run 124321 energy = 4.71682 gamgams = 1380
+    run 124322 energy = 4.71683 gamgams = 1398
+    run 124323 energy = 4.71683 gamgams = 284
+    run 124324 energy = 4.71683 gamgams = 1311
+    run 124326 energy = 4.7168 gamgams = 1732
+    run 124643 energy = 4.7167 gamgams = 252
+    run 124644 energy = 4.7167 gamgams = 1179
+    run 124645 energy = 4.7168 gamgams = 1711
+    run 124647 energy = 4.7167 gamgams = 1543
+    run 124648 energy = 4.7168 gamgams = 1616
+    run 124650 energy = 4.7168 gamgams = 1695
+    run 124651 energy = 4.7168 gamgams = 1715
+    run 124652 energy = 4.7167 gamgams = 1772
+    run 124655 energy = 4.7168 gamgams = 915
+    run 124657 energy = 4.7168 gamgams = 1784
+    run 124658 energy = 4.7168 gamgams = 1365
+    run 124659 energy = 4.7167 gamgams = 1644
+    run 124660 energy = 4.7167 gamgams = 1508
+    run 124663 energy = 4.7168 gamgams = 508
+    run 124665 energy = 4.7168 gamgams = 1527
+    run 124667 energy = 4.7168 gamgams = 962
+    run 124668 energy = 4.7168 gamgams = 1888
+    run 124807 energy = 4.7169 gamgams = 514
+    run 124808 energy = 4.7169 gamgams = 1151
+    run 124809 energy = 4.7169 gamgams = 675
+    run 124810 energy = 4.7169 gamgams = 513
+    run 124812 energy = 4.7169 gamgams = 1027
+    run 124814 energy = 4.7169 gamgams = 1059
+    run 124820 energy = 4.7169 gamgams = 507
+    run 124954 energy = 4.7168 gamgams = 1443
+    run 125158 energy = 4.7169 gamgams = 978
+    run 125159 energy = 4.717 gamgams = 1635
+    run 125163 energy = 4.7169 gamgams = 358
+    run 125166 energy = 4.717 gamgams = 1308
+    run 125168 energy = 4.7169 gamgams = 1634
+    run 125169 energy = 4.717 gamgams = 1717
+    run 125170 energy = 4.717 gamgams = 1631
+    run 125171 energy = 4.7169 gamgams = 323
+    run 125175 energy = 4.717 gamgams = 1687
+    run 125176 energy = 4.7169 gamgams = 1653
+    run 125177 energy = 4.7169 gamgams = 1631
+    run 125178 energy = 4.717 gamgams = 1617
+    run 125297 energy = 4.717 gamgams = 843
+    run 125315 energy = 4.7169 gamgams = 1897
+  Average energy is 4.71673515821
+  Corrected number of hadrons is 557762.408296 +/- 747.434004916
+  Number of gamgams is 179632
+  Relative cross-section is 0.139566938549 +/- 0.000378704862424
+  High-energy tail point
+    run 124960 energy = 4.7803 gamgams = 288
+    run 124961 energy = 4.7803 gamgams = 1424
+    run 124962 energy = 4.7804 gamgams = 1268
+    run 124963 energy = 4.7804 gamgams = 1217
+    run 124966 energy = 4.7804 gamgams = 520
+    run 124967 energy = 4.7804 gamgams = 903
+    run 124968 energy = 4.7804 gamgams = 915
+    run 124969 energy = 4.7804 gamgams = 1050
+    run 124970 energy = 4.7804 gamgams = 1057
+    run 124971 energy = 4.7804 gamgams = 1097
+    run 124972 energy = 4.7804 gamgams = 971
+    run 124973 energy = 4.7804 gamgams = 1033
+  Average energy is 4.7803854211
+  Corrected number of hadrons is 38849.0452274 +/- 197.253529177
+  Number of gamgams is 11743
+  Relative cross-section is 0.144768962655 +/- 0.00152480598357
+  See if there are any peak/scan points...
+  Peak points near 4736.0 MeV (there are 4 of them)
+    run 123175 energy = 4.736 gamgams = 692
+    run 123599 energy = 4.73601 gamgams = 1300
+    run 123600 energy = 4.73602 gamgams = 1240
+    run 124106 energy = 4.736 gamgams = 579
+  Average energy is 4.73600991866
+  Corrected number of hadrons is 17578.1366817 +/- 132.672014074
+  Number of gamgams is 3811
+  Relative cross-section is 0.205640514503 +/- 0.00367495168405
+  Peak points near 4736.7 MeV (there are 1 of them)
+    run 124444 energy = 4.73672 gamgams = 789
+  Average energy is 4.73672
+  Corrected number of hadrons is 3380.04147926 +/- 58.1718017663
+  Number of gamgams is 789
+  Relative cross-section is 0.190936782656 +/- 0.0075501540202
+  Peak points near 4736.8 MeV (there are 4 of them)
+    run 124289 energy = 4.73678 gamgams = 536
+    run 125122 energy = 4.7368 gamgams = 775
+    run 125257 energy = 4.7368 gamgams = 1132
+    run 125290 energy = 4.7368 gamgams = 814
+  Average energy is 4.73679670863
+  Corrected number of hadrons is 14151.8005997 +/- 119.030245737
+  Number of gamgams is 3257
+  Relative cross-section is 0.193653098195 +/- 0.00376392721518
+  Peak points near 4736.9 MeV (there are 1 of them)
+    run 125308 energy = 4.7369 gamgams = 863
+  Average energy is 4.7369
+  Corrected number of hadrons is 3706.42153923 +/- 60.9227253229
+  Number of gamgams is 863
+  Relative cross-section is 0.191406015357 +/- 0.00723536500051
+  Peak points near 4724.9 MeV (there are 1 of them)
+    run 123167 energy = 4.7249 gamgams = 694
+  Average energy is 4.7249
+  Corrected number of hadrons is 2405.01174413 +/- 49.1018151994
+  Number of gamgams is 694
+  Relative cross-section is 0.155228867256 +/- 0.00669062320877
+  Peak points near 4737.9 MeV (there are 3 of them)
+    run 123782 energy = 4.73794 gamgams = 1075
+    run 124081 energy = 4.73792 gamgams = 1040
+    run 124103 energy = 4.73791 gamgams = 616
+  Average energy is 4.73792561699
+  Corrected number of hadrons is 11828.0687156 +/- 108.839015451
+  Number of gamgams is 2731
+  Relative cross-section is 0.192937062618 +/- 0.00409662485629
+  Peak points near 4738.0 MeV (there are 2 of them)
+    run 123166 energy = 4.738 gamgams = 797
+    run 123597 energy = 4.73795 gamgams = 1285
+  Average energy is 4.73796914025
+  Corrected number of hadrons is 8994.26611694 +/- 94.9090821948
+  Number of gamgams is 2082
+  Relative cross-section is 0.192442306061 +/- 0.00468096208933
+  Peak points near 4725.8 MeV (there are 1 of them)
+    run 123783 energy = 4.72583 gamgams = 1106
+  Average energy is 4.72583
+  Corrected number of hadrons is 4729.93628186 +/- 68.8190650775
+  Number of gamgams is 1106
+  Relative cross-section is 0.191489062755 +/- 0.00639657270826
+  Peak points near 4725.9 MeV (there are 1 of them)
+    run 123598 energy = 4.72594 gamgams = 913
+  Average energy is 4.72594
+  Corrected number of hadrons is 4645.0129935 +/- 68.1981451837
+  Number of gamgams is 913
+  Relative cross-section is 0.227792671794 +/- 0.00824739021354
+  Peak points near 4726.0 MeV (there are 2 of them)
+    run 123606 energy = 4.72596 gamgams = 1012
+    run 124084 energy = 4.72597 gamgams = 941
+  Average energy is 4.72596481823
+  Corrected number of hadrons is 8764.29010495 +/- 93.6787590388
+  Number of gamgams is 1953
+  Relative cross-section is 0.200924794492 +/- 0.0050282641694
+  Peak points near 4738.6 MeV (there are 1 of them)
+    run 124626 energy = 4.7386 gamgams = 1250
+  Average energy is 4.7386
+  Corrected number of hadrons is 5172.77036482 +/- 71.966864842
+  Number of gamgams is 1250
+  Relative cross-section is 0.184294801904 +/- 0.00580912126882
+  Peak points near 4738.7 MeV (there are 2 of them)
+    run 124281 energy = 4.7387 gamgams = 1214
+    run 124440 energy = 4.73865 gamgams = 966
+  Average energy is 4.73867784404
+  Corrected number of hadrons is 8598.51124438 +/- 92.7873307926
+  Number of gamgams is 2180
+  Relative cross-section is 0.175651717645 +/- 0.0042125781908
+  Peak points near 4726.8 MeV (there are 5 of them)
+    run 123164 energy = 4.7268 gamgams = 441
+    run 123176 energy = 4.7268 gamgams = 805
+    run 124086 energy = 4.72684 gamgams = 883
+    run 124107 energy = 4.7268 gamgams = 561
+    run 125307 energy = 4.7268 gamgams = 1016
+  Average energy is 4.72680953049
+  Corrected number of hadrons is 24202.6676662 +/- 155.651316518
+  Number of gamgams is 3706
+  Relative cross-section is 0.292295155499 +/- 0.00515627684295
+  Peak points near 4726.9 MeV (there are 4 of them)
+    run 123165 energy = 4.7269 gamgams = 254
+    run 123601 energy = 4.72685 gamgams = 1454
+    run 123786 energy = 4.72687 gamgams = 868
+    run 125256 energy = 4.7269 gamgams = 793
+  Average energy is 4.7268706916
+  Corrected number of hadrons is 23711.4357821 +/- 154.047279164
+  Number of gamgams is 3369
+  Relative cross-section is 0.314999161355 +/- 0.00580002121911
+  Peak points near 4727.0 MeV (there are 1 of them)
+    run 125287 energy = 4.727 gamgams = 800
+  Average energy is 4.727
+  Corrected number of hadrons is 5884.70264868 +/- 76.7417575465
+  Number of gamgams is 800
+  Relative cross-section is 0.32920265676 +/- 0.012405589688
+  Peak points near 4738.8 MeV (there are 3 of them)
+    run 125120 energy = 4.7388 gamgams = 820
+    run 125255 energy = 4.7388 gamgams = 1105
+    run 125305 energy = 4.7388 gamgams = 1043
+  Average energy is 4.7388
+  Corrected number of hadrons is 12176.8928036 +/- 110.422403508
+  Number of gamgams is 2968
+  Relative cross-section is 0.18269885546 +/- 0.00374046328807
+  Peak points near 4727.6 MeV (there are 3 of them)
+    run 124290 energy = 4.72761 gamgams = 1273
+    run 124445 energy = 4.72759 gamgams = 763
+    run 124632 energy = 4.7276 gamgams = 1358
+  Average energy is 4.72760150265
+  Corrected number of hadrons is 32007.8545727 +/- 178.947325846
+  Number of gamgams is 3394
+  Relative cross-section is 0.421951954746 +/- 0.00761730075194
+  Peak points near 4727.7 MeV (there are 1 of them)
+    run 125309 energy = 4.7277 gamgams = 971
+  Average energy is 4.7277
+  Corrected number of hadrons is 10796.1489255 +/- 103.931954059
+  Number of gamgams is 971
+  Relative cross-section is 0.497450436553 +/- 0.0166667475299
+  Peak points near 4727.8 MeV (there are 4 of them)
+    run 125125 energy = 4.7278 gamgams = 547
+    run 125126 energy = 4.7278 gamgams = 882
+    run 125259 energy = 4.7278 gamgams = 1036
+    run 125291 energy = 4.7278 gamgams = 780
+  Average energy is 4.7278
+  Corrected number of hadrons is 36841.177911 +/- 191.986515383
+  Number of gamgams is 3245
+  Relative cross-section is 0.507926197926 +/- 0.00930105585925
+  Peak points near 4738.9 MeV (there are 1 of them)
+    run 125286 energy = 4.7389 gamgams = 604
+  Average energy is 4.7389
+  Corrected number of hadrons is 2532.38955522 +/- 50.3548452959
+  Number of gamgams is 604
+  Relative cross-section is 0.186697493042 +/- 0.00845518160934
+  Peak points near 4728.3 MeV (there are 2 of them)
+    run 124091 energy = 4.7283 gamgams = 1125
+    run 124102 energy = 4.7283 gamgams = 2388
+  Average energy is 4.7283
+  Corrected number of hadrons is 42851.6561719 +/- 207.051548722
+  Number of gamgams is 3513
+  Relative cross-section is 0.545606347648 +/- 0.0095754067316
+  Peak points near 4728.4 MeV (there are 3 of them)
+    run 123781 energy = 4.72836 gamgams = 1308
+    run 123790 energy = 4.72836 gamgams = 936
+    run 124111 energy = 4.72842 gamgams = 910
+  Average energy is 4.72837731135
+  Corrected number of hadrons is 41003.0944528 +/- 202.536183304
+  Number of gamgams is 3154
+  Relative cross-section is 0.581474528408 +/- 0.0107448044404
+  Peak points near 4728.5 MeV (there are 3 of them)
+    run 123596 energy = 4.72849 gamgams = 1111
+    run 123604 energy = 4.72848 gamgams = 1223
+    run 124080 energy = 4.72846 gamgams = 965
+  Average energy is 4.72847751743
+  Corrected number of hadrons is 45784.3648176 +/- 214.017838468
+  Number of gamgams is 3299
+  Relative cross-section is 0.62071497214 +/- 0.0111896312057
+  Peak points near 4728.8 MeV (there are 2 of them)
+    run 123178 energy = 4.7288 gamgams = 363
+    run 123705 energy = 4.72878 gamgams = 830
+  Average energy is 4.7287860855
+  Corrected number of hadrons is 21117.4715142 +/- 145.34279647
+  Number of gamgams is 1193
+  Relative cross-section is 0.791593348843 +/- 0.0235569581731
+  Peak points near 4729.0 MeV (there are 2 of them)
+    run 124450 energy = 4.72902 gamgams = 872
+    run 124639 energy = 4.729 gamgams = 982
+  Average energy is 4.72900940669
+  Corrected number of hadrons is 31011.7088956 +/- 176.131459724
+  Number of gamgams is 1854
+  Relative cross-section is 0.747955246798 +/- 0.0178827201745
+  Peak points near 4729.1 MeV (there are 5 of them)
+    run 124279 energy = 4.72914 gamgams = 946
+    run 124294 energy = 4.72912 gamgams = 922
+    run 124436 energy = 4.72908 gamgams = 562
+    run 124437 energy = 4.7291 gamgams = 575
+    run 124625 energy = 4.7291 gamgams = 949
+  Average energy is 4.729111391
+  Corrected number of hadrons is 63824.7248876 +/- 252.680183458
+  Number of gamgams is 3954
+  Relative cross-section is 0.721760647244 +/- 0.0118285514637
+  Peak points near 4729.2 MeV (there are 1 of them)
+    run 123832 energy = 4.72924 gamgams = 1062
+  Average energy is 4.72924
+  Corrected number of hadrons is 19916.1049475 +/- 141.144943418
+  Number of gamgams is 1062
+  Relative cross-section is 0.838488635929 +/- 0.0264069985923
+  Peak points near 4729.3 MeV (there are 6 of them)
+    run 123828 energy = 4.72925 gamgams = 640
+    run 125119 energy = 4.7293 gamgams = 659
+    run 125254 energy = 4.7293 gamgams = 753
+    run 125262 energy = 4.7293 gamgams = 749
+    run 125285 energy = 4.7293 gamgams = 501
+    run 125295 energy = 4.7293 gamgams = 822
+  Average energy is 4.72929224054
+  Corrected number of hadrons is 73786.9422789 +/- 271.681905399
+  Number of gamgams is 4124
+  Relative cross-section is 0.799960519891 +/- 0.0128003679525
+  Peak points near 4729.8 MeV (there are 2 of them)
+    run 123792 energy = 4.72981 gamgams = 1635
+    run 123821 energy = 4.72984 gamgams = 851
+  Average energy is 4.72982026951
+  Corrected number of hadrons is 48394.7581209 +/- 220.025548242
+  Number of gamgams is 2486
+  Relative cross-section is 0.870177647106 +/- 0.0178952841895
+  Peak points near 4729.9 MeV (there are 15 of them)
+    run 123822 energy = 4.72989 gamgams = 1781
+    run 123823 energy = 4.72988 gamgams = 1992
+    run 123826 energy = 4.7299 gamgams = 478
+    run 123829 energy = 4.72992 gamgams = 2053
+    run 123830 energy = 4.7299 gamgams = 2105
+    run 123831 energy = 4.72991 gamgams = 2222
+    run 123833 energy = 4.72994 gamgams = 2018
+    run 123836 energy = 4.7299 gamgams = 2084
+    run 123837 energy = 4.72993 gamgams = 1935
+    run 123839 energy = 4.72993 gamgams = 2046
+    run 123840 energy = 4.72993 gamgams = 2045
+    run 123841 energy = 4.72991 gamgams = 2183
+    run 123842 energy = 4.7299 gamgams = 538
+    run 123843 energy = 4.72993 gamgams = 795
+    run 123844 energy = 4.72993 gamgams = 2152
+  Average energy is 4.72991427971
+  Corrected number of hadrons is 493406.621189 +/- 702.525002267
+  Number of gamgams is 26427
+  Relative cross-section is 0.834546554124 +/- 0.00526937791312
+  Peak points near 4730.0 MeV (there are 46 of them)
+    run 123608 energy = 4.72997 gamgams = 1554
+    run 123610 energy = 4.73002 gamgams = 1879
+    run 123611 energy = 4.73001 gamgams = 1816
+    run 123612 energy = 4.73001 gamgams = 1825
+    run 123615 energy = 4.73004 gamgams = 1165
+    run 123617 energy = 4.73004 gamgams = 1829
+    run 123618 energy = 4.73004 gamgams = 1937
+    run 123620 energy = 4.73004 gamgams = 1965
+    run 123637 energy = 4.73002 gamgams = 1254
+    run 123638 energy = 4.73002 gamgams = 246
+    run 123640 energy = 4.73002 gamgams = 1863
+    run 123673 energy = 4.72995 gamgams = 2385
+    run 123674 energy = 4.73 gamgams = 1233
+    run 123675 energy = 4.73 gamgams = 2292
+    run 123678 energy = 4.73002 gamgams = 814
+    run 123679 energy = 4.73002 gamgams = 2276
+    run 123683 energy = 4.73004 gamgams = 1479
+    run 123685 energy = 4.73003 gamgams = 1282
+    run 123686 energy = 4.73004 gamgams = 2443
+    run 123689 energy = 4.73002 gamgams = 398
+    run 123691 energy = 4.73003 gamgams = 1082
+    run 123692 energy = 4.73003 gamgams = 2334
+    run 123695 energy = 4.72997 gamgams = 2218
+    run 123697 energy = 4.72999 gamgams = 2553
+    run 123698 energy = 4.73 gamgams = 2413
+    run 123699 energy = 4.73002 gamgams = 2233
+    run 123700 energy = 4.73003 gamgams = 2340
+    run 123703 energy = 4.73001 gamgams = 327
+    run 123704 energy = 4.73002 gamgams = 369
+    run 123706 energy = 4.73002 gamgams = 787
+    run 123707 energy = 4.73002 gamgams = 2019
+    run 123709 energy = 4.73001 gamgams = 2053
+    run 123714 energy = 4.72996 gamgams = 387
+    run 123715 energy = 4.72998 gamgams = 1409
+    run 123716 energy = 4.73001 gamgams = 1525
+    run 123845 energy = 4.72995 gamgams = 2240
+    run 123850 energy = 4.73004 gamgams = 992
+    run 123881 energy = 4.73003 gamgams = 2557
+    run 123886 energy = 4.73003 gamgams = 2545
+    run 123887 energy = 4.73004 gamgams = 2639
+    run 123888 energy = 4.73002 gamgams = 2152
+    run 123890 energy = 4.73001 gamgams = 2527
+    run 123891 energy = 4.73002 gamgams = 2293
+    run 123893 energy = 4.73001 gamgams = 1602
+    run 124640 energy = 4.73 gamgams = 320
+    run 124641 energy = 4.73 gamgams = 1037
+  Average energy is 4.73001322664
+  Corrected number of hadrons is 1447728.86232 +/- 1203.37988087
+  Number of gamgams is 76888
+  Relative cross-section is 0.841596572549 +/- 0.00311468693678
+  Peak points near 4730.1 MeV (there are 85 of them)
+    run 123193 energy = 4.7301 gamgams = 979
+    run 123616 energy = 4.73005 gamgams = 2018
+    run 123619 energy = 4.73005 gamgams = 1894
+    run 123621 energy = 4.73006 gamgams = 1712
+    run 123623 energy = 4.73006 gamgams = 1790
+    run 123624 energy = 4.73005 gamgams = 1872
+    run 123631 energy = 4.73006 gamgams = 356
+    run 123632 energy = 4.73006 gamgams = 1628
+    run 123633 energy = 4.73005 gamgams = 1319
+    run 123635 energy = 4.73005 gamgams = 1813
+    run 123636 energy = 4.73005 gamgams = 1586
+    run 123639 energy = 4.73005 gamgams = 1846
+    run 123641 energy = 4.73005 gamgams = 1797
+    run 123693 energy = 4.73006 gamgams = 2475
+    run 123694 energy = 4.73006 gamgams = 448
+    run 123717 energy = 4.73008 gamgams = 961
+    run 123718 energy = 4.73011 gamgams = 1773
+    run 123849 energy = 4.73005 gamgams = 431
+    run 123851 energy = 4.73008 gamgams = 2338
+    run 123852 energy = 4.73006 gamgams = 2539
+    run 123853 energy = 4.73006 gamgams = 2356
+    run 123858 energy = 4.73007 gamgams = 1352
+    run 123859 energy = 4.73009 gamgams = 1098
+    run 123860 energy = 4.73006 gamgams = 881
+    run 123862 energy = 4.73008 gamgams = 1240
+    run 123863 energy = 4.73009 gamgams = 995
+    run 123864 energy = 4.73006 gamgams = 2377
+    run 123865 energy = 4.73009 gamgams = 2392
+    run 123866 energy = 4.73007 gamgams = 2529
+    run 123867 energy = 4.73008 gamgams = 2551
+    run 123868 energy = 4.73011 gamgams = 2235
+    run 123869 energy = 4.73011 gamgams = 2596
+    run 123871 energy = 4.73012 gamgams = 2537
+    run 123872 energy = 4.73011 gamgams = 2576
+    run 123874 energy = 4.73008 gamgams = 618
+    run 123875 energy = 4.73011 gamgams = 372
+    run 123876 energy = 4.7301 gamgams = 2484
+    run 123879 energy = 4.73005 gamgams = 2361
+    run 123882 energy = 4.73006 gamgams = 2448
+    run 123885 energy = 4.73005 gamgams = 442
+    run 124328 energy = 4.73011 gamgams = 1834
+    run 124374 energy = 4.73007 gamgams = 2017
+    run 124376 energy = 4.73012 gamgams = 2445
+    run 124382 energy = 4.7301 gamgams = 2348
+    run 124383 energy = 4.7301 gamgams = 2571
+    run 124384 energy = 4.73014 gamgams = 2434
+    run 124389 energy = 4.73013 gamgams = 2534
+    run 124451 energy = 4.73006 gamgams = 1204
+    run 124481 energy = 4.73009 gamgams = 2002
+    run 124484 energy = 4.73011 gamgams = 1603
+    run 124486 energy = 4.73011 gamgams = 1747
+    run 124490 energy = 4.73012 gamgams = 841
+    run 124491 energy = 4.73011 gamgams = 1329
+    run 124499 energy = 4.73012 gamgams = 1827
+    run 124500 energy = 4.73013 gamgams = 1870
+    run 124505 energy = 4.73013 gamgams = 1324
+    run 124506 energy = 4.73014 gamgams = 541
+    run 124507 energy = 4.73014 gamgams = 2328
+    run 124508 energy = 4.73014 gamgams = 2219
+    run 124522 energy = 4.73012 gamgams = 266
+    run 124671 energy = 4.7301 gamgams = 1843
+    run 124672 energy = 4.7301 gamgams = 1912
+    run 124673 energy = 4.7301 gamgams = 2051
+    run 124674 energy = 4.7301 gamgams = 2055
+    run 124675 energy = 4.7301 gamgams = 1987
+    run 124676 energy = 4.7301 gamgams = 2040
+    run 124677 energy = 4.7301 gamgams = 1246
+    run 124679 energy = 4.7301 gamgams = 493
+    run 124680 energy = 4.7301 gamgams = 1978
+    run 124681 energy = 4.7301 gamgams = 1843
+    run 124684 energy = 4.7301 gamgams = 2059
+    run 124685 energy = 4.7301 gamgams = 1744
+    run 124687 energy = 4.7301 gamgams = 769
+    run 124688 energy = 4.7301 gamgams = 1946
+    run 124690 energy = 4.7301 gamgams = 1865
+    run 124691 energy = 4.7301 gamgams = 1913
+    run 124699 energy = 4.7301 gamgams = 1799
+    run 124701 energy = 4.7301 gamgams = 2351
+    run 124702 energy = 4.7301 gamgams = 2299
+    run 124704 energy = 4.7301 gamgams = 2372
+    run 124705 energy = 4.7301 gamgams = 2340
+    run 124706 energy = 4.7301 gamgams = 2419
+    run 124707 energy = 4.7301 gamgams = 2342
+    run 125303 energy = 4.7301 gamgams = 1144
+    run 125312 energy = 4.7301 gamgams = 1367
+  Average energy is 4.73009142478
+  Corrected number of hadrons is 2827769.20415 +/- 1681.82127346
+  Number of gamgams is 149476
+  Relative cross-section is 0.845538569612 +/- 0.002244067502
+  Peak points near 4730.2 MeV (there are 85 of them)
+    run 123643 energy = 4.73017 gamgams = 1931
+    run 123644 energy = 4.73018 gamgams = 1774
+    run 123645 energy = 4.73017 gamgams = 1663
+    run 123646 energy = 4.73017 gamgams = 1923
+    run 123647 energy = 4.73017 gamgams = 1862
+    run 123648 energy = 4.73017 gamgams = 1211
+    run 123650 energy = 4.73019 gamgams = 1842
+    run 123651 energy = 4.7302 gamgams = 1825
+    run 123652 energy = 4.73022 gamgams = 2004
+    run 123653 energy = 4.73023 gamgams = 2084
+    run 123654 energy = 4.7302 gamgams = 2177
+    run 123656 energy = 4.7302 gamgams = 1895
+    run 123658 energy = 4.73021 gamgams = 1974
+    run 123659 energy = 4.73023 gamgams = 2188
+    run 123665 energy = 4.73021 gamgams = 2009
+    run 123670 energy = 4.73024 gamgams = 1645
+    run 123672 energy = 4.73022 gamgams = 430
+    run 124112 energy = 4.73023 gamgams = 809
+    run 124142 energy = 4.73021 gamgams = 314
+    run 124144 energy = 4.73023 gamgams = 1709
+    run 124329 energy = 4.73016 gamgams = 1889
+    run 124330 energy = 4.73016 gamgams = 1410
+    run 124333 energy = 4.73016 gamgams = 2043
+    run 124334 energy = 4.73018 gamgams = 533
+    run 124335 energy = 4.73017 gamgams = 977
+    run 124336 energy = 4.73017 gamgams = 2090
+    run 124337 energy = 4.73019 gamgams = 1941
+    run 124338 energy = 4.73019 gamgams = 2009
+    run 124339 energy = 4.73019 gamgams = 1838
+    run 124341 energy = 4.73021 gamgams = 327
+    run 124343 energy = 4.73018 gamgams = 791
+    run 124344 energy = 4.73017 gamgams = 1791
+    run 124346 energy = 4.73018 gamgams = 819
+    run 124348 energy = 4.73019 gamgams = 1946
+    run 124349 energy = 4.73019 gamgams = 1981
+    run 124350 energy = 4.73019 gamgams = 1941
+    run 124351 energy = 4.73022 gamgams = 2305
+    run 124352 energy = 4.73018 gamgams = 2241
+    run 124353 energy = 4.73021 gamgams = 2292
+    run 124354 energy = 4.73021 gamgams = 2125
+    run 124359 energy = 4.7302 gamgams = 1770
+    run 124360 energy = 4.73023 gamgams = 2412
+    run 124361 energy = 4.73023 gamgams = 2171
+    run 124375 energy = 4.73015 gamgams = 2291
+    run 124385 energy = 4.73017 gamgams = 2919
+    run 124391 energy = 4.73019 gamgams = 2446
+    run 124392 energy = 4.73019 gamgams = 2340
+    run 124393 energy = 4.73016 gamgams = 2345
+    run 124394 energy = 4.7302 gamgams = 1286
+    run 124492 energy = 4.73019 gamgams = 1890
+    run 124493 energy = 4.73017 gamgams = 1650
+    run 124495 energy = 4.73017 gamgams = 1857
+    run 124496 energy = 4.73016 gamgams = 1946
+    run 124497 energy = 4.73016 gamgams = 1593
+    run 124498 energy = 4.73016 gamgams = 1800
+    run 124502 energy = 4.73017 gamgams = 1746
+    run 124708 energy = 4.7302 gamgams = 2338
+    run 124709 energy = 4.7302 gamgams = 2212
+    run 124712 energy = 4.7302 gamgams = 2269
+    run 124713 energy = 4.7302 gamgams = 2335
+    run 124714 energy = 4.7302 gamgams = 2410
+    run 124716 energy = 4.7302 gamgams = 2397
+    run 124718 energy = 4.7302 gamgams = 2352
+    run 124719 energy = 4.7302 gamgams = 2310
+    run 124720 energy = 4.7302 gamgams = 2307
+    run 124721 energy = 4.7302 gamgams = 2321
+    run 124722 energy = 4.7302 gamgams = 2172
+    run 124725 energy = 4.7302 gamgams = 2287
+    run 124726 energy = 4.7302 gamgams = 2298
+    run 124727 energy = 4.7302 gamgams = 1277
+    run 124728 energy = 4.7302 gamgams = 2274
+    run 124729 energy = 4.7302 gamgams = 2328
+    run 124730 energy = 4.7302 gamgams = 2370
+    run 124731 energy = 4.7302 gamgams = 2267
+    run 124732 energy = 4.7302 gamgams = 1153
+    run 124733 energy = 4.7302 gamgams = 2318
+    run 124734 energy = 4.7302 gamgams = 2305
+    run 124735 energy = 4.7302 gamgams = 1878
+    run 124736 energy = 4.7302 gamgams = 491
+    run 125316 energy = 4.7302 gamgams = 1724
+    run 125389 energy = 4.7302 gamgams = 1349
+    run 125395 energy = 4.7302 gamgams = 1388
+    run 125397 energy = 4.7302 gamgams = 958
+    run 125399 energy = 4.7302 gamgams = 2182
+    run 125405 energy = 4.7302 gamgams = 1933
+  Average energy is 4.73019353205
+  Corrected number of hadrons is 3004048.66392 +/- 1733.44666375
+  Number of gamgams is 157223
+  Relative cross-section is 0.853951223354 +/- 0.00220930303053
+  Peak points near 4730.3 MeV (there are 63 of them)
+    run 124092 energy = 4.73028 gamgams = 624
+    run 124146 energy = 4.73029 gamgams = 1078
+    run 124148 energy = 4.73026 gamgams = 369
+    run 124149 energy = 4.73027 gamgams = 765
+    run 124150 energy = 4.73029 gamgams = 1647
+    run 124152 energy = 4.73029 gamgams = 1894
+    run 124153 energy = 4.73033 gamgams = 1743
+    run 124154 energy = 4.73032 gamgams = 1712
+    run 124155 energy = 4.73032 gamgams = 495
+    run 124156 energy = 4.73035 gamgams = 1876
+    run 124162 energy = 4.73035 gamgams = 1665
+    run 124165 energy = 4.73033 gamgams = 1810
+    run 124173 energy = 4.73035 gamgams = 2249
+    run 124205 energy = 4.73027 gamgams = 1861
+    run 124208 energy = 4.73033 gamgams = 1536
+    run 124209 energy = 4.73035 gamgams = 1926
+    run 124509 energy = 4.73029 gamgams = 2358
+    run 124510 energy = 4.73028 gamgams = 666
+    run 124513 energy = 4.73029 gamgams = 1860
+    run 124515 energy = 4.73032 gamgams = 2464
+    run 124516 energy = 4.73027 gamgams = 2453
+    run 124517 energy = 4.73027 gamgams = 2312
+    run 124518 energy = 4.73028 gamgams = 1671
+    run 124519 energy = 4.73027 gamgams = 814
+    run 125317 energy = 4.7303 gamgams = 1492
+    run 125318 energy = 4.7303 gamgams = 1614
+    run 125325 energy = 4.7303 gamgams = 1645
+    run 125326 energy = 4.7303 gamgams = 1582
+    run 125327 energy = 4.7303 gamgams = 1386
+    run 125329 energy = 4.7303 gamgams = 822
+    run 125335 energy = 4.7303 gamgams = 1394
+    run 125338 energy = 4.7303 gamgams = 1546
+    run 125342 energy = 4.7303 gamgams = 1680
+    run 125347 energy = 4.7303 gamgams = 944
+    run 125351 energy = 4.7303 gamgams = 717
+    run 125357 energy = 4.7303 gamgams = 1431
+    run 125358 energy = 4.7303 gamgams = 1660
+    run 125360 energy = 4.7303 gamgams = 1841
+    run 125361 energy = 4.7303 gamgams = 1605
+    run 125362 energy = 4.7303 gamgams = 1759
+    run 125363 energy = 4.7303 gamgams = 1840
+    run 125364 energy = 4.7303 gamgams = 1733
+    run 125366 energy = 4.7303 gamgams = 1879
+    run 125369 energy = 4.7303 gamgams = 1814
+    run 125370 energy = 4.7303 gamgams = 2069
+    run 125372 energy = 4.7303 gamgams = 864
+    run 125373 energy = 4.7303 gamgams = 2039
+    run 125375 energy = 4.7303 gamgams = 2022
+    run 125377 energy = 4.7303 gamgams = 679
+    run 125378 energy = 4.7303 gamgams = 831
+    run 125380 energy = 4.7303 gamgams = 1862
+    run 125382 energy = 4.7303 gamgams = 1174
+    run 125384 energy = 4.7303 gamgams = 1332
+    run 125391 energy = 4.7303 gamgams = 1654
+    run 125392 energy = 4.7303 gamgams = 2040
+    run 125396 energy = 4.7303 gamgams = 2149
+    run 125398 energy = 4.7303 gamgams = 862
+    run 125400 energy = 4.7303 gamgams = 1885
+    run 125403 energy = 4.7303 gamgams = 1997
+    run 125404 energy = 4.7303 gamgams = 2009
+    run 125407 energy = 4.7303 gamgams = 636
+    run 125408 energy = 4.7303 gamgams = 2149
+    run 125416 energy = 4.7303 gamgams = 1551
+  Average energy is 4.73030227865
+  Corrected number of hadrons is 1883680.64518 +/- 1372.65121383
+  Number of gamgams is 98036
+  Relative cross-section is 0.858704826492 +/- 0.00281300854662
+  Peak points near 4730.4 MeV (there are 43 of them)
+    run 124159 energy = 4.73036 gamgams = 1026
+    run 124163 energy = 4.73038 gamgams = 1200
+    run 124166 energy = 4.73039 gamgams = 1825
+    run 124167 energy = 4.73038 gamgams = 1702
+    run 124170 energy = 4.73038 gamgams = 1200
+    run 124171 energy = 4.73039 gamgams = 1775
+    run 124172 energy = 4.73038 gamgams = 2108
+    run 124174 energy = 4.73039 gamgams = 2249
+    run 124175 energy = 4.73041 gamgams = 2356
+    run 124176 energy = 4.73041 gamgams = 2155
+    run 124177 energy = 4.73041 gamgams = 2082
+    run 124178 energy = 4.73044 gamgams = 402
+    run 124179 energy = 4.7304 gamgams = 2155
+    run 124181 energy = 4.73041 gamgams = 1861
+    run 124185 energy = 4.73043 gamgams = 776
+    run 124186 energy = 4.73044 gamgams = 1856
+    run 124188 energy = 4.73043 gamgams = 1583
+    run 124190 energy = 4.73043 gamgams = 2214
+    run 124192 energy = 4.73043 gamgams = 2081
+    run 124193 energy = 4.73043 gamgams = 2157
+    run 124194 energy = 4.73043 gamgams = 2259
+    run 124195 energy = 4.73041 gamgams = 2263
+    run 124196 energy = 4.73044 gamgams = 2190
+    run 124197 energy = 4.73043 gamgams = 1932
+    run 124200 energy = 4.73041 gamgams = 463
+    run 124202 energy = 4.73044 gamgams = 2127
+    run 124210 energy = 4.73038 gamgams = 1757
+    run 124212 energy = 4.73041 gamgams = 1951
+    run 124213 energy = 4.73038 gamgams = 1960
+    run 124214 energy = 4.73041 gamgams = 2512
+    run 124347 energy = 4.73038 gamgams = 1927
+    run 125331 energy = 4.7304 gamgams = 1259
+    run 125337 energy = 4.7304 gamgams = 1560
+    run 125339 energy = 4.7304 gamgams = 1370
+    run 125340 energy = 4.7304 gamgams = 1807
+    run 125343 energy = 4.7304 gamgams = 1447
+    run 125344 energy = 4.7304 gamgams = 1635
+    run 125345 energy = 4.7304 gamgams = 1619
+    run 125346 energy = 4.7304 gamgams = 1431
+    run 125348 energy = 4.7304 gamgams = 294
+    run 125353 energy = 4.7304 gamgams = 1639
+    run 125354 energy = 4.7304 gamgams = 1531
+    run 125368 energy = 4.7304 gamgams = 1801
+  Average energy is 4.730406434
+  Corrected number of hadrons is 1388494.53923 +/- 1178.50815049
+  Number of gamgams is 73497
+  Relative cross-section is 0.844262793199 +/- 0.00319555449137
+  Peak points near 4730.5 MeV (there are 2 of them)
+    run 124187 energy = 4.73046 gamgams = 2219
+    run 124201 energy = 4.73046 gamgams = 1122
+  Average energy is 4.73046
+  Corrected number of hadrons is 64200.7526237 +/- 253.415168008
+  Number of gamgams is 3341
+  Relative cross-section is 0.858730512682 +/- 0.015238346843
+  Peak points near 4731.0 MeV (there are 1 of them)
+    run 124296 energy = 4.73099 gamgams = 1737
+  Average energy is 4.73099
+  Corrected number of hadrons is 31664.5884558 +/- 177.970254661
+  Number of gamgams is 1737
+  Relative cross-section is 0.814460392553 +/- 0.0200710384548
+  Peak points near 4726.7 MeV (there are 4 of them)
+    run 124282 energy = 4.72671 gamgams = 1039
+    run 124629 energy = 4.7267 gamgams = 829
+    run 124630 energy = 4.7267 gamgams = 547
+    run 125121 energy = 4.7267 gamgams = 672
+  Average energy is 4.72670336573
+  Corrected number of hadrons is 20418.5617191 +/- 142.952573537
+  Number of gamgams is 3087
+  Relative cross-section is 0.296054605538 +/- 0.00571741635984
+  Peak points near 4731.8 MeV (there are 1 of them)
+    run 124110 energy = 4.73184 gamgams = 594
+  Average energy is 4.73184
+  Corrected number of hadrons is 9236.86431784 +/- 96.1308258685
+  Number of gamgams is 594
+  Relative cross-section is 0.694509221992 +/- 0.0293984498077
+  Peak points near 4731.9 MeV (there are 5 of them)
+    run 123168 energy = 4.7319 gamgams = 863
+    run 123603 energy = 4.73187 gamgams = 820
+    run 123607 energy = 4.73187 gamgams = 364
+    run 123789 energy = 4.7319 gamgams = 811
+    run 124089 energy = 4.7319 gamgams = 523
+  Average energy is 4.73188949423
+  Corrected number of hadrons is 50081.7613693 +/- 223.839761058
+  Number of gamgams is 3381
+  Relative cross-section is 0.661553903224 +/- 0.0117553268766
+  Peak points near 4732.6 MeV (there are 2 of them)
+    run 124449 energy = 4.7326 gamgams = 766
+    run 124636 energy = 4.7326 gamgams = 666
+  Average energy is 4.7326
+  Corrected number of hadrons is 16423.2848576 +/- 128.182351135
+  Number of gamgams is 1432
+  Relative cross-section is 0.512055940556 +/- 0.0141093548998
+  Peak points near 4732.7 MeV (there are 2 of them)
+    run 124293 energy = 4.73266 gamgams = 952
+    run 125311 energy = 4.7327 gamgams = 982
+  Average energy is 4.73268031024
+  Corrected number of hadrons is 21467.087956 +/- 146.550032562
+  Number of gamgams is 1934
+  Relative cross-section is 0.495566941676 +/- 0.0117655914053
+  Peak points near 4732.8 MeV (there are 2 of them)
+    run 125261 energy = 4.7328 gamgams = 998
+    run 125294 energy = 4.7328 gamgams = 836
+  Average energy is 4.7328
+  Corrected number of hadrons is 18662.8335832 +/- 136.649794792
+  Number of gamgams is 1834
+  Relative cross-section is 0.454299174328 +/- 0.011117512714
+  Peak points near 4733.9 MeV (there are 5 of them)
+    run 123170 energy = 4.7339 gamgams = 456
+    run 123172 energy = 4.7339 gamgams = 687
+    run 123602 energy = 4.73391 gamgams = 1242
+    run 124087 energy = 4.73391 gamgams = 949
+    run 124109 energy = 4.7339 gamgams = 547
+  Average energy is 4.73390564545
+  Corrected number of hadrons is 27945.0877061 +/- 167.245066576
+  Number of gamgams is 3881
+  Relative cross-section is 0.321308814162 +/- 0.00550445310583
+  Peak points near 4734.0 MeV (there are 1 of them)
+    run 123787 energy = 4.73397 gamgams = 967
+  Average energy is 4.73397
+  Corrected number of hadrons is 7719.17541229 +/- 87.8909812649
+  Number of gamgams is 967
+  Relative cross-section is 0.356199604702 +/- 0.0121514115403
+  Peak points near 4734.6 MeV (there are 1 of them)
+    run 124633 energy = 4.7346 gamgams = 1320
+  Average energy is 4.7346
+  Corrected number of hadrons is 7457.37781109 +/- 86.3980450526
+  Number of gamgams is 1320
+  Relative cross-section is 0.252026162964 +/- 0.00752626846899
+  Peak points near 4734.7 MeV (there are 2 of them)
+    run 124291 energy = 4.73469 gamgams = 1218
+    run 124448 energy = 4.73467 gamgams = 812
+  Average energy is 4.734682
+  Corrected number of hadrons is 11348.2463768 +/- 106.572762107
+  Number of gamgams is 2030
+  Relative cross-section is 0.249373951671 +/- 0.00600988120865
+  Peak points near 4734.8 MeV (there are 2 of them)
+    run 125127 energy = 4.7348 gamgams = 909
+    run 125310 energy = 4.7348 gamgams = 915
+  Average energy is 4.7348
+  Corrected number of hadrons is 9841.97076462 +/- 99.2573888201
+  Number of gamgams is 1824
+  Relative cross-section is 0.240687734316 +/- 0.00613614542665
+  Peak points near 4734.9 MeV (there are 2 of them)
+    run 125260 energy = 4.7349 gamgams = 838
+    run 125293 energy = 4.7349 gamgams = 613
+  Average energy is 4.7349
+  Corrected number of hadrons is 8338.19315342 +/- 91.3553876166
+  Number of gamgams is 1451
+  Relative cross-section is 0.256320249053 +/- 0.00729148642083
+  Peak points near 4722.2 MeV (there are 1 of them)
+    run 123169 energy = 4.7222 gamgams = 888
+  Average energy is 4.7222
+  Corrected number of hadrons is 2864.71714143 +/- 53.5843527401
+  Number of gamgams is 888
+  Relative cross-section is 0.144670514914 +/- 0.005558061156
+  Peak points near 4735.9 MeV (there are 2 of them)
+    run 123784 energy = 4.73588 gamgams = 1102
+    run 124085 energy = 4.73585 gamgams = 994
+  Average energy is 4.7358657729
+  Corrected number of hadrons is 10055.2631184 +/- 100.343095834
+  Number of gamgams is 2096
+  Relative cross-section is 0.21389635873 +/- 0.00513655484438
+Working on: u2s
+  Continuum point
+    run 126471 energy = 4.9986 gamgams = 1002
+    run 126472 energy = 4.9987 gamgams = 1585
+    run 126473 energy = 4.9988 gamgams = 1667
+    run 126475 energy = 4.9987 gamgams = 867
+    run 126476 energy = 4.9987 gamgams = 504
+    run 126477 energy = 4.9988 gamgams = 1645
+    run 126478 energy = 4.9988 gamgams = 1626
+    run 126479 energy = 4.9987 gamgams = 1592
+    run 126480 energy = 4.9987 gamgams = 1473
+    run 126483 energy = 4.9988 gamgams = 1464
+    run 126485 energy = 4.9988 gamgams = 1679
+    run 126487 energy = 4.9988 gamgams = 1336
+    run 126488 energy = 4.9988 gamgams = 1477
+    run 126490 energy = 4.9988 gamgams = 1597
+    run 126492 energy = 4.9988 gamgams = 1723
+    run 126494 energy = 4.9988 gamgams = 873
+    run 126651 energy = 4.9986 gamgams = 162
+    run 126652 energy = 4.9986 gamgams = 1298
+    run 126653 energy = 4.9986 gamgams = 1725
+    run 126656 energy = 4.9986 gamgams = 1728
+    run 126657 energy = 4.9986 gamgams = 1635
+    run 126658 energy = 4.9986 gamgams = 1140
+    run 126662 energy = 4.9986 gamgams = 1131
+    run 126664 energy = 4.9986 gamgams = 1605
+    run 126665 energy = 4.9985 gamgams = 1588
+    run 126666 energy = 4.9986 gamgams = 1655
+    run 126667 energy = 4.9986 gamgams = 1730
+    run 126668 energy = 4.9986 gamgams = 1686
+    run 126669 energy = 4.9986 gamgams = 1634
+    run 126670 energy = 4.9987 gamgams = 1624
+    run 126673 energy = 4.9986 gamgams = 1163
+    run 126832 energy = 4.9988 gamgams = 1532
+    run 126833 energy = 4.9988 gamgams = 1744
+    run 126834 energy = 4.9988 gamgams = 1652
+    run 126835 energy = 4.9988 gamgams = 1687
+    run 126836 energy = 4.9988 gamgams = 1669
+    run 126837 energy = 4.9988 gamgams = 1618
+    run 126838 energy = 4.9989 gamgams = 671
+    run 126839 energy = 4.9989 gamgams = 1503
+    run 126842 energy = 4.9989 gamgams = 1324
+    run 126845 energy = 4.9989 gamgams = 1171
+    run 126846 energy = 4.9989 gamgams = 1717
+    run 126847 energy = 4.9988 gamgams = 1633
+    run 126851 energy = 4.9988 gamgams = 1028
+    run 126853 energy = 4.9988 gamgams = 1731
+    run 126854 energy = 4.9988 gamgams = 1809
+    run 126855 energy = 4.9988 gamgams = 1676
+    run 126856 energy = 4.9988 gamgams = 1716
+    run 127059 energy = 4.9992 gamgams = 779
+    run 127061 energy = 4.9992 gamgams = 1578
+    run 127062 energy = 4.9993 gamgams = 1594
+    run 127064 energy = 4.9993 gamgams = 1599
+    run 127065 energy = 4.9993 gamgams = 1501
+    run 127066 energy = 4.9992 gamgams = 1627
+    run 127067 energy = 4.9992 gamgams = 1584
+    run 127068 energy = 4.9992 gamgams = 1556
+    run 127070 energy = 4.9992 gamgams = 1694
+    run 127071 energy = 4.9992 gamgams = 1363
+    run 127072 energy = 4.9991 gamgams = 1983
+    run 127073 energy = 4.9991 gamgams = 767
+    run 127074 energy = 4.9986 gamgams = 1201
+    run 127097 energy = 4.9985 gamgams = 800
+    run 127099 energy = 4.9984 gamgams = 1211
+    run 127108 energy = 4.9986 gamgams = 1028
+    run 127110 energy = 4.9985 gamgams = 1427
+    run 127111 energy = 4.9985 gamgams = 1378
+    run 127112 energy = 4.9985 gamgams = 1345
+    run 127113 energy = 4.9985 gamgams = 1309
+    run 127114 energy = 4.9985 gamgams = 1478
+    run 127115 energy = 4.9985 gamgams = 1448
+    run 127116 energy = 4.9985 gamgams = 1123
+    run 127221 energy = 4.9986 gamgams = 1330
+    run 127222 energy = 4.9986 gamgams = 1534
+    run 127224 energy = 4.9986 gamgams = 1027
+    run 127228 energy = 4.9986 gamgams = 1106
+    run 127229 energy = 4.9986 gamgams = 1264
+    run 127231 energy = 4.9985 gamgams = 1314
+    run 127234 energy = 4.9985 gamgams = 1074
+    run 127235 energy = 4.9986 gamgams = 1298
+    run 127237 energy = 4.9986 gamgams = 694
+    run 127238 energy = 4.9986 gamgams = 1248
+    run 127240 energy = 4.9986 gamgams = 1761
+    run 127241 energy = 4.9986 gamgams = 1232
+    run 127247 energy = 4.9987 gamgams = 829
+    run 127249 energy = 4.9987 gamgams = 820
+    run 127250 energy = 4.9987 gamgams = 1537
+    run 127619 energy = 4.9992 gamgams = 1211
+    run 127620 energy = 4.9992 gamgams = 1794
+    run 127621 energy = 4.9986 gamgams = 1689
+    run 127622 energy = 4.9987 gamgams = 1848
+    run 127623 energy = 4.9986 gamgams = 2135
+    run 127625 energy = 4.9987 gamgams = 1674
+    run 127626 energy = 4.9987 gamgams = 1826
+    run 127627 energy = 4.9987 gamgams = 1500
+    run 127630 energy = 4.9987 gamgams = 1126
+    run 127631 energy = 4.9987 gamgams = 1801
+    run 127635 energy = 4.9988 gamgams = 807
+    run 127637 energy = 4.9987 gamgams = 1877
+    run 127638 energy = 4.9987 gamgams = 1527
+    run 127641 energy = 4.9987 gamgams = 400
+    run 127643 energy = 4.9987 gamgams = 1913
+    run 127644 energy = 4.9987 gamgams = 1852
+    run 127645 energy = 4.9987 gamgams = 1793
+    run 127646 energy = 4.9987 gamgams = 1772
+    run 127647 energy = 4.9987 gamgams = 1717
+    run 127650 energy = 4.9987 gamgams = 1455
+    run 127651 energy = 4.9987 gamgams = 1900
+    run 127652 energy = 4.9987 gamgams = 1824
+    run 127654 energy = 4.9988 gamgams = 1338
+    run 127657 energy = 4.9988 gamgams = 1791
+    run 127659 energy = 4.9988 gamgams = 1548
+    run 127661 energy = 4.9988 gamgams = 925
+    run 127662 energy = 4.9988 gamgams = 2256
+    run 127663 energy = 4.9988 gamgams = 2184
+    run 127667 energy = 4.9988 gamgams = 596
+    run 127668 energy = 4.9988 gamgams = 2064
+    run 127670 energy = 4.9988 gamgams = 1541
+    run 127673 energy = 4.9987 gamgams = 2022
+    run 127677 energy = 4.9988 gamgams = 1594
+    run 127678 energy = 4.9988 gamgams = 2026
+    run 127680 energy = 4.9988 gamgams = 2136
+    run 127681 energy = 4.9987 gamgams = 2147
+    run 127682 energy = 4.9987 gamgams = 2132
+    run 127683 energy = 4.9988 gamgams = 2141
+    run 127684 energy = 4.9987 gamgams = 2117
+    run 127685 energy = 4.9988 gamgams = 2121
+    run 127690 energy = 4.9988 gamgams = 1535
+    run 127692 energy = 4.9988 gamgams = 1259
+    run 127694 energy = 4.9987 gamgams = 749
+    run 127695 energy = 4.9987 gamgams = 1184
+    run 127698 energy = 4.9987 gamgams = 1438
+    run 127700 energy = 4.9987 gamgams = 2184
+    run 127701 energy = 4.9987 gamgams = 2094
+    run 127702 energy = 4.9988 gamgams = 1993
+    run 127703 energy = 4.9988 gamgams = 2341
+    run 127710 energy = 4.9987 gamgams = 1791
+    run 127712 energy = 4.9987 gamgams = 664
+    run 127721 energy = 4.9987 gamgams = 2146
+    run 127722 energy = 4.9987 gamgams = 1934
+    run 127723 energy = 4.9987 gamgams = 1754
+    run 127725 energy = 4.9988 gamgams = 1872
+    run 128314 energy = 4.9985 gamgams = 638
+  Average energy is 4.99875417717
+  Corrected number of hadrons is 685152.084708 +/- 828.467208339
+  Number of gamgams is 212632
+  Relative cross-section is 0.128953994432 +/- 0.000320186812387
+  High-energy tail point
+    run 127206 energy = 5.0426 gamgams = 268
+    run 127213 energy = 5.0427 gamgams = 663
+    run 127214 energy = 5.0427 gamgams = 807
+    run 127215 energy = 5.0426 gamgams = 806
+    run 127217 energy = 5.0426 gamgams = 744
+    run 127218 energy = 5.0426 gamgams = 528
+    run 127219 energy = 5.0427 gamgams = 605
+  Average energy is 5.04264693508
+  Corrected number of hadrons is 15004.386057 +/- 122.587168754
+  Number of gamgams is 4421
+  Relative cross-section is 0.133469056811 +/- 0.00228440204943
+  See if there are any peak/scan points...
+  Peak points near 5017.6 MeV (there are 1 of them)
+    run 126461 energy = 5.0176 gamgams = 1274
+  Average energy is 5.0176
+  Corrected number of hadrons is 5330.80909545 +/- 73.0697673771
+  Number of gamgams is 1274
+  Relative cross-section is 0.166200233158 +/- 0.00518377726117
+  Peak points near 5017.7 MeV (there are 2 of them)
+    run 126821 energy = 5.0177 gamgams = 833
+    run 127606 energy = 5.0177 gamgams = 985
+  Average energy is 5.0177
+  Corrected number of hadrons is 7785.57396302 +/- 88.2973727638
+  Number of gamgams is 1818
+  Relative cross-section is 0.170093364599 +/- 0.00443117444992
+  Peak points near 5006.6 MeV (there are 3 of them)
+    run 126460 energy = 5.0066 gamgams = 850
+    run 127603 energy = 5.0066 gamgams = 774
+    run 127931 energy = 5.0066 gamgams = 378
+  Average energy is 5.0066
+  Corrected number of hadrons is 6544.22688656 +/- 80.9677288396
+  Number of gamgams is 2002
+  Relative cross-section is 0.130409276233 +/- 0.00333138029791
+  Peak points near 5006.8 MeV (there are 1 of them)
+    run 126817 energy = 5.0068 gamgams = 990
+  Average energy is 5.0068
+  Corrected number of hadrons is 3533.97276362 +/- 59.4981280074
+  Number of gamgams is 990
+  Relative cross-section is 0.142399189152 +/- 0.00512152982891
+  Peak points near 5020.5 MeV (there are 1 of them)
+    run 127932 energy = 5.0205 gamgams = 562
+  Average energy is 5.0205
+  Corrected number of hadrons is 2185.98550725 +/- 46.7975906725
+  Number of gamgams is 562
+  Relative cross-section is 0.154318154147 +/- 0.00729985573972
+  Peak points near 5020.6 MeV (there are 3 of them)
+    run 126454 energy = 5.0206 gamgams = 696
+    run 127602 energy = 5.0206 gamgams = 960
+    run 127961 energy = 5.0206 gamgams = 337
+  Average energy is 5.0206
+  Corrected number of hadrons is 7371.77911044 +/- 85.9547607149
+  Number of gamgams is 1993
+  Relative cross-section is 0.146741776087 +/- 0.0037056618095
+  Peak points near 5020.7 MeV (there are 1 of them)
+    run 126815 energy = 5.0207 gamgams = 1092
+  Average energy is 5.0207
+  Corrected number of hadrons is 4071.64192904 +/- 63.8620236993
+  Number of gamgams is 1092
+  Relative cross-section is 0.147917104143 +/- 0.00504168934018
+  Peak points near 5008.4 MeV (there are 1 of them)
+    run 128307 energy = 5.0084 gamgams = 552
+  Average energy is 5.0084
+  Corrected number of hadrons is 2581.40229885 +/- 50.8389388279
+  Number of gamgams is 552
+  Relative cross-section is 0.186431202574 +/- 0.0087433254148
+  Peak points near 5008.5 MeV (there are 1 of them)
+    run 127959 energy = 5.0085 gamgams = 323
+  Average energy is 5.0085
+  Corrected number of hadrons is 1460.74487756 +/- 38.2525178575
+  Number of gamgams is 323
+  Relative cross-section is 0.180283712816 +/- 0.0110866918615
+  Peak points near 5008.7 MeV (there are 2 of them)
+    run 126782 energy = 5.0087 gamgams = 1246
+    run 127600 energy = 5.0087 gamgams = 801
+  Average energy is 5.0087
+  Corrected number of hadrons is 9599.92053973 +/- 98.0514123318
+  Number of gamgams is 2047
+  Relative cross-section is 0.186938931286 +/- 0.00455164993196
+  Peak points near 5013.8 MeV (there are 1 of them)
+    run 128306 energy = 5.0138 gamgams = 1635
+  Average energy is 5.0138
+  Corrected number of hadrons is 13489.8438281 +/- 116.181565543
+  Number of gamgams is 1635
+  Relative cross-section is 0.328212526979 +/- 0.00859513548355
+  Peak points near 5010.4 MeV (there are 1 of them)
+    run 127963 energy = 5.0104 gamgams = 473
+  Average energy is 5.0104
+  Corrected number of hadrons is 3535.86881559 +/- 59.4821921621
+  Number of gamgams is 473
+  Relative cross-section is 0.297776352399 +/- 0.0145793740472
+  Peak points near 5010.5 MeV (there are 7 of them)
+    run 127589 energy = 5.0105 gamgams = 1437
+    run 127924 energy = 5.0105 gamgams = 961
+    run 127925 energy = 5.0105 gamgams = 1416
+    run 127927 energy = 5.0105 gamgams = 945
+    run 128310 energy = 5.0105 gamgams = 416
+    run 128312 energy = 5.0105 gamgams = 530
+    run 128313 energy = 5.0105 gamgams = 777
+  Average energy is 5.0105
+  Corrected number of hadrons is 52848.986007 +/- 229.971767817
+  Number of gamgams is 6482
+  Relative cross-section is 0.324762218483 +/- 0.00427415737987
+  Peak points near 5010.6 MeV (there are 9 of them)
+    run 126465 energy = 5.0106 gamgams = 1078
+    run 126777 energy = 5.0106 gamgams = 1350
+    run 126778 energy = 5.0106 gamgams = 1467
+    run 126779 energy = 5.0106 gamgams = 1359
+    run 127588 energy = 5.0106 gamgams = 821
+    run 127592 energy = 5.0106 gamgams = 1510
+    run 127610 energy = 5.0106 gamgams = 1142
+    run 127611 energy = 5.0106 gamgams = 1452
+    run 127612 energy = 5.0106 gamgams = 1588
+  Average energy is 5.0106
+  Corrected number of hadrons is 96174.7766117 +/- 310.230919459
+  Number of gamgams is 11767
+  Relative cross-section is 0.325548699403 +/- 0.00317953874869
+  Peak points near 5010.7 MeV (there are 7 of them)
+    run 126462 energy = 5.0107 gamgams = 400
+    run 126464 energy = 5.0107 gamgams = 842
+    run 126467 energy = 5.0107 gamgams = 602
+    run 126776 energy = 5.0107 gamgams = 1323
+    run 126823 energy = 5.0107 gamgams = 1324
+    run 126824 energy = 5.0107 gamgams = 1566
+    run 126825 energy = 5.0107 gamgams = 1450
+  Average energy is 5.0107
+  Corrected number of hadrons is 59633.5192404 +/- 244.283607227
+  Number of gamgams is 7507
+  Relative cross-section is 0.316393258237 +/- 0.00387487607311
+  Peak points near 5012.5 MeV (there are 2 of them)
+    run 126505 energy = 5.0125 gamgams = 989
+    run 126912 energy = 5.0125 gamgams = 1058
+  Average energy is 5.0125
+  Corrected number of hadrons is 20457.2588706 +/- 143.10395218
+  Number of gamgams is 2047
+  Relative cross-section is 0.397759743531 +/- 0.00922128156646
+  Peak points near 5012.6 MeV (there are 13 of them)
+    run 126469 energy = 5.0126 gamgams = 1017
+    run 126496 energy = 5.0126 gamgams = 508
+    run 126499 energy = 5.0126 gamgams = 176
+    run 126506 energy = 5.0126 gamgams = 695
+    run 126831 energy = 5.0126 gamgams = 660
+    run 126858 energy = 5.0126 gamgams = 1708
+    run 126871 energy = 5.0126 gamgams = 1872
+    run 126909 energy = 5.0126 gamgams = 1603
+    run 126910 energy = 5.0126 gamgams = 1824
+    run 126911 energy = 5.0126 gamgams = 1919
+    run 126914 energy = 5.0126 gamgams = 2099
+    run 126915 energy = 5.0126 gamgams = 1992
+    run 128315 energy = 5.0126 gamgams = 887
+  Average energy is 5.0126
+  Corrected number of hadrons is 168029.282609 +/- 410.074038914
+  Number of gamgams is 16960
+  Relative cross-section is 0.394305673259 +/- 0.0031769945604
+  Peak points near 5012.7 MeV (there are 26 of them)
+    run 126503 energy = 5.0127 gamgams = 345
+    run 126507 energy = 5.0127 gamgams = 596
+    run 126508 energy = 5.0127 gamgams = 1751
+    run 126509 energy = 5.0127 gamgams = 1527
+    run 126511 energy = 5.0127 gamgams = 489
+    run 126512 energy = 5.0127 gamgams = 290
+    run 126859 energy = 5.0127 gamgams = 1639
+    run 126862 energy = 5.0127 gamgams = 1098
+    run 126866 energy = 5.0127 gamgams = 1313
+    run 126868 energy = 5.0127 gamgams = 1741
+    run 126869 energy = 5.0127 gamgams = 1680
+    run 126870 energy = 5.0127 gamgams = 1721
+    run 126872 energy = 5.0127 gamgams = 1643
+    run 126874 energy = 5.0127 gamgams = 1615
+    run 126875 energy = 5.0127 gamgams = 980
+    run 126877 energy = 5.0127 gamgams = 412
+    run 126878 energy = 5.0127 gamgams = 1725
+    run 126879 energy = 5.0127 gamgams = 885
+    run 126880 energy = 5.0127 gamgams = 493
+    run 126881 energy = 5.0127 gamgams = 1763
+    run 126882 energy = 5.0127 gamgams = 1576
+    run 126883 energy = 5.0127 gamgams = 1598
+    run 126906 energy = 5.0127 gamgams = 142
+    run 126907 energy = 5.0127 gamgams = 388
+    run 128303 energy = 5.0127 gamgams = 1133
+    run 128305 energy = 5.0127 gamgams = 1120
+  Average energy is 5.0127
+  Corrected number of hadrons is 294561.330585 +/- 542.937076847
+  Number of gamgams is 29663
+  Relative cross-section is 0.395200270983 +/- 0.00240746191345
+  Peak points near 5012.8 MeV (there are 13 of them)
+    run 126513 energy = 5.0128 gamgams = 528
+    run 126514 energy = 5.0128 gamgams = 1640
+    run 126517 energy = 5.0128 gamgams = 1455
+    run 126521 energy = 5.0128 gamgams = 329
+    run 126527 energy = 5.0128 gamgams = 1111
+    run 126528 energy = 5.0128 gamgams = 235
+    run 126531 energy = 5.0128 gamgams = 204
+    run 126532 energy = 5.0128 gamgams = 1820
+    run 126556 energy = 5.0128 gamgams = 2092
+    run 126557 energy = 5.0128 gamgams = 2000
+    run 126559 energy = 5.0128 gamgams = 1992
+    run 126890 energy = 5.0128 gamgams = 1501
+    run 128316 energy = 5.0128 gamgams = 927
+  Average energy is 5.0128
+  Corrected number of hadrons is 158558.323338 +/- 398.343666526
+  Number of gamgams is 15834
+  Relative cross-section is 0.398508555007 +/- 0.0033214393662
+  Peak points near 5012.9 MeV (there are 17 of them)
+    run 126520 energy = 5.0129 gamgams = 386
+    run 126535 energy = 5.0129 gamgams = 200
+    run 126536 energy = 5.0129 gamgams = 1824
+    run 126540 energy = 5.0129 gamgams = 1999
+    run 126541 energy = 5.0129 gamgams = 1802
+    run 126542 energy = 5.0129 gamgams = 479
+    run 126546 energy = 5.0129 gamgams = 256
+    run 126552 energy = 5.0129 gamgams = 1996
+    run 126554 energy = 5.0129 gamgams = 2129
+    run 126555 energy = 5.0129 gamgams = 2149
+    run 126562 energy = 5.0129 gamgams = 1820
+    run 126563 energy = 5.0129 gamgams = 2239
+    run 126564 energy = 5.0129 gamgams = 1145
+    run 126566 energy = 5.0129 gamgams = 212
+    run 126568 energy = 5.0129 gamgams = 1922
+    run 126892 energy = 5.0129 gamgams = 1682
+    run 127615 energy = 5.0129 gamgams = 1567
+  Average energy is 5.0129
+  Corrected number of hadrons is 234649.123438 +/- 484.605898191
+  Number of gamgams is 23807
+  Relative cross-section is 0.392225822068 +/- 0.00266799066781
+  Peak points near 5013.0 MeV (there are 3 of them)
+    run 126893 energy = 5.013 gamgams = 1261
+    run 126894 energy = 5.013 gamgams = 384
+    run 126895 energy = 5.013 gamgams = 1967
+  Average energy is 5.013
+  Corrected number of hadrons is 34791.4375312 +/- 186.591967857
+  Number of gamgams is 3612
+  Relative cross-section is 0.383291530325 +/- 0.0067006813216
+  Peak points near 5013.7 MeV (there are 1 of them)
+    run 127962 energy = 5.0137 gamgams = 662
+  Average energy is 5.0137
+  Corrected number of hadrons is 5718.69890055 +/- 75.6525022683
+  Number of gamgams is 662
+  Relative cross-section is 0.343654910135 +/- 0.0141090313604
+  Peak points near 5026.6 MeV (there are 2 of them)
+    run 126780 energy = 5.0266 gamgams = 1041
+    run 127598 energy = 5.0266 gamgams = 792
+  Average energy is 5.0266
+  Corrected number of hadrons is 6553.76561719 +/- 81.0323045631
+  Number of gamgams is 1833
+  Relative cross-section is 0.141507607023 +/- 0.00373973327845
+  Peak points near 5013.9 MeV (there are 1 of them)
+    run 127613 energy = 5.0139 gamgams = 1659
+  Average energy is 5.0139
+  Corrected number of hadrons is 14630.9550225 +/- 121.024976668
+  Number of gamgams is 1659
+  Relative cross-section is 0.350812414253 +/- 0.00908865637731
+  Peak points near 5014.4 MeV (there are 1 of them)
+    run 127594 energy = 5.0144 gamgams = 769
+  Average energy is 5.0144
+  Corrected number of hadrons is 6388.63618191 +/- 79.9585131058
+  Number of gamgams is 769
+  Relative cross-section is 0.33040291282 +/- 0.012611846971
+  Peak points near 5015.2 MeV (there are 2 of them)
+    run 127958 energy = 5.0152 gamgams = 240
+    run 128309 energy = 5.0152 gamgams = 588
+  Average energy is 5.0152
+  Corrected number of hadrons is 4924.79835082 +/- 70.208273367
+  Number of gamgams is 828
+  Relative cross-section is 0.236473022442 +/- 0.00888259223417
+  Peak points near 5015.3 MeV (there are 4 of them)
+    run 126449 energy = 5.0153 gamgams = 903
+    run 126451 energy = 5.0153 gamgams = 462
+    run 127601 energy = 5.0153 gamgams = 1000
+    run 127933 energy = 5.0153 gamgams = 535
+  Average energy is 5.0153
+  Corrected number of hadrons is 18434.3395802 +/- 135.844250595
+  Number of gamgams is 2900
+  Relative cross-section is 0.252717753829 +/- 0.00504886197642
+  Peak points near 5015.4 MeV (there are 1 of them)
+    run 126453 energy = 5.0154 gamgams = 217
+  Average energy is 5.0154
+  Corrected number of hadrons is 1505.56146927 +/- 38.8643606757
+  Number of gamgams is 217
+  Relative cross-section is 0.27582117648 +/- 0.0200320065419
+  Peak points near 5015.5 MeV (there are 2 of them)
+    run 126783 energy = 5.0155 gamgams = 1260
+    run 126814 energy = 5.0155 gamgams = 1003
+  Average energy is 5.0155
+  Corrected number of hadrons is 14103.5929535 +/- 118.829318968
+  Number of gamgams is 2263
+  Relative cross-section is 0.247751756246 +/- 0.00561079647004
+  Peak points near 5017.4 MeV (there are 1 of them)
+    run 127928 energy = 5.0174 gamgams = 522
+  Average energy is 5.0174
+  Corrected number of hadrons is 2068.18165917 +/- 45.5172312518
+  Number of gamgams is 522
+  Relative cross-section is 0.157384054192 +/- 0.00771033387707
+Working on: u3s
+  Continuum point
+    run 121899 energy = 5.1651 gamgams = 1005
+    run 121901 energy = 5.1648 gamgams = 975
+    run 121902 energy = 5.1648 gamgams = 372
+    run 121903 energy = 5.1649 gamgams = 925
+    run 121904 energy = 5.1649 gamgams = 1159
+    run 121905 energy = 5.1648 gamgams = 1014
+    run 121906 energy = 5.1648 gamgams = 585
+    run 121911 energy = 5.1649 gamgams = 1057
+    run 121912 energy = 5.1649 gamgams = 1125
+    run 121914 energy = 5.1649 gamgams = 394
+    run 121915 energy = 5.1648 gamgams = 1047
+    run 122064 energy = 5.1647 gamgams = 372
+    run 122066 energy = 5.1648 gamgams = 361
+    run 122080 energy = 5.1647 gamgams = 1325
+    run 122081 energy = 5.1648 gamgams = 1471
+    run 122083 energy = 5.1648 gamgams = 1007
+    run 122085 energy = 5.1648 gamgams = 907
+    run 122089 energy = 5.1648 gamgams = 982
+    run 122091 energy = 5.1648 gamgams = 1351
+    run 122264 energy = 5.1647 gamgams = 663
+    run 122268 energy = 5.1647 gamgams = 1435
+    run 122269 energy = 5.1647 gamgams = 1345
+    run 122272 energy = 5.1647 gamgams = 753
+    run 122273 energy = 5.1647 gamgams = 1552
+    run 122418 energy = 5.1648 gamgams = 1365
+    run 122420 energy = 5.1648 gamgams = 1434
+    run 122422 energy = 5.1648 gamgams = 872
+    run 122423 energy = 5.1648 gamgams = 1575
+    run 122424 energy = 5.1648 gamgams = 1553
+    run 122425 energy = 5.1648 gamgams = 1534
+    run 122426 energy = 5.1648 gamgams = 1539
+    run 122427 energy = 5.1648 gamgams = 1330
+    run 122428 energy = 5.1648 gamgams = 1517
+    run 122429 energy = 5.1648 gamgams = 534
+    run 122430 energy = 5.1649 gamgams = 1561
+    run 122432 energy = 5.1648 gamgams = 1420
+    run 122433 energy = 5.1649 gamgams = 753
+    run 122434 energy = 5.1649 gamgams = 356
+    run 122585 energy = 5.1651 gamgams = 1425
+    run 122586 energy = 5.1652 gamgams = 1391
+    run 122587 energy = 5.1652 gamgams = 1369
+    run 122589 energy = 5.1652 gamgams = 1257
+    run 122590 energy = 5.1652 gamgams = 1236
+    run 122593 energy = 5.1652 gamgams = 567
+    run 122594 energy = 5.1652 gamgams = 636
+    run 122596 energy = 5.1652 gamgams = 1138
+    run 122599 energy = 5.1652 gamgams = 344
+    run 122602 energy = 5.1652 gamgams = 1496
+    run 122603 energy = 5.1652 gamgams = 1509
+    run 122604 energy = 5.1652 gamgams = 1447
+    run 122605 energy = 5.1653 gamgams = 1520
+    run 122606 energy = 5.1653 gamgams = 462
+    run 122783 energy = 5.1651 gamgams = 1184
+    run 122785 energy = 5.1651 gamgams = 1246
+    run 122786 energy = 5.1651 gamgams = 874
+    run 122787 energy = 5.1651 gamgams = 465
+    run 122789 energy = 5.1651 gamgams = 1314
+    run 122796 energy = 5.1651 gamgams = 1532
+    run 122797 energy = 5.1646 gamgams = 1389
+    run 122798 energy = 5.1651 gamgams = 1370
+    run 122799 energy = 5.1651 gamgams = 1454
+    run 122800 energy = 5.1651 gamgams = 1367
+    run 122801 energy = 5.1651 gamgams = 1360
+    run 122802 energy = 5.1651 gamgams = 1639
+    run 122803 energy = 5.1651 gamgams = 1556
+    run 122804 energy = 5.1651 gamgams = 1502
+    run 122805 energy = 5.1651 gamgams = 1260
+    run 122808 energy = 5.1651 gamgams = 336
+    run 122809 energy = 5.1651 gamgams = 1008
+    run 122810 energy = 5.1651 gamgams = 1390
+    run 123011 energy = 5.165 gamgams = 1147
+    run 123012 energy = 5.1651 gamgams = 537
+    run 123016 energy = 5.165 gamgams = 1266
+    run 123018 energy = 5.165 gamgams = 1382
+    run 123019 energy = 5.165 gamgams = 1196
+  Average energy is 5.16496413504
+  Corrected number of hadrons is 279242.52024 +/- 529.053380823
+  Number of gamgams is 84096
+  Relative cross-section is 0.12447197754 +/- 0.000489741286663
+  High-energy tail point
+    run 122568 energy = 5.1997 gamgams = 841
+    run 122569 energy = 5.1997 gamgams = 756
+    run 122570 energy = 5.1997 gamgams = 1293
+    run 122571 energy = 5.1997 gamgams = 1375
+    run 122572 energy = 5.1997 gamgams = 1448
+    run 122573 energy = 5.1997 gamgams = 1463
+    run 122574 energy = 5.1997 gamgams = 1050
+    run 122575 energy = 5.1997 gamgams = 1018
+  Average energy is 5.1997
+  Corrected number of hadrons is 32139.4692654 +/- 179.461780707
+  Number of gamgams is 9244
+  Relative cross-section is 0.128594439263 +/- 0.00151805499141
+  See if there are any peak/scan points...
+  Peak points near 5188.3 MeV (there are 2 of them)
+    run 122251 energy = 5.1883 gamgams = 772
+    run 123003 energy = 5.1883 gamgams = 856
+  Average energy is 5.1883
+  Corrected number of hadrons is 6091.2896052 +/- 78.1326461526
+  Number of gamgams is 1628
+  Relative cross-section is 0.138996763331 +/- 0.00387893416906
+  Peak points near 5184.9 MeV (there are 1 of them)
+    run 122772 energy = 5.1849 gamgams = 896
+  Average energy is 5.1849
+  Corrected number of hadrons is 3733.97501249 +/- 61.1557437001
+  Number of gamgams is 896
+  Relative cross-section is 0.155018178086 +/- 0.00576766888409
+  Peak points near 5172.3 MeV (there are 1 of them)
+    run 122249 energy = 5.1723 gamgams = 929
+  Average energy is 5.1723
+  Corrected number of hadrons is 2936.69390305 +/- 54.2706743735
+  Number of gamgams is 929
+  Relative cross-section is 0.118161380001 +/- 0.00444943709658
+  Peak points near 5172.4 MeV (there are 5 of them)
+    run 122412 energy = 5.1724 gamgams = 1189
+    run 122539 energy = 5.1724 gamgams = 1105
+    run 122561 energy = 5.1724 gamgams = 978
+    run 122770 energy = 5.1724 gamgams = 1108
+    run 123001 energy = 5.1724 gamgams = 799
+  Average energy is 5.1724
+  Corrected number of hadrons is 17177.0329835 +/- 131.198197459
+  Number of gamgams is 5179
+  Relative cross-section is 0.123970408566 +/- 0.00196572872177
+  Peak points near 5185.3 MeV (there are 1 of them)
+    run 122540 energy = 5.1853 gamgams = 1042
+  Average energy is 5.1853
+  Corrected number of hadrons is 3913.38055972 +/- 62.6148499981
+  Number of gamgams is 1042
+  Relative cross-section is 0.139680759702 +/- 0.00487023188716
+  Peak points near 5185.4 MeV (there are 3 of them)
+    run 122253 energy = 5.1854 gamgams = 1173
+    run 122414 energy = 5.1854 gamgams = 1177
+    run 123002 energy = 5.1854 gamgams = 805
+  Average energy is 5.1854
+  Corrected number of hadrons is 12086.7363818 +/- 110.051186355
+  Number of gamgams is 3155
+  Relative cross-section is 0.142477130475 +/- 0.00284904540209
+  Peak points near 5185.5 MeV (there are 2 of them)
+    run 122551 energy = 5.1855 gamgams = 1128
+    run 122562 energy = 5.1855 gamgams = 993
+  Average energy is 5.1855
+  Corrected number of hadrons is 7860.30084958 +/- 88.7338669868
+  Number of gamgams is 2121
+  Relative cross-section is 0.137821579579 +/- 0.00337286933344
+  Peak points near 5173.3 MeV (there are 2 of them)
+    run 122070 energy = 5.1733 gamgams = 1138
+    run 122778 energy = 5.1733 gamgams = 1113
+  Average energy is 5.1733
+  Corrected number of hadrons is 7787.04422789 +/- 88.356979193
+  Number of gamgams is 2251
+  Relative cross-section is 0.129259305614 +/- 0.00309411733968
+  Peak points near 5173.4 MeV (there are 1 of them)
+    run 121889 energy = 5.1734 gamgams = 955
+  Average energy is 5.1734
+  Corrected number of hadrons is 3357.77586207 +/- 58.0364035579
+  Number of gamgams is 955
+  Relative cross-section is 0.131370004175 +/- 0.00481944124983
+  Peak points near 5186.4 MeV (there are 2 of them)
+    run 122071 energy = 5.1864 gamgams = 1155
+    run 122779 energy = 5.1864 gamgams = 1090
+  Average energy is 5.1864
+  Corrected number of hadrons is 8447.64592704 +/- 92.0236603975
+  Number of gamgams is 2245
+  Relative cross-section is 0.139890215792 +/- 0.00332250498743
+  Peak points near 5186.5 MeV (there are 1 of them)
+    run 121890 energy = 5.1865 gamgams = 966
+  Average energy is 5.1865
+  Corrected number of hadrons is 3631.7966017 +/- 60.3672377892
+  Number of gamgams is 966
+  Relative cross-section is 0.139764098324 +/- 0.00506147366005
+  Peak points near 5174.0 MeV (there are 1 of them)
+    run 122768 energy = 5.174 gamgams = 1183
+  Average energy is 5.174
+  Corrected number of hadrons is 4451.8998001 +/- 66.7839816116
+  Number of gamgams is 1183
+  Relative cross-section is 0.140574901418 +/- 0.00459906747156
+  Peak points near 5174.3 MeV (there are 3 of them)
+    run 122252 energy = 5.1743 gamgams = 1055
+    run 122537 energy = 5.1743 gamgams = 1114
+    run 122559 energy = 5.1743 gamgams = 1052
+  Average energy is 5.1743
+  Corrected number of hadrons is 11708.2893553 +/- 108.313021584
+  Number of gamgams is 3221
+  Relative cross-section is 0.135768653883 +/- 0.00270190883735
+  Peak points near 5174.5 MeV (there are 4 of them)
+    run 122416 energy = 5.1745 gamgams = 608
+    run 122548 energy = 5.1745 gamgams = 1010
+    run 122996 energy = 5.1745 gamgams = 449
+    run 122998 energy = 5.1745 gamgams = 800
+  Average energy is 5.1745
+  Corrected number of hadrons is 10999.2136432 +/- 104.970407053
+  Number of gamgams is 2867
+  Relative cross-section is 0.143283823526 +/- 0.0030051165458
+  Peak points near 5187.8 MeV (there are 1 of them)
+    run 122413 energy = 5.1878 gamgams = 1120
+  Average energy is 5.1878
+  Corrected number of hadrons is 4005.62768616 +/- 63.3432894145
+  Number of gamgams is 1120
+  Relative cross-section is 0.132888104841 +/- 0.00449257373636
+  Peak points near 5175.3 MeV (there are 2 of them)
+    run 122780 energy = 5.1753 gamgams = 252
+    run 122781 energy = 5.1753 gamgams = 949
+  Average energy is 5.1753
+  Corrected number of hadrons is 4864.52398801 +/- 69.7959598544
+  Number of gamgams is 1201
+  Relative cross-section is 0.151225936324 +/- 0.00487337918797
+  Peak points near 5175.4 MeV (there are 1 of them)
+    run 122072 energy = 5.1754 gamgams = 1177
+  Average energy is 5.1754
+  Corrected number of hadrons is 4626.71964018 +/- 68.1122629181
+  Number of gamgams is 1177
+  Relative cross-section is 0.146760397055 +/- 0.00479244115111
+  Peak points near 5175.5 MeV (there are 1 of them)
+    run 121892 energy = 5.1755 gamgams = 841
+  Average energy is 5.1755
+  Corrected number of hadrons is 3732.20964518 +/- 61.1538253491
+  Number of gamgams is 841
+  Relative cross-section is 0.165678215909 +/- 0.00632522597739
+  Peak points near 5188.4 MeV (there are 2 of them)
+    run 122563 energy = 5.1884 gamgams = 910
+    run 122773 energy = 5.1884 gamgams = 1094
+  Average energy is 5.1884
+  Corrected number of hadrons is 7132.56721639 +/- 84.5306617956
+  Number of gamgams is 2004
+  Relative cross-section is 0.132215159899 +/- 0.00334338878154
+  Peak points near 5188.5 MeV (there are 2 of them)
+    run 122541 energy = 5.1885 gamgams = 1029
+    run 122555 energy = 5.1885 gamgams = 691
+  Average energy is 5.1885
+  Corrected number of hadrons is 6342.55647176 +/- 79.7084909419
+  Number of gamgams is 1720
+  Relative cross-section is 0.136978451918 +/- 0.0037245323037
+  Peak points near 5189.4 MeV (there are 3 of them)
+    run 121887 energy = 5.1894 gamgams = 1111
+    run 122069 energy = 5.1894 gamgams = 774
+    run 122777 energy = 5.1894 gamgams = 1085
+  Average energy is 5.1894
+  Corrected number of hadrons is 10519.6454273 +/- 102.705182794
+  Number of gamgams is 2970
+  Relative cross-section is 0.13152561995 +/- 0.00273377196602
+  Peak points near 5176.8 MeV (there are 2 of them)
+    run 122776 energy = 5.1768 gamgams = 745
+    run 123004 energy = 5.1768 gamgams = 825
+  Average energy is 5.1768
+  Corrected number of hadrons is 9351.37631184 +/- 96.7606515488
+  Number of gamgams is 1570
+  Relative cross-section is 0.222255802424 +/- 0.00606236027743
+  Peak points near 5176.9 MeV (there are 1 of them)
+    run 122993 energy = 5.1769 gamgams = 618
+  Average energy is 5.1769
+  Corrected number of hadrons is 4040.57421289 +/- 63.6036617429
+  Number of gamgams is 618
+  Relative cross-section is 0.243957998024 +/- 0.0105380528927
+  Peak points near 5177.0 MeV (there are 1 of them)
+    run 122766 energy = 5.177 gamgams = 979
+  Average energy is 5.177
+  Corrected number of hadrons is 5995.60669665 +/- 77.4751140906
+  Number of gamgams is 979
+  Relative cross-section is 0.228504161722 +/- 0.00787735758373
+  Peak points near 5177.3 MeV (there are 4 of them)
+    run 122076 energy = 5.1773 gamgams = 1171
+    run 122256 energy = 5.1773 gamgams = 736
+    run 122409 energy = 5.1773 gamgams = 693
+    run 122415 energy = 5.1773 gamgams = 972
+  Average energy is 5.1773
+  Corrected number of hadrons is 22066.398051 +/- 148.645894491
+  Number of gamgams is 3572
+  Relative cross-section is 0.230469434291 +/- 0.00415697454403
+  Peak points near 5177.4 MeV (there are 6 of them)
+    run 121898 energy = 5.1774 gamgams = 1238
+    run 122245 energy = 5.1774 gamgams = 904
+    run 122535 energy = 5.1774 gamgams = 1109
+    run 122542 energy = 5.1774 gamgams = 988
+    run 122556 energy = 5.1774 gamgams = 709
+    run 122564 energy = 5.1774 gamgams = 1055
+  Average energy is 5.1774
+  Corrected number of hadrons is 37899.1791604 +/- 194.79430392
+  Number of gamgams is 6003
+  Relative cross-section is 0.235525547378 +/- 0.00327203350184
+  Peak points near 5190.3 MeV (there are 1 of them)
+    run 122767 energy = 5.1903 gamgams = 1135
+  Average energy is 5.1903
+  Corrected number of hadrons is 4084.97826087 +/- 63.9767281059
+  Number of gamgams is 1135
+  Relative cross-section is 0.133600771622 +/- 0.00448377133911
+  Peak points near 5190.4 MeV (there are 2 of them)
+    run 122247 energy = 5.1904 gamgams = 1467
+    run 122411 energy = 5.1904 gamgams = 1130
+  Average energy is 5.1904
+  Corrected number of hadrons is 9388.92153923 +/- 97.0107131237
+  Number of gamgams is 2597
+  Relative cross-section is 0.134196782639 +/- 0.00297608268422
+  Peak points near 5190.5 MeV (there are 4 of them)
+    run 122536 energy = 5.1905 gamgams = 1108
+    run 122545 energy = 5.1905 gamgams = 943
+    run 122557 energy = 5.1905 gamgams = 759
+    run 122995 energy = 5.1905 gamgams = 779
+  Average energy is 5.1905
+  Corrected number of hadrons is 12651.6714143 +/- 112.589202794
+  Number of gamgams is 3589
+  Relative cross-section is 0.130844675638 +/- 0.00247508926538
+  Peak points near 5178.9 MeV (there are 6 of them)
+    run 122852 energy = 5.1789 gamgams = 1241
+    run 122853 energy = 5.1789 gamgams = 800
+    run 122855 energy = 5.1789 gamgams = 1198
+    run 122856 energy = 5.1789 gamgams = 213
+    run 122859 energy = 5.1789 gamgams = 2134
+    run 123020 energy = 5.1789 gamgams = 951
+  Average energy is 5.1789
+  Corrected number of hadrons is 49934.7058971 +/- 223.551546859
+  Number of gamgams is 6537
+  Relative cross-section is 0.284805886239 +/- 0.00374622928283
+  Peak points near 5179.0 MeV (there are 39 of them)
+    run 121884 energy = 5.179 gamgams = 463
+    run 121885 energy = 5.179 gamgams = 1258
+    run 122812 energy = 5.179 gamgams = 1756
+    run 122813 energy = 5.179 gamgams = 1536
+    run 122815 energy = 5.179 gamgams = 1653
+    run 122820 energy = 5.179 gamgams = 1923
+    run 122826 energy = 5.179 gamgams = 1844
+    run 122831 energy = 5.179 gamgams = 1851
+    run 122833 energy = 5.179 gamgams = 1980
+    run 122858 energy = 5.179 gamgams = 2068
+    run 122860 energy = 5.179 gamgams = 2056
+    run 122862 energy = 5.179 gamgams = 2233
+    run 122863 energy = 5.179 gamgams = 2246
+    run 122866 energy = 5.179 gamgams = 1790
+    run 122867 energy = 5.179 gamgams = 2431
+    run 122868 energy = 5.179 gamgams = 2239
+    run 122869 energy = 5.179 gamgams = 2388
+    run 122870 energy = 5.179 gamgams = 2292
+    run 122871 energy = 5.179 gamgams = 1984
+    run 122873 energy = 5.179 gamgams = 1636
+    run 122874 energy = 5.179 gamgams = 1324
+    run 122879 energy = 5.179 gamgams = 1285
+    run 122880 energy = 5.179 gamgams = 1008
+    run 122881 energy = 5.179 gamgams = 2283
+    run 123021 energy = 5.179 gamgams = 1732
+    run 123022 energy = 5.179 gamgams = 1671
+    run 123023 energy = 5.179 gamgams = 1787
+    run 123024 energy = 5.179 gamgams = 1798
+    run 123025 energy = 5.179 gamgams = 1702
+    run 123026 energy = 5.179 gamgams = 1805
+    run 123027 energy = 5.179 gamgams = 1733
+    run 123028 energy = 5.179 gamgams = 1707
+    run 123029 energy = 5.179 gamgams = 1748
+    run 123040 energy = 5.179 gamgams = 1835
+    run 123041 energy = 5.179 gamgams = 1647
+    run 123043 energy = 5.179 gamgams = 1938
+    run 123044 energy = 5.179 gamgams = 1399
+    run 123048 energy = 5.179 gamgams = 1550
+    run 123050 energy = 5.179 gamgams = 1868
+  Average energy is 5.179
+  Corrected number of hadrons is 528693.685657 +/- 727.434061852
+  Number of gamgams is 69447
+  Relative cross-section is 0.283830336342 +/- 0.00114565519395
+  Peak points near 5179.1 MeV (there are 55 of them)
+    run 121932 energy = 5.1791 gamgams = 1654
+    run 121940 energy = 5.1791 gamgams = 1722
+    run 122816 energy = 5.1791 gamgams = 1648
+    run 122819 energy = 5.1791 gamgams = 749
+    run 122821 energy = 5.1791 gamgams = 1813
+    run 122823 energy = 5.1791 gamgams = 1916
+    run 122824 energy = 5.1791 gamgams = 1986
+    run 122825 energy = 5.1791 gamgams = 1958
+    run 122827 energy = 5.1791 gamgams = 1852
+    run 122829 energy = 5.1791 gamgams = 1043
+    run 122830 energy = 5.1791 gamgams = 1862
+    run 122832 energy = 5.1791 gamgams = 1930
+    run 122835 energy = 5.1791 gamgams = 1651
+    run 122838 energy = 5.1791 gamgams = 791
+    run 122841 energy = 5.1791 gamgams = 1896
+    run 122842 energy = 5.1791 gamgams = 2306
+    run 122843 energy = 5.1791 gamgams = 2253
+    run 122844 energy = 5.1791 gamgams = 2193
+    run 122845 energy = 5.1791 gamgams = 2212
+    run 122846 energy = 5.1791 gamgams = 2274
+    run 122847 energy = 5.1791 gamgams = 2129
+    run 123034 energy = 5.1791 gamgams = 730
+    run 123035 energy = 5.1791 gamgams = 580
+    run 123036 energy = 5.1791 gamgams = 1774
+    run 123038 energy = 5.1791 gamgams = 1089
+    run 123039 energy = 5.1791 gamgams = 1884
+    run 123042 energy = 5.1791 gamgams = 1993
+    run 123049 energy = 5.1791 gamgams = 1859
+    run 123051 energy = 5.1791 gamgams = 1762
+    run 123052 energy = 5.1791 gamgams = 1743
+    run 123054 energy = 5.1791 gamgams = 1756
+    run 123055 energy = 5.1791 gamgams = 1270
+    run 123056 energy = 5.1791 gamgams = 587
+    run 123058 energy = 5.1791 gamgams = 2132
+    run 123059 energy = 5.1791 gamgams = 1996
+    run 123060 energy = 5.1791 gamgams = 2069
+    run 123062 energy = 5.1791 gamgams = 2101
+    run 123063 energy = 5.1791 gamgams = 2064
+    run 123066 energy = 5.1791 gamgams = 2198
+    run 123067 energy = 5.1791 gamgams = 2113
+    run 123068 energy = 5.1791 gamgams = 1861
+    run 123070 energy = 5.1791 gamgams = 1860
+    run 123074 energy = 5.1791 gamgams = 395
+    run 123077 energy = 5.1791 gamgams = 247
+    run 123078 energy = 5.1791 gamgams = 262
+    run 123081 energy = 5.1791 gamgams = 780
+    run 123083 energy = 5.1791 gamgams = 2103
+    run 123084 energy = 5.1791 gamgams = 911
+    run 123085 energy = 5.1791 gamgams = 1487
+    run 123087 energy = 5.1791 gamgams = 1570
+    run 123088 energy = 5.1791 gamgams = 2539
+    run 123089 energy = 5.1791 gamgams = 2604
+    run 123090 energy = 5.1791 gamgams = 2540
+    run 123091 energy = 5.1791 gamgams = 1384
+    run 123093 energy = 5.1791 gamgams = 392
+  Average energy is 5.1791
+  Corrected number of hadrons is 687908.362819 +/- 829.766013513
+  Number of gamgams is 90473
+  Relative cross-section is 0.283467324438 +/- 0.00100252811733
+  Peak points near 5179.2 MeV (there are 22 of them)
+    run 121916 energy = 5.1792 gamgams = 1217
+    run 121917 energy = 5.1792 gamgams = 1345
+    run 121918 energy = 5.1792 gamgams = 1166
+    run 121920 energy = 5.1792 gamgams = 981
+    run 121924 energy = 5.1792 gamgams = 275
+    run 121925 energy = 5.1792 gamgams = 1137
+    run 121926 energy = 5.1792 gamgams = 1144
+    run 121933 energy = 5.1792 gamgams = 1705
+    run 121936 energy = 5.1792 gamgams = 1214
+    run 121939 energy = 5.1792 gamgams = 535
+    run 121943 energy = 5.1792 gamgams = 668
+    run 121946 energy = 5.1792 gamgams = 374
+    run 121948 energy = 5.1792 gamgams = 1630
+    run 121949 energy = 5.1792 gamgams = 1691
+    run 121950 energy = 5.1792 gamgams = 1668
+    run 121951 energy = 5.1792 gamgams = 1862
+    run 121952 energy = 5.1792 gamgams = 1846
+    run 121962 energy = 5.1792 gamgams = 1295
+    run 121966 energy = 5.1792 gamgams = 2137
+    run 123065 energy = 5.1792 gamgams = 2059
+    run 123097 energy = 5.1792 gamgams = 961
+    run 123101 energy = 5.1792 gamgams = 1228
+  Average energy is 5.1792
+  Corrected number of hadrons is 212004.51999 +/- 460.764017703
+  Number of gamgams is 28138
+  Relative cross-section is 0.280883695826 +/- 0.00178228752162
+  Peak points near 5179.3 MeV (there are 38 of them)
+    run 121963 energy = 5.1793 gamgams = 711
+    run 121965 energy = 5.1793 gamgams = 917
+    run 121967 energy = 5.1793 gamgams = 538
+    run 121968 energy = 5.1793 gamgams = 1251
+    run 121969 energy = 5.1793 gamgams = 236
+    run 121970 energy = 5.1793 gamgams = 2167
+    run 121972 energy = 5.1793 gamgams = 1808
+    run 121973 energy = 5.1793 gamgams = 234
+    run 121974 energy = 5.1793 gamgams = 1567
+    run 121975 energy = 5.1793 gamgams = 2158
+    run 121976 energy = 5.1793 gamgams = 2142
+    run 121985 energy = 5.1793 gamgams = 1668
+    run 121986 energy = 5.1793 gamgams = 1854
+    run 121987 energy = 5.1793 gamgams = 1866
+    run 121989 energy = 5.1793 gamgams = 1527
+    run 121992 energy = 5.1793 gamgams = 1851
+    run 121994 energy = 5.1793 gamgams = 214
+    run 121995 energy = 5.1793 gamgams = 2252
+    run 121996 energy = 5.1793 gamgams = 2058
+    run 121997 energy = 5.1793 gamgams = 681
+    run 121999 energy = 5.1793 gamgams = 1886
+    run 122001 energy = 5.1793 gamgams = 952
+    run 122003 energy = 5.1793 gamgams = 2198
+    run 122007 energy = 5.1793 gamgams = 465
+    run 122275 energy = 5.1793 gamgams = 824
+    run 122276 energy = 5.1793 gamgams = 576
+    run 122277 energy = 5.1793 gamgams = 1824
+    run 122279 energy = 5.1793 gamgams = 950
+    run 122280 energy = 5.1793 gamgams = 1810
+    run 122281 energy = 5.1793 gamgams = 363
+    run 122283 energy = 5.1793 gamgams = 1291
+    run 122294 energy = 5.1793 gamgams = 1477
+    run 122296 energy = 5.1793 gamgams = 1774
+    run 122298 energy = 5.1793 gamgams = 1836
+    run 122300 energy = 5.1793 gamgams = 1160
+    run 122301 energy = 5.1793 gamgams = 1872
+    run 122306 energy = 5.1793 gamgams = 1962
+    run 122576 energy = 5.1793 gamgams = 297
+  Average energy is 5.1793
+  Corrected number of hadrons is 388674.322089 +/- 623.866714861
+  Number of gamgams is 51217
+  Relative cross-section is 0.282897805597 +/- 0.00132995548282
+  Peak points near 5179.4 MeV (there are 53 of them)
+    run 121927 energy = 5.1794 gamgams = 1400
+    run 122006 energy = 5.1794 gamgams = 1930
+    run 122079 energy = 5.1794 gamgams = 1648
+    run 122092 energy = 5.1794 gamgams = 1288
+    run 122097 energy = 5.1794 gamgams = 1126
+    run 122099 energy = 5.1794 gamgams = 1575
+    run 122136 energy = 5.1794 gamgams = 1659
+    run 122274 energy = 5.1794 gamgams = 1703
+    run 122278 energy = 5.1794 gamgams = 430
+    run 122285 energy = 5.1794 gamgams = 1726
+    run 122286 energy = 5.1794 gamgams = 1615
+    run 122287 energy = 5.1794 gamgams = 1413
+    run 122288 energy = 5.1794 gamgams = 1682
+    run 122289 energy = 5.1794 gamgams = 1254
+    run 122291 energy = 5.1794 gamgams = 804
+    run 122292 energy = 5.1794 gamgams = 416
+    run 122293 energy = 5.1794 gamgams = 1446
+    run 122297 energy = 5.1794 gamgams = 1903
+    run 122305 energy = 5.1794 gamgams = 312
+    run 122307 energy = 5.1794 gamgams = 1789
+    run 122309 energy = 5.1794 gamgams = 1660
+    run 122310 energy = 5.1794 gamgams = 1679
+    run 122312 energy = 5.1794 gamgams = 1418
+    run 122313 energy = 5.1794 gamgams = 1394
+    run 122314 energy = 5.1794 gamgams = 1784
+    run 122315 energy = 5.1794 gamgams = 1810
+    run 122317 energy = 5.1794 gamgams = 419
+    run 122319 energy = 5.1794 gamgams = 1523
+    run 122321 energy = 5.1794 gamgams = 1823
+    run 122437 energy = 5.1794 gamgams = 225
+    run 122438 energy = 5.1794 gamgams = 458
+    run 122439 energy = 5.1794 gamgams = 566
+    run 122440 energy = 5.1794 gamgams = 1703
+    run 122443 energy = 5.1794 gamgams = 1667
+    run 122445 energy = 5.1794 gamgams = 1099
+    run 122514 energy = 5.1794 gamgams = 1924
+    run 122577 energy = 5.1794 gamgams = 1074
+    run 122579 energy = 5.1794 gamgams = 357
+    run 122608 energy = 5.1794 gamgams = 1422
+    run 122610 energy = 5.1794 gamgams = 1602
+    run 122613 energy = 5.1794 gamgams = 530
+    run 122614 energy = 5.1794 gamgams = 1931
+    run 122615 energy = 5.1794 gamgams = 1918
+    run 122616 energy = 5.1794 gamgams = 1958
+    run 122618 energy = 5.1794 gamgams = 1941
+    run 122619 energy = 5.1794 gamgams = 1933
+    run 122620 energy = 5.1794 gamgams = 1941
+    run 122623 energy = 5.1794 gamgams = 818
+    run 122626 energy = 5.1794 gamgams = 1834
+    run 122628 energy = 5.1794 gamgams = 424
+    run 122629 energy = 5.1794 gamgams = 1841
+    run 122630 energy = 5.1794 gamgams = 1901
+    run 122631 energy = 5.1794 gamgams = 484
+  Average energy is 5.1794
+  Corrected number of hadrons is 546168.088706 +/- 739.455144883
+  Number of gamgams is 72180
+  Relative cross-section is 0.282065869659 +/- 0.00111718344959
+  Peak points near 5179.5 MeV (there are 102 of them)
+    run 122094 energy = 5.1795 gamgams = 1060
+    run 122098 energy = 5.1795 gamgams = 1295
+    run 122101 energy = 5.1795 gamgams = 1610
+    run 122102 energy = 5.1795 gamgams = 1686
+    run 122105 energy = 5.1795 gamgams = 1455
+    run 122108 energy = 5.1795 gamgams = 208
+    run 122109 energy = 5.1795 gamgams = 888
+    run 122111 energy = 5.1795 gamgams = 1061
+    run 122112 energy = 5.1795 gamgams = 1680
+    run 122114 energy = 5.1795 gamgams = 414
+    run 122116 energy = 5.1795 gamgams = 473
+    run 122117 energy = 5.1795 gamgams = 1546
+    run 122118 energy = 5.1795 gamgams = 1238
+    run 122123 energy = 5.1795 gamgams = 1537
+    run 122124 energy = 5.1795 gamgams = 1628
+    run 122125 energy = 5.1795 gamgams = 1870
+    run 122126 energy = 5.1795 gamgams = 1596
+    run 122127 energy = 5.1795 gamgams = 1796
+    run 122129 energy = 5.1795 gamgams = 1691
+    run 122132 energy = 5.1795 gamgams = 1352
+    run 122134 energy = 5.1795 gamgams = 417
+    run 122137 energy = 5.1795 gamgams = 1552
+    run 122138 energy = 5.1795 gamgams = 1465
+    run 122139 energy = 5.1795 gamgams = 1595
+    run 122141 energy = 5.1795 gamgams = 1737
+    run 122142 energy = 5.1795 gamgams = 1861
+    run 122143 energy = 5.1795 gamgams = 1808
+    run 122147 energy = 5.1795 gamgams = 1319
+    run 122148 energy = 5.1795 gamgams = 1965
+    run 122152 energy = 5.1795 gamgams = 1436
+    run 122153 energy = 5.1795 gamgams = 1792
+    run 122154 energy = 5.1795 gamgams = 289
+    run 122158 energy = 5.1795 gamgams = 258
+    run 122164 energy = 5.1795 gamgams = 1816
+    run 122166 energy = 5.1795 gamgams = 801
+    run 122167 energy = 5.1795 gamgams = 608
+    run 122168 energy = 5.1795 gamgams = 2178
+    run 122169 energy = 5.1795 gamgams = 2127
+    run 122170 energy = 5.1795 gamgams = 1944
+    run 122172 energy = 5.1795 gamgams = 2137
+    run 122173 energy = 5.1795 gamgams = 2228
+    run 122263 energy = 5.1795 gamgams = 205
+    run 122322 energy = 5.1795 gamgams = 2047
+    run 122323 energy = 5.1795 gamgams = 2069
+    run 122326 energy = 5.1795 gamgams = 1401
+    run 122447 energy = 5.1795 gamgams = 814
+    run 122448 energy = 5.1795 gamgams = 1791
+    run 122449 energy = 5.1795 gamgams = 781
+    run 122450 energy = 5.1795 gamgams = 1675
+    run 122452 energy = 5.1795 gamgams = 1840
+    run 122453 energy = 5.1795 gamgams = 1743
+    run 122454 energy = 5.1795 gamgams = 1664
+    run 122464 energy = 5.1795 gamgams = 2149
+    run 122465 energy = 5.1795 gamgams = 2212
+    run 122466 energy = 5.1795 gamgams = 2004
+    run 122467 energy = 5.1795 gamgams = 2227
+    run 122468 energy = 5.1795 gamgams = 2131
+    run 122469 energy = 5.1795 gamgams = 1896
+    run 122471 energy = 5.1795 gamgams = 2221
+    run 122472 energy = 5.1795 gamgams = 2155
+    run 122473 energy = 5.1795 gamgams = 2250
+    run 122480 energy = 5.1795 gamgams = 1165
+    run 122484 energy = 5.1795 gamgams = 1244
+    run 122485 energy = 5.1795 gamgams = 373
+    run 122487 energy = 5.1795 gamgams = 2197
+    run 122488 energy = 5.1795 gamgams = 2250
+    run 122489 energy = 5.1795 gamgams = 2050
+    run 122492 energy = 5.1795 gamgams = 609
+    run 122493 energy = 5.1795 gamgams = 1967
+    run 122496 energy = 5.1795 gamgams = 1347
+    run 122497 energy = 5.1795 gamgams = 2237
+    run 122498 energy = 5.1795 gamgams = 2089
+    run 122500 energy = 5.1795 gamgams = 1658
+    run 122501 energy = 5.1795 gamgams = 2178
+    run 122502 energy = 5.1795 gamgams = 2241
+    run 122503 energy = 5.1795 gamgams = 2079
+    run 122505 energy = 5.1795 gamgams = 509
+    run 122507 energy = 5.1795 gamgams = 880
+    run 122508 energy = 5.1795 gamgams = 2170
+    run 122509 energy = 5.1795 gamgams = 2229
+    run 122510 energy = 5.1795 gamgams = 2289
+    run 122511 energy = 5.1795 gamgams = 1795
+    run 122519 energy = 5.1795 gamgams = 251
+    run 122520 energy = 5.1795 gamgams = 568
+    run 122521 energy = 5.1795 gamgams = 917
+    run 122524 energy = 5.1795 gamgams = 1849
+    run 122525 energy = 5.1795 gamgams = 2032
+    run 122526 energy = 5.1795 gamgams = 2124
+    run 122527 energy = 5.1795 gamgams = 1555
+    run 122625 energy = 5.1795 gamgams = 1405
+    run 122632 energy = 5.1795 gamgams = 548
+    run 122634 energy = 5.1795 gamgams = 703
+    run 122640 energy = 5.1795 gamgams = 1099
+    run 122641 energy = 5.1795 gamgams = 1838
+    run 122642 energy = 5.1795 gamgams = 1991
+    run 122643 energy = 5.1795 gamgams = 1624
+    run 122646 energy = 5.1795 gamgams = 861
+    run 122647 energy = 5.1795 gamgams = 723
+    run 122648 energy = 5.1795 gamgams = 953
+    run 122649 energy = 5.1795 gamgams = 1900
+    run 122652 energy = 5.1795 gamgams = 1308
+    run 122653 energy = 5.1795 gamgams = 1942
+  Average energy is 5.1795
+  Corrected number of hadrons is 1171251.22664 +/- 1082.85214751
+  Number of gamgams is 154439
+  Relative cross-section is 0.282694528599 +/- 0.000765355778282
+  Peak points near 5179.6 MeV (there are 12 of them)
+    run 122133 energy = 5.1796 gamgams = 1772
+    run 122146 energy = 5.1796 gamgams = 1645
+    run 122156 energy = 5.1796 gamgams = 420
+    run 122159 energy = 5.1796 gamgams = 1698
+    run 122160 energy = 5.1796 gamgams = 581
+    run 122174 energy = 5.1796 gamgams = 2067
+    run 122176 energy = 5.1796 gamgams = 1412
+    run 122178 energy = 5.1796 gamgams = 2049
+    run 122455 energy = 5.1796 gamgams = 1741
+    run 122461 energy = 5.1796 gamgams = 1304
+    run 122462 energy = 5.1796 gamgams = 333
+    run 122650 energy = 5.1796 gamgams = 1819
+  Average energy is 5.1796
+  Corrected number of hadrons is 127750.87956 +/- 357.649437913
+  Number of gamgams is 16841
+  Relative cross-section is 0.282750628316 +/- 0.00231815120689
+  Peak points near 5172.5 MeV (there are 1 of them)
+    run 122550 energy = 5.1725 gamgams = 1109
+  Average energy is 5.1725
+  Corrected number of hadrons is 3677.13568216 +/- 60.7030832647
+  Number of gamgams is 1109
+  Relative cross-section is 0.123930188514 +/- 0.00424673088238
+  Peak points near 5181.4 MeV (there are 2 of them)
+    run 122073 energy = 5.1814 gamgams = 1173
+    run 122077 energy = 5.1814 gamgams = 894
+  Average energy is 5.1814
+  Corrected number of hadrons is 14254.2948526 +/- 119.480982367
+  Number of gamgams is 2067
+  Relative cross-section is 0.256868600668 +/- 0.00604625584547
+  Peak points near 5182.1 MeV (there are 1 of them)
+    run 122769 energy = 5.1821 gamgams = 1126
+  Average energy is 5.1821
+  Corrected number of hadrons is 6398.99950025 +/- 80.0437411654
+  Number of gamgams is 1126
+  Relative cross-section is 0.211622629776 +/- 0.00683960049094
+  Peak points near 5182.3 MeV (there are 1 of them)
+    run 122246 energy = 5.1823 gamgams = 1148
+  Average energy is 5.1823
+  Corrected number of hadrons is 6134.23163418 +/- 78.39495115
+  Number of gamgams is 1148
+  Relative cross-section is 0.198963394797 +/- 0.0063990981013
+  Peak points near 5182.4 MeV (there are 5 of them)
+    run 122410 energy = 5.1824 gamgams = 1290
+    run 122538 energy = 5.1824 gamgams = 1053
+    run 122549 energy = 5.1824 gamgams = 1204
+    run 122560 energy = 5.1824 gamgams = 949
+    run 122999 energy = 5.1824 gamgams = 776
+  Average energy is 5.1824
+  Corrected number of hadrons is 28040.6689155 +/- 167.562916794
+  Number of gamgams is 5272
+  Relative cross-section is 0.198039174187 +/- 0.00297316397617
+  Peak points near 5183.3 MeV (there are 1 of them)
+    run 122074 energy = 5.1833 gamgams = 1146
+  Average energy is 5.1833
+  Corrected number of hadrons is 5808.59895052 +/- 76.2981064606
+  Number of gamgams is 1146
+  Relative cross-section is 0.188657503408 +/- 0.00609903285274
+  Peak points near 5183.4 MeV (there are 1 of them)
+    run 121897 energy = 5.1834 gamgams = 1255
+  Average energy is 5.1834
+  Corrected number of hadrons is 6030.85232384 +/- 77.737685045
+  Number of gamgams is 1255
+  Relative cross-section is 0.178856826023 +/- 0.00555022686691

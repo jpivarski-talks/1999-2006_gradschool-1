@@ -1,0 +1,448 @@
+------- Setting ulimits -------
+core file size        (blocks, -c) 0
+data seg size         (kbytes, -d) unlimited
+file size             (blocks, -f) unlimited
+max locked memory     (kbytes, -l) unlimited
+max memory size       (kbytes, -m) unlimited
+open files                    (-n) 1024
+pipe size          (512 bytes, -p) 8
+stack size            (kbytes, -s) unlimited
+cpu time             (seconds, -t) unlimited
+max user processes            (-u) 2044
+virtual memory        (kbytes, -v) unlimited
+ %% INFO-Suez: 
+// -----------------------------------------------------------
+//  Welcome to Suez, the CLEO III data access program         
+// -----------------------------------------------------------
+
+ %% INFO-Suez: $Id: SuezMain.cc,v 1.72 2003/04/25 15:42:19 vk Exp $
+
+ %% SYSTEM-Interpreter.TclInterpreter: 
+//  For a list of available commands, type "help".              
+//                                                                
+//  Since the command interpreter is based on a Tcl interpreter,  
+//  all Tcl commands are available.                               
+//  For info on tcl: "http://www.scriptics.com/resource/doc"    
+
+ %% SYSTEM-Interpreter.TclInterpreter: 
+// Renaming the following Tcl commands:
+//  (because they collide with Suez commands!)
+// -------------------------------------------
+//  source --> tcl_source or ::source
+//  proc   --> tcl_proc   or ::proc
+//  file   --> tcl_file   or ::file
+
+ %% SYSTEM-Module: added command "summary" from SummaryModule
+ %% SYSTEM-Module: added command "source_format" from SourceFormatMap
+ %% SYSTEM-Module: added command "sink_format" from SinkFormatMap
+ %% SYSTEM-Module: added command "source" from SourceManager
+ %% SYSTEM-Module: added command "stream" from SourceManager
+ %% SYSTEM-Module: added command "sink" from SinkManager
+ %% SYSTEM-Module: added command "prod" from MasterProducer
+ %% SYSTEM-Module: added command "proc" from MasterProcessor
+ %% SYSTEM-Module: added command "path" from PathModule
+ %% SYSTEM-Module: added command "default" from DefaultModule
+ %% SYSTEM-Module: added command "file" from FileModule
+ %% SYSTEM-Module: added command "emptysource" from EmptySourceModule
+Suez.cleocmc> default prompt off
+off
+Suez.cleocmc> exception continueEventLoop on
+on
+Suez.cleocmc> module sel LoadHbook4MModule
+ %% WARNING-CommandPattern.CompositeModule: no command(s) for module LoadHbook4MModule
+Suez.cleocmc> module sel HbookHistogramModule
+ %% SYSTEM-Module: added command "hbook" from HbookHistogramModule
+Suez.cleocmc> hbook file ../rzn4/cleocmc.rzn
+Suez.cleocmc> hbook init
+Suez.cleocmc> module sel CorbaModule
+ %% SYSTEM-Module: added command "corba" from CorbaModule
+Suez.cleocmc> corba init
+Suez.cleocmc> module sel RunStatisticsSourceModule
+ %% SYSTEM-Module: added command "runstatistics" from RunStatisticsSourceModule
+Suez.cleocmc> runstatistics in
+ %% INFO-JobControl.SourceManager: creating Source Name "RunStatistics" 
+Suez.cleocmc> module sel ConstantsModule
+ %% SYSTEM-Module: added command "constants" from ConstantsModule
+Suez.cleocmc> constants in $env(C3_CONST) standard CLEO3default
+ %% INFO-JobControl.SourceManager: creating Source Name "Codi" 
+Suez.cleocmc> prod sel NavigationProd
+ %% SYSTEM-Module: added command "NavigationProd" from NavigationProd
+Suez.cleocmc> prod sel TrackDeliveryProd
+ %% SYSTEM-Module: added command "TrackDeliveryProd" from TrackDeliveryProd
+Suez.cleocmc> prod sel C3ccProd
+ %% SYSTEM-Module: added command "C3ccProd" from C3ccProd
+Suez.cleocmc> param C3ccProd RequireRunGainsHotList false
+0
+Suez.cleocmc> prod sel MagFieldProd
+ %% SYSTEM-Module: added command "MagFieldProd" from MagFieldProd
+Suez.cleocmc> prod sel EventPropertiesProd
+ %% SYSTEM-Module: added command "EventPropertiesProd" from EventPropertiesProd
+Suez.cleocmc> prod sel EventTypeProd
+ %% SYSTEM-Module: added command "EventTypeProd" from EventTypeProd
+Suez.cleocmc> prod sel CesrBeamEnergyProd
+ %% SYSTEM-Module: added command "CesrBeamEnergyProd" from CesrBeamEnergyProd
+Suez.cleocmc> prod sel VFinderProd
+ %% SYSTEM-Module: added command "VFinderProd" from VFinderProd
+Suez.cleocmc> prod sel ElectronFromPionFitProd
+ %% SYSTEM-Module: added command "ElectronFromPionFitProd" from ElectronFromPionFitProd
+Suez.cleocmc> prod sel GoodThingsProd
+ %% SYSTEM-Module: added command "GoodThingsProd" from GoodThingsProd
+Suez.cleocmc> source_format sel BeamSpotFileSourceFormat
+Suez.cleocmc> file in $env(C3_INFO)/mc/zeromc.beamspot beginrun
+ %% INFO-JobControl.SourceManager: creating Source Name "zeromc" 
+zeromc
+Suez.cleocmc> run_file $env(C3_SCRIPTS)/CcHotList.tcl
+Suez.CcHotList> source_format sel CcHotListFileSourceFormat
+Suez.CcHotList> file in $env(C3_INFO)/data/cchotlist.cchotlist beginrun
+ %% INFO-JobControl.SourceManager: creating Source Name "cchotlist" 
+cchotlist
+cchotlist
+Suez.cleocmc> prod sel DetectorConfigurationProd
+ %% SYSTEM-Module: added command "DetectorConfigurationProd" from DetectorConfigurationProd
+Suez.cleocmc> param DetectorConfigurationProd Override true
+1
+Suez.cleocmc> param DetectorConfigurationProd UseZDnotSI true
+1
+Suez.cleocmc> prod sel IRGeomProd
+ %% SYSTEM-Module: added command "IRGeomProd" from IRGeomProd
+Suez.cleocmc> prod sel DRGeom
+ %% SYSTEM-Module: added command "DRGeom" from DRGeom
+Suez.cleocmc> prod sel ZDGeomProd
+ %% SYSTEM-Module: added command "ZDGeomProd" from ZDGeomProd
+Suez.cleocmc> prod sel AZDGeomProd
+ %% SYSTEM-Module: added command "AZDGeomProd" from AZDGeomProd
+Suez.cleocmc> prod sel ADRGeomProd
+ %% SYSTEM-Module: added command "ADRGeomProd" from ADRGeomProd
+Suez.cleocmc> prod sel DRHitCorrectorProd
+ %% SYSTEM-Module: added command "DRHitCorrectorProd" from DRHitCorrectorProd
+Suez.cleocmc> prod sel CDOffCal
+ %% SYSTEM-Module: added command "CDOffCal" from CDOffCal
+Suez.cleocmc> source_format sel AsciiSourceFormat
+Suez.cleocmc> file in $env(C3_DATA)/material.asc material
+ %% INFO-JobControl.SourceManager: creating Source Name "material" 
+material
+Suez.cleocmc> proc sel EventTypeFilterProc
+ %% SYSTEM-Module: added command "EventTypeFilterProc" from EventTypeFilterProc
+Suez.cleocmc> param EventTypeFilterProc GamGam true
+ %% SYSTEM-Interpreter.TclInterpreter: Tcl_Eval error: invalid command name "GamGam"; type 'help' for available commands
+invalid command name "GamGam"; type 'help' for available commands
+Suez.cleocmc> param EventTypeFilterProc BhabhaLoose true
+ %% SYSTEM-Interpreter.TclInterpreter: Tcl_Eval error: invalid command name "BhabhaLoose"; type 'help' for available commands
+invalid command name "BhabhaLoose"; type 'help' for available commands
+Suez.cleocmc> proc sel ../build_Linux/shlib/Convert
+ %% SYSTEM-Module: added command "Convert" from Convert
+Suez.cleocmc> run_file /cdat/solpi1/disk1/souren/work/test/Chains/GamGam_203912_203953.tcl
+Suez.GamGam_203912_203953> source_format sel  PDSSourceFormat
+Suez.GamGam_203912_203953> source create myHotStoreChain
+ %% INFO-JobControl.SourceManager: creating Source Name "myHotStoreChain" 
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203912_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203913_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203920_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203921_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203924_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203926_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203927_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203930_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203931_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203932_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203936_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203937_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203938_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203942_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203943_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203944_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203945_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203946_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203948_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203949_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203950_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203951_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203953_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203954_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203968_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203971_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203972_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203973_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203974_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> file add myHotStoreChain /nfs/grp/pitt/souren/MC/GasWireVapor/GamGam_gen3_20041104_MCP2_203975_10000_pass2.pds
+ %% INFO-JobControl.FileModule: using default streams: physics beginrun endrun event startrun
+myHotStoreChain
+Suez.GamGam_203912_203953> source activate myHotStoreChain beginrun atartrun event endrun
+ %% WARNING-JobControl.SourceCommand: Using non-standard Stream type!atartrun
+Suez.cleocmc> go
+ %% INFO-JobControl.SourceManager: Opened data source "RunStatistics".
+ %% INFO-JobControl.SourceManager: Opened data source "Codi".
+ %% INFO-JobControl.SourceManager: Opened data source "zeromc".
+ %% INFO-JobControl.SourceManager: Opened data source "cchotlist".
+ %% INFO-JobControl.SourceManager: Opened data source "material".
+ %% INFO-JobControl.SourceManager: Opened data source "myHotStoreChain".
+ %% WARNING-HbookHistogram.HbookHistDir: 
+directory name EventTypeFilterProc exceeds hbook size limit of 16
+name has been truncated to EventTypeFilter
+ %% INFO-Processor.EventTypeFilterProc:  No selection made: passing all events:
+
+
+
+ %% INFO-GoodThingsProd.GoodThingsProd: Tracks selected with:
+FitsOK TRUE means Kalman fit must be ok            1
+RedCh2 Upper value of reduced chisq of fit         50
+HtFrac Lower limit on hit fraction                 0.5
+|DPCA| Upper limit on |dist closest approach|      0.02
+|ZPCA| Upper limit on |Z0 at d.c.a.|               0.1
+Mom_Lo Lower limit on momentum/EBeam               0.01
+Mom_Hi Upper limit on momentum/EBeam               1.2
+|CosT| Upper limit on |Cos(theta)|                 0.93
+EcotTh Upper limit on err(Cot(theta))              0.3
+Err_Z0 Upper limit on err(Z0)                      0.5
+
+Showers selected with:
+NoMtch TRUE to require not matched to a track      1
+NoMtCR TRUE to require no track match in ConReg    0
+GoodBE TRUE to require good barrel OR endcap       1
+NotHot TRUE to require not hot crystal             1
+NotBrm TRUE to require not bremmed from a track    0
+Enr_Lo Lower limit on energy/EBeam                 0.01
+Enr_Hi Upper limit on energy/EBeam                 1.2
+DisMat Lower limit on dist to nearest matched shwr -1
+DisUnm Lower limit on dist to nearest unmatched sh -1
+X925__ Lower limit on X925                         -1
+X925Un Lower limit on X925Unfolded                 -1
+
+ %% INFO-JobControl.SourceManager: Using myHotStoreChain for active streams: event 
+ %% INFO-JobControl.SourceManager: Defined active streams.
+
+ >> Mon Apr 11 10:47:05 2005 Run:  203912 Event:       1 Stop: event << 
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBBeamEnergyShift using version 1.1
+ %% INFO-CCGECS: CC Energy-dependent calibration version of Jan 2004
+ %% WARNING-MCInfo.MCDecayMode: Potential Energy nonconservation: VPHO --> B0 B0B 
+ %% WARNING-MCInfo.MCDecayMode: Potential Energy nonconservation: VPHO --> B+ B- 
+ %% WARNING-MCInfo.MCParticleProperty: Adding a decay mode with a branching fraction of zero!!!!
+mode 12: frac =        0 TAU- --> PI- PI- PI+ PI0 PI0 PI0 NUT  (Model 2107)
+ %% WARNING-MCInfo.MCParticleProperty: Adding a decay mode with a branching fraction of zero!!!!
+mode 12: frac =        0 TAU+ --> PI+ PI+ PI- PI0 PI0 PI0 NUTB  (Model 2107)
+ %% WARNING-MCInfo.MCParticleProperty: Adding a decay mode with a branching fraction of zero!!!!
+mode 19: frac =        0 ETAC --> PI+ PI-  (Model 0)
+ %% WARNING-MCInfo.MCParticleProperty: Adding a decay mode with a branching fraction of zero!!!!
+mode 20: frac =        0 ETAC --> K+ K-  (Model 0)
+ %% WARNING-MCInfo.MCParticleProperty: Adding a decay mode with a branching fraction of zero!!!!
+mode 13: frac =        0 CHI1 --> PI+ PI-  (Model 0)
+ %% WARNING-MCInfo.MCParticleProperty: Adding a decay mode with a branching fraction of zero!!!!
+mode 14: frac =        0 CHI1 --> K+ K-  (Model 0)
+ %% WARNING-MCInfo.MCParticleProperty: Adding a decay mode with a branching fraction of zero!!!!
+mode 25: frac =        0 ETAC' --> PI+ PI-  (Model 0)
+ %% WARNING-MCInfo.MCParticleProperty: Adding a decay mode with a branching fraction of zero!!!!
+mode 26: frac =        0 ETAC' --> K+ K-  (Model 0)
+ %% WARNING-MCInfo.MCParticleProperty: Adding a decay mode with a branching fraction of zero!!!!
+mode 3: frac =        0 D21S0P --> D*+ GAMM  (Model 0)
+ %% WARNING-MCInfo.MCParticleProperty: Adding a decay mode with a branching fraction of zero!!!!
+mode 3: frac =        0 D21S0N --> D*- GAMM  (Model 0)
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBMagFudge using version 1.4
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBSuperConductingQuadFieldMap using version 1.2
+ %% INFO-IRGeom.BeamPipeGeometry23: Constructing the CLEO2-3 beam pipe.
+ %% INFO-IRGeom.MaskInnerGeometry: Constructing inner mask.
+ %% INFO-IRGeom.MaskMainGeometry: Constructing main mask.
+ %% INFO-IRGeom.StainlessTubeGeometry: Constructing stainless support tubes.
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBZDGeomAlignment using version 1.4
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBAZDGeomWireSurvey using version 1.2
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBAZDGeomLayer using version 1.1
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRGeomAlignment using version 1.6
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBADRGeomLayer using version 1.4
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBADRGeomWireSurvey using version 1.1
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBADRGeomLayersEnds using version 1.1
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRWeight2LayerDriftEntAng using version 1.6
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRWeight2LayerTheta using version 1.6
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRWeight2LayerPhi using version 1.1
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRGarfield_DistanceCorrection using version 1.15
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRGarfield_TimeCorrection using version 1.1
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRDaqCellIDMap using version 1.1
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRWireQuality using version 1.1
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRtdc2time using version 1.1
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRadc2charge using version 1.195
+ %% INFO-CDOffCal.DriftFunctionProxy: Extracting DriftDatav2 Constant Object
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRDriftDatav2 using version 1.40
+ %% INFO-CDOffCal.DriftFunctionProxy: Extracting DriftData Constant Object
+ %% WARNING-CDOffCal.DriftFunctionProxy: No drdriftdata Record found in the Frame
+ %% WARNING-CDOffCal.DriftFunctionProxy: DriftData Constant Object Not Found
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRvarious using version 1.1
+ %% INFO-CDOffCal.DriftFunctionProxy: Signal Propagation taken from Constants Database 0.75
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRadcpedestal using version 1.256
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRt0channelv2 using version 1.39
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRt0card using version 1.40
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRt0hvcard using version 1.40
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRt0crate using version 1.41
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRt0global using version 1.49
+ %% INFO-CDOffCal.DriftFunction: Global scale (user parameter): 0.000123
+ %% INFO-CDOffCal.DriftFunction: Global T0 offset 1 (user parameter): 0
+ %% INFO-CDOffCal.DriftFunction: Global T0 offset 2 (constants)     : 6.10274e+06
+ %% INFO-CDOffCal.DriftFunction: t0s loaded OK
+ %% INFO-CDOffCal.DriftFunction:  Found 80 Charge Dependent T0 Shifts 
+ %% INFO-CDOffCal.DriftFunction: Pedestals loaded OK
+ %% INFO-CDOffCal.DriftFunction: WireQuality Info loaded OK
+ %% INFO-CDOffCal.DriftFunction: WireMap loaded OK
+ %% INFO-CDOffCal.DriftFunction: ADC Gains loaded OK
+ %% INFO-CDOffCal.DriftFunction: No Zero ADC Gains
+ %% INFO-CDOffCal.DriftFunction: TDC Slopes loaded OK
+ %% INFO-CDOffCal.DriftFunction: ADC Gains loaded OK
+ %% INFO-CDOffCal.DataDriftFunction: Reading Drift Functions 
+ %% INFO-CDOffCal.DataDriftFunction: DriftDatav2 Object Used For DF Constants
+ %% INFO-CDOffCal.DataDriftFunction: Drift Correction File Size: 1924
+ %% INFO-CDOffCal.DataDriftFunction: Load constants for new (calibrated from data) drift dist. vs time and E.A. correction
+ %% INFO-CDOffCal.DataDriftFunction: Entrance Angle Correction Parameters (for calibrated on data map): 
+ %% INFO-CDOffCal.DataDriftFunction:  Entrance Angle: Range(degree) = +-90, # of bins =37, Bin Size =5
+ %% INFO-CDOffCal.DataDriftFunction:  Drift Time: Range(ps) = from 0 to 500000, # of bins =26, Bin Size =20000
+ %% INFO-CDOffCal.DataDriftFunction: E.A. Correction Statistics for Ambiguity = 0:
+                                     # of zero bins / Total=382 / 962
+                                     Max/Min correction(m) =0.00101416 / -0.00224654
+ %% INFO-CDOffCal.DataDriftFunction: E.A. Correction Statistics for Ambiguity = 1:
+                                     # of zero bins / Total=386 / 962
+                                     Max/Min correction(m) =0.00223611 / -0.00104809
+ %% INFO-CDOffCal.DataDriftFunction: Entrance Angle Statistics 
+                                     Time Correction vs. Distance 
+                                     Nonzero Correction Bins: 87%, 
+                                     RMS correction value   : 22388.9(ps),  
+                                     Zero Correction Bins   : 13%, 
+                                     Filled Correction Bins : 91%  
+
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBADRGeomCathodePanels using version 1.1
+
+ >> Mon Apr 11 10:47:08 2005 Run:  203912 Event:      55 Stop: event << 
+ %% INFO-VXFit.VXFitSettings: >>>>>> Initializing default fitter settings.
+ %% INFO-VXFit.VXFitSettings:        epsilon: 1e-05
+ %% INFO-VXFit.VXFitSettings:        max. Iter.: 10
+ %% INFO-VXFit.VXFitSettings:        Debug? OFF (0)
+ %% INFO-VXFit.VXFitSettings:        Fast Inv.?  ON (1)
+ %% INFO-VXFit.VXFitSettings:        Fail at Max Itr? YES (0)
+
+ >> Mon Apr 11 10:47:08 2005 Run:  203912 Event:     259 Stop: event << 
+ %% NOTICE-VFinderProd.VXFitVeeConversionProxy: Vee Fit failed...
+
+ >> Mon Apr 11 10:47:09 2005 Run:  203912 Event:     608 Stop: event << 
+ %% NOTICE-VFinderProd.VXFitVeeConversionProxy: Vee Fit failed...
+
+ >> Mon Apr 11 11:08:41 2005 Run:  203975 Event:    9781 Stop: event << 
+ %% NOTICE-VFinderProd.VXFitVeeConversionProxy: Vee Fit failed...
+
+ >> Mon Apr 11 11:08:42 2005 Run:  203975 Stop: none << 
+ %% INFO-JobControl.JobControl: Reached end of an active source
+ %% INFO-JobControl.SourceManager: Removed source-in-use "myHotStoreChain"
+Suez.cleocmc> hbook terminate
+Suez.cleocmc> summary
+
+ ***** Summary Info *****
+
+ Stream event : 299874
+   Processed 299874 stops.
+
+
+Suez.cleocmc> exit
+ %% INFO-Processor.EventTypeFilterProc: 
+
+ ****** Summary from EventTypeFilterProc  **** for   299874 events ******
+
+    **** # passed EventTypeFilterProc  filtering =   299874 events ******
+
+
+      Type           Excl   Incl      Overlap (in %, use Incl # as denom)
+      ----           ----   ----      -----------------------------------
+
+T00 Hadron              0     45   0% T26=100 T01= 91 T09= 53 T07= 49 T24= 44
+T01 HadronTight         0     41   0% T00=100 T26=100 T07= 51 T09= 51 T24= 49
+T02 Tau                 0    331   0% T26=100 T09= 56 T18= 45 T13= 41 T14= 41
+T03 Tau1vN              0      5   0% T00=100 T01=100 T02=100 T26=100 T07= 60
+T04 TauLoBgd            0     69   0% T02=100 T26=100 T09= 65 T13= 35 T14= 33
+T05 MuPair              0     14   0% T06=100 T26=100 T07= 71 T09= 71 T25= 71
+T06 RadMuP              0    105   0% T26=100 T09= 74 T25= 55 T05= 13 T07= 10
+T07 BhabhaLoose         6   1300   0% T26= 99 T09= 96 T23=  3 T24=  3 T25=  3
+T08 BhabhaTight         0      0   0%
+T09 RadBha              0   7103   2% T26=100 T07= 18 T02=  3 T25=  2 T18=  2
+T10 GamGam         273662 291466  97% T26=  6 T11=  5 T25=  2
+T11 RadGam              0  15933   5% T26=100 T10=100 T25= 20
+T12 ElGamJunk         352    814   0% T26= 57 T25= 57
+T13 LoPtLoose           0    155   0% T14= 98 T26= 89 T02= 88 T18= 46 T04= 15
+T14 LoPtTwoTk           0    152   0% T13=100 T02= 89 T26= 89 T18= 47 T04= 15
+T15 LoPt2Leptons        0      0   0%
+T16 LoPtGT2Tk           0      3   0% T00=100 T26=100 T13=100 T01= 67 T02= 67
+T17 LoPt4Pions          0      0   0%
+T18 LoPtOneTag          4    198   0% T26= 97 T02= 75 T09= 60 T13= 36 T14= 36
+T19 LoPtTwotag          0      0   0%
+T20 BeamGas             0      0   0%
+T21 Cosmic              0      0   0%
+T22 TranDiMuon          0     31   0% T07=100 T26=100 T09= 90 T23= 90 T05= 13
+T23 TranDiElec          0     38   0% T07=100 T26=100 T09= 87 T22= 74 T00=  5
+T24 TranLepTk           0     37   0% T07=100 T26=100 T00= 54 T01= 54 T09= 22
+T25 HardGam             0   5623   2% T26=100 T10= 89 T11= 56 T12=  8 T09=  3
+T26 HadLep              0  25580   9% T10= 70 T11= 62 T09= 28 T25= 22 T07=  5
+T32 Known               0 299621 100% T10= 97 T26=  9 T11=  5 T09=  2 T25=  2
+T33 Unknown           253    253   0%
+
+
+ %% INFO-JobControl.SummaryModule: 
+ ***** Summary Info *****
+
+ Stream event : 299874
+   Processed 299874 stops.
+
+
+EDT: 04/11/2005 11:09:31.342194 | xitman.cxx:278: info: (C) xitman starts cleaning...
+EDT: 04/11/2005 11:09:31.381830 | runtime.cxx:135: info: (C) BDT checks out...
+EDT: 04/11/2005 11:09:31.382975 | runtime.cxx:140: info: (C) Removed basics::theDict.
+EDT: 04/11/2005 11:09:31.383821 | xitman.cxx:288: info: (C) xitman done!

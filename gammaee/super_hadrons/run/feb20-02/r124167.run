@@ -1,0 +1,15 @@
+#$ -l calibration
+#$ -o /cdat/tem/mccann/r124167.out
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/super_hadrons/run/feb20-02
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Jan24_03_P2
+
+USER_RUN=124167
+export USER_RUN
+
+suez -f count.tcl > /cdat/tem/mccann/r124167.log
+
+perl final_count.pl 124167 /cdat/tem/mccann/r124167.log > r124167.txt

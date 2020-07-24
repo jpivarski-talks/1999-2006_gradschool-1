@@ -1,0 +1,33 @@
+*** Begin of history file: Tue Feb 15 12:29:09 2005
+ve/read nbb hist_nbb.vec
+ve/read peak hist_peak.vec
+ve/read cont hist_cont.vec
+ve/plot nbb
+h/cr/1d 100 'Percent non-beam-beam contamination' 50 0. 2.5
+h/cr/1d 200 'Percent non-beam-beam contamination' 50 0. 2.5
+h/cr/1d 300 'Percent non-beam-beam contamination' 50 0. 2.5
+ve/hfill nbb 100
+ve/hfill peak 200
+ve/hfill cont 300
+h/plot 100
+h/plot 200 's'
+h/plot 300 's'
+opt sta
+set stat 0000110
+h/plot 100
+set stat 0001110
+h/plot 100
+h/plot 200 's'
+h/plot 300 's'
+opt logy
+h/plot 100
+h/plot 200 's'
+h/plot 300 's'
+h/cr/1d 100 '"Y# non-beam-beam contamination (on- and off-res subsamples are dashed and dotted)' 50 0. 2.5
+ve/hfill nbb 100
+h/plot 100
+h/plot 200 's'
+h/plot 300 's'
+pict/print 'hist_nbb.eps'
+exit
+*** End   of history file: Tue Feb 15 12:34:27 2005

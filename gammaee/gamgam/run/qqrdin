@@ -1,0 +1,18 @@
+#!/usr/local/bin/bash
+echo "Input file $1"
+echo "Output directed to $2"
+echo "Maximum number of events: $3"
+rm -f DV0001.DAT QQRDIN.QQIN
+ln -s $1 QQRDIN.QQIN
+/usr/local/bin/nice -19 ./qq <<End_qq2
+qqrdin.ctr
+datadisk noinput
+datadisk out $2
+maxev $3
+write single
+user
+go
+exit
+End_qq2
+
+

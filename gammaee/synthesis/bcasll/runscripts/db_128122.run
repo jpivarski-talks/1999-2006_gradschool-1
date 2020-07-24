@@ -1,0 +1,16 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/bcasll_128122.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/synthesis/bcasll/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_RUN=128122
+export USER_DB=22
+export USER_DIR=cont3
+suez -f database.tcl
+rm -f core
+
+exit

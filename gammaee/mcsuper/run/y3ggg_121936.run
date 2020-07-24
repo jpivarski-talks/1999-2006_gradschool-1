@@ -1,0 +1,34 @@
+#$ -l sigmc=1
+#$ -o /cdat/tem/mccann/y3ggg_121936.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/mcsuper/run/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Mar04_04_MC
+export C3_SHLIB=../build_SunOS/shlib:$C3_SHLIB
+
+export USER_RUN=121936
+export USER_GEN=../pds/generator_y3ggg_121936.pds
+export USER_DEC=y3ggg.dec
+export USER_EBEAM=5.1776
+export USER_RES=10.3552
+export USER_WIDE=0.0000263
+
+rm -f $USER_GEN
+
+rm -f core
+suez -f generate.tcl
+rm -f core
+
+c3rel Jun27_02_MC
+export C3_SHLIB=../build_$CMLIB/shlib:$C3_SHLIB
+export C3_SCRIPTS=/home/mccann/mcsuper/run/scripts_$CMLIB
+export USER_CLEOG=../pds/cleog_y3ggg_121936_db16.pds
+export USER_MCPASS2=../pds/mcpass2_y3ggg_121936_db16.pds
+rm -f $USER_CLEOG
+rm -f $USER_MCPASS2
+suez -f cleog.tcl
+rm -f core
+suez -f mcpass2.tcl
+rm -f core

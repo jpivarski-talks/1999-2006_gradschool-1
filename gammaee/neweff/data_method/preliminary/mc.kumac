@@ -1,0 +1,232 @@
+h/file 1 ../data_method_rzn/mc.rzn
+sigma ebeam = 5.17765
+
+* cd beamgasfilter
+* opt logy
+* opt sta
+* set stat 0110010
+* h/plot 100
+* h/plot 101
+* h/plot 200
+* h/plot 201
+
+cd supercuts
+nt/recover 1
+nt/print 1
+
+*       "mc",
+*       "rawtk", "eptk", "tmtk",
+*       "ccen", "visen",
+*       "p1", "p2", "p3", "p4",
+*       "d1", "d2", "d3", "d4",
+*       "z1", "z2", "z3", "z4",
+*       "me1", "me2", "me3", "me4",
+*       "md1", "md2", "md3", "md4",
+*       "e1", "e2", "e3", "e4",
+*       "p2x", "p2y", "p2z",
+*       "p4x", "p4y", "p4z",
+*       "pallx", "pally", "pallz",
+*       "pepx", "pepy", "pepz"};
+
+opt logy
+
+opt sta
+set stat 0110010
+
+nt/plot 1.ccen/2/$SIGMA(ebeam) mc>0
+nt/plot 1.ccen/2/$SIGMA(ebeam) ! ! ! ! 's'
+
+nt/plot 1.ccen/2/$SIGMA(ebeam) mc==0
+nt/plot 1.ccen/2/$SIGMA(ebeam) ! ! ! ! 's'
+
+nt/plot 1.visen/2/$SIGMA(ebeam) mc>0
+nt/plot 1.visen/2/$SIGMA(ebeam) ! ! ! ! 's'
+
+nt/plot 1.visen/2/$SIGMA(ebeam) mc==0
+nt/plot 1.visen/2/$SIGMA(ebeam) ! ! ! ! 's'
+
+h/cr/1d 100 'raw number of tracks for ll events with no visible energy' 7 -0.5 6.5
+h/cr/1d 200 'Trkman number of tracks for ll events with no visible energy' 7 -0.5 6.5
+h/cr/1d 300 'EventProperties number of tracks for ll events with no visible energy' 7 -0.5 6.5
+nt/plot 1.rawtk mc>0&&visen/2/$SIGMA(ebeam)<0.2 ! ! ! ! 100
+nt/plot 1.tmtk mc>0&&visen/2/$SIGMA(ebeam)<0.2 ! ! ! ! 200
+nt/plot 1.eptk mc>0&&visen/2/$SIGMA(ebeam)<0.2 ! ! ! ! 300
+
+* nt/plot 1.p1 mc>0&&0.4<visen/2/$SIGMA(ebeam)<0.6&&p1<10
+* nt/plot 1.p1 0.4<visen/2/$SIGMA(ebeam)<0.6&&p1<10 ! ! ! 's'
+
+h/cr/1d 100 'biggest track momentum' 100 0. 2.
+h/cr/1d 200 'biggest track momentum' 100 0. 2.
+nt/plot 1.p1/$SIGMA(ebeam) mc>0 ! ! ! ! 100
+nt/plot 1.p1/$SIGMA(ebeam) ! ! ! ! 's' 200
+
+h/cr/1d 100 '2nd biggest track momentum' 100 0. 2.
+h/cr/1d 200 '2nd biggest track momentum' 100 0. 2.
+nt/plot 1.p2/$SIGMA(ebeam) mc>0 ! ! ! ! 100
+nt/plot 1.p2/$SIGMA(ebeam) ! ! ! ! 's' 200
+
+h/cr/1d 100 '3rd biggest track momentum' 100 0. 2.
+h/cr/1d 200 '3rd biggest track momentum' 100 0. 2.
+nt/plot 1.p3/$SIGMA(ebeam) mc>0 ! ! ! ! 100
+nt/plot 1.p3/$SIGMA(ebeam) ! ! ! ! 's' 200
+
+h/cr/1d 100 '3rd biggest track momentum' 100 0. 0.3
+h/cr/1d 200 '3rd biggest track momentum' 100 0. 0.3
+nt/plot 1.p3/$SIGMA(ebeam) mc>0 ! ! ! ! 100
+nt/plot 1.p3/$SIGMA(ebeam) ! ! ! ! 's' 200
+zone 1 2
+h/cr/1d 300 '3rd biggest track momentum for ll' 100 0. 0.3
+h/cr/1d 400 '4th biggest track momentum for ll' 100 0. 0.3
+nt/plot 1.p3/$SIGMA(ebeam) mc>0 ! ! ! ! 300
+h/plot 100 's'
+nt/plot 1.p4/$SIGMA(ebeam) mc>0 ! ! ! ! 400
+h/plot 100 's'
+zone 1 1
+
+h/cr/1d 100 'biggest track d0' 100 -0.6 0.6
+h/cr/1d 200 'biggest track d0' 100 -0.6 0.6
+nt/plot 1.d1 mc>0 ! ! ! ! 100
+nt/plot 1.d1 ! ! ! ! 's' 200
+
+h/cr/1d 100 '2nd biggest track d0' 100 -0.6 0.6
+h/cr/1d 200 '2nd biggest track d0' 100 -0.6 0.6
+nt/plot 1.d2 mc>0 ! ! ! ! 100
+nt/plot 1.d2 ! ! ! ! 's' 200
+
+h/cr/1d 100 '3rd biggest track d0' 100 -0.6 0.6
+h/cr/1d 200 '3rd biggest track d0' 100 -0.6 0.6
+nt/plot 1.d3 mc>0 ! ! ! ! 100
+nt/plot 1.d3 ! ! ! ! 's' 200
+
+h/cr/1d 100 '4th biggest track d0' 100 -0.6 0.6
+h/cr/1d 200 '4th biggest track d0' 100 -0.6 0.6
+nt/plot 1.d4 mc>0 ! ! ! ! 100
+nt/plot 1.d4 ! ! ! ! 's' 200
+
+
+
+h/cr/1d 100 'number of tracks' 8 -0.5 7.5
+h/cr/1d 200 'number of tracks' 8 -0.5 7.5
+
+nt/plot 1.rawtk mc>0 ! ! ! ! 100
+nt/plot 1.rawtk ! ! ! ! 's' 200
+
+nt/plot 1.eptk mc>0 ! ! ! ! 100
+nt/plot 1.eptk ! ! ! ! 's' 200
+
+nt/plot 1.tmtk mc>0 ! ! ! ! 100
+nt/plot 1.tmtk ! ! ! ! 's' 200
+
+
+
+h/cr/1d 100 'mass of two highest-momentum particles' 100 4.8 5.2
+h/cr/1d 200 'mass of two highest-momentum particles' 100 4.8 5.2
+nt/plot 1.sqrt($SIGMA(ebeam**2)-(p2x**2+p2y**2+p2z**2)) mc>0&&$SIGMA(ebeam**2)-(p2x**2+p2y**2+p2z**2)>0 ! ! ! ! 100
+nt/plot 1.sqrt($SIGMA(ebeam**2)-(p2x**2+p2y**2+p2z**2)) $SIGMA(ebeam**2)-(p2x**2+p2y**2+p2z**2)>0 ! ! ! 's' 200
+
+
+
+
+
+
+
+h/cr/1d 100 'EventProperties pperp' 100 0. 6.
+h/cr/1d 200 'EventProperties pperp' 100 0. 6.
+h/cr/1d 300 'EventProperties ptot' 100 0. 10.
+h/cr/1d 400 'EventProperties ptot' 100 0. 10.
+h/cr/1d 500 'EventProperties pz' 100 -10. 10.
+h/cr/1d 600 'EventProperties pz' 100 -10. 10.
+
+nt/plot 1.sqrt(pepx**2+pepy**2) mc==0 ! ! ! ! 100
+nt/plot 1.sqrt(pepx**2+pepy**2) mc>0 ! ! ! 's' 200
+nt/plot 1.sqrt(pepx**2+pepy**2+pepz**2) mc==0 ! ! ! ! 300
+nt/plot 1.sqrt(pepx**2+pepy**2+pepz**2) mc>0 ! ! ! 's' 400
+nt/plot 1.pepz mc==0 ! ! ! ! 500
+nt/plot 1.pepz mc>0 ! ! ! 's' 600
+
+h/cr/1d 100 'EventProperties pperp' 100 0. 6.
+h/cr/1d 200 'EventProperties pperp' 100 0. 6.
+h/cr/1d 300 'EventProperties ptot' 100 0. 10.
+h/cr/1d 400 'EventProperties ptot' 100 0. 10.
+h/cr/1d 500 'EventProperties pz' 100 -10. 10.
+h/cr/1d 600 'EventProperties pz' 100 -10. 10.
+
+nt/plot 1.sqrt(p2x**2+p2y**2) mc==0 ! ! ! ! 100
+nt/plot 1.sqrt(p2x**2+p2y**2) mc>0 ! ! ! 's' 200
+nt/plot 1.sqrt(p2x**2+p2y**2+p2z**2) mc==0 ! ! ! ! 300
+nt/plot 1.sqrt(p2x**2+p2y**2+p2z**2) mc>0 ! ! ! 's' 400
+nt/plot 1.p2z mc==0 ! ! ! ! 500
+nt/plot 1.p2z mc>0 ! ! ! 's' 600
+
+
+
+
+
+
+
+
+*********************** comparing ways of identifying tracks
+
+opt liny
+opt nsta
+
+h/cr/2d 100 'raw tracks VS EventProperties tracks' 7 -0.5 6.5 7 -0.5 6.5
+h/cr/2d 200 'Trkman tracks VS EventProperties tracks' 7 -0.5 6.5 7 -0.5 6.5
+h/cr/2d 300 'raw tracks VS Trkman tracks' 7 -0.5 6.5 7 -0.5 6.5
+nt/plot 1.rawtk%eptk ! ! ! ! 'N' 100
+nt/plot 1.tmtk%eptk ! ! ! ! 'N' 200
+nt/plot 1.rawtk%tmtk ! ! ! ! 'N' 300
+
+h/plot 100 'box'
+dline -0.5 6.5 -0.5 6.5
+h/plot 200 'box'
+dline -0.5 6.5 -0.5 6.5
+h/plot 300 'box'
+dline -0.5 6.5 -0.5 6.5
+
+zone 2 3
+h/plot 100 'text'
+dline -0.5 6.5 -0.5 6.5
+h/plot 200 'text'
+dline -0.5 6.5 -0.5 6.5
+h/plot 300 'text'
+dline -0.5 6.5 -0.5 6.5
+pict/print 'tmp.ps'
+
+h/cr/2d 100 'raw tracks VS EventProperties RARE' 7 -0.5 6.5 7 -0.5 6.5
+h/cr/2d 200 'Trkman tracks VS EventProperties RARE' 7 -0.5 6.5 7 -0.5 6.5
+h/cr/2d 300 'raw tracks VS Trkman RARE' 7 -0.5 6.5 7 -0.5 6.5
+nt/plot 1.rawtk%eptk mc>0 ! ! ! 'N' 100
+nt/plot 1.tmtk%eptk mc>0 ! ! ! 'N' 200
+nt/plot 1.rawtk%tmtk mc>0 ! ! ! 'N' 300
+
+h/cr/2d 101 'raw tracks VS EventProperties TYP' 7 -0.5 6.5 7 -0.5 6.5
+h/cr/2d 201 'Trkman tracks VS EventProperties TYP' 7 -0.5 6.5 7 -0.5 6.5
+h/cr/2d 301 'raw tracks VS Trkman TYP' 7 -0.5 6.5 7 -0.5 6.5
+nt/plot 1.rawtk%eptk mc==0 ! ! ! 'N' 101
+nt/plot 1.tmtk%eptk mc==0 ! ! ! 'N' 201
+nt/plot 1.rawtk%tmtk mc==0 ! ! ! 'N' 301
+
+zone 2 3
+h/plot 100 'text'
+set ltyp 3
+dline -0.5 6.5 -0.5 6.5
+h/plot 101 'text'
+set ltyp 3
+dline -0.5 6.5 -0.5 6.5
+h/plot 200 'text'
+set ltyp 3
+dline -0.5 6.5 -0.5 6.5
+h/plot 201 'text'
+set ltyp 3
+dline -0.5 6.5 -0.5 6.5
+h/plot 300 'text'
+set ltyp 3
+dline -0.5 6.5 -0.5 6.5
+h/plot 301 'text'
+set ltyp 3
+dline -0.5 6.5 -0.5 6.5
+zone 1 1
+pict/print 'tmp.ps'
+
+*************************************************************

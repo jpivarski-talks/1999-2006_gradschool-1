@@ -1,0 +1,66 @@
+h/file 1 ../data_method_rzn/y1sqqmcother_trigger.rzn
+h/file 2 ../data_method_rzn/y2sqqmcother_trigger.rzn
+h/file 3 ../data_method_rzn/y3sqqmcother_trigger.rzn
+
+h/file 21 ../data_method_rzn/y2segmcother_trigger.rzn
+
+h/file 31 ../data_method_rzn/data16_trigger.rzn
+
+opt sta
+set stat 0000010
+
+zone 2 2
+
+fortran/file 65 'trigger.ps'
+graphics/metafile 65 -111
+igset mtype 1
+
+h/cr/title 'QQ Y(1S)'
+h/cr/2d 101 't1had VS t1tau' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun1/cuts/1.t1had%t1tau ! ! ! ! text 101
+h/cr/2d 102 't1had.or.t1tau VS eltrack' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun1/cuts/1.(t1had==1.or.t1tau==1)%eltrack ! ! ! ! text 102
+h/cr/2d 103 't1had.or.t1tau.or.eltrack VS minbias' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun1/cuts/1.(t1had==1.or.t1tau==1.or.eltrack==1)%minbias ! ! ! ! text 103
+h/cr/2d 104 't1had.or.t1tau.or.eltrack.or.minbias VS l4>0' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun1/cuts/1.(t1had==1.or.t1tau==1.or.eltrack==1.or.minbias==1)%l4>0 ! ! ! ! text 104
+
+h/cr/title 'QQ Y(2S)'
+h/cr/2d 201 't1had VS t1tau' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun2/cuts/1.t1had%t1tau ! ! ! ! text 201
+h/cr/2d 202 't1had.or.t1tau VS eltrack' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun2/cuts/1.(t1had==1.or.t1tau==1)%eltrack ! ! ! ! text 202
+h/cr/2d 203 't1had.or.t1tau.or.eltrack VS minbias' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun2/cuts/1.(t1had==1.or.t1tau==1.or.eltrack==1)%minbias ! ! ! ! text 203
+h/cr/2d 204 't1had.or.t1tau.or.eltrack.or.minbias VS l4>0' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun2/cuts/1.(t1had==1.or.t1tau==1.or.eltrack==1.or.minbias==1)%l4>0 ! ! ! ! text 204
+
+h/cr/title 'QQ Y(3S)'
+h/cr/2d 301 't1had VS t1tau' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun3/cuts/1.t1had%t1tau ! ! ! ! text 301
+h/cr/2d 302 't1had.or.t1tau VS eltrack' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun3/cuts/1.(t1had==1.or.t1tau==1)%eltrack ! ! ! ! text 302
+h/cr/2d 303 't1had.or.t1tau.or.eltrack VS minbias' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun3/cuts/1.(t1had==1.or.t1tau==1.or.eltrack==1)%minbias ! ! ! ! text 303
+h/cr/2d 304 't1had.or.t1tau.or.eltrack.or.minbias VS l4>0' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun3/cuts/1.(t1had==1.or.t1tau==1.or.eltrack==1.or.minbias==1)%l4>0 ! ! ! ! text 304
+
+h/cr/title 'EvtGen Y(2S)'
+h/cr/2d 401 't1had VS t1tau' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun21/cuts/1.t1had%t1tau ! ! ! ! text 401
+h/cr/2d 402 't1had.or.t1tau VS eltrack' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun21/cuts/1.(t1had==1.or.t1tau==1)%eltrack ! ! ! ! text 402
+h/cr/2d 403 't1had.or.t1tau.or.eltrack VS minbias' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun21/cuts/1.(t1had==1.or.t1tau==1.or.eltrack==1)%minbias ! ! ! ! text 403
+h/cr/2d 404 't1had.or.t1tau.or.eltrack.or.minbias VS l4>0' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun21/cuts/1.(t1had==1.or.t1tau==1.or.eltrack==1.or.minbias==1)%l4>0 ! ! ! ! text 404
+
+h/cr/title 'data16 hadron Y(3S)'
+h/cr/2d 401 't1had VS t1tau' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun31/cuts/1.t1had%t1tau ! ! ! ! text 401
+h/cr/2d 402 't1had.or.t1tau VS eltrack' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun31/cuts/1.(t1had==1.or.t1tau==1)%eltrack ! ! ! ! text 402
+h/cr/2d 403 't1had.or.t1tau.or.eltrack VS minbias' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun31/cuts/1.(t1had==1.or.t1tau==1.or.eltrack==1)%minbias ! ! ! ! text 403
+h/cr/2d 404 't1had.or.t1tau.or.eltrack.or.minbias VS l4>0' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun31/cuts/1.(t1had==1.or.t1tau==1.or.eltrack==1.or.minbias==1)%l4>0 ! ! ! ! text 404

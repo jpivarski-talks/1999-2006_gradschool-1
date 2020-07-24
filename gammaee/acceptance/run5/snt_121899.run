@@ -1,0 +1,17 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/snt_121899.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/acceptance/run5/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_DIR=rzn4
+export USER_RUN=121899
+export USER_HASB=1
+
+suez -f shower_ntuple.tcl
+rm -f core
+
+exit

@@ -1,0 +1,15 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/cas126956_126966.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/acceptance/run5/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_NAME=cas126956_126966
+export USER_DB=21
+export USER_RUNMIN=126956
+export USER_RUNMAX=126966
+
+suez -f fillcascades.tcl

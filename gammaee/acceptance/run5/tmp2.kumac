@@ -1,0 +1,747 @@
+* %%BoundingBox: 10 145 537 652
+
+***************************************************************
+*
+* "t1had", "t1rad", "t1el", "t1tt",
+* "tracks", "visen", "ccen",
+* "p2", "e1",
+* "ci", "wz", "d0close", "z0close",
+* "run", "ebeam", "neue", "q",
+* "axial", "stereo", "cblo", "cbmd",
+* "rawtk", "pmiss", "tr1", "tr2", "trperp1", "trperp2", "e2",
+* "shperp", "shdot",
+* "l4dec", "l4tracks",
+* "mctype",
+* "wpz", "cotthp",
+* "nbunch", "bbunch",
+* "cvisen", "cccen", "cneue",
+* "avisen", "accen", "aneue"
+*
+***************************************************************
+
+* nt/cuts $1 (t1had>0).or.(t1rad>0).or.(t1el>0)
+* nt/cuts $2 abs(d0close)<0.005
+* nt/cuts $3 e1<0.85
+* nt/cuts $4 p2<0.85
+* nt/cuts $5 (wz>800&&abs(z0close)<0.075).or.(wz<800&&abs(wz)<0.075)
+* nt/cuts $6 visen>0.35
+
+* nt/cuts $7 tracks>1
+* nt/cuts $8 l4dec>0
+* nt/cuts $9 ccen<0.85
+
+* peak: [1]30
+* cont: [1]41
+* bge:  [1]42
+* bgp:  [1]43
+* cos:  [1]44
+* ee:   [1]14
+* mumu: [1]15
+* taus: [1]16
+
+* allmc:   [1]54
+* alldata: [1]66
+
+sigma which = 2
+if $SIGMA(which).eq.1 then
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db18.rzn
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db19.rzn
+  nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y1gggam_db18.rzn
+  nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y1ggg_db18.rzn
+  nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y1qq_db18.rzn
+  * nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y1gggam_db19.rzn
+  * nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y1ggg_db19.rzn
+  * nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y1qq_db19.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_123817.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_123817.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_123853.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_123853.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_125176.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_125176.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_124684.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_124684.rzn
+  sigma ptobge = 0.775	 
+  sigma ptobgp = 0.807666
+  sigma ctobge = 0.578646
+  sigma ctobgp = 0.642509
+  sigma ma = 0.989625
+*  sigma ma = 0.925731 with all cuts
+  sigma mb = 0.0183919
+  sigma pa = 116608
+*  sigma pa = 105060 with all cuts
+  sigma ca = 32573
+*  sigma ca = 23000 with all cuts
+  sigma pb = 81188 
+  sigma cb = 65674 
+*   sigma ema = 0.00424056
+*   sigma emb = 0.000429033
+endif
+if $SIGMA(which).eq.2 then
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db21.rzn
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db23.rzn
+  nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y2gggam_db21.rzn
+  nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y2ggg_db21.rzn
+  nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y2qq_db21.rzn
+  * nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y2gggam_db23.rzn
+  * nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y2ggg_db23.rzn
+  * nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y2qq_db23.rzn
+  nt/chain mccas /home/mccann/acceptance/rzn5/ntuple_cas_db21.rzn
+  * nt/chain mccas /home/mccann/acceptance/rzn5/ntuple_cas_db23.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_126488.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_126473.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_126835.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_126831.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_126488.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_126473.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_126835.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_126831.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_126870.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_126563.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_127317.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_127319.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_126870.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_126563.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_127317.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_127319.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_130427.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_129848.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_129071.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_129845.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_130427.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_129848.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_129071.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_129845.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_129572.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_129630.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_130473.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_129564.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_129572.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_129630.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_130473.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_129564.rzn
+  sigma ptobge = 2.96563
+  sigma ptobgp = 8.58676
+  sigma ctobge = 2.39375
+  sigma ctobgp = 8.95192
+  sigma ma = 0.955274
+*  sigma ma = 0.919187 with all cuts
+  sigma mb = 0.0200853
+  sigma pa = 273574
+*  sigma pa = 228821 with all cuts
+  sigma ca = 129549
+*  sigma ca = 92612 with all cuts
+  sigma pb = 306556
+  sigma cb = 252568
+*   sigma ema = 0.00340357
+*   sigma emb = 0.000517445
+endif
+if $SIGMA(which).eq.3 then
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db16.rzn
+  nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y3gggam_db16.rzn
+  nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y3ggg_db16.rzn
+  nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y3qq_db16.rzn
+  nt/chain mccas /home/mccann/acceptance/rzn5/ntuple_cas_db16.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_121906.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122083.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_121899.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_121906.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122083.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_121899.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122132.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122147.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_121969.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122132.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122147.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_121969.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122091.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122080.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122081.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_121904.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122091.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122080.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122081.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_121904.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122133.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_121972.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122136.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122143.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122133.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_121972.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122136.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122143.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122586.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122594.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122802.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122429.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122586.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122594.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122802.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122429.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122576.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122647.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122829.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_123044.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122576.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122647.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122829.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_123044.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122430.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122587.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122800.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122418.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122430.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122587.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122800.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122418.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122832.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122831.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_123043.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122816.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122832.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122831.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_123043.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122816.rzn
+  sigma ptobge = 6.67031
+  sigma ptobgp = 10.3596
+  sigma ctobge = 5.41458
+  sigma ctobgp = 8.87526
+  sigma ma = 0.954255
+*  sigma ma = 0.912534 with all cuts
+  sigma mb = 0.021645
+  sigma pa = 293497
+*  sigma pa = 265640 with all cuts
+  sigma ca = 165045
+*  sigma ca = 141741 
+  sigma pb = 383254
+  sigma cb = 324028
+*   sigma ema = 0.00327434
+*   sigma emb = 0.000608458
+endif
+if $SIGMA(which).eq.21 then
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db21.rzn
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db23.rzn
+  nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y2gggam_db21.rzn
+  nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y2ggg_db21.rzn
+  nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y2qq_db21.rzn
+  * nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y2gggam_db23.rzn
+  * nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y2ggg_db23.rzn
+  * nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y2qq_db23.rzn
+  nt/chain mccas /home/mccann/acceptance/rzn5/ntuple_cas_db21.rzn
+  * nt/chain mccas /home/mccann/acceptance/rzn5/ntuple_cas_db23.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_126488.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_126473.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_126835.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_126831.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_126488.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_126473.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_126835.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_126831.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_126870.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_126563.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_127317.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_127319.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_126870.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_126563.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_127317.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_127319.rzn
+  sigma ptobge = 1.31354
+  sigma ptobgp = 6.94425
+  sigma ctobge = 1.00417
+  sigma ctobgp = 4.89547
+  sigma ma = 0.954255
+  sigma mb = 0.021645
+  sigma pa = 126548
+  sigma ca = 54748
+  sigma pb = 142154
+  sigma cb = 101086
+endif
+if $SIGMA(which).eq.23 then
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db21.rzn
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db23.rzn
+  nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y2gggam_db21.rzn
+  nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y2ggg_db21.rzn
+  nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y2qq_db21.rzn
+  * nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y2gggam_db23.rzn
+  * nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y2ggg_db23.rzn
+  * nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y2qq_db23.rzn
+  nt/chain mccas /home/mccann/acceptance/rzn5/ntuple_cas_db21.rzn
+  * nt/chain mccas /home/mccann/acceptance/rzn5/ntuple_cas_db23.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_130427.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_129848.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_129071.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_129845.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_130427.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_129848.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_129071.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_129845.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_129572.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_129630.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_130473.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_129564.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_129572.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_129630.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_130473.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_129564.rzn
+  sigma ptobge = 1.65208
+  sigma ptobgp = 1.64251
+  sigma ctobge = 1.38958
+  sigma ctobgp = 4.05645
+  sigma ma = 0.954255
+  sigma mb = 0.021645
+  sigma pa = 147026
+  sigma ca = 74801
+  sigma pb = 164402
+  sigma cb = 151482
+endif
+nt/chain bge /home/mccann/acceptance/rzn5/bgneg.rzn
+nt/chain bgp /home/mccann/acceptance/rzn5/bgpos.rzn
+nt/chain cos /home/mccann/acceptance/rzn5/cosmic.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger126828.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger126920.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger126922.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger127014.rzn
+nt/chain tbgp /home/mccann/acceptance/rzn3/trigger126785.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128706.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128736.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128741.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128748.rzn
+* Analysis cuts
+nt/cuts $1 (t1had>0).or.(t1rad>0).or.(t1el>0)
+nt/cuts $2 abs(d0close)<0.005
+nt/cuts $3 e1<0.85
+nt/cuts $4 p2<0.85
+nt/cuts $5 (wz>800&&abs(z0close)<0.075).or.(wz<800&&abs(wz)<0.075)
+nt/cuts $6 visen>0.35
+nt/cuts $7 tracks>1
+nt/cuts $8 l4dec>0
+nt/cuts $9 ccen<0.85
+* Bhabha luminosity cuts
+nt/cuts $15 (rawtk>=2).and.(tracks<=4).and.(pmiss<0.2).and.(abs(2-tr1-tr2-pmiss)<0.2).and.(visen>0.75).and.(ccen>0.75).and.(abs(d0close)<0.005).and.(abs(z0close)<0.05)
+* MC cuts
+nt/cuts $10 nbunch<15&&bbunch<10
+nt/cuts $11 -12<=mctype<=-10
+nt/cuts $12 -22<=mctype<=-20
+nt/cuts $13 -32<=mctype<=-30
+nt/cuts $21 10<=mctype<=12
+nt/cuts $22 20<=mctype<=22
+nt/cuts $23 !$21&&!$22
+nt/plot //mcggg/cuts/1.mctype $10 ! ! ! 'N' 1000000
+sigma nmcggg = $HINFO(1000000,'ENTRIES')
+nt/plot //mcgam/cuts/1.mctype $10 ! ! ! 'N' 1000000
+sigma nmcgam = $HINFO(1000000,'ENTRIES')
+nt/plot //mcqq/cuts/1.mctype $10 ! ! ! 'N' 1000000
+sigma nmcqq = $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.mctype $10&&$11 ! ! ! 'N' 1000000
+sigma nmcee = $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.mctype $10&&$12 ! ! ! 'N' 1000000
+sigma nmcmm = $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.mctype $10&&$13 ! ! ! 'N' 1000000
+sigma nmctt = $HINFO(1000000,'ENTRIES')
+if $SIGMA(which).ne.1 then
+  nt/plot //mccas/cuts/1.mctype $10&&$21 ! ! ! 'N' 1000000
+  sigma nmccee = $HINFO(1000000,'ENTRIES')
+  nt/plot //mccas/cuts/1.mctype $10&&$22 ! ! ! 'N' 1000000
+  sigma nmccmm = $HINFO(1000000,'ENTRIES')
+  nt/plot //mccas/cuts/1.mctype $10&&$23 ! ! ! 'N' 1000000
+  sigma nmccas = $HINFO(1000000,'ENTRIES')
+endif
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 0
+
+* exec i_cant_believe_im_in_the_background $1&&$2&&$3&&$4&&$5&&$6
+* exec i_cant_believe_im_in_the_background $1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+
+* fortran/file 65 incredible_trigger_$SIGMA(which)s.eps
+* graphics/metafile 65 -111
+* igset mtype 1
+* zone 2 2
+* set dmod 1
+* exec i_cant_believe_trigger 1 '"f#AXIAL tracks' 16 -0.5 15.5 axial $1
+* exec i_cant_believe_trigger 11 '"f#AXIAL tracks' 16 -0.5 15.5 axial axial>-10
+* exec i_cant_believe_oh_plot_it_anyway 1
+* set dmod 3
+* h/plot 1154 'shist'
+* set ltyp 2
+* dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* dline 2.5 2.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* set dmod 1
+* exec i_cant_believe_trigger 2 '"f#STEREO tracks' 16 -0.5 15.5 stereo $1
+* exec i_cant_believe_trigger 12 '"f#STEREO tracks' 16 -0.5 15.5 stereo axial>-10
+* exec i_cant_believe_oh_plot_it_anyway 2
+* set dmod 3
+* h/plot 1254 'shist'
+* set ltyp 2
+* dline 1.5 1.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* set dmod 1
+* exec i_cant_believe_trigger 3 '"f#CBLO clusters' 8 -0.5 7.5 cblo $1
+* exec i_cant_believe_trigger 13 '"f#CBLO clusters' 8 -0.5 7.5 cblo axial>-10
+* exec i_cant_believe_oh_plot_it_anyway 3
+* set dmod 3
+* h/plot 1354 'shist'
+* set ltyp 2
+* dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* dline 1.5 1.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* set dmod 1
+* exec i_cant_believe_trigger 4 '"f#CBMD clusters' 8 -0.5 7.5 cbmd $1
+* exec i_cant_believe_trigger 14 '"f#CBMD clusters' 8 -0.5 7.5 cbmd axial>-10
+* exec i_cant_believe_oh_plot_it_anyway 4
+* set dmod 3
+* h/plot 1454 'shist'
+* set ltyp 2
+* dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* close 65
+
+* fortran/file 65 incredible_ccstudy_$SIGMA(which)s.eps
+* graphics/metafile 65 -111
+* igset mtype 1
+* exec i_cant_believe 21 'Biggest shower energy in unrepresented events (GeV)' 40 0. 4. e1*ebeam !($2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&visen-neue>0.35)
+* exec i_cant_believe 22 'Biggest shower energy in TwoTrack check of the CC trigger (GeV)' 40 0. 4. e1*ebeam ($2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&visen-neue>0.35)
+* zone 1 2
+* opt sta
+* set stat 0000100
+* exec i_cant_believe_oh_plot_it_anyway 22
+* set ltyp 2
+* dline 0.15 0.15 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* dline 0.75 0.75 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* exec i_cant_believe_oh_plot_it_anyway 21
+* set ltyp 2
+* dline 0.15 0.15 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* dline 0.75 0.75 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* opt nsta
+* close 65
+
+* fortran/file 65 incredible_mcvars_$SIGMA(which)s.eps
+* graphics/metafile 65 -111
+* igset mtype 1
+* exec i_cant_believe 31 'Closest track approach to beamline (mm)' 100 -6. 6. d0close*1000. $1
+* exec i_cant_believe 32 'Biggest shower energy / beam energy' 60 0. 1.2 e1 $1&&$2
+* exec i_cant_believe 33 'Second-biggest track momentum / beam energy' 60 0. 1.2 p2 $1&&$2&&$3
+* zone 1 3
+* exec i_cant_believe_oh_plot_it_anyway 31
+* set ltyp 2
+* dline -5. -5. $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* dline  5.  5. $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* exec i_cant_believe_oh_plot_it_anyway 32
+* set ltyp 2
+* dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* exec i_cant_believe_oh_plot_it_anyway 33
+* set ltyp 2
+* dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* close 65
+
+* fortran/file 65 incredible_z0close_$SIGMA(which)s.eps
+* graphics/metafile 65 -111
+* igset mtype 1
+* exec i_cant_believe 36 'Event vertex Z minus beamspot Z (cm)' 100 -10. 10. wz*100. $1&&$2&&$3&&$4
+* exec i_cant_believe 37 'Closest track approach to beamspot Z when event vertex is unavailable (cm)' 100 -10. 10. z0close*100. $1&&$2&&$3&&$4&&wz>800
+* zone 1 2
+* exec i_cant_believe_oh_plot_it_anyway 36
+* set ltyp 2
+* dline -7.5 -7.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* dline  7.5  7.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* exec i_cant_believe_oh_plot_it_anyway 37
+* set ltyp 2
+* dline -7.5 -7.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* dline  7.5  7.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* close 65
+
+* fortran/file 65 incredible_visen_$SIGMA(which)s.eps
+* graphics/metafile 65 -111
+* igset mtype 1
+* exec i_cant_believe 41 'Visible energy / center-of-mass energy' 60 0. 1.2 visen $1&&$2&&$3&&$4&&$5
+* exec i_cant_believe 43 'Visible energy with hot crystals removed' 60 0. 1.2 cvisen/2./ebeam $1&&$2&&$3&&$4&&$5
+* zone 1 2
+* exec i_cant_believe_oh_plot_it_anyway 41
+* set ltyp 2
+* dline 0.35 0.35 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* zone 2 2 3 's'
+* h/copy 4130 4140 'On- and off-resonance (hatched)'
+* h/plot 4140 'hist'
+* set hwid 5
+* set htyp 244
+* h/plot 4141 'shist'
+* set hwid 1
+* set htyp 0
+* set ltyp 2
+* dline 0.35 0.35 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* exec i_cant_believe_oh_plot_it_anyway 43
+* set ltyp 2
+* dline 0.35 0.35 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* close 65
+
+* fortran/file 65 incredible_datavars_$SIGMA(which)s.eps
+* graphics/metafile 65 -111
+* igset mtype 1
+* exec i_cant_believe 70 'Number of quality tracks' 19 -0.5 18.5 tracks $1&&$2&&$3&&$4&&$5&&$6
+* exec i_cant_believe 71 'Total CC energy / center-of-mass energy' 60 0. 1.2 ccen $1&&$2&&$3&&$4&&$5&&$6&&$7&&$8
+* zone 1 2
+* exec i_cant_believe_oh_plot_it_anyway 70
+* set ltyp 2
+* dline 1.5 1.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* exec i_cant_believe_oh_plot_it_anyway 71
+* set ltyp 2
+* dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* close 65
+
+* message trigger only
+* exec i_cant_believe 50 'pass' 2 -0.5 1.5 $1 axial>-10
+* exec i_cant_believe_wriggling 50
+
+* message d0close given previous
+* exec i_cant_believe 51 'pass' 2 -0.5 1.5 $2 $1
+* exec i_cant_believe_wriggling 51
+
+* message e1 given previous
+* exec i_cant_believe 52 'pass' 2 -0.5 1.5 $3 $1&&$2
+* exec i_cant_believe_wriggling 52
+
+* message p2 given previous
+* exec i_cant_believe 53 'pass' 2 -0.5 1.5 $4 $1&&$2&&$3
+* exec i_cant_believe_wriggling 53
+
+* message wz given previous
+* exec i_cant_believe 54 'pass' 2 -0.5 1.5 $5 $1&&$2&&$3&&$4
+* exec i_cant_believe_wriggling 54
+
+* message visen given previous
+* exec i_cant_believe 55 'pass' 2 -0.5 1.5 $6 $1&&$2&&$3&&$4&&$5
+* h/cr/1d 55311 'pass' 2 -0.5 1.5
+* h/cr/1d 55312 'pass' 2 -0.5 1.5
+* nt/plot //cont/cuts/1.$6 $1&&$2&&$3&&$4&&$5&&visen<=0.35 ! ! ! 'N' 55311
+* nt/plot //cont/cuts/1.$6 $1&&$2&&$3&&$4&&$5&&visen>0.35 ! ! ! 'N' 55312
+
+* message both 5 and 6
+* exec i_cant_believe 56 'pass' 2 -0.5 1.5 $5&&$6 $1&&$2&&$3&&$4
+* h/cr/1d 56311 'pass' 2 -0.5 1.5
+* h/cr/1d 56312 'pass' 2 -0.5 1.5
+* nt/plot //cont/cuts/1.$5&&$6 $1&&$2&&$3&&$4&&visen<=0.35 ! ! ! 'N' 56311
+* nt/plot //cont/cuts/1.$5&&$6 $1&&$2&&$3&&$4&&visen>0.35 ! ! ! 'N' 56312
+
+* message visen given previous (cut cosmics)
+* exec i_cant_believe 57 'pass' 2 -0.5 1.5 $6 $1&&$2&&$3&&$4&&$5&&visen>0.05
+* h/cr/1d 57311 'pass' 2 -0.5 1.5
+* h/cr/1d 57312 'pass' 2 -0.5 1.5
+* nt/plot //cont/cuts/1.$6 $1&&$2&&$3&&$4&&$5&&visen<=0.35&&visen>0.05 ! ! ! 'N' 57311
+* nt/plot //cont/cuts/1.$6 $1&&$2&&$3&&$4&&$5&&visen>0.35&&visen>0.05 ! ! ! 'N' 57312
+
+* message both 5 and 6 (cut cosmics)
+* exec i_cant_believe 58 'pass' 2 -0.5 1.5 $5&&$6 $1&&$2&&$3&&$4&&visen>0.05
+* h/cr/1d 58311 'pass' 2 -0.5 1.5
+* h/cr/1d 58312 'pass' 2 -0.5 1.5
+* nt/plot //cont/cuts/1.$5&&$6 $1&&$2&&$3&&$4&&visen<=0.35&&visen>0.05 ! ! ! 'N' 58311
+* nt/plot //cont/cuts/1.$5&&$6 $1&&$2&&$3&&$4&&visen>0.35&&visen>0.05 ! ! ! 'N' 58312
+
+* sigma what = 58
+* h/cr/1d $SIGMA(what)31 'pass' 2 -0.5 1.5
+* * add $SIGMA(what)311 $SIGMA(what)312 $SIGMA(what)31 1. 1. 'e'
+* add $SIGMA(what)311 $SIGMA(what)312 $SIGMA(what)31 1.005 1. 'e'
+* exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 0
+* exec i_cant_believe_weight $SIGMA(what)
+* ve/cr davec(2)
+* ve/cr daerr(2)
+* h/get_vect/contents $SIGMA(what)66 davec
+* h/get_vect/errors   $SIGMA(what)66 daerr
+* sigma daeff = davec(2)/(davec(1)+davec(2))*100
+* sigma daeer = sqrt(davec(2)**2*daerr(1)**2+davec(1)**2*daerr(2)**2)/(davec(1)+davec(2))**2*100
+* message nominal data: $SIGMA(daeff) +/- $SIGMA(daeer) %
+
+* fortran/file 65 incredible_visenfix_$SIGMA(which)s.ps
+* graphics/metafile 65 -111
+* igset mtype 1
+* exec i_cant_believe 1 'Visible energy (hot crystals removed) / center-of-mass energy' 24 0. 1.2 cvisen/2./ebeam $1&&$2&&$3&&$4&&$5
+* h/cr/1d 9999 'Visible energy (hot crystals removed) / center-of-mass energy' 24 0. 1.2
+* h/cr/1d 9998 'Visible energy (hot crystals removed) / center-of-mass energy' 24 0. 1.2
+* nt/plot //cont/cuts/1.cvisen/2./ebeam $1&&$2&&$3&&$4&&$5&&cvisen/2./ebeam<=0.35 ! ! ! 'N' 9999
+* nt/plot //cont/cuts/1.cvisen/2./ebeam $1&&$2&&$3&&$4&&$5&&cvisen/2./ebeam>0.35 ! ! ! 'N' 9998
+* h/cr/1d 131 'Visible energy (hot crystals removed) / center-of-mass energy' 24 0. 1.2
+* add 9999 9998 131 1. 1. 'e'
+* exec i_cant_believe_weight 1
+* zone 1 1
+* exec i_cant_believe_oh_plot_it_anyway 1
+* set dmod 1
+* h/plot 166 'se1'
+* set hcol 2
+* h/cr/1d 131 'Visible energy (hot crystals removed) / center-of-mass energy' 24 0. 1.2
+* add 9999 9998 131 1.005 1. 'e'
+* exec i_cant_believe_weight 1
+* set dmod 1
+* h/plot 166 'se1'
+* set ltyp 2
+* dline 0.35 0.35 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* close 65
+
+* message 1 through 6 dont believe data
+* exec i_cant_believe 56 'pass' 2 -0.5 1.5 $1&&$2&&$3&&$4&&$5&&$6 axial>-10
+* exec i_cant_believe_wriggling 56
+
+* message 2 through 6 compare data and MC for fun
+* exec i_cant_believe 57 'pass' 2 -0.5 1.5 $2&&$3&&$4&&$5&&$6 $1
+* exec i_cant_believe_wriggling 57
+
+* message 5 and 6 compare data and MC for systematic error on wz and visen together
+* exec i_cant_believe 62 'pass' 2 -0.5 1.5 $5&&$6 $1&&$2&&$3&&$4
+* exec i_cant_believe_wriggling 62
+
+* message tracks given previous only believe data
+* exec i_cant_believe 58 'pass' 2 -0.5 1.5 $7 $1&&$2&&$3&&$4&&$5&&$6
+* exec i_cant_believe_wriggling 58
+
+* message l4dec given previous only believe data
+* exec i_cant_believe 59 'pass' 2 -0.5 1.5 $8 $1&&$2&&$3&&$4&&$5&&$6&&$7
+* exec i_cant_believe_wriggling 59
+
+* message ccen given previous only believe data
+* exec i_cant_believe 60 'pass' 2 -0.5 1.5 $9 $1&&$2&&$3&&$4&&$5&&$6&&$7&&$8
+* exec i_cant_believe_wriggling 60
+
+* message just the data ones all together
+* exec i_cant_believe 61 'pass' 2 -0.5 1.5 $7&&$8&&$9 $1&&$2&&$3&&$4&&$5&&$6
+* exec i_cant_believe_wriggling 61
+
+* message cuts 5 through 9 for the $SIGMA(which)s
+* exec i_cant_believe 61 'pass' 2 -0.5 1.5 $5&&$6&&$7&&$8&&$9 $1&&$2&&$3&&$4
+* exec i_cant_believe_wriggling 61
+
+* message the backgrounds after 1 - 6
+* exec i_cant_believe 80 'pass anything' 1 0.5 1.5 axial>-10 $1&&$2&&$3&&$4&&$5&&$6
+* exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 0
+* exec i_cant_believe_weight 80
+* ve/cr bkvec(1)
+* ve/cr bkerr(1)
+* h/get_vect/contents 8042 bkvec
+* h/get_vect/errors   8042 bkerr
+* message bge: $SIGMA(bkvec(1)) pm $SIGMA(bkerr(1))
+* ve/cr bkvec(1)
+* ve/cr bkerr(1)
+* h/get_vect/contents 8043 bkvec
+* h/get_vect/errors   8043 bkerr
+* message bgp: $SIGMA(bkvec(1)) pm $SIGMA(bkerr(1))
+* ve/cr bkvec(1)
+* ve/cr bkerr(1)
+* h/get_vect/contents 8044 bkvec
+* h/get_vect/errors   8044 bkerr
+* message cos: $SIGMA(bkvec(1)) pm $SIGMA(bkerr(1))
+* ve/cr bkvec(1)
+* ve/cr bkerr(1)
+* h/get_vect/contents 8014 bkvec
+* h/get_vect/errors   8014 bkerr
+* message ee: $SIGMA(bkvec(1)) pm $SIGMA(bkerr(1))
+* ve/cr bkvec(1)
+* ve/cr bkerr(1)
+* h/get_vect/contents 8015 bkvec
+* h/get_vect/errors   8015 bkerr
+* message mumu: $SIGMA(bkvec(1)) pm $SIGMA(bkerr(1))
+* ve/cr bkvec(1)
+* ve/cr bkerr(1)
+* h/get_vect/contents 8016 bkvec
+* h/get_vect/errors   8016 bkerr
+* message tautau: $SIGMA(bkvec(1)) pm $SIGMA(bkerr(1))
+* ve/cr bkvec(1)
+* ve/cr bkerr(1)
+* h/get_vect/contents 8060 bkvec
+* h/get_vect/errors   8060 bkerr
+* message data with backgrounds still in it: $SIGMA(bkvec(1)) pm $SIGMA(bkerr(1)) but statistically independent of control samples
+
+* message the backgrounds after EVERYTHING
+* exec i_cant_believe 81 'pass anything' 1 0.5 1.5 axial>-10 $1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+* exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 0
+* exec i_cant_believe_weight 81
+* ve/cr bkvec(1)
+* ve/cr bkerr(1)
+* h/get_vect/contents 8142 bkvec
+* h/get_vect/errors   8142 bkerr
+* message bge: $SIGMA(bkvec(1)) pm $SIGMA(bkerr(1))
+* ve/cr bkvec(1)
+* ve/cr bkerr(1)
+* h/get_vect/contents 8143 bkvec
+* h/get_vect/errors   8143 bkerr
+* message bgp: $SIGMA(bkvec(1)) pm $SIGMA(bkerr(1))
+* ve/cr bkvec(1)
+* ve/cr bkerr(1)
+* h/get_vect/contents 8144 bkvec
+* h/get_vect/errors   8144 bkerr
+* message cos: $SIGMA(bkvec(1)) pm $SIGMA(bkerr(1))
+* ve/cr bkvec(1)
+* ve/cr bkerr(1)
+* h/get_vect/contents 8114 bkvec
+* h/get_vect/errors   8114 bkerr
+* message ee: $SIGMA(bkvec(1)) pm $SIGMA(bkerr(1))
+* ve/cr bkvec(1)
+* ve/cr bkerr(1)
+* h/get_vect/contents 8115 bkvec
+* h/get_vect/errors   8115 bkerr
+* message mumu: $SIGMA(bkvec(1)) pm $SIGMA(bkerr(1))
+* ve/cr bkvec(1)
+* ve/cr bkerr(1)
+* h/get_vect/contents 8116 bkvec
+* h/get_vect/errors   8116 bkerr
+* message tautau: $SIGMA(bkvec(1)) pm $SIGMA(bkerr(1))
+* ve/cr bkvec(1)
+* ve/cr bkerr(1)
+* h/get_vect/contents 8160 bkvec
+* h/get_vect/errors   8160 bkerr
+* message data with backgrounds still in it: $SIGMA(bkvec(1)) pm $SIGMA(bkerr(1)) but statistically independent of control samples
+
+* * redefine MC cuts for no PHOTOS
+* nt/cuts $10 nbunch<15&&bbunch<10
+* nt/cuts $11 mctype==-10
+* nt/cuts $12 mctype==-20
+* nt/cuts $13 mctype==-30
+* nt/cuts $21 mctype==10
+* nt/cuts $22 mctype==20
+* nt/cuts $23 !$21&&!$22
+* nt/plot //mcggg/cuts/1.mctype $10 ! ! ! 'N' 1000000
+* sigma nmcggg = $HINFO(1000000,'ENTRIES')
+* nt/plot //mcgam/cuts/1.mctype $10 ! ! ! 'N' 1000000
+* sigma nmcgam = $HINFO(1000000,'ENTRIES')
+* nt/plot //mcqq/cuts/1.mctype $10 ! ! ! 'N' 1000000
+* sigma nmcqq = $HINFO(1000000,'ENTRIES')
+* nt/plot //mc/cuts/1.mctype $10&&$11 ! ! ! 'N' 1000000
+* sigma nmcee = $HINFO(1000000,'ENTRIES')
+* nt/plot //mc/cuts/1.mctype $10&&$12 ! ! ! 'N' 1000000
+* sigma nmcmm = $HINFO(1000000,'ENTRIES')
+* nt/plot //mc/cuts/1.mctype $10&&$13 ! ! ! 'N' 1000000
+* sigma nmctt = $HINFO(1000000,'ENTRIES')
+* if $SIGMA(which).ne.1 then
+*   nt/plot //mccas/cuts/1.mctype $10&&$21 ! ! ! 'N' 1000000
+*   sigma nmccee = $HINFO(1000000,'ENTRIES')
+*   nt/plot //mccas/cuts/1.mctype $10&&$22 ! ! ! 'N' 1000000
+*   sigma nmccmm = $HINFO(1000000,'ENTRIES')
+*   nt/plot //mccas/cuts/1.mctype $10&&$23 ! ! ! 'N' 1000000
+*   sigma nmccas = $HINFO(1000000,'ENTRIES')
+* endif
+* exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 0
+
+* message e1 given previous no PHOTOS look at central value only
+* exec i_cant_believe 64 'pass' 2 -0.5 1.5 $3 $1&&$2
+* exec i_cant_believe_wriggling 64
+
+* message p2 given previous no PHOTOS look at central value only
+* exec i_cant_believe 65 'pass' 2 -0.5 1.5 $4 $1&&$2&&$3
+* exec i_cant_believe_wriggling 65
+
+* message 1 through 6 no PHOTOS look at central value only dont believe data
+* exec i_cant_believe 63 'pass' 2 -0.5 1.5 $1&&$2&&$3&&$4&&$5&&$6 axial>-10
+* exec i_cant_believe_wriggling 63
+
+
+
+* exec i_cant_believe 2 'Visible energy' 60. 0. 1.2 visen $1&&$2&&$3&&$4&&$5
+* exec i_cant_believe_oh_plot_it_anyway.kumac 2
+
+fortran/file 65 incredible__$SIGMA(which)s.ps
+graphics/metafile 65 -111
+igset mtype 1
+
+exec i_cant_believe 1 'Matched shower energy over track energy for visible energy "l# 35"Y#' 60. 0. 1.2 (ccen-neue)/(visen-neue) $1&&$2&&$3&&$4&&$5&&visen<0.35&&(visen-neue)>0
+exec i_cant_believe 2 'cos[Q] for positrons (solid) and electrons (dashed)' 10 -1. 1. wpz/tr1 $1&&$2&&$3&&$4&&$5&&visen<0.35&&(visen-neue)>0&&0.9<(ccen-neue)/(visen-neue)<1.1&&rawtk==1&&q==1
+exec i_cant_believe 3 'cos[Q] for positrons (solid) and electrons (dashed)' 10 -1. 1. wpz/tr1 $1&&$2&&$3&&$4&&$5&&visen<0.35&&(visen-neue)>0&&0.9<(ccen-neue)/(visen-neue)<1.1&&rawtk==1&&q==-1
+zone 1 2
+set dmod 1
+exec i_cant_believe_oh_plot_it_anyway.kumac 1
+set ltyp 2
+dline 0.9 0.9 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 1.1 1.1 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+set dmod 1
+exec i_cant_believe_oh_plot_it_anyway.kumac 2
+set dmod 2
+exec i_cant_believe_oh_plot_it_overlay.kumac 3

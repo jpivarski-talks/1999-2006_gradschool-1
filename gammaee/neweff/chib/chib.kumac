@@ -1,0 +1,43 @@
+h/file 1 ../chib_rzn/chib-1.rzn
+h/file 2 ../chib_rzn/chib0.rzn
+h/file 3 ../chib_rzn/chib1.rzn
+h/file 4 ../chib_rzn/chib2.rzn
+h/file 21 ../chib_rzn/peak.rzn
+h/file 31 ../chib_rzn/cont.rzn
+
+*       "ntk", "epntk",
+*       "tr1", "tr2", "eop1", "eop2",
+*       "mass1s",
+*       "d1", "d2", "z1", "z2",
+*       "costh1", "costh2", "phi1", "phi2",
+*       "ph1", "ph2",
+*       "masschib",
+*       "costh3", "costh4", "phi3", "phi4",
+*       "allp", "allpt", "alle",
+*       "type"};
+
+opt fit
+set fit 111
+h/cr/1d 100 'chib to U(1S) photon' 100 0.080 0.220
+nt/plot //lun21/chibskim/1.ph2 ! ! ! ! ! 100
+ve/cr par(8)
+ve/inp par 22.536 31.919 0.31799 0.37606E-04 0.33646E-04 0.98230E-05 122.27 -490.80
+h/fit 100 chib.f ! 8 par
+
+h/plot 100
+dline 0.16336 0.16336 70 100
+dline 0.16336 $SIGMA(0.16336+0.001) 70 80
+dline 0.16336 $SIGMA(0.16336-0.001) 70 80
+text 0.16336 105 'chib0"h#' ! ! 'c'
+pict/print 'chib.ps'
+
+zone 2 2
+h/cr/1d 200 'mu+mu- mass' 100 9.2 9.7
+nt/plot //lun21/chibskim/1.mass1s ! ! ! ! ! 200
+h/cr/1d 300 'mu+mu- biggest photon mass' 100 9. 10.5
+nt/plot //lun21/chibskim/1.masschib ! ! ! ! ! 300
+h/cr/1d 350 'four-particle mass' 100 9.5 10.5
+nt/plot //lun21/chibskim/1.alle ! ! ! ! ! 350
+h/cr/2d 400 'biggest photon VS second biggest' 50 0.075 0.225 50 0.275 0.500
+nt/plot //lun21/chibskim/1.ph1%ph2 ! ! ! ! ! 400
+pict/print 'chib_sup.ps'

@@ -1,0 +1,52 @@
+*** Begin of history file: Tue Jan 31 05:46:47 2006
+sigma mc16ld = 0
+exec load_[1].kumac
+nt/chain bge /home/mccann/acceptance/rzn5/bgneg.rzn
+nt/chain bgp /home/mccann/acceptance/rzn5/bgpos.rzn
+nt/chain cos /home/mccann/acceptance/rzn5/cosmic.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger126828.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger126920.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger126922.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger127014.rzn
+nt/chain tbgp /home/mccann/acceptance/rzn3/trigger126785.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128706.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128736.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128741.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128748.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger126785.rzn
+nt/plot //tbge/cuts/1.ci
+nt/chain bge /home/mccann/acceptance/rzn5/bgpos.rzn
+nt/plot //bge/cuts/1.ci
+nt/chain bad /cdat/daf9/mccann/acceptance_home/rzn5/bgneg.rzn
+nt/chain bad /cdat/daf9/mccann/acceptance_home/rzn5/bgpos.rzn
+nt/plot //bad/cuts/1.ci
+nt/plot //bad/cuts/1.ci ci<1000
+nt/plot //bad/cuts/1.ci ci<0.05
+nt/plot //bad/cuts/1.ci ci<0.05&&abs(d0close)<0.005
+nt/plot //bad/cuts/1.ci ci<0.05&&abs(d0close)<0.005&&visen>0.4
+nt/plot //bad/cuts/1.ci ci<0.05&&abs(d0close)<0.005&&visen>0.04
+nt/plot //bad/cuts/1.ci ci<0.05&&abs(d0close)<0.005&&visen>0.01
+nt/plot //bad/cuts/1.ci ci<0.05&&abs(d0close)<0.005&&visen>0.00
+nt/plot //bad/cuts/1.ci ci<0.05&&abs(d0close)<0.005
+h/cr/1d 100 'Closest intersection to beam-beam intersection point' 100 0 5
+nt/plot //bad/cuts/1.ci*100 ci<0.05&&abs(d0close)<0.005 ! ! ! ! 100
+h/cr/1d 100 'Closest intersection to beam-beam intersection point (cm)' 100 0 5
+nt/plot //bad/cuts/1.ci*100 ci<0.05&&abs(d0close)<0.005 ! ! ! ! 100
+h/cr/1d 100 'Closest intersection to beam-beam XY intersection point (cm)' 100 0 5
+nt/plot //bad/cuts/1.ci*100 ci<0.05&&abs(d0close)<0.005 ! ! ! ! 100
+set ltyp 2
+dline 2.1 2.1 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 2.2 2.2 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+nt/cuts $1 (t1had>0).or.(t1rad>0).or.(t1el>0)
+pict/print '/home/mccann/thesis/plots/smallbeamwall.eps'
+nt/plot //bad/cuts/1.ci*100 ci<0.05&&abs(d0close)<0.005 ! ! ! ! 100
+set ltyp 2
+dline 2.1 2.1 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 2.2 2.2 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+text 2.5 200 'beampipe radius'
+nt/plot //bad/cuts/1.ci*100 ci<0.05&&abs(d0close)<0.005 ! ! ! ! 100
+set ltyp 2
+dline 2.1 2.1 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 2.2 2.2 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+text 2.3 200 'beampipe radius' 0.3
+*** End   of history file: Tue Jan 31 06:03:28 2006

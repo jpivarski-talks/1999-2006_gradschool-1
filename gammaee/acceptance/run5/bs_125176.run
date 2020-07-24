@@ -1,0 +1,17 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/bs_125176.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/acceptance/run5/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_DIR=rzn3
+export USER_RUN=125176
+export USER_HASB=0
+
+suez -f bigsyst_data.tcl
+rm -f core
+
+exit

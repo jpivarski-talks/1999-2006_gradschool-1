@@ -1,0 +1,152 @@
+*** Begin of history file: Wed Aug  3 10:55:21 2005
+sigma which = 3
+exec /tmp/pawtmp-2647.kumac
+nt/plot //mc/cuts/1.sqrt((tr1+tr2)**2-pmiss**2)/2. $1&&mctype==-20 ! ! ! ! 100
+nt/plot //mccas/cuts/1.sqrt((tr1+tr2)**2-pmiss**2)/2. $1&&mctype==20 ! ! ! ! 200
+nt/plot //peak/cuts/1.sqrt((tr1+tr2)**2-pmiss**2)/2. $1 ! ! ! ! 300
+nt/plot //cont/cuts/1.sqrt((tr1+tr2)**2-pmiss**2)/2. $1 ! ! ! ! 400
+h/plot 400
+normalize 300
+normalize 400
+h/plot 300
+h/plot 400
+h/plot 300
+h/plot 400 's'
+nt/cuts $1 tr1>-100&&tr2>-100&&pmiss>-100&&visen>0.4&&abs(d0close)<0.005&&((abs(wz)>800&&abs(z0close)<0.075).or.(abs(wz)<800&&abs(wz)<0.075))&&e1<0.7&&(tr1+tr2)**2-pmiss**2>0.
+exec /tmp/pawtmp-3875.kumac
+h/cr/1d 500 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+sub 300 400 1. 0.64825 'e'
+h/cr/1d 500 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+sub 300 400 500 1. 0.64825 'e'
+h/plot 500
+h/cr/1d 500 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+sub 300 400 500 1. 0.064825 'e'
+h/plot 500
+dline 0.7 1.2 0 0
+h/plot 500
+dline 0.7 1.2 0 0
+h/cr/1d 101 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+h/cr/1d 201 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+add 100 100 101 1. 0.
+add 200 200 201 1. 0.
+h/plot 500
+dline 0.7 1.2 0 0
+h/plot 100 's'
+add 100 100 101 5. 0.
+add 200 200 201 1. 0.
+h/plot 500
+dline 0.7 1.2 0 0
+h/plot 100 's'
+h/plot 101 's'
+add 100 100 101 5. 0.
+add 200 200 201 1. 0.
+h/plot 500
+dline 0.7 1.2 0 0
+h/plot 101 's'
+add 100 100 101 4.5 0.
+add 200 200 201 1. 0.
+h/plot 500
+dline 0.7 1.2 0 0
+h/plot 101 's'
+h/plot 201 's'
+add 100 100 101 4.5 0.
+add 200 200 201 2. 0.
+h/plot 500
+dline 0.7 1.2 0 0
+h/plot 101 's'
+h/plot 201 's'
+add 100 100 101 4.5 0.
+add 200 200 201 3. 0.
+h/plot 500
+dline 0.7 1.2 0 0
+h/plot 101 's'
+h/plot 201 's'
+add 200 200 201 2.8 0.
+h/plot 500
+dline 0.7 1.2 0 0
+h/plot 101 's'
+h/plot 201 's'
+add 100 100 101 4.5 0.
+add 200 200 201 2.5 0.
+h/plot 500
+dline 0.7 1.2 0 0
+h/plot 101 's'
+h/plot 201 's'
+message $HINFO(101,'SUM') $HINFO(201,'SUM')
+  nt/chain mc2 /cdat/daf9/mccann/acceptance_home/rzn5/ntuple_db21.rzn
+h/cr/1d 100 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+h/cr/1d 200 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+nt/plot //mc2/cuts/1.sqrt((tr1+tr2)**2-pmiss**2)/2. $1&&mctype==-20 ! ! ! ! 100
+nt/plot //mc2/cuts/1.sqrt((tr1+tr2)**2-pmiss**2)/2. $1&&mctype==20 ! ! ! ! 200
+h/cr/1d 101 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+h/cr/1d 201 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+add 100 100 101 4.5 0.
+add 200 200 201 2.5 0.
+h/plot 500
+dline 0.7 1.2 0 0
+h/plot 101 's'
+h/plot 201 's'
+h/cr/1d 100 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+h/cr/1d 200 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+nt/plot //mc/cuts/1.sqrt((tr1+tr2)**2-pmiss**2)/2. $1&&mctype==-20 ! ! ! ! 100
+nt/plot //mc/cuts/1.sqrt((tr1+tr2)**2-pmiss**2)/2. $1&&mctype==20 ! ! ! ! 200
+h/cr/1d 500 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+sub 300 400 500 1. 0.064825 'e'
+h/cr/1d 101 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+h/cr/1d 201 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+add 100 100 101 1. 0.
+add 200 200 201 1. 0.
+h/plot 500
+dline 0.7 1.2 0 0
+h/plot 101 's'
+h/plot 201 's'
+add 100 100 101 3. 0.
+add 200 200 201 3. 0.
+h/plot 500
+dline 0.7 1.2 0 0
+h/plot 101 's'
+h/plot 201 's'
+h/cr/1d  99 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+nt/plot //mc/cuts/1.sqrt((tr1+tr2)**2-pmiss**2)/2. $1 ! ! ! ! 99
+message $HINFO(99,'ENTRIES')
+message $HINFO(99,'ENTRIES') $HINFO(100,'ENTRIES')
+h/cr/1d  98 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+h/cr/1d  99 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+h/cr/1d  98 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+h/cr/1d  99 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+nt/plot //mc/cuts/1.sqrt((tr1+tr2)**2-pmiss**2)/2. ! ! ! ! ! 98
+nt/plot //mc/cuts/1.sqrt((tr1+tr2)**2-pmiss**2)/2. ! ! ! ! ! 99
+h/cr/1d  98 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+h/cr/1d  99 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+nt/plot //mc/cuts/1.sqrt((tr1+tr2)**2-pmiss**2)/2. ! ! ! ! ! 98
+nt/plot //mc/cuts/1.sqrt((tr1+tr2)**2-pmiss**2)/2. mctype==-20 ! ! ! ! 99
+message $HINFO(98,'ENTRIES') $HINFO(99,'ENTRIES')
+h/cr/1d  98 'p2' 60 0 1.2
+h/cr/1d  99 'p2' 60 0 1.2
+nt/plot //mc/cuts/1.p2 ! ! ! ! ! 98
+nt/plot //mc/cuts/1.p2 mctype==-20 ! ! ! ! 99
+message $HINFO(98,'ENTRIES') $HINFO(99,'ENTRIES')
+nt/plot //mc/cuts/1.p2 ! ! ! ! ! 98
+nt/plot //mc/cuts/1.p2 mctype==-20 ! ! ! ! 99
+nt/plot //mc/cuts/1.p2 ! ! ! ! ! 98
+nt/plot //mc/cuts/1.p2 mctype==-20 ! ! ! 's' 99
+message $HINFO(98,'ENTRIES') $HINFO(99,'ENTRIES')
+add 100 100 101 3. 0.
+add 200 200 201 3. 0.
+h/plot 500
+dline 0.7 1.2 0 0
+h/plot 101 's'
+h/plot 201 's'
+add 100 100 101 4.5 0.
+add 200 200 201 2.5 0.
+h/plot 500
+dline 0.7 1.2 0 0
+h/plot 101 's'
+h/plot 201 's'
+message $HINFO(101,'SUM') $HINFO(201,'SUM')
+h/plot 400
+h/plot 100
+h/plot 200
+h/plot 300
+h/plot 400
+*** End   of history file: Wed Aug  3 12:03:11 2005

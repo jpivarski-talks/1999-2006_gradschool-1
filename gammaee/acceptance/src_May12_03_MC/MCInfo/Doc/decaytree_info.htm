@@ -1,0 +1,434 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Generator" content="Microsoft Word 97/98">
+   <meta name="Version" content="8.0.4915">
+   <meta name="Date" content="1/20/98">
+   <meta name="Template" content="Macintosh HD:Microsoft Office 98:Templates:Web Pages:Blank Web Page">
+   <meta name="GENERATOR" content="Mozilla/4.61 (Macintosh; U; PPC) [Netscape]">
+   <title>Monte Carlo particle and decay primer</title>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000FF" vlink="#800080">
+
+<center>
+<dt>
+<font face="Helvetica"><font color="#1822CD"><font size=+2>Monte Carlo
+particle and decay primer</font></font></font></dt></center>
+
+<center>
+<dt>
+<font face="Helvetica"><font color="#F81820"><font size=+2>***Under Construction***</font></font></font></dt></center>
+
+<p>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<center>
+<p><a NAME="documentTop"></a><a href="#propertyIntro">particle property
+intro</a> |&nbsp; <a href="#MCParticleProperty">MCParticleProperty summary</a>&nbsp;
+|&nbsp; <a href="#MCParticlePropertyStore">MCParticlePropertyStore summary</a>
+<br><a href="#decayTreeIntro">decay tree intro</a> |&nbsp; <a href="#MCParticle">MCParticle
+summary</a>&nbsp; |&nbsp; <a href="#MCVertex">MCVertex summary</a>&nbsp;
+|&nbsp; <a href="#MCDecayTree">MCDecayTree summary</a></center>
+
+<p>To access and navigate the representation of the chain of decays (and
+interactions) of particles, there a five basic classes that an end-user
+will generally interact with. These are
+<ul>
+<li>
+&nbsp;<i><font color="#ED181E"><a href="#MCParticleProperty">MCParticleProperty</a></font></i></li>
+
+<li>
+&nbsp;<i><a href="#MCParticlePropertyStore">MCParticlePropertyStore</a></i></li>
+
+<li>
+&nbsp;<i><a href="#MCDecayTree">MCDecayTree</a></i></li>
+
+<li>
+&nbsp;<i><a href="#MCParticle">MCParticle</a></i></li>
+
+<li>
+&nbsp;<i><a href="#MCVertex">MCVertex</a></i></li>
+</ul>
+The member functions of each of these objects are fairly completely documented
+in their header files in the <b>MCInfo</b> library.&nbsp; A very brief
+rundown of what is available is summarized here.
+<br>&nbsp;
+<h2>
+<a NAME="propertyIntro"></a>Particle property overview</h2>
+<font size=-1><a href="#documentTop">(back to top)</a></font>
+<br>The properties, various identifiers and decay modes are held by an
+<i>MCParticleProperty</i>
+object for each type of particle. An <i><font color="#FF0000">MCParticlePropertyStore</font></i>
+holds a set of particles property objects. When simulating a decay, all
+checks regarding charge and four-momentum conservation and valid decay
+modes will be made with reference to a particular <i><font color="#FF0000">MCParticlePropertyStore</font>.
+</i>That
+is, all the children for a particular decay of a particle must be defined
+within the <i><font color="#FF0000">MCParticlePropertyStore</font></i>
+of the parent's property object, and the properties if the children as
+defined in that store will be used to check the validity of a decay.
+<p>Within SUEZ, one extracts an <i><font color="#FF0000">MCParticlePropertyStore</font></i>
+from the ``physics'' stream. Most data sources do not have a source for
+the physics stream, so you must generally use the ``emptysource'' command
+to create this stream. The producer <b>MCInfoProd</b> will parse a decay.dec
+to fill an <i><font color="#FF0000">MCParticlePropertyStore</font></i>
+and insert it into the frame as an <i><font color="#ED181E">FAItem</font></i>.
+In fact, there are two separate stores available in the frame, a standard
+'system' store and a 'user' store. The system store will usually be created
+from a standard decay.dec. The user store is initially a copy of the store,
+which a supplementary user decay.dec can then be used to add/modify particle
+properties. When an <i><font color="#FF0000">MCParticlePropertyStore</font></i>
+is extracted from the frame, the default (no usage tag specified) will
+be the 'user' store. <b>MCInfoProd</b> has two run time parameters that
+can be used to specify the decay.dec's for both the system store (by default
+$C3_LIB/data/decay.dec) and the user store (by default unspecified, so
+that the user and system stores are identical).
+<p>Here's a snippet of the tcl commands you will need to provide access
+to an <i><font color="#FF0000">MCParticlePropertyStore</font></i> that
+has properties from the standard decay.dec that have been tweaked according
+to tweakDecay.dec:
+<dir>
+<dir><font color="#800080">emptysource def Physics physics</font>
+<br><font color="#800080">prod sel MCInfoProd</font>
+<br><font color="#800080">prod inter MCInfoProd</font>
+<br><font color="#800080">userDecayDec = tweakDecay.dec</font>
+<br><font color="#800080">exit</font></dir>
+</dir>
+Within your program, the following snippet will extract the user store
+from the frame:
+<dir>
+<dir><font color="#008000">MCInfo&lt; MCParticlePropertyStore > pMyStore;</font>
+<br><font color="#008000">extract( theRecord, pMyStore );</font>
+<br><font color="#008000">MCParticlePropertyStore&amp; myStore( *pMyStore
+);</font></dir>
+</dir>
+As usual, <font color="#008000">pMyStore</font> in the code snippet above
+will act like a pointer to the <i><font color="#FF0000">MCParticlePropertyStore</font></i>,
+while <font color="#008000">myStore</font> will allow direct reference
+to the store.
+<br>
+<hr WIDTH="100%">
+<br><a NAME="MCParticleProperty"></a>
+<br><font size=-1><a href="#documentTop">(back to top)</a></font>
+<br>Here's a brief rundown of some of the commonly used information available
+in the <i><font color="#FF0000">MCParticleProperty</font></i> class.
+<p>- member functions for the various identifiers (see <i><font color="#FF0000">MCParticleProperty.h</font></i>
+for special values such as ``kUnknownGeantId''):
+<ul>
+<li>
+name()</li>
+
+<li>
+QQId()</li>
+
+<li>
+PDGId() (following the new 1998 convention in decay.dec)</li>
+
+<li>
+geantId() (only if the particle is known to geant)</li>
+</ul>
+- some member functions for physical properties
+<ul>
+<li>
+mass()&nbsp; (nominal mass, if resonance)</li>
+
+<li>
+width() (if resonance)</li>
+
+<li>
+ctau() (lifetime times the speed of light, units are meters)</li>
+
+<li>
+charge()</li>
+
+<li>
+parity()</li>
+
+<li>
+cParity()&nbsp; (charge parity)</li>
+</ul>
+- member functions for other characteristics
+<ul>
+<li>
+mixable()&nbsp; (whether particle can mix with its charge conjugate)</li>
+
+<li>
+neutrino()</li>
+
+<li>
+lepton()&nbsp; (charged lepton, that is)</li>
+
+<li>
+meson() <i><font size=-1>(function to be added)</font></i></li>
+
+<li>
+baryon() <i><font size=-1>(function to be added)</font></i></li>
+
+<li>
+strange() <i><font size=-1>(function to be added)</font></i></li>
+
+<li>
+charmed() <i><font size=-1>(function to be added)</font></i></li>
+
+<li>
+bottom() <i><font size=-1>(function to be added)</font></i></li>
+
+<li>
+top() <i><font size=-1>(function to be added)</font></i></li>
+</ul>
+- information regarding decay modes <i><font size=-1>(documentation to
+be added)</font></i>
+<p>- An output operator (&lt;&lt;) has been defined to work with the <i><font color="#ED181E">MCParticleProperty</font></i>
+class.&nbsp; If <font color="#008000">myProperty</font> is an <i><font color="#ED181E">MCParticleProperty</font></i>&nbsp;
+(or a reference to one), then
+<blockquote><font color="#008000">report( INFO, kFacilityString) &lt;&lt;
+myProperty &lt;&lt; endl;</font></blockquote>
+<font color="#291A10">will result in a dump of all of the properties of
+the particle (careful -- this includes a list of all of the decay modes
+for that particle).</font>
+<p>
+<hr WIDTH="100%">
+<br><a NAME="MCParticlePropertyStore"></a>
+<br><font size=-1><a href="#documentTop">(back to top)</a></font>
+<br>The <i><font color="#FF0000">MCParticlePropertyStore</font></i><font color="#291A10">class
+gives you access to all of the particle's, as well as various utilities
+such as conversion from one type of particle Id to another (eg., name to
+QQ Id,&nbsp; QQ Id to PDG Id).&nbsp; To illustrate some of the cases, the
+reference </font><font color="#008000">myStore</font><font color="#291A10">
+from the extraction snippet above will be used.</font>
+<p><font color="#291A10">To access a given particle property:</font>
+<ul>
+<li>
+<font color="#291A10">use the square brackets ([]) with the particle's
+QQ Id - </font><font color="#007D00">myStore[12] </font><font color="#291A10">gives
+a reference to the particle property object for a MU+</font></li>
+
+<li>
+<font color="#291A10">use the square brackets ([]) with the particle's
+name - </font><font color="#007D00">myStore["MU+"] </font><font color="#291A10">gives
+a reference to the same object</font></li>
+
+<li>
+<font color="#291A10">use getUsingXXX() for access via any id type:</font></li>
+
+<ul>
+<li>
+<font color="#291A10">getUsingGeantId()</font></li>
+
+<li>
+<font color="#291A10">getUsingPDGId()</font></li>
+
+<li>
+<font color="#291A10">getUsingQQId()</font></li>
+
+<li>
+<font color="#291A10">getUsingName()</font></li>
+</ul>
+
+<li>
+<font color="#291A10">for a COPY of the particle property that can be modified
+at your pleasure, use getCopyUsingXXX()</font></li>
+
+<ul>
+<li>
+<font color="#291A10">getUsingGeantId()</font></li>
+
+<li>
+<font color="#291A10">getUsingPDGId()</font></li>
+
+<li>
+<font color="#291A10">getUsingQQId()</font></li>
+
+<li>
+<font color="#291A10">getUsingName()</font></li>
+</ul>
+</ul>
+<font color="#291A10">To convert between different types of identifiers</font>
+<ul>
+<li>
+<font color="#291A10">qqIdToName()&nbsp; and nameToQQId()</font></li>
+
+<li>
+<font color="#291A10">qqIdtoPDGId() and pdgIdToQQId()</font></li>
+</ul>
+Other functions:
+<ul>
+<li>
+check if given QQ Id has a property object defined: propertyExists()</li>
+
+<li>
+find the QQ Id of the charge conjugate for a given QQ Id: conjugateQQ(
+)</li>
+
+<li>
+there is also a static member function that find the conjugate of a given
+PDG Id, regardless of whether that particle is defined in the store:&nbsp;
+MCParticlePropertyStore::conjugatePDG()</li>
+</ul>
+An output operator (&lt;&lt;) has been defined to work with the <i><font color="#ED181E">MCParticlePropertyStore</font></i>
+class.&nbsp; If <font color="#008000">myStore </font>is an <i><font color="#ED181E">MCParticlePropertyStore</font></i>&nbsp;
+(or a reference to one), then
+<blockquote><font color="#008000">report( INFO, kFacilityString) &lt;&lt;
+myStore &lt;&lt; endl;</font></blockquote>
+<font color="#291A10">will result in a sequential dump by QQ Id of all
+of the </font><i><font color="#ED181E">MCParticlePropertiy</font></i><font color="#291A10">
+objects currently defined in the store.</font>
+<p>
+<hr WIDTH="100%">
+<hr WIDTH="100%">
+<h2>
+<a NAME="decayTreeIntro"></a>Decay tree overview</h2>
+<font size=-1><a href="#documentTop">(back to top)</a></font>
+<br>The objects that describe the ``decay '' chain of a given particle
+reflect the natural topology of the tree of particles that result.&nbsp;
+In addition to holding any children created by actual decays, this structure
+holds particles created in interactions as well.&nbsp; The
+<br>three basic objects that an end user will interact with are
+<ul>
+<li>
+&nbsp;<i><font color="#ED181E"><a href="#MCParticle">MCParticle</a></font></i></li>
+
+<li>
+&nbsp;<i><font color="#ED181E"><a href="#MCVertex">MCVertex</a></font></i></li>
+
+<li>
+&nbsp;<i><font color="#ED181E"><a href="#MCDecayTree">MCDecayTree</a></font></i></li>
+</ul>
+The topology, show below, illustrates the basic structure.
+<p>PUT DIAGRAM HERE!!!!!!!
+<p>An <i><font color="#ED181E">MCParticle</font></i> holds all of its interaction
+vertices, acting as a container (similar to an STL container) of MCVertex
+objects.&nbsp; If an <i><font color="#ED181E">MCParticle</font></i> loses
+its identity (eg., decays or is involved in a nuclear interaction), or
+if the detector simulation package has stopped tracking it (it ranges out
+or leaves the detector volume), that interaction vertex is singled out
+as a ``death'' vertex. The <i><font color="#ED181E">MCParticle</font></i><font color="#291A10">
+class inherits from the basic </font><i><font color="#ED181E">KTKinematicData</font></i><font color="#291A10">
+class used by the tracking objects (and presumably by any vertexing classes
+that get invented).&nbsp; This allows one to directly use the </font><i><font color="#ED181E">MCParticle</font></i><font color="#291A10">
+objects in code development wihout then having to rewrite the code for
+use with reconstructed tracks and particles.</font>
+<p>Just as the <i><font color="#ED181E">MCParticle</font></i> objects hold
+vertices, the <i><font color="#ED181E">MCVertex</font></i><font color="#291A10">
+objects act as a container of the children that were created at the vertex.&nbsp;
+The vertex holds the children rather than the parent MCParticle object
+to simplify management of multiple interaction vertices for the same particle.&nbsp;
+One can navigate down a particlular branch of the tree structure using
+these container nature of the particles and vertices.&nbsp; In addition,
+the </font><i><font color="#ED181E">MCVertex</font></i><font color="#291A10">
+objects record information about when and where the interaction occurred
+and the flavor of the interaction.</font>
+<p><font color="#291A10">To access the information from suez, a user will
+actually request an </font><i><font color="#ED181E">FAItem</font></i><font color="#291A10">
+for an </font><i><font color="#ED181E">MCDecayTree</font></i><font color="#291A10">.&nbsp;
+The </font><i><font color="#ED181E">MCDecayTree</font></i>
+<br>object provides a different flavor of navigation, ``flattening'' the
+branch structure of the decay tree into two sequential lists, one for particles
+and one for vertices, so that users can easily loop (iterate) over all
+of the particles or vertices in a given event.&nbsp; In addition, various
+types of searches are implemented so that the user can easily find particular
+decays of interest.
+<p>All of the producers of an <i><font color="#ED181E">MCDecayTree</font></i>
+will require that the user <i><font color="#ED181E">MCParticlePropertyStore</font></i>
+exists in the physics stream.&nbsp; An <i><font color="#ED181E">MCDecayTree</font></i>
+can be obtained from either a source format that parses a roar file, or
+from one of the generators that run the various models supplied by QQ within
+suez.&nbsp; IMPORTANT:&nbsp; these sources and producers insert the <i><font color="#ED181E">MCDecayTree</font></i>
+with the usage tag "Generator".&nbsp; When the detector simulation is run
+(<font color="#BB56C3">MCResponseProd</font>), an updated <i><font color="#ED181E">MCDecayTree</font></i>
+is created that has all the particles/interactions from GEANT added.&nbsp;
+This latter <i><font color="#ED181E">MCDecayTree</font></i> is currently
+inserted without a usage tage.
+<p>The source formats:
+<ul>
+<li>
+<font color="#BB56C3">QQDriverSourceFormat</font></li>
+
+<li>
+<font color="#BB56C3">DriverSourceFormat</font> (NOT recommended for use
+with CLEO III -- can cause CLEO II / CLEO III library clashes)</li>
+</ul>
+The various producers that create or modify an <i><font color="#ED181E">MCDecayTree</font></i>:
+<ul>
+<li>
+<font color="#BB56C3">SingleParticleGenProd</font></li>
+
+<li>
+<font color="#BB56C3">MCResponseProd</font> (modifies a pre-existing MCDecayTree
+with particles/interactions from the detector simulation)</li>
+</ul>
+
+<p><br>Here is a tcl script snippet that will provide everything you need
+to make <i><font color="#ED181E">MCDecayTree</font></i>'s available from
+a QQ roar file (we'll call it sample.rp) generated with the decay.dec file
+tweakDecay.dec:
+<dir>
+<dir><font color="#BB56C3"># make the MCParticlePropertyStore available</font>
+<br><font color="#BB56C3">emptysource def Physics physics</font>
+<br><font color="#BB56C3">prod sel MCInfoProd</font>
+<p><font color="#BB56C3"># change the decay.dec files used for the user
+property store, if desired</font>
+<br><font color="#BB56C3">#prod inter MCInfoProd</font>
+<br><font color="#BB56C3">#userDecayDec = tweakDecay.dec</font>
+<br><font color="#BB56C3">#exit</font>
+<p><font color="#BB56C3"># select the proper source format</font>
+<br><font color="#BB56C3">source_format sel QQDriverSourceFormat</font>
+<p><font color="#BB56C3"># select the QQ file to read in</font>
+<br><font color="#BB56C3">file in sample.rp</font></dir>
+</dir>
+<font color="#291A10">Of course, to use a Monte Carlo generator will be
+(when implemented) almost completely identical:</font>
+<blockquote>
+<blockquote><font color="#BB56C3"># make the MCParticlePropertyStore available</font>
+<br><font color="#BB56C3">emptysource def Physics physics</font>
+<br><font color="#BB56C3">prod sel MCInfoProd</font>
+<p><font color="#BB56C3"># change the decay.dec files used for the user
+property store, if desired</font>
+<br><font color="#BB56C3">#prod inter MCInfoProd</font>
+<br><font color="#BB56C3">#userDecayDec = tweakDecay.dec</font>
+<br><font color="#BB56C3">#exit</font>
+<p><font color="#BB56C3"># select a Monte Carlo particle generator</font>
+<br><font color="#BB56C3">prod sel SingleParticleGenProd</font></blockquote>
+</blockquote>
+
+<p><br>
+<hr WIDTH="100%">
+<br><a NAME="MCParticle"></a>
+<br><font size=-1><a href="#documentTop">(back to top)</a></font>
+<br>Describe MCParticle
+<br><a NAME="MCVertex"></a>
+<br><font size=-1><a href="#documentTop">(back to top)</a></font>
+<br>Describe MCVertex
+<br><a NAME="MCDecayTree"></a>
+<br><font size=-1><a href="#documentTop">(back to top)</a></font>
+<br>Describe MCDecayTree
+<br>&nbsp;
+<br>&nbsp;
+<br>
+<br>
+<center>
+<p><a href="#propertyIntro">particle property intro</a> |&nbsp; <a href="#MCParticleProperty">MCParticleProperty
+summary</a>&nbsp; |&nbsp; <a href="#MCParticlePropertyStore">MCParticlePropertyStore
+summary</a>
+<br><a href="#decayTreeIntro">decay tree intro</a> |&nbsp; <a href="#MCParticle">MCParticle
+summary</a>&nbsp; |&nbsp; <a href="#MCVertex">MCVertex summary</a>&nbsp;
+|&nbsp; <a href="#MCDecayTree">MCDecayTree summary</a></center>
+<font size=-1><a href="#documentTop">(back to top)</a></font>
+<p>
+<hr WIDTH="100%">
+<br>questions or comments: send mail to&nbsp; <address><a href="mailto:lkg@mail.lns.cornell.edu">Lawrence
+Gibbons</a></address>
+<br>
+$Id: decaytree_info.htm,v 1.2 2000/01/31 17:10:31 lkg Exp $
+<!-- 
+$Log: decaytree_info.htm,v $
+Revision 1.2  2000/01/31 17:10:31  lkg
+Conform to web template
+
+-->
+</body>
+</html>

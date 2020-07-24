@@ -1,0 +1,1508 @@
+%!PS-Adobe-3.0
+%%Title: addemup.m
+%%For: Jim Pivarski
+%%Creator: a2ps version 4.13
+%%CreationDate: Fri Jan 30 15:40:14 2004
+%%BoundingBox: 24 24 588 768
+%%DocumentData: Clean7Bit
+%%Orientation: Portrait
+%%Pages: 8
+%%PageOrder: Ascend
+%%DocumentMedia: Letter 612 792 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontType get 0 eq {
+    currentfont /FontMatrix get 3 get
+  }{
+    currentfont /FontMatrix get 3 get 1000 mul
+  } ifelse
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Define these in case they're not in the FontInfo (also, here
+    % they're easier to get to.
+    /UnderlinePosition 1 def
+    /UnderlineThickness 1 def
+    
+    % Get the underline position and thickness if they're defined.
+    currentdict /FontInfo known {
+      FontInfo
+      
+      dup /UnderlinePosition known {
+	dup /UnderlinePosition get
+	0 exch FontMatrix transform exch pop
+	/UnderlinePosition exch def
+      } if
+      
+      dup /UnderlineThickness known {
+	/UnderlineThickness get
+	0 exch FontMatrix transform exch pop
+	/UnderlineThickness exch def
+      } if
+      
+    } if
+    currentdict 
+  end 
+} bind def
+
+% composite fonts for ASCII-EUC mixed string
+% Version 1.2 1/31/1990
+% Orignal Ken'ichi HANDA (handa@etl.go.jp)
+% Modified Norio Katayama (katayama@rd.nacsis.ac.jp),1998
+% Extend & Fix Koji Nakamaru (maru@on.cs.keio.ac.jp), 1999
+% Anyone can freely copy, modify, distribute this program.
+
+/copyfont {	% font-dic extra-entry-count  copyfont  font-dic
+	1 index maxlength add dict begin
+	{	1 index /FID ne 2 index /UniqueID ne and
+		{def} {pop pop} ifelse
+	} forall
+	currentdict
+	end
+} bind def
+
+/compositefont { % ASCIIFontName EUCFontName RomanScale RomanOffset Rot(T/F) compositefont font
+    /RomanRotation exch def
+    /RomanOffset exch def
+    /RomanScale exch def
+    userdict /fixeucfont_dict known not {
+	userdict begin
+	    /fixeucfont_dict 2 dict begin
+		/UpperByteEncoding [
+		    16#00 1 16#20 { pop 0 } for
+		    16#21 1 16#28 { 16#20 sub } for
+		    16#29 1 16#2F { pop 0 } for
+		    16#30 1 16#74 { 16#27 sub } for
+		    16#75 1 16#FF { pop 0 } for
+		] def
+	        /LowerByteEncoding [
+		    16#00 1 16#A0 { pop /.notdef } for
+		    16#A1 1 16#FE { 16#80 sub 16 2 string cvrs
+				    (cXX) dup 1 4 -1 roll
+				    putinterval cvn } for
+		    /.notdef
+		] def
+		currentdict
+	    end def
+	end
+    } if
+    findfont dup /FontType get 0 eq {
+	14 dict begin
+	    %
+	    % 7+8 bit EUC font
+	    %
+	    12 dict begin
+		/EUCFont exch def
+		/FontInfo (7+8 bit EUC font) readonly def
+		/PaintType 0 def
+		/FontType 0 def
+		/FontMatrix matrix def
+		% /FontName
+		/Encoding fixeucfont_dict /UpperByteEncoding get def
+		/FMapType 2 def
+		EUCFont /WMode known
+		{ EUCFont /WMode get /WMode exch def }
+		{ /WMode 0 def } ifelse
+		/FDepVector [
+		    EUCFont /FDepVector get 0 get
+		    [ 16#21 1 16#28 {} for 16#30 1 16#74 {} for ]
+		    {
+			13 dict begin
+			    /EUCFont EUCFont def
+			    /UpperByte exch 16#80 add def	
+			    % /FontName
+			    /FontInfo (EUC lower byte font) readonly def
+			    /PaintType 0 def
+			    /FontType 3 def
+			    /FontMatrix matrix def
+			    /FontBBox {0 0 0 0} def
+			    /Encoding
+				fixeucfont_dict /LowerByteEncoding get def
+			    % /UniqueID
+			    % /WMode
+			    /BuildChar {
+				gsave
+				exch dup /EUCFont get setfont
+				/UpperByte get
+				2 string
+				dup 0 4 -1 roll put
+				dup 1 4 -1 roll put
+				dup stringwidth setcharwidth
+				0 0 moveto show
+				grestore
+			    } bind def
+			    currentdict
+			end
+			/lowerbytefont exch definefont
+		    } forall
+		] def
+		currentdict
+	    end
+	    /eucfont exch definefont
+	    exch
+	    findfont 1 copyfont dup begin
+		RomanRotation {
+			/FontMatrix FontMatrix
+			[ 0 RomanScale neg RomanScale 0 RomanOffset neg 0 ]
+			matrix concatmatrix def
+		}{
+			/FontMatrix FontMatrix
+			[ RomanScale 0 0 RomanScale 0 RomanOffset ] matrix concatmatrix
+			def
+			/CDevProc
+			    {pop pop pop pop 0 exch -1000 exch 2 div 880} def
+		} ifelse
+	    end
+	    /asciifont exch definefont
+	    exch
+	    /FDepVector [ 4 2 roll ] def
+	    /FontType 0 def
+	    /WMode 0 def
+	    /FMapType 4 def
+	    /FontMatrix matrix def
+	    /Encoding [0 1] def
+	    /FontBBox {0 0 0 0} def
+%	    /FontHeight 1.0 def % XXXX
+	    /FontHeight RomanScale 1.0 ge { RomanScale }{ 1.0 } ifelse def
+	    /Descent -0.3 def   % XXXX
+	    currentdict
+	end
+	/tmpfont exch definefont
+	pop
+	/tmpfont findfont
+    }{
+	pop findfont 0 copyfont
+    } ifelse
+} def	
+
+/slantfont {	% FontName slant-degree  slantfont  font'
+    exch findfont 1 copyfont begin
+    [ 1 0 4 -1 roll 1 0 0 ] FontMatrix exch matrix concatmatrix
+    /FontMatrix exch def
+    currentdict
+    end
+} def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 792 def
+/sw 612 def
+/llx 24 def
+/urx 588 def
+/ury 768 def
+/lly 24 def
+/#copies 1 def
+/th 20.000000 def
+/fnfs 15 def
+/bfs 8.500000 def
+/cw 5.100000 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 110.400000 mul
+def
+/ph
+   694.450000 th add
+def
+/pmw 0 def
+/pmh 0 def
+/v 0 def
+/x [
+  0
+] def
+/y [
+  pmh ph add 0 mul ph add
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 0 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1) 1
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.570000 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<< Statistics`ContinuousDistributions`) p n
+() N
+(WeightedSum[ points:{ { \( _Integer | _Real \), \( _Integer | _Real \) } .. } ] :=) N
+(    { Plus @@ \(#[[1]]& /@ points\), Sqrt[ Plus @@ \(\(#[[2]]^2\)& /@ points\) ] };) N
+() N
+(y1sgoal = Plus @@ \(#[[2]]& /@ ReadList["y1s_high.bgxs", {Real, Real}]\);) N
+(y2sgoal = Plus @@ \(#[[2]]& /@ ReadList["y2s_high.bgxs", {Real, Real}]\);) N
+(y3sgoal = Plus @@ \(#[[2]]& /@ ReadList["y3s_high.bgxs", {Real, Real}]\);) N
+() N
+({y1sgoal, y2sgoal, y3sgoal}) N
+() N
+(Out[4]= {0.444005, 0.186354, 0.406892}) N
+() N
+(y1scont = Sort[ReadList["y1s_cont.bgxs", {Real, Real}], \(#1[[1]] < #2[[1]]\)&];) N
+(y2scont = Sort[ReadList["y2s_cont.bgxs", {Real, Real}], \(#1[[1]] < #2[[1]]\)&];) N
+(y3scont = Sort[ReadList["y3s_cont.bgxs", {Real, Real}], \(#1[[1]] < #2[[1]]\)&];) N
+(y1speak = Sort[ReadList["y1s_peak.bgxs", {Real, Real}], \(#1[[1]] < #2[[1]]\)&];) N
+(y2speak = Sort[ReadList["y2s_peak.bgxs", {Real, Real}], \(#1[[1]] < #2[[1]]\)&];) N
+(y3speak = Sort[ReadList["y3s_peak.bgxs", {Real, Real}], \(#1[[1]] < #2[[1]]\)&];) N
+() N
+(Plot[CDF[ExponentialDistribution[100], x], {x, 0, 0.5}, PlotRange -> {0, 1}];) N
+() N
+(InitialConf[data_] := Table[0, {Length[data]}];) N
+(ConfSum[data_, conf_] := Plus @@ \(#[[2]]& /@ \(data * conf\)\);) N
+(ChangeConf1[conf_] := Module[{i = Random[Integer, Length[conf]-1]+1},) N
+() S 8 T () S 16 T () S 24 T (     ReplacePart[conf, 1 - conf[[i]], i]];) N
+(FindOnes[conf_] := Flatten[Table[If[conf[[i]] == 1, {i}, {}], {i, 1, Length[conf]}], 1];) N
+(FindZeros[conf_] := Flatten[Table[If[conf[[i]] == 0, {i}, {}], {i, 1, Length[conf]}], 1];) N
+(RandElem[list_] := list[[Random[Integer, Length[list]-1]+1]];) N
+(ChangeConf2[conf_] := Module[{i = RandElem[FindOnes[conf]],) N
+() S 8 T () S 16 T () S 24 T (      j = RandElem[FindZeros[conf]]},) N
+() S 8 T () S 16 T () S 24 T (     ReplacePart[ReplacePart[conf, 1 - conf[[i]], i], 1 - conf[[j]], j]];) N
+(ChangeConf[conf_] := If[\(Plus @@ conf\) > 0  &&  Random[Integer] == 0,) N
+() S 8 T () S 16 T () S 24 T (ChangeConf2[conf],) N
+() S 8 T () S 16 T () S 24 T (ChangeConf1[conf]];) N
+(ConfRuns[data_, conf_] := \(Print[TableForm[Select[data * conf, \(# != {0, 0}\)&]]];) N
+() S 8 T () S 16 T () S 24 T (   Print[]; Print["-------------------"]; Print[];) N
+() S 8 T () S 16 T () S 24 T (   Print["          ", ConfSum[data, conf]];\);) N
+(ListFromConf[data_, conf_] := #[[1]]& /@ Select[data * conf, \(# != {0, 0}\)&];) N
+(GapsWeight[list_] := If[Length[list] < 3, 0,) N
+() S 8 T () S 16 T () S 24 T (3./Sum[Abs[list[[i+1]] - list[[i]]], {i, 1, Length[list]-1}]];) N
+(RangeFilled[range_, list_] := Or @@ \(\(# >= range[[1]] && # <= range[[2]]\)& /@ list\);) N
+(RangesFilled[ranges_, list_] := And @@ \(RangeFilled[#, list]& /@ ranges\);) N
+(FindBest[data_, goal_, ranges_, init_] := ) N
+(    Module[{lastconf, lastval, lastinranges, newconf, newval, newinranges,) N
+() S 8 T (    fall, grope, outplot},) N
+() S 8 T (   lastconf = If[init == {}, InitialConf[data], init];) N
+() S 8 T (   lastval = Abs[ConfSum[data, lastconf] - goal]; \(* + GapsWeight[ListFromConf[data, lastconf]]; *\)) N
+() S 8 T (   lastinranges = If[ranges == {}, True, RangesFilled[ranges, ListFromConf[data, lastconf]]];) N
+() S 8 T (   While[lastval > 0.0001, \() N
+() S 8 T (       newconf = ChangeConf[lastconf];) N
+() S 8 T (       newval = Abs[ConfSum[data, newconf] - goal]; \(* + GapsWeight[ListFromConf[data, lastconf]]; *\)) N
+() S 8 T (       newinranges = If[ranges == {}, True, RangesFilled[ranges, ListFromConf[data, newconf]]];) N
+() S 8 T (       fall = newval < lastval;) N
+() S 8 T (       grope = If[fall, False, Random[ExponentialDistribution[100]] > \(newval - lastval\)];) N
+() S 8 T (       Print[lastval, " ", newval, " ", newinranges, " ", fall, " ", grope];) N
+() S 8 T (       If[\(newinranges || !lastinranges\) && \(fall || grope\),) N
+() S 8 T () S 16 T (  {lastval = newval, lastconf = newconf, lastinranges = newinranges}];) N
+() S 8 T () S 16 T () S 24 T () S 32 T (   \)];) N
+() S 8 T (   ConfRuns[data, lastconf];) N
+() S 8 T (   outplot = Table[{i, data[[i, 1]]}, {i, 1, Length[data]}];) N
+() S 8 T (   Show[ListPlot[outplot,) N
+() S 8 T () S 16 T () S 24 T ( AspectRatio -> 3,) N
+() S 8 T () S 16 T () S 24 T ( DisplayFunction -> Identity],) N
+() S 8 T () S 16 T (ListPlot[Select[outplot * lastconf, \(# != {0, 0}\)&],) N
+() S 8 T () S 16 T () S 24 T ( PlotStyle -> RGBColor[1, 0, 0],) N
+() S 8 T () S 16 T () S 24 T ( DisplayFunction -> Identity],) N
+() S 8 T () S 16 T (DisplayFunction -> $DisplayFunction];) N
+() S 8 T (   #[[1]]& /@ Select[data * lastconf, \(# != {0, 0}\)&]];) N
+(ConfFromList[data_, list_] := If[MemberQ[list, #[[1]]], 1, 0]& /@ data;) N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+(addemup.m) (Page 1/8) (Jan 30, 04 15:36) title
+border
+grestore
+(Printed by Jim Pivarski) rhead
+() (1/8) (Friday January 30, 2004) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (2) 2
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.570000 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(                                FIRST THE THREE-S!!!!) p n
+() N
+(FindBest[y3scont, y3sgoal]) N
+() N
+(122080.   0.0640933) N
+(122081.   0.0624708) N
+(122268.   0.0532931) N
+(122420.   0.0409043) N
+(122427.   0.0526649) N
+(122585.   0.0522888) N
+(122789.   0.0379257) N
+(122810.   0.0432392) N
+(-------------------) N
+(          0.40688) N
+() N
+(Out[570]= {122080., 122081., 122268., 122420., 122427., 122585., 122789., 122810.}) N
+() N
+(Additionally, we want enough to have two from each group.) N
+() N
+(These are all the runs:) N
+(    122080 122081 122091) N
+(    122268 122269 122273) N
+(    122418 122420 122423 122424 122425 122426 122427 122428 122430 122432) N
+(    122585 122586 122587) N
+(    122602 122603 122604 122605) N
+(    122789) N
+(    122796 122797 122798 122799 122800 122801 122802 122803 122804 122805) N
+(    122810) N
+(    123018) N
+() N
+(These are the ones to take for luminosity studies:) N
+(    122080 122081) N
+(    122268 122273) N
+(    122420 122427) N
+(    122585 122587) N
+(    122603 122604) N
+(    122789) N
+(    122799 122803) N
+(    122810) N
+(    123018) N
+() N
+(This is the luminosity for those:) N
+() N
+(    122080 1518.1 32.6 38.0) N
+(    122081 1714.4 34.6 42.9) N
+(    122268 1655.0 34.0 41.4) N
+(    122273 1791.2 35.4 44.8) N
+(    122420 1694.2 34.4 42.4) N
+(    122427 1581.7 33.2 39.5) N
+(    122585 1673.4 34.2 41.8) N
+(    122587 1623.9 33.7 40.6) N
+(    122603 1815.3 35.6 45.4) N
+(    122604 1707.7 34.5 42.7) N
+(    122789 1550.4 32.9 38.8) N
+(    122799 1725.1 34.7 43.1) N
+(    122803 1814.6 35.6 45.4) N
+(    122810 1618.9 33.6 40.5) N
+(    123018 1662.9 34.1 41.6) N
+() N
+(WeightedSum[{{1518.1, 32.6},) N
+() S 8 T (     {1714.4, 34.6},) N
+() S 8 T (     {1655.0, 34.0},) N
+() S 8 T (     {1791.2, 35.4},) N
+() S 8 T (     {1694.2, 34.4},) N
+() S 8 T (     {1581.7, 33.2},) N
+() S 8 T (     {1673.4, 34.2},) N
+() S 8 T (     {1623.9, 33.7},) N
+() S 8 T (     {1815.3, 35.6},) N
+() S 8 T (     {1707.7, 34.5},) N
+() S 8 T (     {1550.4, 32.9},) N
+() S 8 T (     {1725.1, 34.7},) N
+() S 8 T (     {1814.6, 35.6},) N
+() S 8 T (     {1618.9, 33.6},) N
+() S 8 T (     {1662.9, 34.1}}]) N
+() N
+(Out[575]= {25146.8, 132.526}) N
+() N
+(132.526/25146.8) N
+() N
+(Out[577]= 0.00527009) N
+() N
+(addemup.m) (Page 2/8) (Jan 30, 04 15:36) title
+border
+grestore
+(Printed by Jim Pivarski) rhead
+() (Friday January 30, 2004) (2/8) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3) 3
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.570000 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+() N
+(The y3speak goal needs to add up to *all* the continuum, not just) N
+(those that add up to high.) N
+() N
+(y3speakgoal = ConfSum[y3scont,) N
+() S 8 T () S 16 T (      ConfFromList[y3scont, {122080., 122081., 122268., 122273.,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (     122420., 122427., 122585., 122587.,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (     122603., 122604., 122789., 122799.,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (     122803., 122810., 123018.}]]) N
+() N
+(Out[8]= 0.72673) N
+() N
+(y3sranges = {{121917., 121974.}, {122079., 122147.}, {122274., 122323.}, {122440., 122473.},) N
+() S 8 T (     {122608., 122673.}, {122812., 122860.}, {123021., 123065.}};) N
+() N
+(FindBest[y3speak, y3speakgoal, y3sranges]) N
+() N
+(121927.   0.0677321) N
+(122102.   0.0657393) N
+(122146.   0.0605859) N
+(122293.   0.0561245) N
+(122322.   0.0584332) N
+(122450.   0.0437741) N
+(122467.   0.0545913) N
+(122616.   0.0381679) N
+(122844.   0.0446943) N
+(122846.   0.040029) N
+(122847.   0.0378684) N
+(123041.   0.0414747) N
+(123050.   0.0369898) N
+(123055.   0.0338164) N
+(123062.   0.0466686) N
+(-------------------) N
+(          0.726689) N
+() N
+(Out[64]= {121927., 122102., 122146., 122293., 122322., 122450., 122467., ) N
+( ) N
+(>    122616., 122844., 122846., 122847., 123041., 123050., 123055., 123062.}) N
+() N
+(Here is the luminosities for those:) N
+() N
+(    122102 1991.2 37.4 49.8) N
+(    122146 1952.6 37.0 48.8) N
+(    122293 1708.7 34.6 42.7) N
+(    122322 2395.9 41.0 59.9) N
+(    122450 1998.9 37.5 50.0) N
+(    122467 2615.8 42.9 65.4) N
+(    122616 2292.5 40.1 57.3) N
+(    122844 2552.9 42.3 63.8) N
+(    122846 2763.0 44.1 69.1) N
+(    122847 2477.0 41.7 61.9) N
+(    123041 1974.7 37.2 49.4) N
+(    123050 2195.2 39.3 54.9) N
+(    123055 1511.1 32.6 37.8) N
+(    123062 2474.9 41.7 61.9) N
+(    121927 1601.9 33.5 40.0) N
+() N
+(WeightedSum[{{1991.2, 37.4},) N
+() S 8 T (     {1952.6, 37.0},) N
+() S 8 T (     {1708.7, 34.6},) N
+() S 8 T (     {2395.9, 41.0},) N
+() S 8 T (     {1998.9, 37.5},) N
+() S 8 T (     {2615.8, 42.9},) N
+() S 8 T (     {2292.5, 40.1},) N
+() S 8 T (     {2552.9, 42.3},) N
+() S 8 T (     {2763.0, 44.1},) N
+() S 8 T (     {2477.0, 41.7},) N
+() S 8 T (     {1974.7, 37.2},) N
+() S 8 T (     {2195.2, 39.3},) N
+() S 8 T (     {1511.1, 32.6},) N
+() S 8 T (     {2474.9, 41.7},) N
+() S 8 T (     {1601.9, 33.5}}]) N
+() N
+(Out[65]= {32506.3, 151.082}) N
+() N
+(151.082/32506.3) N
+() N
+(Out[66]= 0.00464778) N
+() N
+() N
+(addemup.m) (Page 3/8) (Jan 30, 04 15:36) title
+border
+grestore
+(Printed by Jim Pivarski) rhead
+() (3/8) (Friday January 30, 2004) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (4) 4
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.570000 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(                                NOW FOR THE TWO-S!!!!) p n
+() N
+(FindBest[y2scont, y2sgoal, {}]) N
+() N
+(126492.   0.0289536) N
+(126665.   0.0301775) N
+(126670.   0.0235117) N
+(127626.   0.0270535) N
+(127662.   0.0271329) N
+(129065.   0.0244667) N
+(129848.   0.025033) N
+(-------------------) N
+(          0.186329) N
+() N
+(Out[68]= {126492., 126665., 126670., 127626., 127662., 129065., 129848.}) N
+() N
+(We add a few more to get significant luminosity:) N
+() N
+(    127626 1940.6 35.5 48.5) N
+(    127662 2373.5 39.2 59.3) N
+(    127700 2401.3 39.4 60.0) N
+(    126839 1601.8 32.2 40.0) N
+(    127443 1503.2 31.2 37.6) N
+(    126266 2170.5 37.5 54.3) N
+(    126492 1861.6 34.7 46.5) N
+(    126665 1762.9 33.8 44.1) N
+(    126670 1726.8 33.4 43.2) N
+(    129848 1817.6 34.3 45.4) N
+(    129713 1696.3 33.2 42.4) N
+(    129730 1544.6 31.6 38.6) N
+(    129065 2489.1 40.2 62.2) N
+() N
+(And their luminosity is:) N
+() N
+(WeightedSum[{{1940.6, 35.5},) N
+() S 8 T (     {2373.5, 39.2},) N
+() S 8 T (     {2401.3, 39.4},) N
+() S 8 T (     {1601.8, 32.2},) N
+() S 8 T (     {1503.2, 31.2},) N
+() S 8 T (     {2170.5, 37.5},) N
+() S 8 T (     {1861.6, 34.7},) N
+() S 8 T (     {1762.9, 33.8},) N
+() S 8 T (     {1726.8, 33.4},) N
+() S 8 T (     {1817.6, 34.3},) N
+() S 8 T (     {1696.3, 33.2},) N
+() S 8 T (     {1544.6, 31.6},) N
+() S 8 T (     {2489.1, 40.2}}]) N
+() N
+(Out[71]= {24889.8, 126.969}) N
+() N
+(126.969/24889.8) N
+() N
+(Out[72]= 0.00510125) N
+() N
+(y2speakgoal = ConfSum[y2scont,) N
+() S 8 T () S 16 T (      ConfFromList[y2scont, {127626., 127662., 127700., 126839.,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (     127443., 126266., 126492., 126665.,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (     126670., 129848., 129713., 129730., 129065.}]]) N
+() N
+(Out[73]= 0.340685) N
+() N
+(FindBest[y2speak, y2speakgoal, {}]) N
+() N
+(126509.   0.0348069) N
+(126575.   0.0295748) N
+(126581.   0.0278163) N
+(126911.   0.029806) N
+(127268.   0.0246053) N
+(127273.   0.0248815) N
+(127294.   0.0260414) N
+(127317.   0.0288276) N
+(129564.   0.0263333) N
+(129632.   0.0314387) N
+(129656.   0.0308268) N
+(129660.   0.025683) N
+(-------------------) N
+(          0.340642) N
+() N
+(Out[83]= {126509., 126575., 126581., 126911., 127268., 127273., 127294., ) N
+( ) N
+(>    127317., 129564., 129632., 129656., 129660.}) N
+(addemup.m) (Page 4/8) (Jan 30, 04 15:36) title
+border
+grestore
+(Printed by Jim Pivarski) rhead
+() (Friday January 30, 2004) (4/8) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (5) 5
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.570000 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+() N
+(And here's the luminosity:) N
+() N
+(126911 2066.7 36.7 51.7) N
+(127268 1792.3 34.2 44.8) N
+(127273 2025.6 36.3 50.6) N
+(127294 2311.7 38.8 57.8) N
+(127317 1918.3 35.4 48.0) N
+(126509 1649.1 32.8 41.2) N
+(126575 2201.2 37.9 55.0) N
+(126581 1585.4 32.1 39.6) N
+(129564 2711.4 42.0 67.8) N
+(129632 2582.8 41.0 64.6) N
+(129656 2724.9 42.1 68.1) N
+(129660 1771.6 34.0 44.3) N
+() N
+(WeightedSum[{{2066.7, 36.7},) N
+() S 8 T (     {1792.3, 34.2},) N
+() S 8 T (     {2025.6, 36.3},) N
+() S 8 T (     {2311.7, 38.8},) N
+() S 8 T (     {1918.3, 35.4},) N
+() S 8 T (     {1649.1, 32.8},) N
+() S 8 T (     {2201.2, 37.9},) N
+() S 8 T (     {1585.4, 32.1},) N
+() S 8 T (     {2711.4, 42.0},) N
+() S 8 T (     {2582.8, 41.0},) N
+() S 8 T (     {2724.9, 42.1},) N
+() S 8 T (     {1771.6, 34.0}}]) N
+() N
+(Out[91]= {25341., 128.487}) N
+() N
+(128.487/25341.) N
+() N
+(Out[92]= 0.00507032) N
+() N
+() N
+() N
+(                                  NOW FOR THE ONE-S!!!) N
+() N
+(FindBest[y1scont, y1sgoal, {}]) N
+() N
+(123370.   0.0354326) N
+(123569.   0.0321777) N
+(123810.   0.0299177) N
+(123813.   0.0365249) N
+(123814.   0.032271) N
+(123952.   0.0387406) N
+(123958.   0.033571) N
+(124138.   0.0320122) N
+(124312.   0.0348424) N
+(124319.   0.0338164) N
+(124465.   0.0383945) N
+(124648.   0.0304231) N
+(125169.   0.0358712) N
+(-------------------) N
+(          0.443995) N
+() N
+(Out[84]= {123370., 123569., 123810., 123813., 123814., 123952., 123958., ) N
+( ) N
+(>    124138., 124312., 124319., 124465., 124648., 125169.}) N
+() N
+(These are the runs \(plus a few extra for luminosity\):) N
+() N
+(    125169 1639.2 30.8 41.0) N
+(    125315 1820.8 32.4 45.5) N
+(    123810 1895.2 33.1 47.4) N
+(    123813 1916.5 33.3 47.9) N
+(    123814 1995.6 33.9 49.9) N
+(    123952 1626.2 30.6 40.7) N
+(    123958 1584.7 30.2 39.6) N
+(    124114 1737.6 31.7 43.4) N
+(    124138 1836.8 32.6 45.9) N
+(    124312 1687.6 31.2 42.2) N
+(    124319 1718.1 31.5 43.0) N
+(    123370 1699.0 31.3 42.5) N
+(    123569 1566.3 30.1 39.2) N
+(    124465 1549.7 29.9 38.7) N
+(    124648 1564.6 30.0 39.1) N
+(    124665 1502.9 29.4 37.6) N
+() N
+(addemup.m) (Page 5/8) (Jan 30, 04 15:36) title
+border
+grestore
+(Printed by Jim Pivarski) rhead
+() (5/8) (Friday January 30, 2004) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (6) 6
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.570000 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(WeightedSum[{{1639.2, 30.8},) p n
+() S 8 T (     {1820.8, 32.4},) N
+() S 8 T (     {1895.2, 33.1},) N
+() S 8 T (     {1916.5, 33.3},) N
+() S 8 T (     {1995.6, 33.9},) N
+() S 8 T (     {1626.2, 30.6},) N
+() S 8 T (     {1584.7, 30.2},) N
+() S 8 T (     {1737.6, 31.7},) N
+() S 8 T (     {1836.8, 32.6},) N
+() S 8 T (     {1687.6, 31.2},) N
+() S 8 T (     {1718.1, 31.5},) N
+() S 8 T (     {1699.0, 31.3},) N
+() S 8 T (     {1566.3, 30.1},) N
+() S 8 T (     {1549.7, 29.9},) N
+() S 8 T (     {1564.6, 30.0},) N
+() S 8 T (     {1502.9, 29.4}}]) N
+() N
+(Out[88]= {27340.8, 125.61}) N
+() N
+(125.61/27340.8) N
+() N
+(Out[89]= 0.00459423) N
+() N
+(y1speakgoal = ConfSum[y1scont,) N
+() S 8 T () S 16 T (      ConfFromList[y1scont, {125169., 125315., 123810., 123813.,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (     123814., 123952., 123958., 124114.,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (     124138., 124312., 124319., 123370.,) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (     123569., 124465., 124648., 124665}]]) N
+() N
+(Out[93]= 0.510971) N
+() N
+(y1sranges = {{123610., 123624.},) N
+() S 8 T (     {123632., 123659.},) N
+() S 8 T (     {123822., 123853.},) N
+() S 8 T (     {123864., 123873.},) N
+() S 8 T (     {123965., 123993.},) N
+() S 8 T (     {124007., 124017.},) N
+() S 8 T (     {124144., 124194.},) N
+() S 8 T (     {124328., 124377.},) N
+() S 8 T (     {124480., 124518.},) N
+() S 8 T (     {124671., 124691.},) N
+() S 8 T (     {124699., 124719.},) N
+() S 8 T (     {124849., 124877.},) N
+() S 8 T (     {125155., 125227.},) N
+() S 8 T (     {125316., 125370.}};) N
+() N
+(\(* tolerence at 0.1, exponential at 10 *\)) N
+(FindBest[y1speak, y1speakgoal, y1sranges, ConfFromList[y1speak, #[[1]]& /@ y1sranges]]) N
+() N
+(123610.   0.045916) N
+(123632.   0.0391886) N
+(123822.   0.0444431) N
+(123864.   0.0324331) N
+(123965.   0.0431632) N
+(124007.   0.0439405) N
+(124144.   0.0345816) N
+(124328.   0.0334608) N
+(124480.   0.0557282) N
+(124671.   0.0475131) N
+(124699.   0.0434121) N
+(124849.   0.0518461) N
+(125155.   0.0409335) N
+(125316.   0.0436327) N
+(-------------------) N
+(          0.600193) N
+() N
+(Out[118]= {123610., 123632., 123822., 123864., 123965., 124007., 124144., ) N
+( ) N
+(>    124328., 124480., 124671., 124699., 124849., 125155., 125316.}) N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+(addemup.m) (Page 6/8) (Jan 30, 04 15:36) title
+border
+grestore
+(Printed by Jim Pivarski) rhead
+() (Friday January 30, 2004) (6/8) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (7) 7
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.570000 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(\(* tolerence at 0.01, exponential at 500 *\)) p n
+(FindBest[y1speak, y1speakgoal, y1sranges, ConfFromList[y1speak, Out[118]]]) N
+() N
+(123624.   0.041738) N
+(123658.   0.0384696) N
+(123833.   0.0347476) N
+(123864.   0.0324331) N
+(123991.   0.0370973) N
+(124007.   0.0439405) N
+(124174.   0.0343375) N
+(124328.   0.0334608) N
+(124513.   0.0274916) N
+(124688.   0.0403911) N
+(124701.   0.0377333) N
+(124864.   0.042623) N
+(125222.   0.038753) N
+(125366.   0.0374289) N
+(-------------------) N
+(          0.520645) N
+() N
+(Out[130]= {123624., 123658., 123833., 123864., 123991., 124007., 124174., ) N
+( ) N
+(>    124328., 124513., 124688., 124701., 124864., 125222., 125366.}) N
+() N
+(\(* tolerence at 0.001, exponential at 2000 *\)) N
+(FindBest[y1speak, y1speakgoal, y1sranges, ConfFromList[y1speak, Out[130]]]) N
+() N
+(123611.   0.0363972) N
+(123653.   0.0386873) N
+(123833.   0.0347476) N
+(123864.   0.0324331) N
+(123991.   0.0370973) N
+(124007.   0.0439405) N
+(124174.   0.0343375) N
+(124328.   0.0334608) N
+(124513.   0.0274916) N
+(124688.   0.0403911) N
+(124701.   0.0377333) N
+(124861.   0.0383026) N
+(125222.   0.038753) N
+(125366.   0.0374289) N
+(-------------------) N
+(          0.511202) N
+() N
+(Out[132]= {123611., 123653., 123833., 123864., 123991., 124007., 124174., ) N
+( ) N
+(>    124328., 124513., 124688., 124701., 124861., 125222., 125366.}) N
+() N
+(\(* tolerence at 0.0001, exponential at 10000 *\)) N
+(FindBest[y1speak, y1speakgoal, y1sranges, ConfFromList[y1speak, Out[132]]]) N
+() N
+(123611.   0.0363972) N
+(123658.   0.0384696) N
+(123833.   0.0347476) N
+(123864.   0.0324331) N
+(123991.   0.0370973) N
+(124007.   0.0439405) N
+(124174.   0.0343375) N
+(124328.   0.0334608) N
+(124513.   0.0274916) N
+(124688.   0.0403911) N
+(124701.   0.0377333) N
+(124861.   0.0383026) N
+(125222.   0.038753) N
+(125366.   0.0374289) N
+(-------------------) N
+(          0.510984) N
+() N
+(Out[134]= {123611., 123658., 123833., 123864., 123991., 124007., 124174., ) N
+( ) N
+(>    124328., 124513., 124688., 124701., 124861., 125222., 125366.}) N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+(addemup.m) (Page 7/8) (Jan 30, 04 15:36) title
+border
+grestore
+(Printed by Jim Pivarski) rhead
+() (7/8) (Friday January 30, 2004) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (8) 8
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.570000 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(The runs are:) p n
+(    125222 1517.3 29.7 37.9) N
+(    125366 1776.7 32.1 44.4) N
+(    123833 1913.8 33.3 47.8) N
+(    123864 2266.2 36.3 56.7) N
+(    123991 1905.8 33.3 47.6) N
+(    124007 1768.3 32.0 44.2) N
+(    124174 2160.9 35.4 54.0) N
+(    124328 1778.2 32.1 44.5) N
+(    123611 1788.6 32.2 44.7) N
+(    123658 1910.6 33.3 47.8) N
+(    124513 1756.9 31.9 43.9) N
+(    124688 1871.7 33.0 46.8) N
+(    124701 2244.7 36.1 56.1) N
+(    124861 1717.9 31.6 42.9) N
+() N
+(Their luminosities are:) N
+() N
+(WeightedSum[{{1517.3, 29.7},) N
+() S 8 T (     {1776.7, 32.1},) N
+() S 8 T (     {1913.8, 33.3},) N
+() S 8 T (     {2266.2, 36.3},) N
+() S 8 T (     {1905.8, 33.3},) N
+() S 8 T (     {1768.3, 32.0},) N
+() S 8 T (     {2160.9, 35.4},) N
+() S 8 T (     {1778.2, 32.1},) N
+() S 8 T (     {1788.6, 32.2},) N
+() S 8 T (     {1910.6, 33.3},) N
+() S 8 T (     {1756.9, 31.9},) N
+() S 8 T (     {1871.7, 33.0},) N
+() S 8 T (     {2244.7, 36.1},) N
+() S 8 T (     {1717.9, 31.6}}]) N
+() N
+(Out[137]= {26377.6, 123.732}) N
+() N
+(123.732/26377.6) N
+() N
+(Out[138]= 0.0046908) N
+(addemup.m) (Page 8/8) (Jan 30, 04 15:36) title
+border
+grestore
+(Printed by Jim Pivarski) rhead
+() (Friday January 30, 2004) (8/8) footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF

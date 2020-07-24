@@ -1,0 +1,54 @@
+\section{Upsilon Monte Carlo}
+
+An implementation of EvtGen was used to simulate $\Upsilon$ decays,
+with each of the following generated separately: $\Upsilon \to
+e^+e^-$, $\mu^+\mu^-$, $\tau^+\tau^-$, $ggg$, $gg\gamma$, $q\bar{q}$,
+and $\Upsilon(2,3S) \to$ all cascade decays.
+
+The three modes with free quarks and gluons are hadronized by JetSet
+7.4 before being passed to the detector simulation.  This
+hadronization step is an approximation, and that approximation must be
+tested.  Another assumption made by the Monte Carlo is that the above
+is an exhaustive list of $\Upsilon$ decays (where ``all cascade
+decays'' includes only modes listed in the PDG [\ref{cite:pdg}]).  The
+study described in the next Chapter will check these assumptions for
+$\Upsilon(1S)$, though I will need to assume that cascade decays of
+the $\Upsilon(2S)$ and $\Upsilon(3S)$ are well-described by the Monte
+Carlo.
+
+The detector simulation and reconstruction were executed using the
+same version of code as in the database and unfiltered datasets.  This
+is the ``MC code release'' in Table \ref{datasets:unfiltered}
+(reconstruction code is guaranteed to be the same as that in the
+corresponding ``data code release'').  Where data at one resonance
+were processed using two different versions of the code
+($\Upsilon(1S)$ and $\Upsilon(2S)$), the same Monte Carlo events were
+passed through the different code versions, as a stringent test of
+code reproducibility.
+
+This Monte Carlo sample does suffer from one known bug: the
+bunch-finding simulation, which is supposed to reproduce CLEO's
+identification of which storage ring bunch actually collided to
+produce the event, sometimes (rarely) returns too many tested bunches
+and an incorrectly identified bunch number.  These failures can be
+recognized, and all Monte Carlo tests (except the test for sensitivity
+to this bug) rejected bad bunch-finding events.
+
+Extra $\Upsilon$ Monte Carlo was generated for two decay modes.  The
+first of these is $\Upsilon(2S) \to \pi^+\pi^- \Upsilon(1S)$, the
+``cascade'' decay mode to be studied extensively in the next Chapter.
+The other is $\Upsilon(2S,3S) \to \gamma \chi_b(1P,2P) \to \gamma
+\gamma \gamma$.  This is a possible background to the gamgam event
+type which is sought in Chapter \ref{chp:gamgambkgnds}.  No such
+events are seen in real data.
+
+All control files used to generate and process Monte Carlo are listed
+in Appendix \ref{chp:appendixmc}.
+
+\section{Gamgam Monte Carlo}
+
+\section{Bhabha Monte Carlo}
+
+Whatever is used for absolute luminosity\ldots
+
+

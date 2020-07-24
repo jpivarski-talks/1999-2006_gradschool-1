@@ -1,0 +1,14 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/db22_redo.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/fits/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_DB=22
+export USER_DB18=nope
+
+suez -f count_all.tcl
+rm -f core

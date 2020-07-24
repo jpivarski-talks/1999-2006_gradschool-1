@@ -1,0 +1,121 @@
+nt/chain mc ../rzn2/mc21cascades.rzn
+
+nt/chain data ../rzn2/db21cascades.rzn
+nt/chain data ../rzn2/db22cascades.rzn
+nt/chain data ../rzn2/db23cascades.rzn
+nt/chain data ../rzn2/db25cascades.rzn
+nt/chain data ../rzn2/db27cascades.rzn
+
+nt/chain data2 ../rzn2/db21cascades2.rzn
+nt/chain data2 ../rzn2/db22cascades2.rzn
+nt/chain data2 ../rzn2/db23cascades2.rzn
+nt/chain data2 ../rzn2/db25cascades2.rzn
+nt/chain data2 ../rzn2/db27cascades2.rzn
+
+sigma s1 = 9.441
+sigma s2 = 9.454
+sigma s3 = 9.472
+sigma s4 = 9.480
+
+nt/cuts $1 (abs(p1z)>0.060&&abs(p2z)>0.060)&&(mctag<10)
+
+set gsiz 0.4
+set tsiz 0.4
+set vsiz 0.35
+
+zone 2 2
+
+h/cr/1d 200 'unbiased sample' 78 $SIGMA(s1) $SIGMA(s4)
+set dmod 1
+nt/plot //data/UPSLNGMMEECSCDES/1.m $1 ! ! ! 'N' 200
+
+ve/cr par(6)
+ve/inp par $SIGMA(670586./19.) $SIGMA(-70342.3/19.) $SIGMA(20873486./19.) 0.0015 0.002 9.46333
+ve/cr step(6)
+ve/inp step $SIGMA(par(1)/5.) $SIGMA(-par(2)/5.) $SIGMA(par(3)/5.) $SIGMA(par(4)/5.) $SIGMA(par(5)/5.) $SIGMA(par(6)/5.)
+ve/cr err(6)
+ve/inp err $SIGMA(par(1)/5.) $SIGMA(-par(2)/5.) $SIGMA(par(3)/5.) $SIGMA(par(4)/5.) $SIGMA(par(5)/5.) $SIGMA(par(6)/5.)
+h/fit 200 refit.f '0' 6 par step ! ! err
+set dmod 1
+h/plot 200 'e'
+set dmod 2
+f/plot ($SIGMA(par(1)))+($SIGMA(par(2)))*x $SIGMA(s1) $SIGMA(s4) 's'
+message 'unbiased: visible' $SIGMA(par(3)) +/- $SIGMA(err(3))
+
+zone 2 2 3 's'
+
+h/cr/1d 201 'unbiased sample, invisible' 78 $SIGMA(s1) $SIGMA(s4)
+set dmod 1
+nt/plot //data/UPSLNGMMEECSCDES/1.m $1&&(thad==0) ! ! ! 'N' 201
+ve/cr bar(6)
+ve/inp bar $SIGMA(par(1)) $SIGMA(par(2)) $SIGMA(par(3)) $SIGMA(par(4)) $SIGMA(par(5)) $SIGMA(par(6))
+ve/cr step(6)
+ve/inp step $SIGMA(bar(1)/5.) $SIGMA(-bar(2)/5.) $SIGMA(bar(3)/5.) $SIGMA(bar(4)/5.) $SIGMA(bar(5)/5.) $SIGMA(bar(6)/5.)
+ve/cr werr(6)
+ve/inp werr 0 0 0 0 0 0
+h/fit 201 refit.f '0e' 3 bar step ! ! werr
+set dmod 1
+h/plot 201 'e'
+set dmod 2
+f/plot ($SIGMA(bar(1)))+($SIGMA(bar(2)))*x $SIGMA(s1) $SIGMA(s4) 's'
+message 'unbiased: invisible' $SIGMA(bar(3)) +/- $SIGMA(werr(3))
+
+zone 2 2 2 's'
+
+h/cr/1d 100 'low-bias sample' 78 $SIGMA(s1) $SIGMA(s4)
+set dmod 1
+nt/plot //data2/UPSLNGMMEECSCDES/1.m $1 ! ! ! 'N' 100
+ve/cr par(6)
+ve/inp par 670586 -70342.3 20873486 0.0015 0.002 9.46333
+ve/cr step(6)
+ve/inp step $SIGMA(par(1)/5.) $SIGMA(-par(2)/5.) $SIGMA(par(3)/5.) $SIGMA(par(4)/5.) $SIGMA(par(5)/5.) $SIGMA(par(6)/5.)
+ve/cr err(6)
+ve/inp err 0 0 0 0 0 0
+h/fit 100 refit.f '0' 6 par step ! ! err
+set dmod 1
+h/plot 100 'e'
+set dmod 2
+f/plot ($SIGMA(par(1)))+($SIGMA(par(2)))*x $SIGMA(s1) $SIGMA(s4) 's'
+set ltyp 3
+dline $SIGMA(s2) $SIGMA(s2) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(s3) $SIGMA(s3) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+message 'low-bias: passing cuts' $SIGMA(par(3)) +/- $SIGMA(err(3))
+
+zone 2 2 4 's'
+
+h/cr/1d 101 'low-bias sample, failing cuts' 78 $SIGMA(s1) $SIGMA(s4)
+set dmod 1
+nt/plot //data2/UPSLNGMMEECSCDES/1.m $1&&!((abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) ! ! ! 'N' 101
+ve/cr bar(6)
+ve/inp bar $SIGMA(par(1)) $SIGMA(par(2)) $SIGMA(par(3)) $SIGMA(par(4)) $SIGMA(par(5)) $SIGMA(par(6))
+ve/cr step(6)
+ve/inp step $SIGMA(bar(1)/5.) $SIGMA(-bar(2)/5.) $SIGMA(bar(3)/5.) $SIGMA(bar(4)/5.) $SIGMA(bar(5)/5.) $SIGMA(bar(6)/5.)
+ve/cr werr(6)
+ve/inp werr 0 0 0 0 0 0
+h/fit 101 refit.f '0' 3 bar step ! ! werr
+set dmod 1
+h/plot 101 'e'
+set dmod 2
+f/plot ($SIGMA(bar(1)))+($SIGMA(bar(2)))*x $SIGMA(s1) $SIGMA(s4) 's'
+set ltyp 3
+dline $SIGMA(s2) $SIGMA(s2) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(s3) $SIGMA(s3) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+message 'low-bias: failing cuts' $SIGMA(bar(3)) +/- $SIGMA(werr(3))
+
+pict/print 'proceedings_fityields.eps'
+
+*  FCN=   83.03400     FROM MIGRAD    STATUS=FAILED       293 CALLS      294 TOTAL
+*  CHISQUARE = 0.1153E+01  NPFIT =    78
+*  unbiased: visible 1.35796E+06 +/- 2.31395
+
+*  FCN=   102.3246     FROM MIGRAD    STATUS=CONVERGED    122 CALLS      123 TOTAL
+*  CHISQUARE = 0.1364E+01  NPFIT =    78
+*  unbiased: invisible 9034.79 +/- 7916.7
+
+*  FCN=   177.2427     FROM MIGRAD    STATUS=FAILED       212 CALLS      213 TOTAL
+*  CHISQUARE = 0.2462E+01  NPFIT =    78
+*  low-bias: passing cuts 23404472 +/- 269012
+
+*  FCN=   82.53241     FROM MIGRAD    STATUS=FAILED       126 CALLS      127 TOTAL
+*  CHISQUARE = 0.1100E+01  NPFIT =    78
+*  low-bias: failing cuts 1.84128E+06 +/- 250819

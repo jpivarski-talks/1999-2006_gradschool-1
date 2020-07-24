@@ -1,0 +1,15 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/db21.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/luminosity/makemc/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Apr16_03_MC
+
+suez -f db21.tcl
+rm -f core
+suez -f db21_followup.tcl
+rm -f core
+
+exit

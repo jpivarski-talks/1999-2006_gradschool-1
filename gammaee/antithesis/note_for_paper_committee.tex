@@ -1,0 +1,145 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+
+%\usepackage[pdftex]{graphicx}
+\usepackage{graphicx}
+
+\oddsidemargin  -0.5 cm
+\evensidemargin 0.0 cm
+\textwidth      6.5in
+\headheight     0.0in
+\topmargin      -1 cm
+\textheight=9.0in
+
+\title{Di-lepton Width of Upsilon(1S, 2S, 3S)}
+\author{Jim Pivarski}
+
+\begin{document}
+
+\newcommand{\subs}[1]{{\mbox{\scriptsize #1}}}
+
+\newcommand{\dxy}{$d_{XY}$}
+\newcommand{\dz}{$d_Z$}
+\newcommand{\pone}{$|\vec{p}_1|$}
+\newcommand{\ptwo}{$|\vec{p}_2|$}
+\newcommand{\eone}{$E_1$}
+\newcommand{\etwo}{$E_2$}
+\newcommand{\eisr}{$E_{\mbox{\scriptsize ISR}}$}
+\newcommand{\visen}{$E_{\mbox{\scriptsize vis}}$}
+\newcommand{\hotvisen}{$E_{\mbox{\scriptsize vis}}^{\mbox{\scriptsize hot}}$}
+\newcommand{\lfourdec}{L4$_{\mbox{\scriptsize dec}}$}
+\newcommand{\pdotp}{$|\vec{p}_1\cdot\vec{p}_2|$}
+\newcommand{\ebeam}{$E_{\mbox{\scriptsize beam}}$}
+\newcommand{\ecom}{$E_{\mbox{\scriptsize COM}}$}
+\newcommand{\pz}{$\sum p_z$}
+
+\newcommand{\scosmic}{$s_{\mbox{\scriptsize cosmic}}$}
+
+\setlength{\baselineskip}{0.9 cm}
+
+\setcounter{page}{1}
+\pagenumbering{roman}
+\pagestyle{plain}
+
+\maketitle
+
+\section*{Note for Paper Committee}
+
+The $\Upsilon(1S)$, $\Upsilon(2S)$, and $\Upsilon(3S)$ di-lepton
+widths ($\Gamma_{ee}$) are being calculated on the lattice by
+Christine Davies's group at the University of Glasgow, likely to be
+presented at HEP2005 Europhysics.  (That's why I'm aiming for the
+same conference.)  My goal is to provide a precise experimental
+measurement for comparison.  Currently, the experimental precisions on
+$\Gamma_{ee}$ are 2.2\% (1S), 4.2\% (2S), and 9.4\% (3S): the expected
+theoretical accuracy is 2--5\%.  My precisions are likely to be about
+2\% for each resonance, so my measurements will confirm or refute
+lattice predictions on the $\Upsilon(2S)$ and $\Upsilon(3S)$.  In this
+paper, you will find most of the argument for that precision.  (A
+checklist of what has been done and what will be done by the time of
+the conference will follow.)
+
+The experimental method is to fit lineshape scans for a total
+$\Upsilon$ cross-section (integrated over beam energy).  From this
+$\Gamma_{ee}$ can be derived:
+\begin{equation}
+  \Gamma_{ee} = \frac{{M_\Upsilon}^2}{6\pi^2} \, \int \sigma(e^+e^-
+  \to \Upsilon) \, dE \mbox{.}
+\end{equation}
+(See the big PDG, page 837 (orange 2004), or Peskin and Schroeder,
+page 151.)  Unlike most partial width measurements, the coupling of
+$\Upsilon$ to $e^+e^-$ which is used is in the production
+cross-section, not the decay.  The total cross-section will be
+determined by counting all $\Upsilon$ decays except for $\Upsilon \to
+e^+e^-$, $\mu^+\mu^-$, and cascades that end with a lower $\Upsilon$
+resonance decaying to $e^+e^-$ or $\mu^+\mu^-$, and then adding these
+back in using their known branching fractions.  (The easiest
+anti-bhabha cut excludes anything with a high-momentum track,
+such as these signal modes.)  It is customary to quote the total
+{\it hadronic} cross-section, in which $\Upsilon \to e^+e^-$,
+$\mu^+\mu^-$, and $\tau^+\tau^-$ are all left out, and only the
+missing cascades are added back in.  This is because
+$\Gamma_{ee}\Gamma_\subs{had}/\Gamma_\subs{tot}$ can be quoted with
+higher precision and can avoid the assumption of lepton universality.
+I will do both.
+
+Seeing that my ultimate goal is to have accurate fits, my goal for
+this paper is to precisely measure the hadronic cross-section of {\it
+every} run in the $\Upsilon$ energy region.  This means that I need to
+know the number of $\Upsilon$s very well (but not the number of
+continuum events; I will be effectively subtracting them off with the
+lineshape fits), the $e^+e^- \to \gamma\gamma$ (``gamgam'')
+luminosity, and how these two might be affected by backgrounds and
+instrumental glitches that can have a different dependence than
+integrated luminosity.
+
+In this paper, I have completed arguments for the following:
+\begin{itemize}
+
+  \item I know the $\Upsilon$ hadronic efficiency very well: 98.7
+    $\pm$ 1.1\%, 96.7 $\pm$ 1.3\%, and 97.0 $\pm$ 1.3\% for the three
+    resonances.
+
+  \item I've searched for (and sometimes found) pathological runs by
+    several general criteria, and can guarantee that the remaining
+    runs are free of these issues.
+
+  \item With my current set of gamgam cuts, there are no luminosity
+    trigger issues.  I can't think of anything else that would vary
+    run-by-run.
+
+\end{itemize}
+
+While you read this (and we have meetings, and you ask me questions
+about it, and all that), I will continue to study the following
+issues:
+\begin{itemize}
+
+  \item Fitting lineshape scans with Karl's fit function (includes
+    Breit-Wigner $\otimes$ radiative corrections $\otimes$ beam energy
+    spread Gaussian, where $\otimes$ is a convolution, with continuum
+    interference in the Breit-Wigner).  I will vary all the lineshape
+    distortions by their uncertainties and get more systematic errors
+    for $\Gamma_{ee}$.  (Yes, I did this before, but with new hadron
+    cuts and gamgam cuts, I want to be sure that the results don't
+    change.)  Also, I want to check the beam energy calibration by
+    artificially inserting miscalibrations, to see how much variation
+    in $\Gamma_{ee}$ is possible before the fit $\chi^2$ becomes
+    unbelievable.  I've never done this with real data or a real fit
+    function.
+
+  \item Translating gamgam counts into a luminosity measurement.  This
+    will set the overall scale for $\Gamma_{ee}$ as a multiplicative
+    factor that I can apply after all fitting.  Note that this doesn't
+    need to be a gamgam luminosity measurement (in which I'd have to
+    be sure I understand conversion probability and the effect of
+    individual CC crystals biasing shower $\theta$ measurements).  I
+    can simply compare my number of gamgams to a bhabha/mupair
+    luminosity measurement (in which track-finding efficiency becomes
+    the major issue).
+
+\end{itemize}
+Nothing in these last two studies will change what has been
+established in this paper.
+
+\end{document}

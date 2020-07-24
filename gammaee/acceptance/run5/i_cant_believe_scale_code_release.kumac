@@ -1,0 +1,752 @@
+*                        [1]   [2]   [3]   [4]   [5]   [6]    [7]   [8]   [9]   [10]
+* i_cant_believe_scales (bmm) (arr) (gag) (bca) (bcm) (ptoc) (bge) (bgp) (cos) (ptomc)
+
+sigma arr    = 3.578
+sigma arrerr = 0.14
+sigma gag    = 0.0320
+sigma gagerr = 0.0045
+
+if ($SIGMA(which).eq.18).or.($SIGMA(which).eq.19) then
+  sigma bmm    = 0.0249
+  sigma bmmerr = 0.0007
+
+  if [1].eq.-1 then
+    sigma fmcee =  bmm - bmmerr
+    sigma fmcmm =  bmm - bmmerr
+    sigma fmctt =  0.8589*(bmm - bmmerr)
+    if [2].eq.-1 then
+      sigma fmcqq =  (arr-arrerr)*(bmm - bmmerr)
+    endif
+    if [2].eq.0 then
+      sigma fmcqq =  (arr)*(bmm - bmmerr)
+    endif
+    if [2].eq.1 then
+      sigma fmcqq =  (arr+arrerr)*(bmm - bmmerr)
+    endif
+  endif
+  if [1].eq.0 then
+    sigma fmcee =  bmm
+    sigma fmcmm =  bmm
+    sigma fmctt =  0.8589*(bmm)
+    if [2].eq.-1 then
+      sigma fmcqq =  (arr-arrerr)*(bmm)
+    endif
+    if [2].eq.0 then
+      sigma fmcqq =  (arr)*(bmm)
+    endif
+    if [2].eq.1 then
+      sigma fmcqq =  (arr+arrerr)*(bmm)
+    endif
+  endif
+  if [1].eq.1 then
+    sigma fmcee =  bmm + bmmerr
+    sigma fmcmm =  bmm + bmmerr
+    sigma fmctt =  0.8589*(bmm + bmmerr)
+    if [2].eq.-1 then
+      sigma fmcqq =  (arr-arrerr)*(bmm + bmmerr)
+    endif
+    if [2].eq.0 then
+      sigma fmcqq =  (arr)*(bmm + bmmerr)
+    endif
+    if [2].eq.1 then
+      sigma fmcqq =  (arr+arrerr)*(bmm + bmmerr)
+    endif
+  endif
+  sigma fmccee = 0
+  sigma fmccmm = 0
+  sigma fmccas = 0
+  if [3].eq.-1 then
+    sigma fmcggg = (1 - fmcee - fmcmm - fmctt - fmcqq - fmccee - fmccmm - fmccas)/(1 - (gag - gagerr))
+    sigma fmcgam = fmcggg * (gag - gagerr)
+  endif
+  if [3].eq.0 then
+    sigma fmcggg = (1 - fmcee - fmcmm - fmctt - fmcqq - fmccee - fmccmm - fmccas)/(1 - (gag))
+    sigma fmcgam = fmcggg * (gag)
+  endif
+  if [3].eq.1 then
+    sigma fmcggg = (1 - fmcee - fmcmm - fmctt - fmcqq - fmccee - fmccmm - fmccas)/(1 - (gag + gagerr))
+    sigma fmcgam = fmcggg * (gag + gagerr)
+  endif
+
+  sigma smcggg = fmcggg / nmcggg
+  sigma smcgam = fmcgam / nmcgam
+  sigma smcqq =  fmcqq  / nmcqq
+  sigma smcee =  fmcee  / nmcee
+  sigma smcmm =  fmcmm  / nmcmm
+  sigma smctt =  fmctt  / nmctt
+  sigma smccee = 0
+  sigma smccmm = 0
+  sigma smccas = 0
+
+  if [1].eq.-1 then
+    sigma ptomc  = (pa - pb*ca/cb)/(ma - ((bmm-bmmerr)/bmm)*mb*ca/cb)
+    sigma ptoc   = (pa*((bmm-bmmerr)/bmm)*mb/ma - pb)/(ca*((bmm-bmmerr)/bmm)*mb/ma - cb)
+  endif
+  if [1].eq.0 then
+    sigma ptomc  = (pa - pb*ca/cb)/(ma - 1.0*mb*ca/cb)
+    sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  endif
+  if [1].eq.1 then
+    sigma ptomc  = (pa - pb*ca/cb)/(ma - ((bmm+bmmerr)/bmm)*mb*ca/cb)
+    sigma ptoc   = (pa*((bmm+bmmerr)/bmm)*mb/ma - pb)/(ca*((bmm+bmmerr)/bmm)*mb/ma - cb)
+  endif
+
+*   if [6].eq.-1 then
+*     sigma dtocos = -0.22999
+*   endif
+*   if [6].eq.0 then
+*     sigma dtocos = -0.226762
+*   endif
+*   if [6].eq.1 then
+*     sigma dtocos = -0.223528
+*   endif
+  sigma d = 100*([6]+1) + 10*([7]+1) + ([8]+1)
+  if $SIGMA(d).eq.0 then
+    sigma dtocos = -0.226128
+  endif
+  if $SIGMA(d).eq.1 then
+    sigma dtocos = -0.226379
+  endif
+  if $SIGMA(d).eq.2 then
+    sigma dtocos = -0.226629
+  endif
+  if $SIGMA(d).eq.10 then
+    sigma dtocos = -0.229742
+  endif
+  if $SIGMA(d).eq.11 then
+    sigma dtocos = -0.229993
+  endif
+  if $SIGMA(d).eq.12 then
+    sigma dtocos = -0.230243
+  endif
+  if $SIGMA(d).eq.20 then
+    sigma dtocos = -0.233356
+  endif
+  if $SIGMA(d).eq.21 then
+    sigma dtocos = -0.233606
+  endif
+  if $SIGMA(d).eq.22 then
+    sigma dtocos = -0.233857
+  endif
+  if $SIGMA(d).eq.100 then
+    sigma dtocos = -0.2231
+  endif
+  if $SIGMA(d).eq.101 then
+    sigma dtocos = -0.223319
+  endif
+  if $SIGMA(d).eq.102 then
+    sigma dtocos = -0.223538
+  endif
+  if $SIGMA(d).eq.110 then
+    sigma dtocos = -0.226539
+  endif
+  if $SIGMA(d).eq.111 then
+    sigma dtocos = -0.226757
+  endif
+  if $SIGMA(d).eq.112 then
+    sigma dtocos = -0.226976
+  endif
+  if $SIGMA(d).eq.120 then
+    sigma dtocos = -0.229977
+  endif
+  if $SIGMA(d).eq.121 then
+    sigma dtocos = -0.230195
+  endif
+  if $SIGMA(d).eq.122 then
+    sigma dtocos = -0.230414
+  endif
+  if $SIGMA(d).eq.200 then
+    sigma dtocos = -0.220079
+  endif
+  if $SIGMA(d).eq.201 then
+    sigma dtocos = -0.220265
+  endif
+  if $SIGMA(d).eq.202 then
+    sigma dtocos = -0.220452
+  endif
+  if $SIGMA(d).eq.210 then
+    sigma dtocos = -0.223341
+  endif
+  if $SIGMA(d).eq.211 then
+    sigma dtocos = -0.223528
+  endif
+  if $SIGMA(d).eq.212 then
+    sigma dtocos = -0.223714
+  endif
+  if $SIGMA(d).eq.220 then
+    sigma dtocos = -0.226603
+  endif
+  if $SIGMA(d).eq.221 then
+    sigma dtocos = -0.22679
+  endif
+  if $SIGMA(d).eq.222 then
+    sigma dtocos = -0.226976
+  endif
+
+  if [9].eq.-1 then
+    sigma dtocos = dtocos - 0.00648779
+  endif
+  if [9].eq.1 then
+    sigma dtocos = dtocos + 0.00648779
+  endif
+
+  if [10].eq.-1 then
+    sigma ptomc = ptomc - 574.882
+  endif
+  if [10].eq.1 then
+    sigma ptomc = ptomc + 574.882
+  endif
+endif
+
+if ($SIGMA(which).eq.21).or.($SIGMA(which).eq.23) then
+  sigma bmm    = 0.0203
+  sigma bmmerr = 0.0009
+  sigma bcm    = 0.0080
+  sigma bcmerr = 0.0004
+  sigma bca    = 0.438
+  sigma bcaerr = 0.015
+
+  if [1].eq.-1 then
+    sigma fmcee =  bmm - bmmerr
+    sigma fmcmm =  bmm - bmmerr
+    sigma fmctt =  0.8743*(bmm - bmmerr)
+    if [2].eq.-1 then
+      sigma fmcqq =  (arr-arrerr)*(bmm - bmmerr)
+    endif
+    if [2].eq.0 then
+      sigma fmcqq =  (arr)*(bmm - bmmerr)
+    endif
+    if [2].eq.1 then
+      sigma fmcqq =  (arr+arrerr)*(bmm - bmmerr)
+    endif
+  endif
+  if [1].eq.0 then
+    sigma fmcee =  bmm
+    sigma fmcmm =  bmm
+    sigma fmctt =  0.8743*(bmm)
+    if [2].eq.-1 then
+      sigma fmcqq =  (arr-arrerr)*(bmm)
+    endif
+    if [2].eq.0 then
+      sigma fmcqq =  (arr)*(bmm)
+    endif
+    if [2].eq.1 then
+      sigma fmcqq =  (arr+arrerr)*(bmm)
+    endif
+  endif
+  if [1].eq.1 then
+    sigma fmcee =  bmm + bmmerr
+    sigma fmcmm =  bmm + bmmerr
+    sigma fmctt =  0.8743*(bmm + bmmerr)
+    if [2].eq.-1 then
+      sigma fmcqq =  (arr-arrerr)*(bmm + bmmerr)
+    endif
+    if [2].eq.0 then
+      sigma fmcqq =  (arr)*(bmm + bmmerr)
+    endif
+    if [2].eq.1 then
+      sigma fmcqq =  (arr+arrerr)*(bmm + bmmerr)
+    endif
+  endif
+  if [5].eq.-1 then
+    sigma fmccee = bcm - bcmerr
+    sigma fmccmm = bcm - bcmerr
+  endif
+  if [5].eq.0 then
+    sigma fmccee = bcm
+    sigma fmccmm = bcm
+  endif
+  if [5].eq.1 then
+    sigma fmccee = bcm + bcmerr
+    sigma fmccmm = bcm + bcmerr
+  endif
+  if [4].eq.-1 then
+    sigma fmccas = bca - bcaerr
+  endif
+  if [4].eq.0 then
+    sigma fmccas = bca
+  endif
+  if [4].eq.1 then
+    sigma fmccas = bca + bcaerr
+  endif
+  if [3].eq.-1 then
+    sigma fmcggg = (1 - fmcee - fmcmm - fmctt - fmcqq - fmccee - fmccmm - fmccas)/(1 - (gag - gagerr))
+    sigma fmcgam = fmcggg * (gag - gagerr)
+  endif
+  if [3].eq.0 then
+    sigma fmcggg = (1 - fmcee - fmcmm - fmctt - fmcqq - fmccee - fmccmm - fmccas)/(1 - (gag))
+    sigma fmcgam = fmcggg * (gag)
+  endif
+  if [3].eq.1 then
+    sigma fmcggg = (1 - fmcee - fmcmm - fmctt - fmcqq - fmccee - fmccmm - fmccas)/(1 - (gag + gagerr))
+    sigma fmcgam = fmcggg * (gag + gagerr)
+  endif
+
+  sigma smcggg = fmcggg / nmcggg
+  sigma smcgam = fmcgam / nmcgam
+  sigma smcqq =  fmcqq  / nmcqq
+  sigma smcee =  fmcee  / nmcee
+  sigma smcmm =  fmcmm  / nmcmm
+  sigma smctt =  fmctt  / nmctt
+  sigma smccee = fmccee / nmccee
+  sigma smccmm = fmccmm / nmccmm
+  sigma smccas = fmccas / nmccas
+
+  if [1].eq.-1 then
+    sigma ptomc  = (pa - pb*ca/cb)/(ma - ((bmm-bmmerr)/bmm)*mb*ca/cb)
+    sigma ptoc   = (pa*((bmm-bmmerr)/bmm)*mb/ma - pb)/(ca*((bmm-bmmerr)/bmm)*mb/ma - cb)
+  endif
+  if [1].eq.0 then
+    sigma ptomc  = (pa - pb*ca/cb)/(ma - 1.0*mb*ca/cb)
+    sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  endif
+  if [1].eq.1 then
+    sigma ptomc  = (pa - pb*ca/cb)/(ma - ((bmm+bmmerr)/bmm)*mb*ca/cb)
+    sigma ptoc   = (pa*((bmm+bmmerr)/bmm)*mb/ma - pb)/(ca*((bmm+bmmerr)/bmm)*mb/ma - cb)
+  endif
+
+*   if [6].eq.-1 then
+*     sigma dtocos = 0.179561
+*   endif
+*   if [6].eq.0 then
+*     sigma dtocos = 0.192375
+*   endif
+*   if [6].eq.1 then
+*     sigma dtocos = 0.205229
+*   endif
+  sigma d = 100*([6]+1) + 10*([7]+1) + ([8]+1)
+  if $SIGMA(d).eq.0 then
+    sigma dtocos = 0.167268
+  endif
+  if $SIGMA(d).eq.1 then
+    sigma dtocos = 0.1839
+  endif
+  if $SIGMA(d).eq.2 then
+    sigma dtocos = 0.200529
+  endif
+  if $SIGMA(d).eq.10 then
+    sigma dtocos = 0.162929
+  endif
+  if $SIGMA(d).eq.11 then
+    sigma dtocos = 0.179561
+  endif
+  if $SIGMA(d).eq.12 then
+    sigma dtocos = 0.19619
+  endif
+  if $SIGMA(d).eq.20 then
+    sigma dtocos = 0.15859
+  endif
+  if $SIGMA(d).eq.21 then
+    sigma dtocos = 0.175222
+  endif
+  if $SIGMA(d).eq.22 then
+    sigma dtocos = 0.191851
+  endif
+  if $SIGMA(d).eq.100 then
+    sigma dtocos = 0.179511
+  endif
+  if $SIGMA(d).eq.101 then
+    sigma dtocos = 0.196366
+  endif
+  if $SIGMA(d).eq.102 then
+    sigma dtocos = 0.213224
+  endif
+  if $SIGMA(d).eq.110 then
+    sigma dtocos = 0.17554
+  endif
+  if $SIGMA(d).eq.111 then
+    sigma dtocos = 0.192396
+  endif
+  if $SIGMA(d).eq.112 then
+    sigma dtocos = 0.209254
+  endif
+  if $SIGMA(d).eq.120 then
+    sigma dtocos = 0.171569
+  endif
+  if $SIGMA(d).eq.121 then
+    sigma dtocos = 0.188425
+  endif
+  if $SIGMA(d).eq.122 then
+    sigma dtocos = 0.205283
+  endif
+  if $SIGMA(d).eq.200 then
+    sigma dtocos = 0.19173
+  endif
+  if $SIGMA(d).eq.201 then
+    sigma dtocos = 0.208812
+  endif
+  if $SIGMA(d).eq.202 then
+    sigma dtocos = 0.225896
+  endif
+  if $SIGMA(d).eq.210 then
+    sigma dtocos = 0.188128
+  endif
+  if $SIGMA(d).eq.211 then
+    sigma dtocos = 0.205209
+  endif
+  if $SIGMA(d).eq.212 then
+    sigma dtocos = 0.222293
+  endif
+  if $SIGMA(d).eq.220 then
+    sigma dtocos = 0.184525
+  endif
+  if $SIGMA(d).eq.221 then
+    sigma dtocos = 0.201606
+  endif
+  if $SIGMA(d).eq.222 then
+    sigma dtocos = 0.218691
+  endif
+
+  if [9].eq.-1 then
+    sigma dtocos = dtocos - 0.0137488
+  endif
+  if [9].eq.1 then
+    sigma dtocos = dtocos + 0.0137488
+  endif
+
+  if [10].eq.-1 then
+    sigma ptomc = ptomc - 955.325
+  endif
+  if [10].eq.1 then
+    sigma ptomc = ptomc + 955.325
+  endif
+endif
+
+if $SIGMA(which).eq.3 then
+  sigma bmm    = 0.0239
+  sigma bmmerr = 0.0012
+  sigma bcm    = 0.0034
+  sigma bcmerr = 0.0004
+  sigma bca    = 0.449
+  sigma bcaerr = 0.015
+
+  if [1].eq.-1 then
+    sigma fmcee =  bmm - bmmerr
+    sigma fmcmm =  bmm - bmmerr
+    sigma fmctt =  0.8822*(bmm - bmmerr)
+    if [2].eq.-1 then
+      sigma fmcqq =  (arr-arrerr)*(bmm - bmmerr)
+    endif
+    if [2].eq.0 then
+      sigma fmcqq =  (arr)*(bmm - bmmerr)
+    endif
+    if [2].eq.1 then
+      sigma fmcqq =  (arr+arrerr)*(bmm - bmmerr)
+    endif
+  endif
+  if [1].eq.0 then
+    sigma fmcee =  bmm
+    sigma fmcmm =  bmm
+    sigma fmctt =  0.8822*(bmm)
+    if [2].eq.-1 then
+      sigma fmcqq =  (arr-arrerr)*(bmm)
+    endif
+    if [2].eq.0 then
+      sigma fmcqq =  (arr)*(bmm)
+    endif
+    if [2].eq.1 then
+      sigma fmcqq =  (arr+arrerr)*(bmm)
+    endif
+  endif
+  if [1].eq.1 then
+    sigma fmcee =  bmm + bmmerr
+    sigma fmcmm =  bmm + bmmerr
+    sigma fmctt =  0.8822*(bmm + bmmerr)
+    if [2].eq.-1 then
+      sigma fmcqq =  (arr-arrerr)*(bmm + bmmerr)
+    endif
+    if [2].eq.0 then
+      sigma fmcqq =  (arr)*(bmm + bmmerr)
+    endif
+    if [2].eq.1 then
+      sigma fmcqq =  (arr+arrerr)*(bmm + bmmerr)
+    endif
+  endif
+  if [5].eq.-1 then
+    sigma fmccee = bcm - bcmerr
+    sigma fmccmm = bcm - bcmerr
+  endif
+  if [5].eq.0 then
+    sigma fmccee = bcm
+    sigma fmccmm = bcm
+  endif
+  if [5].eq.1 then
+    sigma fmccee = bcm + bcmerr
+    sigma fmccmm = bcm + bcmerr
+  endif
+  if [4].eq.-1 then
+    sigma fmccas = bca - bcaerr
+  endif
+  if [4].eq.0 then
+    sigma fmccas = bca
+  endif
+  if [4].eq.1 then
+    sigma fmccas = bca + bcaerr
+  endif
+  if [3].eq.-1 then
+    sigma fmcggg = (1 - fmcee - fmcmm - fmctt - fmcqq - fmccee - fmccmm - fmccas)/(1 - (gag - gagerr))
+    sigma fmcgam = fmcggg * (gag - gagerr)
+  endif
+  if [3].eq.0 then
+    sigma fmcggg = (1 - fmcee - fmcmm - fmctt - fmcqq - fmccee - fmccmm - fmccas)/(1 - (gag))
+    sigma fmcgam = fmcggg * (gag)
+  endif
+  if [3].eq.1 then
+    sigma fmcggg = (1 - fmcee - fmcmm - fmctt - fmcqq - fmccee - fmccmm - fmccas)/(1 - (gag + gagerr))
+    sigma fmcgam = fmcggg * (gag + gagerr)
+  endif
+
+  sigma smcggg = fmcggg / nmcggg
+  sigma smcgam = fmcgam / nmcgam
+  sigma smcqq =  fmcqq  / nmcqq
+  sigma smcee =  fmcee  / nmcee
+  sigma smcmm =  fmcmm  / nmcmm
+  sigma smctt =  fmctt  / nmctt
+  sigma smccee = fmccee / nmccee
+  sigma smccmm = fmccmm / nmccmm
+  sigma smccas = fmccas / nmccas
+
+  if [1].eq.-1 then
+    sigma ptomc  = (pa - pb*ca/cb)/(ma - ((bmm-bmmerr)/bmm)*mb*ca/cb)
+    sigma ptoc   = (pa*((bmm-bmmerr)/bmm)*mb/ma - pb)/(ca*((bmm-bmmerr)/bmm)*mb/ma - cb)
+  endif
+  if [1].eq.0 then
+    sigma ptomc  = (pa - pb*ca/cb)/(ma - 1.0*mb*ca/cb)
+    sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  endif
+  if [1].eq.1 then
+    sigma ptomc  = (pa - pb*ca/cb)/(ma - ((bmm+bmmerr)/bmm)*mb*ca/cb)
+    sigma ptoc   = (pa*((bmm+bmmerr)/bmm)*mb/ma - pb)/(ca*((bmm+bmmerr)/bmm)*mb/ma - cb)
+  endif
+
+*   if [6].eq.-1 then
+*     sigma dtocos = -1.1908
+*   endif
+*   if [6].eq.0 then
+*     sigma dtocos = -1.16973
+*   endif
+*   if [6].eq.1 then
+*     sigma dtocos = -1.1486
+*   endif
+  sigma d = 100*([6]+1) + 10*([7]+1) + ([8]+1)
+  if $SIGMA(d).eq.0 then
+    sigma dtocos = -1.17611
+  endif
+  if $SIGMA(d).eq.1 then
+    sigma dtocos = -1.17574
+  endif
+  if $SIGMA(d).eq.2 then
+    sigma dtocos = -1.17537
+  endif
+  if $SIGMA(d).eq.10 then
+    sigma dtocos = -1.19118
+  endif
+  if $SIGMA(d).eq.11 then
+    sigma dtocos = -1.19081
+  endif
+  if $SIGMA(d).eq.12 then
+    sigma dtocos = -1.19044
+  endif
+  if $SIGMA(d).eq.20 then
+    sigma dtocos = -1.20625
+  endif
+  if $SIGMA(d).eq.21 then
+    sigma dtocos = -1.20588
+  endif
+  if $SIGMA(d).eq.22 then
+    sigma dtocos = -1.20551
+  endif
+  if $SIGMA(d).eq.100 then
+    sigma dtocos = -1.15593
+  endif
+  if $SIGMA(d).eq.101 then
+    sigma dtocos = -1.15536
+  endif
+  if $SIGMA(d).eq.102 then
+    sigma dtocos = -1.1548
+  endif
+  if $SIGMA(d).eq.110 then
+    sigma dtocos = -1.17028
+  endif
+  if $SIGMA(d).eq.111 then
+    sigma dtocos = -1.16971
+  endif
+  if $SIGMA(d).eq.112 then
+    sigma dtocos = -1.16915
+  endif
+  if $SIGMA(d).eq.120 then
+    sigma dtocos = -1.18462
+  endif
+  if $SIGMA(d).eq.121 then
+    sigma dtocos = -1.18406
+  endif
+  if $SIGMA(d).eq.122 then
+    sigma dtocos = -1.18349
+  endif
+  if $SIGMA(d).eq.200 then
+    sigma dtocos = -1.13579
+  endif
+  if $SIGMA(d).eq.201 then
+    sigma dtocos = -1.13503
+  endif
+  if $SIGMA(d).eq.202 then
+    sigma dtocos = -1.13427
+  endif
+  if $SIGMA(d).eq.210 then
+    sigma dtocos = -1.14941
+  endif
+  if $SIGMA(d).eq.211 then
+    sigma dtocos = -1.14865
+  endif
+  if $SIGMA(d).eq.212 then
+    sigma dtocos = -1.14789
+  endif
+  if $SIGMA(d).eq.220 then
+    sigma dtocos = -1.16303
+  endif
+  if $SIGMA(d).eq.221 then
+    sigma dtocos = -1.16227
+  endif
+  if $SIGMA(d).eq.222 then
+    sigma dtocos = -1.16151
+  endif
+
+  if [9].eq.-1 then
+    sigma dtocos = dtocos - 0.0162621
+  endif
+  if [9].eq.1 then
+    sigma dtocos = dtocos + 0.0162621
+  endif
+
+  if [10].eq.-1 then
+    sigma ptomc = ptomc - 980.194
+  endif
+  if [10].eq.1 then
+    sigma ptomc = ptomc + 980.194
+  endif
+endif
+
+* DON'T WRIGGLE ANYTHING!!!
+if $SIGMA(which).eq.21 then
+  sigma bmm    = 0.0203
+  sigma bmmerr = 0.0009
+  sigma bcm    = 0.0080
+  sigma bcmerr = 0.0004
+  sigma bca    = 0.438
+  sigma bcaerr = 0.015
+
+  if [1].eq.0 then
+    sigma fmcee =  bmm
+    sigma fmcmm =  bmm
+    sigma fmctt =  0.8743*(bmm)
+    if [2].eq.0 then
+      sigma fmcqq =  (arr)*(bmm)
+    endif
+  endif
+  if [5].eq.0 then
+    sigma fmccee = bcm
+    sigma fmccmm = bcm
+  endif
+  if [4].eq.0 then
+    sigma fmccas = bca
+  endif
+  if [3].eq.0 then
+    sigma fmcggg = (1 - fmcee - fmcmm - fmctt - fmcqq - fmccee - fmccmm - fmccas)/(1 - (gag))
+    sigma fmcgam = fmcggg * (gag)
+  endif
+
+  sigma smcggg = fmcggg / nmcggg
+  sigma smcgam = fmcgam / nmcgam
+  sigma smcqq =  fmcqq  / nmcqq
+  sigma smcee =  fmcee  / nmcee
+  sigma smcmm =  fmcmm  / nmcmm
+  sigma smctt =  fmctt  / nmctt
+  sigma smccee = fmccee / nmccee
+  sigma smccmm = fmccmm / nmccmm
+  sigma smccas = fmccas / nmccas
+
+  if [1].eq.0 then
+    sigma ptomc  = (pa - pb*ca/cb)/(ma - 1.0*mb*ca/cb)
+    sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  endif
+
+  sigma d = 100*([6]+1) + 10*([7]+1) + ([8]+1)
+  if $SIGMA(d).eq.111 then
+    sigma dtocos = -0.0280942
+  endif
+endif
+* DON'T WRIGGLE ANYTHING!!!
+if $SIGMA(which).eq.23 then
+  sigma bmm    = 0.0203
+  sigma bmmerr = 0.0009
+  sigma bcm    = 0.0080
+  sigma bcmerr = 0.0004
+  sigma bca    = 0.438
+  sigma bcaerr = 0.015
+
+  if [1].eq.0 then
+    sigma fmcee =  bmm
+    sigma fmcmm =  bmm
+    sigma fmctt =  0.8743*(bmm)
+    if [2].eq.0 then
+      sigma fmcqq =  (arr)*(bmm)
+    endif
+  endif
+  if [5].eq.0 then
+    sigma fmccee = bcm
+    sigma fmccmm = bcm
+  endif
+  if [4].eq.0 then
+    sigma fmccas = bca
+  endif
+  if [3].eq.0 then
+    sigma fmcggg = (1 - fmcee - fmcmm - fmctt - fmcqq - fmccee - fmccmm - fmccas)/(1 - (gag))
+    sigma fmcgam = fmcggg * (gag)
+  endif
+
+  sigma smcggg = fmcggg / nmcggg
+  sigma smcgam = fmcgam / nmcgam
+  sigma smcqq =  fmcqq  / nmcqq
+  sigma smcee =  fmcee  / nmcee
+  sigma smcmm =  fmcmm  / nmcmm
+  sigma smctt =  fmctt  / nmctt
+  sigma smccee = fmccee / nmccee
+  sigma smccmm = fmccmm / nmccmm
+  sigma smccas = fmccas / nmccas
+
+  if [1].eq.0 then
+    sigma ptomc  = (pa - pb*ca/cb)/(ma - 1.0*mb*ca/cb)
+    sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  endif
+
+  sigma d = 100*([6]+1) + 10*([7]+1) + ([8]+1)
+  if $SIGMA(d).eq.111 then
+    sigma dtocos = 0.311336
+  endif
+endif
+
+sigma mba = mb/ma
+sigma ptcerr = sqrt((pb - mba*pa)**2 * (cb + mba**2*ca) + (cb - mba*ca)**2 * (pb + mba**2*pa))/(cb - mba*ca)**2
+if [6].eq.-1 then
+  sigma ptoc = ptoc - ptcerr
+endif
+if [6].eq.1 then
+  sigma ptoc = ptoc + ptcerr
+endif
+
+sigma dtobge = ptobge - ptoc*ctobge
+sigma dtobgp = ptobgp - ptoc*ctobgp
+
+if [7].eq.-1 then
+  sigma dtobge = 0.97 * dtobge
+endif
+if [7].eq.1 then
+  sigma dtobge = 1.03 * dtobge
+endif
+
+if [8].eq.-1 then
+  sigma dtobgp = 0.97 * dtobgp
+endif
+if [8].eq.1 then
+  sigma dtobgp = 1.03 * dtobgp
+endif

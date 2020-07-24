@@ -1,0 +1,16 @@
+#$ -l u5
+#$ -o /home/mccann/synthesis/lumilogs/
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/synthesis/run/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel 20050614_FULL
+
+export USER_RUN=122571
+export USER_DB=17
+export USER_ENERGY=5.1997
+suez -f getlumis.tcl
+rm -f core
+
+exit

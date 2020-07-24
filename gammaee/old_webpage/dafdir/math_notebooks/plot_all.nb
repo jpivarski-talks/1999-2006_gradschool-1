@@ -1,0 +1,2489 @@
+(***********************************************************************
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used on any computer system with Mathematica 4.0,
+MathReader 4.0, or any compatible application. The data for the notebook 
+starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do one of 
+the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing the 
+word CacheID, otherwise Mathematica-compatible applications may try to 
+use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+***********************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     78640,       2444]*)
+(*NotebookOutlinePosition[     79278,       2467]*)
+(*  CellTagsIndexPosition[     79234,       2463]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+Cell[BoxData[
+    \(<< Graphics`Legend`\)], "Input"],
+
+Cell[BoxData[
+    \(\(background[x_, back_] := back*\((2*5.16483)\)^2/x^2;\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(jacksonSharreOnly[x_, norm_, mean_, 
+          sigma_] := \((\[IndentingNewLine]t = 
+              2*\((\(1/137.0359997650\)/
+                    Pi)\)*\((Log[\((x*1000)\)^2/0.51099890221^2 - 
+                      1. ])\); \[IndentingNewLine]z = \((x - mean)\)/
+                sigma; \[IndentingNewLine]F = 
+              Gamma[1 + t]*
+                  Exp[\(-z^2\)/2]/
+                    Sqrt[2*Pi]*\[IndentingNewLine]\((0.31 - 
+                        0.73*z/
+                            Sqrt[1 + \((z/\((1 + 
+                                        1.37*t)\))\)^2]\[IndentingNewLine] + 
+                        z^2)\)^\((\(-t\)/2)\) + \[IndentingNewLine]If[z > 0, 
+                    1, 0]*t*
+                  z^t*\[IndentingNewLine]\((z^2.18/\((1 + 
+                          z^3.18)\))\)*\[IndentingNewLine]\((1 + \((1 - 
+                            t)\)*\(\((2 - t)\)/
+                            2\)/\[IndentingNewLine]\((1.5*t + 
+                              2.44 + \((z - 
+                                    46/\((z^2 + 
+                                        21)\))\)^2)\))\); \
+\[IndentingNewLine]norm*\((2*sigma/mean)\)^t*F/sigma\[IndentingNewLine])\) // 
+          Chop;\)\[IndentingNewLine]\), "\[IndentingNewLine]", 
+    \(\(jacksonSharre[x_, norm_, mean_, sigma_, 
+          back_] := \[IndentingNewLine]jacksonSharreOnly[x*2, norm*2/1000, 
+            mean*2, sigma*2/1000] + 
+          background[x, 
+            back];\)\[IndentingNewLine]\), "\[IndentingNewLine]", 
+    \(\(jsParams = {norm, mean, sigma, back};\)\)}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(Plot[{jacksonSharre[x, 2*40.83, 2*5.179363, 2*2.28, 3.23], 
+        jacksonSharre[x, 2*40.37, 2*5.179499, 2*2.306, 3.267], 
+        jacksonSharre[x, 2*41.30, 2*5.179111, 2*2.315, 3.153], 
+        jacksonSharre[x, 2*41.15, 2*5.179019, 2*2.310, 3.1807], 
+        jacksonSharre[x, 2*41.52, 2*5.179014, 2*2.346, 3.2200], 
+        jacksonSharre[x, 2*41.41, 2*5.179019, 2*2.308, 3.1870], 
+        jacksonSharre[x, 2*42.79, 2*5.179101, 2*2.421, 3.189]}, {x, 2*5.174, 
+        2*5.186}, Frame \[Rule] True, Axes \[Rule] False, 
+      PlotRange \[Rule] {{2*5.174, 2*5.186}, {2.999, 8}}, 
+      FrameLabel \[Rule] {"\<COM Energy in GeV\>", "\<Hadronic Cross-section \
+in nb\>", "\<All Seven Upsilon 3s Scans  ---  fits only\>", \ None}, 
+      PlotStyle \[Rule] {Hue[0.`, 1.`, 1.`], Hue[0.1`, 1.`, 1.`], 
+          Hue[0.15`, 1.`, 0.3`], Hue[0.375`, 1.`, 0.7`], Hue[0.5`, 1.`, 1.`], 
+          Hue[0.625`, 1.`, 1.`], Hue[0.75`, 1.`, 0.7`], 
+          Hue[0.875`, 1.`, 1.`], Hue[1.`, 1.`, 0.7`]}, 
+      PlotLegend \[Rule] {"\<11-29\>", "\<12-06\>", "\<12-13\>", "\<12-20\>", \
+"\<12-25\>", "\<01-03\>", "\<01-10\>"}, 
+      LegendPosition \[Rule] {1, \(-0.25\)}, \n
+      FrameTicks \[Rule] {Sort[
+            Join[\({#, ToString[#]} &\) /@ 
+                Range[2*5.175, 2*5.186, 0.005], \n\t\t\t\({#, "\<\>"} &\) /@ 
+                Range[2*5.175, 2*5.186, 
+                  0.001]], \((#1[\([1]\)] < #2[\([1]\)])\) &], Automatic, 
+          None, None}]\)], "Input"],
+
+Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: .52087 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.425137 0.401327 0.260436 0.401327 [
+[ 0 0 0 0 ]
+[ 1 .52087 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+% Start of sub-graphic
+p
+0.0238095 0.0124017 0.826464 0.50847 MathSubStart
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+-431.167 41.6667 -0.370623 0.123582 [
+[.08333 -0.0125 -17 -9.8125 ]
+[.08333 -0.0125 17 0 ]
+[.29167 -0.0125 -20 -9.8125 ]
+[.29167 -0.0125 20 0 ]
+[.5 -0.0125 -17 -9.8125 ]
+[.5 -0.0125 17 0 ]
+[.70833 -0.0125 -20 -9.8125 ]
+[.70833 -0.0125 20 0 ]
+[.91667 -0.0125 -17 -9.8125 ]
+[.91667 -0.0125 17 0 ]
+[ 0 0 -0.125 0 ]
+[.5 -0.0125 -53 -19.9375 ]
+[.5 -0.0125 53 -9.8125 ]
+[-0.0125 .00012 -6 -4.5 ]
+[-0.0125 .00012 0 4.5 ]
+[-0.0125 .12371 -6 -4.5 ]
+[-0.0125 .12371 0 4.5 ]
+[-0.0125 .24729 -6 -4.5 ]
+[-0.0125 .24729 0 4.5 ]
+[-0.0125 .37087 -6 -4.5 ]
+[-0.0125 .37087 0 4.5 ]
+[-0.0125 .49445 -6 -4.5 ]
+[-0.0125 .49445 0 4.5 ]
+[-0.0125 .61803 -6 -4.5 ]
+[-0.0125 .61803 0 4.5 ]
+[ 0 0 -0.125 0 ]
+[-0.01875 .30902 -16.125 -86 ]
+[-0.01875 .30902 -6 86 ]
+[ 0 .61803 .125 0 ]
+[.5 .63053 -128 0 ]
+[.5 .63053 128 10.125 ]
+[ 1 0 .125 0 ]
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+.08333 0 m
+.08333 .00625 L
+s
+.08333 0 m
+.08333 .00625 L
+s
+gsave
+.08333 -0.0125 -78 -13.8125 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 17.8125 translate 1 -1 scale
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(10.35) show
+93.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.125 0 m
+.125 .00625 L
+s
+.16667 0 m
+.16667 .00625 L
+s
+.20833 0 m
+.20833 .00625 L
+s
+.25 0 m
+.25 .00625 L
+s
+.29167 0 m
+.29167 .00625 L
+s
+.29167 0 m
+.29167 .00625 L
+s
+gsave
+.29167 -0.0125 -81 -13.8125 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 17.8125 translate 1 -1 scale
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(10.355) show
+99.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.33333 0 m
+.33333 .00625 L
+s
+.375 0 m
+.375 .00625 L
+s
+.41667 0 m
+.41667 .00625 L
+s
+.45833 0 m
+.45833 .00625 L
+s
+.5 0 m
+.5 .00625 L
+s
+.5 0 m
+.5 .00625 L
+s
+gsave
+.5 -0.0125 -78 -13.8125 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 17.8125 translate 1 -1 scale
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(10.36) show
+93.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.54167 0 m
+.54167 .00625 L
+s
+.58333 0 m
+.58333 .00625 L
+s
+.625 0 m
+.625 .00625 L
+s
+.66667 0 m
+.66667 .00625 L
+s
+.70833 0 m
+.70833 .00625 L
+s
+.70833 0 m
+.70833 .00625 L
+s
+gsave
+.70833 -0.0125 -81 -13.8125 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 17.8125 translate 1 -1 scale
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(10.365) show
+99.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.75 0 m
+.75 .00625 L
+s
+.79167 0 m
+.79167 .00625 L
+s
+.83333 0 m
+.83333 .00625 L
+s
+.875 0 m
+.875 .00625 L
+s
+.91667 0 m
+.91667 .00625 L
+s
+.91667 0 m
+.91667 .00625 L
+s
+gsave
+.91667 -0.0125 -78 -13.8125 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 17.8125 translate 1 -1 scale
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(10.37) show
+93.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.95833 0 m
+.95833 .00625 L
+s
+1 0 m
+1 .00625 L
+s
+0 0 m
+1 0 L
+s
+gsave
+.5 -0.0125 -114 -23.9375 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.125 translate 1 -1 scale
+63.000 11.563 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(COM) show
+87.000 11.563 moveto
+(Energy) show
+129.000 11.563 moveto
+(in) show
+147.000 11.563 moveto
+(GeV) show
+165.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 .00012 m
+.00625 .00012 L
+s
+[(3)] -0.0125 .00012 1 0 Mshowa
+0 .12371 m
+.00625 .12371 L
+s
+[(4)] -0.0125 .12371 1 0 Mshowa
+0 .24729 m
+.00625 .24729 L
+s
+[(5)] -0.0125 .24729 1 0 Mshowa
+0 .37087 m
+.00625 .37087 L
+s
+[(6)] -0.0125 .37087 1 0 Mshowa
+0 .49445 m
+.00625 .49445 L
+s
+[(7)] -0.0125 .49445 1 0 Mshowa
+0 .61803 m
+.00625 .61803 L
+s
+[(8)] -0.0125 .61803 1 0 Mshowa
+.125 Mabswid
+0 .02484 m
+.00375 .02484 L
+s
+0 .04956 m
+.00375 .04956 L
+s
+0 .07427 m
+.00375 .07427 L
+s
+0 .09899 m
+.00375 .09899 L
+s
+0 .14842 m
+.00375 .14842 L
+s
+0 .17314 m
+.00375 .17314 L
+s
+0 .19785 m
+.00375 .19785 L
+s
+0 .22257 m
+.00375 .22257 L
+s
+0 .272 m
+.00375 .272 L
+s
+0 .29672 m
+.00375 .29672 L
+s
+0 .32144 m
+.00375 .32144 L
+s
+0 .34615 m
+.00375 .34615 L
+s
+0 .39559 m
+.00375 .39559 L
+s
+0 .4203 m
+.00375 .4203 L
+s
+0 .44502 m
+.00375 .44502 L
+s
+0 .46974 m
+.00375 .46974 L
+s
+0 .51917 m
+.00375 .51917 L
+s
+0 .54388 m
+.00375 .54388 L
+s
+0 .5686 m
+.00375 .5686 L
+s
+0 .59332 m
+.00375 .59332 L
+s
+.25 Mabswid
+0 0 m
+0 .61803 L
+s
+gsave
+-0.01875 .30902 -158.062 -9.0625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+147 9.0625 translate
+90 rotate
+-147 -9.0625 translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.125 translate 1 -1 scale
+63.000 11.563 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(Hadronic) show
+117.000 11.563 moveto
+(Cross) show
+147.000 11.563 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+153.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(section) show
+201.000 11.563 moveto
+(in) show
+219.000 11.563 moveto
+(nb) show
+231.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 .61803 m
+1 .61803 L
+s
+gsave
+.5 .63053 -189 -4 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.125 translate 1 -1 scale
+63.000 11.563 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(All) show
+87.000 11.563 moveto
+(Seven) show
+123.000 11.563 moveto
+(Upsilon) show
+171.000 11.563 moveto
+(3) show
+177.000 11.563 moveto
+(s) show
+189.000 11.563 moveto
+(Scans) show
+231.000 11.563 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(--) show
+243.000 11.563 moveto
+(-) show
+261.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(fits) show
+291.000 11.563 moveto
+(only) show
+315.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+1 0 m
+1 .61803 L
+s
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+1 0 0 r
+.5 Mabswid
+0 .05121 m
+.01975 .05779 L
+.04057 .06625 L
+.08481 .09032 L
+.12477 .12025 L
+.1673 .16129 L
+.20824 .20916 L
+.25176 .2667 L
+.29369 .32464 L
+.33402 .37781 L
+.37693 .42588 L
+.39827 .44478 L
+.41825 .45873 L
+.42806 .46409 L
+.43739 .4682 L
+.44253 .47003 L
+.44814 .47166 L
+.45287 .47276 L
+.45798 .47371 L
+.46088 .47414 L
+.46356 .47446 L
+.46611 .4747 L
+.46742 .4748 L
+.46881 .47489 L
+.47008 .47495 L
+.47123 .475 L
+.4724 .47503 L
+.4735 .47504 L
+.47477 .47505 L
+.47596 .47503 L
+.47726 .475 L
+.47864 .47495 L
+.47999 .47488 L
+.48123 .47479 L
+.48403 .47454 L
+.4865 .47424 L
+.4891 .47385 L
+.49462 .47275 L
+.50066 .47113 L
+.51144 .46709 L
+.52125 .4622 L
+.54325 .4475 L
+.58523 .40957 L
+.62562 .3647 L
+.66858 .31158 L
+.70995 .2606 L
+.74974 .21606 L
+.79209 .17586 L
+.83286 .14472 L
+.8762 .11921 L
+Mistroke
+.91795 .10104 L
+.9581 .08834 L
+1 .07887 L
+Mfstroke
+1 .6 0 r
+0 .05348 m
+.01975 .05945 L
+.04057 .06715 L
+.08481 .08912 L
+.12477 .11663 L
+.1673 .15465 L
+.20824 .19948 L
+.25176 .25409 L
+.29369 .31004 L
+.33402 .36254 L
+.37693 .41156 L
+.39827 .43162 L
+.41825 .44708 L
+.43739 .45841 L
+.44814 .46313 L
+.45798 .4663 L
+.46298 .4675 L
+.46832 .46851 L
+.47091 .46891 L
+.47335 .46923 L
+.47553 .46947 L
+.47791 .46969 L
+.47919 .46978 L
+.48056 .46986 L
+.48132 .4699 L
+.48201 .46992 L
+.48336 .46997 L
+.48459 .46999 L
+.48593 .47 L
+.48719 .46999 L
+.48837 .46997 L
+.48971 .46993 L
+.49097 .46987 L
+.49236 .46979 L
+.49385 .46968 L
+.49689 .46938 L
+.49967 .46902 L
+.50465 .46815 L
+.50997 .46691 L
+.51954 .46382 L
+.53093 .45873 L
+.54128 .45287 L
+.58326 .42006 L
+.62365 .37927 L
+.66661 .32924 L
+.70799 .27919 L
+.74777 .23396 L
+.79013 .19206 L
+.83089 .1589 L
+.87423 .13121 L
+Mistroke
+.91598 .11112 L
+.95614 .09686 L
+.99887 .08595 L
+1 .08571 L
+Mfstroke
+.3 .27 0 r
+0 .05121 m
+.04057 .07023 L
+.08481 .09936 L
+.12636 .13563 L
+.16632 .17859 L
+.20885 .23154 L
+.2498 .28665 L
+.29331 .34494 L
+.33524 .39539 L
+.37557 .43366 L
+.3964 .44808 L
+.40691 .45374 L
+.41284 .45641 L
+.41848 .45859 L
+.42357 .46024 L
+.42913 .4617 L
+.43423 .46276 L
+.43886 .46352 L
+.44151 .46387 L
+.44437 .46417 L
+.44594 .4643 L
+.44739 .4644 L
+.44877 .46448 L
+.44953 .46451 L
+.45023 .46454 L
+.45149 .46458 L
+.45283 .4646 L
+.45408 .4646 L
+.45526 .46459 L
+.45664 .46456 L
+.45791 .46451 L
+.4593 .46444 L
+.46079 .46434 L
+.46329 .46413 L
+.46592 .46382 L
+.47062 .46308 L
+.47569 .462 L
+.48123 .46046 L
+.49117 .45678 L
+.50042 .4523 L
+.5219 .43847 L
+.54142 .42268 L
+.5834 .38151 L
+.62379 .33491 L
+.66676 .2821 L
+.70813 .23331 L
+.74791 .19177 L
+.79027 .15486 L
+.83103 .12658 L
+.87437 .1036 L
+Mistroke
+.91612 .08731 L
+.95628 .07594 L
+.99901 .06729 L
+1 .06712 L
+Mfstroke
+0 .7 .175 r
+0 .05729 m
+.04057 .07746 L
+.08481 .10809 L
+.12636 .14585 L
+.16632 .19013 L
+.20885 .24411 L
+.2498 .29954 L
+.29331 .35726 L
+.33524 .40616 L
+.35443 .42488 L
+.37557 .44208 L
+.3964 .45498 L
+.4078 .46014 L
+.41848 .46363 L
+.42369 .46486 L
+.42938 .46592 L
+.43198 .4663 L
+.43476 .46664 L
+.43737 .4669 L
+.43974 .46707 L
+.44096 .46714 L
+.44225 .46719 L
+.44335 .46723 L
+.44455 .46725 L
+.44585 .46726 L
+.44658 .46726 L
+.44725 .46726 L
+.44854 .46723 L
+.44976 .46719 L
+.4509 .46714 L
+.45211 .46707 L
+.45428 .46691 L
+.45662 .46667 L
+.45919 .46635 L
+.46436 .46546 L
+.46979 .46419 L
+.47951 .46103 L
+.48997 .45636 L
+.50141 .44984 L
+.544 .41596 L
+.58499 .37375 L
+.62857 .32206 L
+.67055 .27052 L
+.71094 .22416 L
+.7539 .1815 L
+.79528 .14794 L
+.83506 .12244 L
+.87741 .10178 L
+.91818 .08718 L
+.96152 .07607 L
+Mistroke
+1 .069 L
+Mfstroke
+0 1 1 r
+0 .06486 m
+.04057 .08573 L
+.08481 .11699 L
+.12636 .15507 L
+.16632 .19925 L
+.20885 .25264 L
+.2498 .30705 L
+.29331 .36335 L
+.33524 .41082 L
+.35443 .42895 L
+.37557 .44558 L
+.3964 .45803 L
+.4078 .463 L
+.41848 .46636 L
+.42369 .46755 L
+.42938 .46857 L
+.43198 .46894 L
+.43476 .46927 L
+.43737 .46951 L
+.43974 .46968 L
+.44096 .46975 L
+.44225 .4698 L
+.44335 .46984 L
+.44455 .46986 L
+.44585 .46987 L
+.44658 .46987 L
+.44725 .46986 L
+.44854 .46984 L
+.44976 .4698 L
+.4509 .46975 L
+.45211 .46968 L
+.45428 .46953 L
+.45662 .4693 L
+.45919 .46898 L
+.46436 .46813 L
+.46979 .46691 L
+.47951 .46386 L
+.48997 .45936 L
+.50141 .45307 L
+.544 .42021 L
+.58499 .3792 L
+.62857 .32882 L
+.67055 .27824 L
+.71094 .23238 L
+.7539 .18981 L
+.79528 .15604 L
+.83506 .13016 L
+.87741 .109 L
+.91818 .09391 L
+.96152 .08233 L
+Mistroke
+1 .07493 L
+Mfstroke
+0 .25 1 r
+0 .05817 m
+.04057 .07844 L
+.08481 .10925 L
+.12636 .14726 L
+.16632 .19184 L
+.20885 .24623 L
+.2498 .3021 L
+.29331 .36029 L
+.33524 .4096 L
+.35443 .42848 L
+.37557 .44583 L
+.3964 .45884 L
+.4078 .46404 L
+.41848 .46756 L
+.42369 .4688 L
+.42938 .46986 L
+.43198 .47025 L
+.43476 .47059 L
+.43737 .47084 L
+.43974 .47102 L
+.44096 .47109 L
+.44225 .47114 L
+.44335 .47118 L
+.44455 .4712 L
+.44585 .47121 L
+.44658 .47121 L
+.44725 .47121 L
+.44854 .47118 L
+.44976 .47114 L
+.4509 .47109 L
+.45211 .47102 L
+.45428 .47085 L
+.45662 .47062 L
+.45919 .47028 L
+.46436 .46939 L
+.46979 .4681 L
+.47951 .46491 L
+.48997 .4602 L
+.50141 .45363 L
+.544 .41944 L
+.58499 .37688 L
+.62857 .32475 L
+.67055 .27281 L
+.71094 .22611 L
+.7539 .18316 L
+.79528 .14939 L
+.83506 .12374 L
+.87741 .10297 L
+.91818 .0883 L
+.96152 .07714 L
+Mistroke
+1 .07005 L
+Mfstroke
+.35 0 .7 r
+0 .06375 m
+.04057 .08489 L
+.08481 .11605 L
+.12636 .15353 L
+.16632 .19666 L
+.20885 .2485 L
+.2498 .3013 L
+.29331 .35619 L
+.33524 .40308 L
+.37557 .43837 L
+.3964 .45161 L
+.40691 .45679 L
+.41284 .45925 L
+.41848 .46124 L
+.42357 .46275 L
+.42913 .46409 L
+.43423 .46508 L
+.43886 .46579 L
+.44151 .46611 L
+.44437 .4664 L
+.44594 .46652 L
+.44739 .46662 L
+.44886 .4667 L
+.45023 .46676 L
+.45141 .46679 L
+.45268 .46682 L
+.4534 .46683 L
+.45408 .46683 L
+.45536 .46682 L
+.45671 .4668 L
+.45796 .46676 L
+.45933 .4667 L
+.46079 .46662 L
+.46329 .46643 L
+.46592 .46617 L
+.47062 .46552 L
+.47569 .46456 L
+.48123 .46319 L
+.49117 .4599 L
+.50042 .45587 L
+.5219 .44328 L
+.54142 .42875 L
+.5834 .39061 L
+.62379 .34718 L
+.66676 .29711 L
+.70813 .24975 L
+.74791 .20842 L
+.79027 .17082 L
+.83103 .1413 L
+.87437 .11667 L
+Mistroke
+.91612 .09872 L
+.95628 .08588 L
+.99901 .07593 L
+1 .07574 L
+Mfstroke
+MathSubEnd
+P
+% End of sub-graphic
+0 g
+.84653 .14004 m
+.84653 .4611 L
+.97619 .4611 L
+.97619 .14004 L
+F
+1 g
+.82646 .1601 m
+.82646 .48117 L
+.95612 .48117 L
+.95612 .1601 L
+F
+0 g
+.001 w
+[ ] 0 setdash
+.82646 .1601 m
+.95612 .1601 L
+.95612 .48117 L
+.82646 .48117 L
+.82646 .1601 L
+s
+% Start of sub-graphic
+p
+0.826464 0.160104 0.956124 0.481166 MathSubStart
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.0297619 0.297619 0.0297619 0.297619 [
+[ 0 0 0 0 ]
+[ 1 2.47619 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 0 m
+1 0 L
+1 2.47619 L
+0 2.47619 L
+closepath
+clip
+newpath
+% Start of sub-graphic
+p
+0.0535714 0.0535714 0.35119 0.35119 MathSubStart
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.0238095 0.952381 0.309017 0.294302 [
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+.35 0 .7 r
+.5 Mabswid
+[ ] 0 setdash
+.02381 .30902 m
+.97619 .30902 L
+s
+MathSubEnd
+P
+% End of sub-graphic
+0 g
+gsave
+.38988 .20238 -61 -8.90625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 17.8125 translate 1 -1 scale
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(01) show
+75.000 11.250 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+81.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(10) show
+93.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+% Start of sub-graphic
+p
+0.0535714 0.39881 0.35119 0.696429 MathSubStart
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.0238095 0.952381 0.309017 0.294302 [
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+0 .25 1 r
+.5 Mabswid
+[ ] 0 setdash
+.02381 .30902 m
+.97619 .30902 L
+s
+MathSubEnd
+P
+% End of sub-graphic
+0 g
+gsave
+.38988 .54762 -61 -8.90625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 17.8125 translate 1 -1 scale
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(01) show
+75.000 11.250 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+81.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(03) show
+93.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+% Start of sub-graphic
+p
+0.0535714 0.744048 0.35119 1.04167 MathSubStart
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.0238095 0.952381 0.309017 0.294302 [
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+0 1 1 r
+.5 Mabswid
+[ ] 0 setdash
+.02381 .30902 m
+.97619 .30902 L
+s
+MathSubEnd
+P
+% End of sub-graphic
+0 g
+gsave
+.38988 .89286 -61 -8.90625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 17.8125 translate 1 -1 scale
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(12) show
+75.000 11.250 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+81.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(25) show
+93.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+% Start of sub-graphic
+p
+0.0535714 1.08929 0.35119 1.3869 MathSubStart
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.0238095 0.952381 0.309017 0.294302 [
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+0 .7 .175 r
+.5 Mabswid
+[ ] 0 setdash
+.02381 .30902 m
+.97619 .30902 L
+s
+MathSubEnd
+P
+% End of sub-graphic
+0 g
+gsave
+.38988 1.2381 -61 -8.90625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 17.8125 translate 1 -1 scale
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(12) show
+75.000 11.250 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+81.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(20) show
+93.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+% Start of sub-graphic
+p
+0.0535714 1.43452 0.35119 1.73214 MathSubStart
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.0238095 0.952381 0.309017 0.294302 [
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+.3 .27 0 r
+.5 Mabswid
+[ ] 0 setdash
+.02381 .30902 m
+.97619 .30902 L
+s
+MathSubEnd
+P
+% End of sub-graphic
+0 g
+gsave
+.38988 1.58333 -61 -8.90625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 17.8125 translate 1 -1 scale
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(12) show
+75.000 11.250 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+81.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(13) show
+93.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+% Start of sub-graphic
+p
+0.0535714 1.77976 0.35119 2.07738 MathSubStart
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.0238095 0.952381 0.309017 0.294302 [
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+1 .6 0 r
+.5 Mabswid
+[ ] 0 setdash
+.02381 .30902 m
+.97619 .30902 L
+s
+MathSubEnd
+P
+% End of sub-graphic
+0 g
+gsave
+.38988 1.92857 -61 -8.90625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 17.8125 translate 1 -1 scale
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(12) show
+75.000 11.250 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+81.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(06) show
+93.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+% Start of sub-graphic
+p
+0.0535714 2.125 0.35119 2.42262 MathSubStart
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.0238095 0.952381 0.309017 0.294302 [
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+1 0 0 r
+.5 Mabswid
+[ ] 0 setdash
+.02381 .30902 m
+.97619 .30902 L
+s
+MathSubEnd
+P
+% End of sub-graphic
+0 g
+gsave
+.38988 2.27381 -61 -8.90625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 17.8125 translate 1 -1 scale
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(11) show
+75.000 11.250 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+81.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(29) show
+93.000 11.250 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+MathSubEnd
+P
+% End of sub-graphic
+0 0 m
+1 0 L
+1 .52087 L
+0 .52087 L
+closepath
+clip
+newpath
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+  ImageSize->{679.75, 354},
+  ImageMargins->{{0, 0}, {0, 1}},
+  ImageRegion->{{0, 1}, {0, 1}},
+  ImageCache->GraphicsData["Bitmap", "\<\
+CF5dJ6E]HGAYHf4PAg9QL6QYHg<PAVmbKF5d0`4000:W0001HPP10`4000010?ooo`000063aP00002h
+Z2iLF0EkL:Cek/c<c6IVIXR8R?GemLZZTD]RM^[Mdg=QDZbANl30`61PH4iJJJ:ecH20P000ogmoO`00
+Rooo003o0000P8:2PZJVYU=CDnWYjG5aJG5aFG5YJG5Y@FUY>6UQFFUQ@FUQ:6UIHFUIDFUI>6UA@FUA
+86U9HFU9FFU9BF5QJF59:6596651>651064`FEUQ@EUIFEUAJEUABEUA>5U9<5U9:5U945U1FEU1BEU1
+05ThDETh@ETh<5Th85Th655A454h254X854X654PDE4PBDUADDUABDU9:4U1HDU1FDU1>4U104Th<4Th
+04TXDDTX<4TX24TP84TH64T84451BD51644hBD4h844h644`HD4`FD4PBD4P644H>44@844@23QA83Q1
+@CQ1>3Q183Q103PhDCPh<3Ph03P`83PX@CPX<3PX63PX03PH<3PH63PH23P883P823P0430h@C0`HC0P
+830H82Q182Ph<2Ph42Ph02P`@BP`82PXDBPPBBPP62PH62P@<2P@02P8:2P0420X<20X820X220@8200
+21P`<1P`01P@<1P@21P881P0410X:10P610P210H810@610020P@40P@00P8:0006?GN/m:dS4PmReE[
+;om50?nPNP3ook34gXO>n^kMPYSkV7ooe?o0bc;=<VUYJM?Cdol00:gHiP00E@00ZP1E001EE@1EZP1E
+o`2Z002ZE@2ZZP2Zo`3oE@3oZUD005D0EED0ZUD0oeEE05EEEEEEZUEEoeFZ05FZEEFZZUFZoeGo05Go
+EEGoZUGoojX00:X0EJX0ZZX0ojYE0:YEEJYEZZYEojZZ0:ZZEJZZZZZZoj[o0:[oEJ[oZZ[oool0EOl0
+Z_l0oomE0?mEEOmEZ_mEoonZ0?nZEOnZZ_nZooooEOooZ/BbShMjH^OWifm_Kj>SXiT0I_ooc80003<c
+IVIVc9VIob8R8X200020P4:JY`0g?0200?mV<omVc<c<ool0o`2Y0000o`3o0:T0003o0?l0Z@000?l0
+o`2Y0000o`3o0:T0003o0?l0Z@000?l0o`2Y0000o`3o0:T0003o0?l0Z@000?l0o`2Y0000o`0/00<1
+0P020Ol0MP000?l0;`001@4000010?l0M@000?`00P4400810P020@03004100L01@401@010@400081
+0P030@80104300<10`020@T020400`010@08008110030@<000<10000o`190000n`00104000420006
+0@000@010`000`40000600040@000@8000@100010P000`40000400030@00008000@100010P001040
+004:00050@0000400P000`40000600040@000@8000<100000`000`400@3o04X0003k00030@0000<0
+00X1000100400@0120000`40000300040@000@800`4400030@00008000@100010P001040004:0005
+0@0000400P000`40000600040@010@800`4300030@010?l0BP000?/000<100000`002P4000400@01
+004800<10`001040004200040@000@<000<100000P001040004200040@000@X000D100000@020003
+0@0000H000<100000`001040004200030@010?l0BP000?/000@100010P001@400040008100<00@40
+20001`4000400@000P4400810`000`400@020@800P401@010@4000812@020@8000@100412@001040
+004300810P001@4000010?l0B@000?`00P4400810P001@40000100L01@4i008120020@0300410?l0
+B@000?l0@0000`40003o06H0003o0?l0Z@000?l0o`2Y0000o`3o0:T0003o0?l0Z@0005P010430081
+10000`40000300810`030DD01043008110000`40000300810`030@<00`5600@10`020@@000<10000
+0`020@@00P5500@10`020@@000<100000`020@@00P4300<1A@040@<00P4400030@0000<00P440003
+0@000:H0001J00050@0000400P000`40000600040@000@D000<10000A0001@400001008000<10000
+1P001040004500030@0000<000<10000A@001@400001008000<100001P001040004200040@000DH0
+00D100000@0200030@0000H000@100010P001040004500030@0004@000D100000@0200030@0000H0
+00@100010`000`40002V0000FP001@400001008000<100002@000`40000300030@0004@000D10000
+0@0200030@0000T000<100000`000`40000300030@0004D000D100000@0200030@0000T000@10001
+0P000`40001400050@0000400P000`40000900040@000@8000<100000`000`40001400050@000040
+0P000`40000900030@00008000<10000Y@0005X000D100000@0200030@0000L00P4300<1A`001@40
+0001008000<100001`020@<00`4300<1B0001@400001008000<100001`020@<00`5700050@000040
+0P000`40000700810`030@<00`5700050@0000400P000`40000700811@000`40002U0000FP001@40
+0001008000<100002@001040005900050@0000400P000`40000900040@000@D000<10000B0001@40
+0001008000<100002@001040005900050@0000400P000`40000900040@000@D000<10000A`001@40
+0001008000<100002@000`40000300030@000:@0001H00<10`001040004800040@000@8000<10000
+A@030@<000@1000120001040004200030@0000<000<10000AP030@<000@100012000104000420003
+0@0004D00`4300040@000@P000@100010P000`40000300030@0004D00`4300040@000@P000@10001
+0P001040006V0000FP000`40000200812P020@<0105600030@0000800P4:00810`040@8010570003
+0@0000800P4:008110030DH000<100000P020@X00P4400<10P040DH000<100000P020@X00P4300@1
+YP000?l0o`2Y0000o`3o0:T0003o0?l0Z@0003D00P7o0?l0LP0003@000@10001o`3o0740000g0003
+0@0000D0o`7N0H/0000e008120000`40000T00030@00014000<100004@000`40000A00030@000140
+00<1000040000`40000A00030@00014000<100004@000`40000A00030@00014000<1000040000`40
+000A00030@00014000<100004@000`40000A00030@00014000<1000040000`40000A00030@000140
+00<100004@000`40000A00030@00014000<10000R@0003L000<100001@000`40000T00030@000140
+00<100004@000`40000A00030@00014000<1000040000`40000A00030@00014000<100004@000`40
+000A00030@00014000<1000040000`40000A00030@00014000<100004@000`40000A00030@000140
+00<1000040000`40000A00030@00014000<100004@000`40000A00030@00014000<10000R@0003@0
+00@100011`000`40000T00030@00014000<100004@000`40000A00030@00014000<1000040000`40
+000A00030@00014000<100004@000`40000A00030@00014000<1000040000`40000A00030@000140
+00<100004@000`40000A00030@00014000<1000040000`40000A00030@00014000<100004@000`40
+000A00030@00014000<10000R@0003D00P4800030@000?l0fP000`4000290000?`000`40003o0=X0
+00<10000R@0003l000<10000o`3J00030@0008T0000o00030@000?l0fP000`4000290000?`000`40
+003o0=X000<10000R@0003l000<10000o`3J00030@0008T0000o00030@000?l0fP000`4000290000
+?`000`40003o0=X000<10000R@0003l00P7o0=/000<10000R@0003l000<10000o`3J00030@0008T0
+000o00030@000?l0fP000`4000290000?`000`40003o0=X000<10000R@0003l000<10000o`3J0003
+0@0008T0000o00030@000?l0fP000`4000290000?`000`40003o0=X000<10000R@0003l000<10000
+o`3J00030@0008T0000o00030@000?l0fP000`4000290000?`000`40003o0=X000<10000R@0003l0
+00<10000o`3J00030@0008T0000o0081o`3K00030@0008T0000o00;3o`3K00030@0008T0000o0005
+i^;30K40o`3H00030@0008T0000o00040@3ViP;30[7o0=D000<10000R@0003l000>j00000P000n;3
+0@03/Ol0dP000`4000290000?`02^003^@0000<00/<00nJa/@3o0=0000<10000R@0003l000D10;PF
+^P050003``7V00>ao`3=00030@0008T0000o0004`@0000:h00>i00000`02``;V0[7o0</000<10000
+R@0003l000>W`L400`000kPF^P050004``7VhP:ao`3900030@0008T0000o00050JNW`/400`02^003
+^@0000<00/<3iP03/@000?l0`P04`h/0000o00030@0000:W0/430003^1Jj00D000K30@3Ri[7o0;d0
+00W30L<1`kVh5[P0R`0003l000<100000P02Y`03`/4000800[P00kT0000300;300@0i^Jao`2f00C3
+00>m^KP01;P200030@0008T0000o00811@02Y`;10`000kPF^P050005``00h^H0o`2`000;``73^KZi
+^QJh5[P01@03Yh/0000o00030@0000H00ZL00l;1000200:h00>i00000P02``800^Ko0:X000K3_KVm
+^Kd5^0@01:L01<;1`/6;0000?`000`40000800:W0/430003^1H000@000H10000h^Ko0:@000[3^KZi
+^QJh5[PF1@04Y`C100@0/K6aR`0003l000<100002P02Y`03`/4000800[P400;30`02i_l0WP001L>m
+^Kfi00Bh1@05Y`05`/72`@001;4200030@0008T0000o00030@0000`00ZL2`@<000>h00000`000l<0
+00020003h^H00?l0U`002L>i^[Vj5[PF^00500BW00<0`L400/400`2a/@02/@H000<10000R@0003l0
+00<100003P02Y`06`P000;Ri1002``<000>ai^H0o`2B0005`kfi_KT01;P500BW00H0`/72`@04/@X0
+00<10000R@0003l000<1000040000jO1`@020003^1H000@000<100000P000k7RiP3o08d000P1^[Vj
+5[PF^0H00jL200?100<0/K400[4;0004h^KRiX/0000o00030@0001400ZL01/40002h_@@00/<40003
+/NKV0?l0R@000kfi_@03^0L00jL20004`/7200>a2`04iP<000<10000R@0003l000<100004`000jO1
+000200035[P000@000?300000`000k7RiP3o08@000Jj^KXF^1H600BW0P03`@040;6a/@X000CRi^;V
+1`000`4000290000?`000`40000D0003Yl7200<000>h^@000`02``@00[400nH0003o07h000>m^Kd0
+0kP600>W0P001L72`L8000>a2@04iP/000<10000R@0003l000<100005@02Y`06`@000;Ri1@000`40
+00030003/NKR0?l0O0001KVj5[PF00H00jL200?100<0/K400[480004h^KRiPl000<10000R@0003l0
+00<100005`000jO2`@0200:h00>m00000P02``@000>a0>H0o`1h0003^Kfi00:h1P03Y`8000C1`/40
+0k4900?V4`000`4000290000?`020AT00ZL01/40000F^PD000?300000P02/@03h^H00?l0LP001[Vj
+^KPF^0D00jL200?100@0/K6a2@000n;VhP0F00030@0008T0000o00030@0001X000>W`@000P02^003
+^@00008000?300000`000k40iP3o06l000>i_KT00kP500>W0`000l;10003/@X00^HI00030@0008T0
+000o00030@0001/000>W`L400`000kRi00030003``0000<000>a0>H0o`1/0005^[Vh5[P01P02Y`<0
+0l400`2a/@0:0003i^;V01/000<10000R@0003l000<100007002Y`07`P000;Ri_@0300;31002/@;V
+o`1X0004^Kfh^0H00jL30004`L8000:a2@03iQh000<10000R@0003l000<100007P000jO1`@020003
+^1Jj00@000<100000`000k40hP3o06D000Bj^KPF1@03Y`<00l4200:a2@000n;V000P00030@0008T0
+000o00030@0001l00ZL01/40002h_@@000?300000`001;40i^Ko064000Bi_KRh1003Y`@000C2`@00
+0k4800?V8`000`4000290000?`000`40000Q0003Yl40008000<F^P000`000`40000300:a00<0iP00
+o`1M0004^[Vh5P@00ZL400?10P02/@P000?Ri^809P000`4000290000?`000`40000R0003Yl720080
+00>h_@000`000l<000040004/@3Vi_l0FP001;Vm^;P400:W10000l72000200:a2002iRT000<10000
+R@0003l000<100008`02Y`05`@005[X010000`4000040004/@00h_l0E`001;Zi^1H400:W1002`@<0
+0[480003h^H002X000<10000R@0003l000<100009@001jO2002h_KT00`02``D00[400`3V003o05<0
+00Bi_KRh1002Y`@000?1`P000P02/@P00^H]00030@0008T0000f00030@0000H000<100009P001jO1
+000F^;T010000l<000040003/@3R0?l0D@001;Zi^1H400:W1002`@<00[470003i^;V02l000<10000
+R@0003H000<100001P000`40000W0003Yl80008000>h^@000`000l<000040003/@3V0?l0C`000kfh
+^00400:W10000l72000200:a1`02iS8000<10000R@0003<01@4700@19`000jO100020003^;T000<0
+00?3000010000k40hP3o04`000>i^QH01002Y`D000C100000[470003i^8003<000<10000R@0003<0
+00@1000120000`40000Y0003Yl;1008000>h^@000`000l<000040004/@3Vi_l0B@000kVh^00300:W
+1@001<;10002/@L00^Hf00030@0008T0000d00030@0100P000<10000:P02Y`05`@00^;T010000l<1
+00040004/@00i_l0AP000kZi^00300:W1@02`@<000>a00001@000nKR000g00030@000200F04A0000
+=@020@P000<10000;0001ZO1002h^@D000?300000`001;400>Ko04<000Bi_KRh0`000jL000030003
+`/4000800[4600;V>P000`40000P05P14@0003H000<100001P000`40000]0006Yl400;Ri1@000`40
+00030004/@00i_l0@@000kVh5P0300:W1@001<400002/@H000?VhP00>`000`40000P05P14@0002d0
+0P42008130000`40000^0006Yl400;Ri1@000l<000030004/@00i_l0?P001;fi^<<30003Y`0000<0
+00C1`P000[4600;V?P000`40000P05P14@0002h000@100013@000`40000_0007Yl400;Ri^P040003
+0@0000<000Ba003Vo`0l0003^QJh00<00ZL400;10`000k4000050003hP0003h000<10000801H0A40
+000^00040@000@d000<10000<0001:O10002^003_@00008000?300000`001;400>Ko03T000Bi_KS3
+0P02Y`@000?1`P000P02/@H00^I100030@000200F04A0000;P040@d000<10000<@000jO100020003
+5[X000<000<100000`001;400>Ko03H000Fj^KPF``020003Y`0000<000C100000[470003iP000440
+00<10000801H0A40000^00040@000@d000<10000<P000jO100020003^;d000<000?300000`001;40
+0>Ko03@000Bm^;S30P02Y`@000C2`@000[4700;VA0000`40000P05P14@0002d00P42008130000`40
+000c0003Yl71008000<F^P000`000`4000030005/@00i^80o`0`0005^KXF00400P000jL000030005
+`@000;401`000nKR001500030@000200F04A0000;`020@03004000/00P4e00:W00G2002h_@030003
+``0000@000Fa0000iP3o02h000>i^;P00/<00`2WY`050005`P000;401`000nH0001600030@000200
+F04A0000;P001040004=00030@0003H000JW`@005[X30003``0000@000Fa0000hP3o02`000Fi^033
+0002Y`D00/4200:a1P000n;V001800030@000200F04A0000;`030@d000<10000=`001ZO2002h_@<0
+00?3000010001K40003V0?l0:@001kfi^0330:L01P001L40002a00L000?V0000B@000`40000P05P1
+4@00034000<100002`000`40000h0006Yl4001Jj0`000l<000040005/@000>80o`0W0005^QJh0L<0
+0ZL60005`@000;401P000nKR001;00030@000200F04A0000;`020@h000<10000>@001ZO2002h_@<0
+00?3000010001K40003V0?l09@001[fh0<<0Y`H000?2`@000P000k40000300;VCP000`40000B06H1
+4@0003l000<10000>P001JO1000F00@000?3000010001K40003R0?l08`001[XF0040Y`H000C10000
+0[450003hP0004h000<100004P000`40001E00h14@0002l00P400`01000;00030@0003/000FW`P2h
+^@040003``0000@000Fa0000iP3o020000Fi_KP0``02Y`H000G20000/@060003iP0004l000<10000
+4P000`40001E00h14@0002h000@100013@000`40000l0005Yl40^;T010000l<000040005/@000>80
+o`0N0006^KPF``6W1P02`@<000>a000010000n80001@00030@00018000<10000E@0>0A40000^0004
+0@000@d000<10000?@001JO20;Ri00@000?3000010001K40003V0?l070001[Vh0<<0Y`H000C10000
+0[4500;VD`000`40000B00030@0005D03P4A0000;P001040004=00030@0003h000FW`@2h^@040003
+``0000@000Ba003Vo`0K0006^KP0``2W1P001L40002a00H000?V0000D`000`40000B00030@0005D0
+3P4A0000;`030@d000<10000?P001ZL0`P2h^@<000?300001@001;400>Ko01P000Fm^KP0``02Y`D0
+00?2`@000P000k4000040003iP0005@000<100004P000`40001E00h14@00034000<100002`000`40
+000o0006Y`310;Ri0`000`4000050004/@00i_l05P001[XF^033Y`H000?100000P000k4000040003
+iP0005D000<100004P000`40001E00h14@0002h0104=0081@@001ZL0`P2h^@<000?300001@001;40
+0>Ko01@000>m^0000/<00jL000040004`P0000:a1P000nH0001F00030@00018000<10000E@0>0A40
+000_00030@0000d000<10000@@001ZL0`@2h^@<000<1000010001K40003V0?l04P001[XF0040Y`H0
+00G10000/@060003h^H005P000<100004P000`40001E00h14@0002l000<100003@000`4000120006
+Yl400;Ri0`000l<000040005/@000>H0o`0?0005^Kfh0<<00ZL60005`P000;401P000nH0001I0003
+0@00018000<10000E@0>0A40000_00030@0000d000<10000@`001JO1002h00@000<1000010001K40
+003V0?l03@001[Vh5P01Y`H00/430003/@0000@000?R0000FP000`40000B00030@0005D03P4A0000
+;P000`400@020@`000<10000A0001JO10;Rm00@000?3000010001K40003V0?l02`001[Vh0033Y`H0
+00?100000P000k4000040003iP0005/000<100004P000`40001E00h14@0003l000<10000A@001JO1
+01Jj00@000<1000010001K40003V0?l02@001[Vh0001Y`H000?100000P000k4000040003hP0005`0
+00<100004P000`40001E00h14@0002l00P4>00030@0004H000FW`@2h_@030003``0000D000Fa0000
+iP3o00L000Bi^0330ZL60003`@00008000>a00000`02iUl000<100004P000`40001E00h14@0002h0
+00@100013@000`4000170005Yl405[X00`000l<000050005/@000>H0o`050005^KP0`jL01`001<40
+0002/@D000?V0000G`000`40000B00030@0005D03P4A0000;P001040004=00030@0004L000JW0<40
+^;d30003``0000D000Ba003Vo`040005^KP0`jL01`001L40002a00H000?V0000H0000`40000B0003
+0@0002<00P4300@120040@<00P4H00h14@0002h000@100013@000`4000180006Y`3101Jj0`000l<0
+00050004/@00h_l00P001KVh0<>W00L000G10000/@060003iP00064000<100004P000`40000R0004
+0@000@@000<100002@001@400001008000<100005@0>0A40000_00813P000`4000190006Y`310;Rm
+0`000l<000050004/@00i_l000Fi^033Y`070005`@000;401P000nH0001R00030@00018000<10000
+0P006/72`L;1`/72`L;1`/72`L;1`/72`L;1`/721P001040004400040@0000@110001@4000010080
+00<100005@0>0A40000o00030@0004X000FW0<405P0300030@0000H000Ba003Ro@001KVh0<>W00L0
+00G10000/@060003iP0006<000<100004P000`40000R00040@000@@000<100002@001@4000010080
+00<100005@0>0A40000]00<100<00@4030020D`000FW0<6h^@030003``0000D000Fa0000iP3k0005
+^KP0`jL01P000l;100020003/@0000@000?V0000I0000`40000B00030@00028000@1000110000`40
+000900050@0000400P000`40000E00h14@0002h000@100013@000`40001<0005Y`31^;T00`000`40
+00050005/@000>80n@001KVh0<>W00H000?100000P000k4000040003iP0006D000<100004P000`40
+000R00040@000@800`4900<10`001040004G00h14@0002h000@100013@000`40001=0005Yl80^;T0
+0`000l<000050005/@000>H0m`001KVh0<>W00H000?200000P000k4000040003iP0006H000<10000
+4P000`40000S00811@000`40000900030@0000800P4H00h14@0002h000@100013@000`40001>0004
+Yl40^0@000<100001@001K40003R0?H000Bh0<>W1P000l4000020003/@0000@000?V0000I`000`40
+000B00030@0005D03P4A0000;@0010400@4>00030@0004h000FW0<:h_@030003``0000H000Ba003V
+m@001;P0`jL60004`P0000:a1P000nH0001X00030@00018000<10000E@0>0A40000o00030@0004l0
+00FW0<4F^P030003``0000H000Ba003Vl`001;P0`jL60005`@000;401`000nH0001Y00030@000180
+00<10000E@0>0A40000^00D130000`40001@0005Y`32^;d00`000l<000060004/@00i_4000Bh0<>W
+1P001L80002a00L000?V0000JP000`40000B00030@0005D03P4A0000<0000`40000<00030@000540
+00BW`@0F10000l<000050005/@000>H0k`001;P00:L60005`@000;401`000nH0001[00030@000180
+00<10000E@0>0A40000`00030@0000`000<10000DP001:O1^;T40003``0000D000Ba003VkP001;P0
+0:L60005`P000;401`000nH0001/00030@00018000<10000E@0>0A40000`00030@0000`000<10000
+DP001JL0`KRi00<000<100001P001;400>;/0004^000Y`H000G10000/@070003iP0006d000<10000
+4P000`40001E00h14@0002l00P4>00030@0005<000FW0<6h^@030003``0000H000Ba003VjP001;P0
+0:L60005`P000;401`000nH0001^00030@00018000<10000E@0>0A40000o00030@0005@000FW0<6h
+^@0300030@0000D000Fa0000hP3X0004^000Y`H000G10000/@070003iP0006l000<100004P000`40
+001E00h14@0002l00P4>0081EP001:O20;P40003``0000D000Ba003Vi`001;P00:L60005`P000;40
+1`000nH0001`00030@00018000<10000E@0>0A40000^00040@000@d000<10000EP001:O15[X40003
+0@0000D000Ba003Vi@001;P00:L60003`@00008000>a000010000nH0001a00030@00018000<10000
+E@0>0A40000^00030@0000h000<10000EP001JL0`[Rm00<000?300001@001K40003V0><000Bh002W
+1P000l8000020003/@0000@000?V0000LP000`40000B00030@0005D03P4A0000;P001040004=0003
+0@0005L000FW0<4F^P030003``0000D000Fa0000iP3Q0004^000Y`L000G10000/@060003iP0007<0
+00<100004P000`40001E00h14@0002l00P4>00030@0005P000BW0<:h10000l<000050005/@000>H0
+g`001;fh0:L70005`@000;401P000nH0001d00030@00018000<10000E@0>0A40000o00030@0005T0
+00BW`KRi10000l<000050004/@00h]l000<F0:L01`001L40002a00H000?V0000M@000`40000B0003
+0@0005D03P4A0000?`000`40001J0004Yl6h^@<000?300001@001K40003V0=d000>h0:L01`001L40
+002a00H000?V0000MP000`40000B00030@0005D03P4A0000?`000`40001J0005Y`31^;T00`000`40
+00050005/@000>80f`000aH0Y`070005`@000;401P000nH0001g00030@00018000<10000E@0>0A40
+000o00030@0005/000BW0<6h10000l<000050005/@000>H0f@001;P0`jL60003`@00008000>a0000
+0`000nH0001h00030@00018000<10000E@0>0A40000o00030@0005`000BW0<6j10000`4000040005
+/@000>H0f00011H00:L60003`@00008000>a000010000n80001h00030@00018000<10000E@0>0A40
+000d00<120000`40001M0004Yl:h_@<000?300001@001K40003V0=H000Bi^02W1P000l4000020003
+/@0000@000?V0000N@000`40000B00030@0005D03P4A0000=`000`40000500030@0005h000BW`AJj
+0`000l<000050005/@000>H0e0001;Vh0:L60003`@00008000>a000010000n80001j00030@000180
+00<10000E@0>0A40000_00811P000`40000500@1G@001:L0`[P40003``0000D000Fa0000iP3C0003
+^02W00H000?100000P000k4000040003iP0007/000<100004P000`40001E00h14@0002h000@10001
+0P030@P000<10000G`001:L0`KT40003``0000@000Fa0000hP3B0003^02W00H000?100000P000k40
+00040003hP0007`000<100004P000`40001E00h14@0002h000<100000`000`40000800030@000600
+00BW0<:i0`000l<000050005/@000>H0d0000kP0Y`060003`@00008000>a000010000nH0001m0003
+0@00018000<10000E@0>0A40000^00030@0000<000<1000020000`40001Q0004Yl6h^@<000<10000
+1@001K40003R0<h000Bh0<>W1@000l4000030003/@0000<000?R0000OP000`40000B00030@0002<0
+0P4300@12@020@@00P4H00h14@0002h000@100010P040@L000<10000H@001:L0`KP40003``0000@0
+00>a00000P000nH0003:0004_KS3Y`D000?100000`000k4000040003iP0007h000<100004P000`40
+000201Zh1P001040004400030@0000L000@100010P001040004G00h14@0002l00P4>00030@000680
+00BW0<6j10000`4000040003/@00008000?R0000b0001;XF0:L50003`@0000<000>a000010000nH0
+001o00030@00018000<100008P001040004400040@0000@10P001040004500030@0001D03P4A0000
+;P040@d000<10000H`001:L0`Kd30003``0000D000Fa0000iP390004_KP0Y`D000?100000`000k40
+00040003iP00080000<100004P000`40000R00040@000@@000<100001`00104000430081600>0A40
+000_00030@0000d000<10000I0001:O15[X30003``0000D000Fa0000iP370004^QH0Y`H000?10000
+0P000k4000040003iP00084000<100004P000`40000R00040@000@@000<100001`00104000450003
+0@0001D03P4A0000;`000`40000=00030@0006@000BW0<:i10000l<000040003/@00008000?V0000
+a0000kP0Y`060003`P00008000>a000010000nH0002200030@00018000<100008P001040004200<1
+2@001040004200040@000AL03P4A0000;`000`40000=00030@0006D000BW0<6i0`000`4000050003
+/@00008000?V0000`P000aH0Y`060003`@0000<000>a00000`000nH0002300030@00018000<10000
+8`020@D000<1000020020@@00P4H00h14@0002h000<100400P4<00030@0006H000BW0<:i0`000l<0
+00050005/@000>H0``000kVhY`060003`P0000<000>a00000`000nH0002400030@00018000<10000
+E@0>0A40000o0081J0001:O10;T300030@0000@000>a00000P000n80002o0004^KP1Y`D000?10000
+0`000k4000030003iP0008D000<100004P000`40001E00h14@0002l00P4>00030@0006L000BW0<6m
+10000l<000040003/@00008000?V0000_@001;Vh`jL50003`P0000<000>a000010000nH000250003
+0@00018000<10000E@0>0A40000^00040@000@d000<10000J0001:L0`KX30003``0000D000>a0000
+0P000n80002k0004^KP0Y`D000?100000`000k4000040003hP0008H000<100004P000`40001E00h1
+4@0002h000@100013@000`40001Y0004Y`31_@<000?300001@001K40003V0;d000>h0:L01@000l80
+00030003/@0000@000?V0000Q`000`40000B00030@0005D03P4A0000;P001040004=00030@0006X0
+00>W`KT010000l<000040003/@00008000?V0000^@000kXFY`050003`@0000@000>a00000`000n80
+002800030@00018000<10000E@0>0A40000_00813P000`40001Z0004Y`32^@@000?3000010000k40
+00020003iP000;L000>m^:L01@000l8000040003/@0000<000?V0000R@000`40000B00030@0005D0
+3P4A0000?`000`40001[0004Y`31^@<000<100001@000k4000020003iP000;D000Bj5/>W10000l40
+00040003/@0000<000?R0000RP000`40000B00030@0005D03P4A0000;P030@h000<10000K0001:Nh
+`[T30003``0000D000>a00000P000nH0002c0004_KS3Y`D000?100000`000k4000040003iP0008X0
+00<100004P000`40001E00h14@00034000<100002`000`40001/0004Y`31^P@000<1000010000k40
+00020003hP000;8000Bj5/>W1@000l4000030003/@0000@000?V0000R`000`40000B00030@0005D0
+3P4A0000;`020@h000<10000K@001:L0`Kd40003``0000@000>a00000P000nH0002a0003^02W00D0
+00?100000`000k4000040003iP0008`000<100004P000`40001E00h14@0002h000<100003P000`40
+001^0004YkS1^P<000?300001@000k4000020003hP000:l000>i^:L01@000l4000040003/@0000<0
+00?V0000S@000`40000B00030@0005D03P4A0000;`030@d000<10000K`001:Nh`Kd30003``0000D0
+00>a00000P000nH0002]0003^KRW00D000?1000010000k4000030003iP0008h000<100004P000`40
+001E00h14@0003l00P5`0004Y`31^@@000?3000010000k4000020003iP000:`000Bi^06W10000l40
+00040003/@0000<000?V0000S`000`40000B00030@0005D03P4A0000;P030@h000<10000L0001:L0
+`[T40003``0000@000>a00000P000nH0002Z0004^KS3Y`@000?1000010000k4000040003iP0008l0
+00<100004P000`40001E00h14@00034000<100002`000`40001a0004YaK1^@<000<100001@000k40
+00020003iP000:P000Bi^06W10000l4000040003/@0000@000?R0000T0000`40000B00030@0005D0
+3P4A0000;`020@h000<10000LP001:Nh`[T30003``0000D000>a00000P000nH0002W0003^02W00@0
+00?1000010000k4000040003iP00094000<100004P000`40001E00h14@0002h000<100003P000`40
+001b0004Y`0F`@@000<1000010000k4000020003hP000:H000>j5ZL01@000l4000040003/@0000<0
+00?R0000TP000`40000B00030@0005D03P4A0000;`030@d000<10000L`001:L0`Kd40003``0000@0
+00>a00000P000nH0002T0003_KRW00D000?2000010000k4000030003iP0009<000<100004P000`40
+001E00h14@0003l000<10000M0001:Nh`KX30003``0000D000>a00000P000n80002R0004^QK3Y`@0
+00?1000010000k4000030003hP0009@000<100004P000`40001E00h14@0003l000<10000M@001:Nh
+`Kd30003``0000D000>a00000P000nH0002P0004_KS3Y`@000?2000010000k4000040003iP0009@0
+00<100004P000`40001E00h14@0003l000<10000M@001:L0^<440003``0000@000>a00000`000n80
+002N0004^QK3Y`@000?1000010000k4000040003iP0009D000<100004P000`40001E00h14@0002h0
+104=00030@0007H000BW0;S110000l<000040003/@00008000?V0000WP000kP0Y`040003`P0000@0
+00>a000010000nH0002F00030@00018000<10000E@0>0A40000o00030@0007L000BW5/6i0`000`40
+00050003/@00008000?V0000W0000kVhY`040003`@0000@000>a000010000nH0002G00030@000180
+00<100008P040@80104800@10P030AP03P4A0000?`000`40001h0004YkS2^@<000?300001@000k40
+00020003iP0009X000>i^:L010000l8000050003/@0000<000?V0000V0000`40000B00030@0002@0
+00D100000@0;00030@0000H000<100005@0>0A40000o0081N@001:L05/4400030@0000@000>a0000
+0`000nH0002H0004^KP1Y`@000?1000010000k4000030003iP0009T000<100004P000`40000201ZW
+20000`40000200030@000080104300030@0000D000<100005@0>0A40000^00<13P000`40001i0004
+Y`2h`P@000?3000010000k4000030003iP0009H000Bi^<>W10000l4000040003/@0000@000?V0000
+V@000`40000B00030@0002@000<100000`000`40000900040@0000<1600>0A40000a00030@0000/0
+00<10000NP001:L05/430003``0000D000>a00000P000n80002E0004^KP1Y`@000?1000010000k40
+00040003hP0009X000<100004P000`40000T00030@0000@000<100002@001040004J00h14@0002l0
+0P4>00030@0007/000BW^0320`000l<000050003/@00008000?V0000T`001;Vh0:L40003`@0000@0
+00>a000010000nH0002K00030@00018000<100008P030@<000@1000120001040004200030@0001P0
+3P4A0000;P000`40000>00030@0007`000>W^<4010000l<000040003/@0000<000?R0000TP000kP0
+Y`040003`@0000@000>a000010000n80002L00030@00018000<1000090000`40000200812P020@<0
+104G00h14@0002l00`4=00030@0007`000BW0;S110000l<000040003/@0000<000?V0000T0000kfh
+Y`040003`@0000D000>a00000`000nH0002M00030@00018000<10000E@0>0A40000o00030@0007d0
+00BW0;S10`000`4000050003/@0000<000?R0000SP000kXFY`040003`@0000D000>a00000`000n80
+002N00030@00018000<10000E@0>0A40000_00<13@000`40001n0004YkP0`@<000?300001@000k40
+00020003iP0008d000Bm^<>W0`000l4000050003/@0000<000?V0000W`000`40000B00030@0005D0
+3P4A0000;P000`40000>00030@0007l000BW5[[10`000`4000040003/@0000<000?V0000R`001;XF
+`jL40003`@0000@000>a00000`000n80002P00030@00018000<10000E@0>0A40000^00<13P000`40
+001o0004Y`2h`P@000?3000010000k4000030003iP0008T000Bm^<>W10000l8000040003/@0000<0
+00?V0000X@000`40000B00030@0005D03P4A0000;P001040004=00030@00080000BW01K10`000l<0
+00050003/@0000<000?V0000R0000aH0Y`040003`@0000@000>a000010000nH0002Q00030@000180
+00<10000E@0>0A40000_00813P000`4000210004Y`2h`P<000?300001@000k4000030003iP0008H0
+00>i^:L010000l8000050003/@0000<000?V0000XP000`40000B00030@0005D03P4A0000?`020H<0
+00BW^;W10`000l<000040003/@0000<000?R0000Q@000kVhY`040003`@0000D000>a00000`000nH0
+002S00030@00018000<10000E@0>0A40000_00813P000`4000230004YkRi`P<000?3000010000k40
+00030003iP0008<000>i^:L010000l8000050003/@0000<000?V0000Y0000`40000B00030@0005D0
+3P4A0000;P001040004=00030@0008<000BW0;S110000l<000040003/@0000<000?R0000P@000kVh
+Y`040003`@0000D000>a00000`000nH0002U00030@00018000<10000E@0>0A40000^00030@0000h0
+00<10000Q0001:L0^<430003``0000D000>a00000`000nH0001o0004^KS3Y`<000?200001@000k40
+00030003iP000:H000<100004P000`40001E00h14@0002h000@100013@000`4000250004YaJj`@<0
+00<100001@000k4000030003hP0007h000>h0JL00`000l4000050003/@0000<000?V0000Y`000`40
+000B00030@0005D03P4A0000;`020@h000<10000QP001:Nh_L430003``0000@000>a00000`000nH0
+001m0003_KRW00<000?200001P000k4000020003iP000:P000<100004P000`40001E00h14@0003l0
+00<10000QP001JL05[[100<000<1000010000k4000030003iP0007/000>j5ZL010000l4000050003
+/@00008000?V0000Z@000`40000B00030@0005D03P4A0000<0020@d000<10000Q`001JL0^;g100<0
+00?3000010000k4000030003iP0007T000>m^:L010000l4000050003/@00008000?V0000ZP000`40
+000B00030@0005D03P4A0000;`001040004<00030@0008P000BW01K110000`4000040003/@0000<0
+00?V0000M`000kXFY`040003`@0000D000>a00000P000nH0002[00030@00018000<10000E@0>0A40
+000_00030@0000<00P4800030@0008T000BW0;S20`000l<000040003/@0000@000?V0000M@000kfh
+Y`040003`@0000D000>a00000P000nH0002/00030@00018000<10000E@0>0A40000_00030@000080
+00@100011`000`40002:0004YkRi`@<000?3000010000k4000040003iP0007@000<FY`000`000l40
+00050003/@0000<000?R0000[0000`40000B00030@0005D03P4A0000;P040@8000@100011`040HX0
+00BW^;W20`000l<000040003/@0000<000?V0000L`000kVhY`030003`@0000D000>a00000`000nH0
+002]00030@00018000<10000E@0>0A40000_00030@0000800`4800030@0008`000BW^;W10`000l<0
+00040003/@0000<000?R0000L@000kVhY`030003`@0000H000>a00000P000n80002^00030@000180
+00<10000E@0>0A40000^00D100<00@002@000`40002=0004YkRi`P<000?300000`000k4000040003
+iP0006l000>i^:L00`000l4000060003/@00008000?V0000[`000`40000B00030@0005D03P4A0000
+<0001@40000100X000<10000S@001JL0^;W100<000?300000`000k4000040003hP0006d000>i^:L0
+0`000l4000060003/@00008000?R0000/0000`40000B00030@0005D03P4A0000<0000`40000200<1
+1`000`40002>0005Y`2h^L800P000l<000040003/@0000@000?V0000J`000kVhY`030003`@0000H0
+00>a00000P000nH0002a00030@00018000<10000E@0>0A40000`00030@0000`000<10000S`001:LF
+0<4300030@0000@000>a000010000n80001Y0003^KRW00@000?100001@000k4000020003hP000;80
+00<100004P000`40000R00@10P040@P010430081600>0A40000_00813P000`40002@0004YkRm`@<0
+00?3000010000k4000030003iP0006P000>i^:L010000l8000050003/@00008000?V0000/`000`40
+000B00030@0002@000D100000@0;00030@0000<000@100015`0>0A40000o00030@00094000BW5[[1
+0`000`4000040003/@0000<000?V0000IP000kVhY`040003`@0000D000>a00000P000n80002d0003
+0@00018000<100000P006[Zi^[Vj^KZi^[Vj^KZi^[Vj^KZi^[Vj^KZi20000`40000200030@000080
+104300030@00008000@100015`0>0A40000_00813P000`40002B0004YkRm`@<000?300000`000k40
+00040003iP0006@000>i^:L010000l8000060005/@000>H0]`000`40000B00030@0002@000<10000
+0`000`40000900050@0000400P000`40000E00h14@0002h000@100013@000`40002C0004YaJj`@<0
+00<100000`000k4000040003iP00068000>i01H010000l4000060005/@000>80^0000`40000B0003
+0@0002@000<1000010000`40000900040@000@8000<100005@0>0A40000^00040@000@d000<10000
+U0001:Nh_L420003``0000@000>a000010000nH0001P0003^@2h00@000?200001P001K40003V0;T0
+00<100004P000`40000R00<10`001040004800040@000@8000@100015`0>0A40000^00040@000@d0
+00<10000U@001;P0^/420003``0000@000>a000010000nH0001N0003^@0F00@000?100001P001K40
+003R0;X000<100004P000`40000T00030@0000800P4:008110020AP03P4A0000;`020@h00P6G0004
+^02m`@8000?3000010000k4000030003iP0005h000>m^0000`000l8000060005/@000>H0^`000`40
+000B00030@0005D03P4A0000?`000`40002G0003^03100<000?3000010000k4000030003hP0005`0
+00>j5P000`000l4000060005/@000>80_0000`40000B00030@0005D03P4A0000;@030@03004100`0
+00<10000U`001:Nh^L830003``0000@000>a00000`000nH0001J0003_KRW008000?1`P001`000k40
+00020003iP000;X000<100004P000`40001E00h14@0002h000@100013@000`40002H0004YkRi`@<0
+00?3000010000k4000030003hP0005P000>j5ZL00P000l4000070003/@00008000?V0000^`000`40
+000B00030@0005D03P4A0000;P001040004=00030@0009T000BW^;W20`000l<000030003/@0000@0
+00?V0000EP000kfhY`020003`@0000P000Fa0000iP2n00030@00018000<10000E@0>0A40000^0004
+0@000@d000<10000VP0011H0^L430003``0000<000>a000010000n80001D0003^QJW008000?10000
+20001K40003V0;l000<100004P000`40001E00h14@0002d000@100413P000`40002K0004^02i`P<0
+00?300000`000k4000030003iP0005<000>m^:L00P000l4000080005/@000>H0`0000`40000B0003
+0@0005D03P4A0000?`000`40002L00045P2i`@<000?300000`000k4000030003iP00054000>j0KP0
+0P000l4000080005/@000>H0`@000`40000B00030@0005D03P4A0000?`000`40002M0005^02i`/40
+0P000l<000030003/@0000<000?V0000C`000kg3^0020003`@0000P000Fa0000iP3200030@000180
+00<10000E@0>0A40000o00030@0009h000DF0;T0`@020003``4000<000>a00000`000nH0001=0003
+^P6h008000?1000020001K40003V0<<000<100004P000`40001E00h14@0003l000<10000W`001KP0
+^@3100<000?300000P000k4000030003iP0004/000>m`kP00P000l4000080005/@000>H0a0000`40
+000B00030@0005D03P4A0000?`000`40002P00055P2i0<400`000`4000020003/@0000<000?V0000
+B@001;X1^002`@T00[430003iP000<<000<100004P000`40001E00h14@0003l00P6R0005^02i0<40
+0`001L<0002a00H000?V0000AP001[Vm`kP0`PX000>a00000P000nH0003400030@00018000<10000
+E@0>0A40000o00030@000:8000DF0;T0`@0300050@000;401P000nKR00140006^@01^0312P001[40
+003Ri/L000<100004P000`40001E00h14@0002h01@4<00030@000:<000Fh0;T0`@030005``000;40
+1`000nH000110006^@2h^0322P001K40003V0<T000<100004P000`40001E00h14@00030000<10000
+30000`40002T00055P2i0<400`001@40002a00L000?R0000?P001;Zi01H20003`@0000P000Fa0000
+hP3:00030@00018000<10000E@0>0A40000`00030@0000`000<10000Y@001KP0^Kg100<000G30000
+/@070003iP0003`000Bm002h0P000l8000080003/@0000;Vb`000`40000B00030@0005D03P4A0000
+<0000`40000<00030@000:H000@F002j0/4200050@000;401`000n80000j0004^P2h5P8000?10000
+20001;400>K=00030@00018000<10000E@0>0A40000_00813P000`40002W00:h00@0_@320P001L<0
+002a00L000?V0000=`001;Vm0;P20003`L8000T000Ba003VcP000`40000B00030@0005D03P4A0000
+?`000`40002Y0005^02j0<400P001@73002a00L000?RiP00=@001;T00;P20003`@0000T000Ba0>;V
+c`000`40000B00030@0005D03P4A0000;@060@`000<10000ZP001KP0_KW200<000?300000[470003
+iP00038000Bi0;Rh0P000l40000800:a00<0iP00d0000`40000B00030@0005D03P4A0000;P001040
+004=00030@000:/000Fh002i`@030005``000;401`000nH0000_0006^[T05/<00/4:0004/@00h]80
+00<100004P000`40001E00h14@0002h000@100013@000`40002/00:h00@0^L;10P02``8000>a0000
+1@000nH0000]0007_@00^<<0`P0;0004/@3Vi]<000<100004P000`40001E00h14@0002h000@10001
+3@000`40002^00045P2i^P;10P0010400;470003i^8002/000Bj0;PF0P000l4000090003/@3V0=D0
+00<100004P000`40001E00h14@0002d000@100413P020K0000Jh002m^L8200;300<0/@001`000nH0
+000W0004^Kd0^08000?1`P002P000k40iP3F00030@00018000<100008P040@80104800@10`020AP0
+3P4A0000?`000`40002`00055[P00;T00/420004``2a/@L000?R00009@001KT00KP000;130000k7R
+iP3G00030@00018000<100000P006/<1``730L<1``730L<1``730L<1``730L<120001@40000100d0
+00D100000@0200030@0001D03P4A0000?`000`40002b00:h00H0^Kg1`P02``030;6a00H00^HT0006
+^L>h^0323002/@03iP000=L000<100004P000`40000T00030@00008000<100000P040@@000<10000
+10000`40000E00h14@0003l000<10000]0001AH00;Zi00;100D00L<0/@070003i^8001l000Fj^L<F
+0002`@`000>a0>80fP000`40000B00030@0002@000<100000`000`40000900030@0000800P4H00h1
+4@0003l000<10000]@02^08000Fi0<720002``:a1`02iQ`000Ni_L<0^<;100`00[42i]/000<10000
+4P000`40000T00030@0000@000<1000020000`40000400030@0001D03P4A0000?`000`40002g0006
+^1H0^KX00l4010730K470003i^8001L000Fj^L<0^002`@d000>ah^H0g@000`40000B00030@000280
+0`4300040@000@P00`4300040@000AL03P4A0000?`000`40002i0005^:L0_KT00P000l;1`P02``P0
+0^HD0007^Kd00;S2`@0>0003/NH00=h000<100004P000`40000T00030@0000800P4;00030@000080
+0P4H00h14@0003l000<10000^P001aJhYjNi^[T00P02`@03``7300L000?VhP003P001;Vj^@04`@h0
+00>ai^80h0000`40000B00030@0005D03P4A0000;@030@03004100`000<10000_002^0>W00Ni_@00
+`L;100K30`03iPP00/<01kfi`l72`KP03`000k7ViP3R00030@00018000<10000E@0>0A40000^0004
+0@000@d000<10000_P002QJh5[RW^[Vj^KX4`@8000h1``730L<1``730KZi^PG100>h5P003P000n;V
+hP3T00030@00018000<10000E@0>0A40000^00040@000@d000<10000`P03^0>W01Bm^Kfi`/72`L;1
+`/72`L;1`/72`@:W0[P>00CVi`000`40000B00030@0005D03P4A0000;P001040004=0081aP000kPF
+^009Y`030:NW00FW00Vh5[PF^>;Vh^H01@002>KRi^;Vh^JajP000`40000B00030@0005D03P4A0000
+;@0010400@4>00030@000<P04KP800KV0`03/N`000<100004P000`40001E00h14@0003l000<10000
+d`05/@d01K7_00030@00018000<10000E@0>0A40000]00@13P000`40003H00fam0000`40000B0003
+0@0005D03P4A0000;P001040004=00030@000?l0fP000`40000B00030@0005D03P4A0000;P001040
+004=00030@000?l0fP000`40000B00030@0005D03P4A0000;P001040004=00030@000?l0fP000`40
+000B00030@0005D03P4A0000;P030@h000<10000o`3J00030@00018000<10000E@0>0A40000^0003
+0@0000h000<10000o`3J00030@00018000<10000E@0>0A40000]008140000`40003o0=X000<10000
+4P000`40001E00h14@0003D000<100001`000`40003o0=X000<100004P000`40001E00h14@0003D0
+00<100001`000`40003o0=X000<100004P000`40001E00h14@0003H000<100001P040Ol0f@000`40
+000B00030@0005D03P4A0000=P000`40000600030@000?l0fP000`40000B00030@0005D03P4A0000
+=`000`40000500030@000?l0fP000`40000B00030@0005D03P4A0000=0001040004700030@000?l0
+fP000`40000B00030@0005D03P4A0000=0040@L000<10000o`3J00030@00018000<10000E@0>0A40
+000o00030@000?l0fP000`40000B00030@0005D03P4A0000?`000`40003o0=X000<100004P000`40
+001E00h14@0003l000<10000o`3J00030@00018000<100008P040@801049008110020AP03P4A0000
+?`000`40003o0=X000<100004P000`40000T00050@0000402`001040004200040@000AL03P4A0000
+?`000`40003o0=X000<100004P000`40000201[V20000`40000200030@000080104200040@000@80
+00@100015`0>0A40000o00030@000?l0fP000`40000B00030@0002@000<100000`000`4000070004
+0@000@800`4H00h14@0003l000<10000o`3J00030@00018000<1000090000`40000400030@0000H0
+00@100010P000`40000H00h14@0003l00P7o0=/000<100004P000`40000R00<10`00104000480004
+0@000@8000<10000600>0A40000o00030@000?l0fP000`40000B00030@0002@000<100000P020@X0
+0P4400<15`0>0A40000o00030@000?l0fP000`40000B00030@0005D03P4A0000?`000`40003o0=X0
+00<100004P000`40001E00h14@0003l000<10000o`3J00030@00018000<10000E@0>0A40000o0003
+0@000?l0fP000`40000B00030@0005D03P4A0000?`000`40003o0=X000<100004P000`40001E00h1
+4@0003l000<10000o`3J00030@00018000<10000E@0>0A40000o00030@000?l0fP000`40000B0003
+0@0005D03P4A0000?`000`40003o0=X000<100004P000`40001E00h14@0003l000<10000o`3J0003
+0@00018000<10000E@0>0A40000o00030@000?l0fP000`40000B00030@0005D03P4A0000?`020Ol0
+f`000`40000B00030@0005D03P4A0000?`000`40003o0=X000<100004P000`40001E00h14@0003l0
+00<10000o`3J00030@00018000<10000E@0>0A40000o00030@000?l0fP000`40000B00030@0005D0
+3P4A0000?`000`40003o0=X000<100004P000`40001E00h14@0003l000<10000o`3J00030@000180
+00<10000E@0>0A40000o00030@000?l0fP000`40000B00030@0005D03P4A0000?`000`40003o0=X0
+00<100004P000`40001E00h14@0003l000<10000o`3J00030@00018000<10000E@0>0A40000o0003
+0@000?l0fP000`40000B00030@0005D03P4A0000?`000`40003o0=X000<100004P000`40001E00h1
+4@0003l000<10000o`3J00030@00018000<10000E@0>0A40000o0081o`3K00030@00018000<10000
+E@0>0A40000o00030@000?l0fP000`40000B00030@000280104200@120040@800`4H00h14@0003l0
+00<10000o`3J00030@00018000<1000090000`40000300030@0000L000<100001P000`40000E00h1
+4@0003l000<10000o`3J00030@00018000<100000P0J/@P000<100000`00104000040@<000<10000
+1@000`40000E00h14@0003l000<10000o`3J00030@00018000<1000090000`40000300030@0000T0
+00<100000P030AL03P4A0000?`000`40003o0=X000<100004P000`40000T00030@0000<000<10000
+2P001040004200030@0001D03P4A0000?`000`40003o0=X000<100004P000`40000R00<10`030@T0
+00@100010P001040004G00h14@0003l000<10000o`3J00030@00018000<1000090000`4000030003
+0@0000P00P440081600>0A40000o00030@000?l0fP000`40000B00030@0005D000<10000700003l0
+00<10000o`3J00030@00018000<10000E@000`40000L0000?`000`40003o0=X000<100004P000`40
+001E00030@0001`0000o0081o`3K00030@00018000<10000E@000`40000L0000?`000`40003o0=X0
+00<100004P000`40001E00030@0001`0000o00030@000?l0fP000`40000B00030@0005D000<10000
+700003l000<10000o`3J00030@00018000<10000E@000`40000L0000?`000`40003o0=X000<10000
+4P000`40001E00030@0001`0000o00030@000?l0fP000`40000B00030@0005D000<10000700003l0
+00<10000o`3J00030@00018000<10000E@000`40000L0000?`000`40003o0=X000<100004P000`40
+001E00030@0001`0000o00030@000?l0fP000`40000B00030@0005D000<10000700003l000<10000
+o`3J00030@00018000<10000E@000`40000L0000=@020@P000<10000o`3J00030@000180F@4N0000
+=0001040004700030@000?l0fP000`4000290000=000104000470?l1gP6;0000=@020Ol0o`1b0000
+=0001040007o0?l0L@0003@000@10001o`3o0740000e0081o`3o0780003o0?l0Z@000?l0o`2Y0000
+o`3o0:T0003a00<1/@020Ol00@000?8000<10000/P000`40003m0000[`020@800P400`010@030@03
+004100<11`030@@00`4400030@0000800`401@010@40008120020@<00`4300<10`050@03004100<1
+0P020@800`400`010@0800810`030@T00`44008110020@030041008100@00@400`4]00@10P050@<0
+0P4200<12P020@800`4010010@050@800P7n0000/0001040004400030@0000<000<100001`001040
+004200030@0000@000<100400P000`40000300040@000@P000@100010P001040004500030@000080
+00<100000`001@400001008000@100010P000`40000600040@000@D000<100001P00104000420004
+0@000@8000@100010P001040004500030@0002/000<1000010000`40000200040@000@@000<10000
+1P001040004200040@000@@000D100000@0200030@000?/0002`00@110000`40000300030@0000X0
+00<100000`4400030@0100800`4300040@000@P000@100010P001040004300811@000`4000030005
+0@0000400P001040004200030@0000T000@100000P4<00040@000@H00`4200040@000@<00P4?00@1
+0P040@80104?00030@0000@000<100000P000`40000300812@001040004200040@000@@000D10000
+0@0200030@000?/0002`00040@000@@000<100000`000`40000800810`001040004200070@000040
+0@0200040@000@8000<100001P001040004200040@000@8000<100001@000`40000300050@000040
+0P001040004200030@0000L00P4300030@0000X00P4300040@000@D000@100010P001040004`0003
+0@0000@000<100000P000`40000200030@0000T000@100010P001040004400050@0000400P000`40
+003k0000/@000`400@0400030@0000<000<100001`000`40000400810P020@800P4200810P001040
+0@4900070@000@0100020@@00`4300811@000`40000200810P0010400@4<00040@0000<120000`40
+0004008110020@8000@1004110030B`0104300810`040@<00`4900810P0010400@4500030@000081
+00<00@40o@000;000`4500030@0000<000<1000020030Al00P4200815@000`40000C00040@000@l0
+0`5500030@0000T000<1000070000`40003o00<0002g008110020D4000<100000P020AH00P5I0081
+10000`40000200030@0001/00P7o00D0003o0?l0Z@000?l0o`2Y0000o`3o0:T0003o0?l0Z@000?l0
+o`2Y0000o`3o0:T0003o0?l0Z@000?l0o`2Y0000\
+\>"],
+  ImageRangeCache->{{{0, 678.75}, {353, 0}} -> {-1.06125, -0.648944, \
+0.00367672, 0.00367672}, {{16.625, 560.562}, {344.562, 8.375}} -> {10.3448, \
+2.41553, 5.04136*^-5, 0.0169974}, {{560.562, 648.437}, {244.437, 26.875}} -> \
+{-21.5374, -4.25172, 0.0382423, 0.0382423}, {{565.25, 591.375}, {239.687, \
+213.562}} -> {-22.7434, -16.4368, 0.0401918, 0.130063}, {{565.25, 591.375}, \
+{209.375, 183.187}} -> {-22.7434, -20.3834, 0.0401918, 0.130063}, {{565.25, \
+591.375}, {179.062, 152.875}} -> {-22.7434, -24.3259, 0.0401918, 0.130063}, \
+{{565.25, 591.375}, {148.687, 122.562}} -> {-22.7434, -28.2725, 0.0401918, \
+0.130063}, {{565.25, 591.375}, {118.375, 92.25}} -> {-22.7434, -32.2151, \
+0.0401918, 0.130063}, {{565.25, 591.375}, {88.0625, 61.875}} -> {-22.7434, \
+-36.1617, 0.0401918, 0.130063}, {{565.25, 591.375}, {57.6875, 31.5625}} -> \
+{-22.7434, -40.1083, 0.0401918, 0.130063}}],
+
+Cell[BoxData[
+    FormBox[
+      TagBox[\(\[SkeletonIndicator]  Graphics  \[SkeletonIndicator]\),
+        False,
+        Editable->False], TraditionalForm]], "Output"]
+}, Open  ]]
+},
+FrontEndVersion->"4.0 for X",
+ScreenRectangle->{{0, 1024}, {0, 768}},
+WindowSize->{784, 721},
+WindowMargins->{{Automatic, 79}, {7, Automatic}}
+]
+
+
+(***********************************************************************
+Cached data follows.  If you edit this Notebook file directly, not using
+Mathematica, you must remove the line containing CacheID at the top of 
+the file.  The cache data will then be recreated when you save this file 
+from within Mathematica.
+***********************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+Cell[1717, 49, 52, 1, 27, "Input"],
+Cell[1772, 52, 89, 1, 27, "Input"],
+Cell[1864, 55, 1579, 29, 283, "Input"],
+
+Cell[CellGroupData[{
+Cell[3468, 88, 1481, 24, 299, "Input"],
+Cell[4952, 114, 73502, 2321, 363, 35898, 1852, "GraphicsData", "PostScript", \
+"Graphics"],
+Cell[78457, 2437, 167, 4, 28, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+
+
+
+(***********************************************************************
+End of Mathematica Notebook file.
+***********************************************************************)
+

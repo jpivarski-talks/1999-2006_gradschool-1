@@ -1,0 +1,49 @@
+// -*- C++ -*-
+//
+// Package:     <MCInfo>
+// Module:      instantiate_transform_const_string_qqid.cc
+// 
+// Description: instantiate the STL transform algorithm used for name --> qqid
+//
+//
+// Author:      Lawrence Gibbons
+// Created:     Sat Nov  7 16:48:05 EST 1998
+// $Id: instantiate_transform_string_qqid.cc,v 1.1 1999/06/22 21:29:39 lkg Exp $
+//
+// Revision history
+//
+//
+
+#include "Experiment/Experiment.h"
+
+// system include files
+#if defined(STL_TEMPLATE_DEFAULT_PARAMS_FIRST_BUG)
+#include <vector>
+#include <algorithm>
+#include <functional>
+#endif /* STL_TEMPLATE_DEFAULT_PARAMS_FIRST_BUG */
+
+// user include files
+#include "MCInfo/MCTypes.h"
+#include "MCInfo/MCParticleProperty/MCParticlePropertyStore.h"
+
+// STL classes
+#include <vector>
+#include <algorithm>
+#include <functional>
+
+// forward declarations
+#include "STLUtility/fwd_vector.h"
+
+// instantiate the unary fcn class needed
+typedef string  _unary_function_arg_ ;
+typedef QQ_id   _unary_function_result_ ;
+#include "STLUtility/instantiate_unary_function.h"
+
+// instantiate the transform  algorithm used
+typedef STL_VECTOR( _unary_function_arg_ )::iterator
+                                               _transform_in_iterator_ ;
+typedef STL_VECTOR( _unary_function_result_ )::iterator
+                                               _transform_out_iterator_ ;
+typedef MCParticlePropertyStore::TransNameToQQ _transform_unary_fcn_ ;
+#include "STLUtility/instantiate_transform_specific_unary.h"

@@ -1,0 +1,62 @@
+*** Begin of history file: Thu Sep 12 10:07:36 2002
+ls ../rzn/*ntuple.rzn
+sh ls ../rzn/*ntuple.rzn
+h/file 1 ../rzn/monte_carlo_ntuple.rzn
+ldir
+cd bigntuple2
+h/list
+nt/print 2
+nt/plot 2.cos(ttp_th)
+nt/plot 2.cos(ttp_th)%tot_tr_p
+nt/plot 2.cos(ttp_th)%tot_tr_p 0<tot_tr_p<6
+nt/plot 2.cos(ttp_th)%tot_tr_p 0<tot_tr_p<6
+nt/plot 2.cos(ttp_th)%tot_tr_p 0<tot_tr_p<4&&cos(ttp_th)>0.5 ! ! ! box
+nt/plot 2.charge
+nt/plot 2.charge abs(w_z0)<0.1&&xydist<0.003
+nt/plot 2.cos(ttp_th) abs(w_z0)<0.1&&xydist<0.003&&tot_tr_p>0&&charge==1
+nt/plot 2.cos(ttp_th) abs(w_z0)<0.1&&xydist<0.003&&tot_tr_p>0&&charge==-1 ! ! ! s
+h/cr/1d 1000 'cos(ttp th) for charge = +1' 100 -1 1
+h/cr/1d 1001 'cos(ttp th) for charge = -1' 100 -1 1
+nt/plot 2.cos(ttp_th) abs(w_z0)<0.1&&xydist<0.003&&tot_tr_p>0&&charge==1 ! ! ! ! 1000
+nt/plot 2.cos(ttp_th) abs(w_z0)<0.1&&xydist<0.003&&tot_tr_p>0&&charge==-1 ! ! ! ! 1001
+add 1000 1001 1002 1 -1
+copy 1002 1003 'cos(ttp th) for charge +1 minus cos(ttp th) for charge -1'
+h/copy 1002 1003 'cos(ttp th) for charge +1 minus cos(ttp th) for charge -1'
+h/plot 1003
+h/cr/1d 2000 'cos(ttp th) for charge = +2' 100 -1 1
+h/cr/1d 2001 'cos(ttp th) for charge = -2' 100 -1 1
+nt/plot 2.cos(ttp_th) abs(w_z0)<0.1&&xydist<0.003&&tot_tr_p>0&&charge==2 ! ! ! ! 2000
+nt/plot 2.cos(ttp_th) abs(w_z0)<0.1&&xydist<0.003&&tot_tr_p>0&&charge==-2 ! ! ! ! 2001
+add 2000 2001 2002 1 -1
+h/copy 2002 2003 'cos(ttp th) for charge +2 minus cos(ttp th) for charge -2'
+h/plot 2003
+nt/plot 2.xydist
+h/cr/1d 5000 'Monte Carlo Closest Intersection' 100 0. 0.006
+set stat 0000010
+opt sta
+nt/plot 2.xydist num_tr>2 ! ! ! ! 5000
+h/cr/1d 5001 'Monte Carlo Closest Intersection' 100 0. 0.006
+opt logy
+h/plot 5000
+opt liny
+h/plot 5000
+nt/plot 2.xydist num_tr>2&&xydist>0.003 ! ! ! ! 5001
+h/plot 5000
+h/plot 5000
+dline 0.003 0.003 0 $GRAFINFO('WNYMAX')
+h/plot 5000
+opt ltyp 2
+set ltyp 2
+dline 0.003 0.003 0 $GRAFINFO('WNYMAX')
+text '0.33% of MC' 0.0045 100000 4
+help text
+text 0.0045 100000 '0.33% of MC' 4
+text 0.0045 100000 '0.33% of MC' 0.4
+h/plot 5000
+set ltyp 2
+dline 0.003 0.003 0 $GRAFINFO('WNYMAX')
+pict/print '~/public_html/private/my_gammaee/dafdir/cuts_pta/mc_ci.eps'
+nt/print 2.ttp_phi
+nt/plot 2.ttp_phi
+exit
+*** End   of history file: Fri Sep 13 12:35:05 2002

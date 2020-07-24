@@ -1,0 +1,53 @@
+#!/bin/csh
+#$ -l sigmc=1
+#$ -o /cdat/tem/mccann/mc_125199_nofsr.log
+#$ -e /cdat/tem/mccann/mc_125199_nofsr.log
+#$ -S /bin/csh
+#$ -j y
+echo starting
+source /nfs/cleo3/Offline/scripts/cleo3login
+source /nfs/cleo3/Offline/scripts/cleo3def
+setenv OSAGENT_PORT 31415
+c3rel data19_MC
+limit datasize unlimited
+limit stacksize unlimited
+setenv C3MC /home/mccann/neweff/data_method/idanko
+setenv MYAREA ${C3MC}/Y1S2mumu
+setenv MYCTR ${C3MC}/ly1s_standalone.ctr
+setenv MYRUN 126475
+setenv QQOUT ${C3MC}/qq_${MYRUN}.rp
+setenv CLEOGOUT ${MYAREA}/cg_${MYRUN}.pds
+setenv MCP2OUT ${MYAREA}/p2_${MYRUN}.pds
+echo done with setup
+cd ${MYAREA}
+pwd
+date
+# run cleog detector simulation:
+cat << CLEOGINT
+#######################################################
+#                Starting   CLEOG                     #
+#######################################################
+       
+  Time           : `date`
+  Output file    : $CLEOGOUT
+  Release used   : `echo $C3LIB`
+
+#######################################################
+CLEOGINT
+suez -f ${C3MC}/runcleog.tcl
+#run mcpass2 reconstruction:
+cat << MCPASS2INT
+#######################################################
+#                Starting   MCPASS2                   #
+#######################################################
+       
+  Time          : `date`
+  Output file   : $MCP2OUT
+  Release used  : `echo $C3LIB`
+
+#######################################################
+MCPASS2INT
+suez -f ${C3MC}/runmcpass2.tcl
+# clean up
+#rm qq_out.rp
+exit

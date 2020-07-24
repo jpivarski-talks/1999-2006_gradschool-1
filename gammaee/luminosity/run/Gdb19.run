@@ -1,0 +1,17 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/grepme_db19b.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/luminosity/run/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_DB=19
+export USER_START=125207
+export USER_STOP=125416
+
+suez -f grepme_data.tcl
+rm -f core
+
+exit

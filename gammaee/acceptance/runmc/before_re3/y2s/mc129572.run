@@ -1,0 +1,23 @@
+#$ -l sigmc=1
+#$ -o /cdat/tem/mccann/mc129572.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/acceptance/runmc
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Mar04_04_MC
+
+export USER_RUN=129572
+export USER_GEN=../remc/y2s/generator_$USER_RUN.pds
+export USER_CLEOG=../remc/y2s/cleog_$USER_RUN.pds
+export USER_MCPASS2=../remc/y2s/mcpass2_$USER_RUN.pds
+export USER_DEC=ups2s.dec
+export USER_EBEAM=5.01163
+export USER_RES=10.02326
+export USER_WIDE=0.000044
+
+rm -f $USER_GEN
+
+rm -f core
+suez -f generate.tcl
+rm -f core

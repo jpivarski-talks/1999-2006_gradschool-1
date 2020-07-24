@@ -1,0 +1,459 @@
+* %%BoundingBox: 10 145 537 652
+
+***************************************************************
+*
+* "t1had", "t1rad", "t1el", "t1tt",
+* "tracks", "visen", "ccen",
+* "p2", "e1",
+* "ci", "wz", "d0close", "z0close",
+* "run", "ebeam", "neue", "q",
+* "axial", "stereo", "cblo", "cbmd",
+* "rawtk", "pmiss", "tr1", "tr2", "trperp1", "trperp2", "e2",
+* "shperp", "shdot",
+* "l4dec", "l4tracks",
+* "mctype",
+* "wpz", "cotthp",
+* "nbunch", "bbunch",
+* "cvisen", "cccen", "cneue",
+* "avisen", "accen", "aneue"
+*
+***************************************************************
+
+* nt/cuts $1 (t1had>0).or.(t1rad>0).or.(t1el>0)
+* nt/cuts $2 abs(d0close)<0.005
+* nt/cuts $3 e1<0.85
+* nt/cuts $4 p2<0.85
+* nt/cuts $5 (wz>800&&abs(z0close)<0.075).or.(wz<800&&abs(wz)<0.075)
+* nt/cuts $6 visen>0.35
+
+* nt/cuts $7 tracks>1
+* nt/cuts $8 l4dec>0
+* nt/cuts $9 ccen<0.85
+
+* peak: [1]30
+* cont: [1]41
+* bge:  [1]42
+* bgp:  [1]43
+* cos:  [1]44
+* ee:   [1]14
+* mumu: [1]15
+* taus: [1]16
+
+* allmc:   [1]54
+* alldata: [1]66
+
+* sigma which = [1]
+sigma which = 1
+if $SIGMA(which).eq.1 then
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db18.rzn
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db19.rzn
+  nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y1gggam_db18.rzn
+  nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y1ggg_db18.rzn
+  nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y1qq_db18.rzn
+  * nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y1gggam_db19.rzn
+  * nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y1ggg_db19.rzn
+  * nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y1qq_db19.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_123817.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_123817.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_123853.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_123853.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_125176.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_125176.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_124684.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_124684.rzn
+  sigma ptobge = 0.775	 
+  sigma ptobgp = 0.807666
+  sigma ctobge = 0.578646
+  sigma ctobgp = 0.642509
+  sigma ma = 0.989625
+*  sigma ma = 0.925731 with all cuts
+  sigma mb = 0.0183919
+  sigma pa = 116608
+*  sigma pa = 105060 with all cuts
+  sigma ca = 32573
+*  sigma ca = 23000 with all cuts
+  sigma pb = 81188 
+  sigma cb = 65674 
+*   sigma ema = 0.00424056
+*   sigma emb = 0.000429033
+endif
+if $SIGMA(which).eq.2 then
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db21.rzn
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db23.rzn
+  nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y2gggam_db21.rzn
+  nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y2ggg_db21.rzn
+  nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y2qq_db21.rzn
+  * nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y2gggam_db23.rzn
+  * nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y2ggg_db23.rzn
+  * nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y2qq_db23.rzn
+  nt/chain mccas /home/mccann/acceptance/rzn5/ntuple_cas_db21.rzn
+  * nt/chain mccas /home/mccann/acceptance/rzn5/ntuple_cas_db23.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_126488.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_126473.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_126835.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_126831.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_126488.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_126473.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_126835.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_126831.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_126870.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_126563.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_127317.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_127319.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_126870.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_126563.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_127317.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_127319.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_130427.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_129848.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_129071.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_129845.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_130427.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_129848.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_129071.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_129845.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_129572.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_129630.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_130473.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_129564.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_129572.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_129630.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_130473.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_129564.rzn
+  sigma ptobge = 2.96563
+  sigma ptobgp = 8.58676
+  sigma ctobge = 2.39375
+  sigma ctobgp = 8.95192
+  sigma ma = 0.955274
+*  sigma ma = 0.919187 with all cuts
+  sigma mb = 0.0200853
+  sigma pa = 273574
+*  sigma pa = 228821 with all cuts
+  sigma ca = 129549
+*  sigma ca = 92612 with all cuts
+  sigma pb = 306556
+  sigma cb = 252568
+*   sigma ema = 0.00340357
+*   sigma emb = 0.000517445
+endif
+if $SIGMA(which).eq.3 then
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db16.rzn
+  nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y3gggam_db16.rzn
+  nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y3ggg_db16.rzn
+  nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y3qq_db16.rzn
+  nt/chain mccas /home/mccann/acceptance/rzn5/ntuple_cas_db16.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_121906.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122083.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_121899.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_121906.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122083.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_121899.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122132.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122147.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_121969.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122132.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122147.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_121969.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122091.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122080.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122081.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_121904.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122091.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122080.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122081.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_121904.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122133.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_121972.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122136.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122143.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122133.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_121972.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122136.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122143.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122586.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122594.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122802.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122429.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122586.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122594.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122802.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122429.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122576.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122647.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122829.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_123044.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122576.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122647.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122829.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_123044.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122430.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122587.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122800.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_122418.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122430.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122587.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122800.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_122418.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122832.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122831.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_123043.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_122816.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122832.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122831.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_123043.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_122816.rzn
+  sigma ptobge = 6.67031
+  sigma ptobgp = 10.3596
+  sigma ctobge = 5.41458
+  sigma ctobgp = 8.87526
+  sigma ma = 0.954255
+*  sigma ma = 0.912534 with all cuts
+  sigma mb = 0.021645
+  sigma pa = 293497
+*  sigma pa = 265640 with all cuts
+  sigma ca = 165045
+*  sigma ca = 141741 
+  sigma pb = 383254
+  sigma cb = 324028
+*   sigma ema = 0.00327434
+*   sigma emb = 0.000608458
+endif
+if $SIGMA(which).eq.21 then
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db21.rzn
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db23.rzn
+  nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y2gggam_db21.rzn
+  nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y2ggg_db21.rzn
+  nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y2qq_db21.rzn
+  * nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y2gggam_db23.rzn
+  * nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y2ggg_db23.rzn
+  * nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y2qq_db23.rzn
+  nt/chain mccas /home/mccann/acceptance/rzn5/ntuple_cas_db21.rzn
+  * nt/chain mccas /home/mccann/acceptance/rzn5/ntuple_cas_db23.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_126488.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_126473.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_126835.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_126831.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_126488.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_126473.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_126835.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_126831.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_126870.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_126563.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_127317.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_127319.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_126870.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_126563.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_127317.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_127319.rzn
+  sigma ptobge = 1.31354
+  sigma ptobgp = 6.94425
+  sigma ctobge = 1.00417
+  sigma ctobgp = 4.89547
+  sigma ma = 0.954255
+  sigma mb = 0.021645
+  sigma pa = 126548
+  sigma ca = 54748
+  sigma pb = 142154
+  sigma cb = 101086
+endif
+if $SIGMA(which).eq.23 then
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db21.rzn
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db23.rzn
+  nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y2gggam_db21.rzn
+  nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y2ggg_db21.rzn
+  nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y2qq_db21.rzn
+  * nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y2gggam_db23.rzn
+  * nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y2ggg_db23.rzn
+  * nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y2qq_db23.rzn
+  nt/chain mccas /home/mccann/acceptance/rzn5/ntuple_cas_db21.rzn
+  * nt/chain mccas /home/mccann/acceptance/rzn5/ntuple_cas_db23.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_130427.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_129848.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_129071.rzn
+  nt/chain cont /home/mccann/acceptance/rzn5/ntuple_129845.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_130427.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_129848.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_129071.rzn
+  nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_129845.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_129572.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_129630.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_130473.rzn
+  nt/chain peak /home/mccann/acceptance/rzn5/ntuple_129564.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_129572.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_129630.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_130473.rzn
+  nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_129564.rzn
+  sigma ptobge = 1.65208
+  sigma ptobgp = 1.64251
+  sigma ctobge = 1.38958
+  sigma ctobgp = 4.05645
+  sigma ma = 0.954255
+  sigma mb = 0.021645
+  sigma pa = 147026
+  sigma ca = 74801
+  sigma pb = 164402
+  sigma cb = 151482
+endif
+nt/chain bge /home/mccann/acceptance/rzn5/bgneg.rzn
+nt/chain bgp /home/mccann/acceptance/rzn5/bgpos.rzn
+nt/chain cos /home/mccann/acceptance/rzn5/cosmic.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger126828.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger126920.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger126922.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger127014.rzn
+nt/chain tbgp /home/mccann/acceptance/rzn3/trigger126785.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128706.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128736.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128741.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128748.rzn
+* Analysis cuts
+nt/cuts $1 (t1had>0).or.(t1rad>0).or.(t1el>0)
+nt/cuts $2 abs(d0close)<0.005
+nt/cuts $3 e1<0.85
+nt/cuts $4 p2<0.85
+nt/cuts $5 (wz>800&&abs(z0close)<0.075).or.(wz<800&&abs(wz)<0.075)
+nt/cuts $6 visen>0.35
+nt/cuts $7 tracks>1
+nt/cuts $8 l4dec>0
+nt/cuts $9 ccen<0.85
+* Bhabha luminosity cuts
+nt/cuts $15 (rawtk>=2).and.(tracks<=4).and.(pmiss<0.2).and.(abs(2-tr1-tr2-pmiss)<0.2).and.(visen>0.75).and.(ccen>0.75).and.(abs(d0close)<0.005).and.(abs(z0close)<0.05)
+* MC cuts
+nt/cuts $10 nbunch<15&&bbunch<10
+nt/cuts $11 -12<=mctype<=-10
+nt/cuts $12 -22<=mctype<=-20
+nt/cuts $13 -32<=mctype<=-30
+nt/cuts $21 10<=mctype<=12
+nt/cuts $22 20<=mctype<=22
+nt/cuts $23 !$21&&!$22
+nt/plot //mcggg/cuts/1.mctype $10 ! ! ! 'N' 1000000
+sigma nmcggg = $HINFO(1000000,'ENTRIES')
+nt/plot //mcgam/cuts/1.mctype $10 ! ! ! 'N' 1000000
+sigma nmcgam = $HINFO(1000000,'ENTRIES')
+nt/plot //mcqq/cuts/1.mctype $10 ! ! ! 'N' 1000000
+sigma nmcqq = $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.mctype $10&&$11 ! ! ! 'N' 1000000
+sigma nmcee = $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.mctype $10&&$12 ! ! ! 'N' 1000000
+sigma nmcmm = $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.mctype $10&&$13 ! ! ! 'N' 1000000
+sigma nmctt = $HINFO(1000000,'ENTRIES')
+if $SIGMA(which).ne.1 then
+  nt/plot //mccas/cuts/1.mctype $10&&$21 ! ! ! 'N' 1000000
+  sigma nmccee = $HINFO(1000000,'ENTRIES')
+  nt/plot //mccas/cuts/1.mctype $10&&$22 ! ! ! 'N' 1000000
+  sigma nmccmm = $HINFO(1000000,'ENTRIES')
+  nt/plot //mccas/cuts/1.mctype $10&&$23 ! ! ! 'N' 1000000
+  sigma nmccas = $HINFO(1000000,'ENTRIES')
+endif
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 0
+
+
+
+* this is the error in ptoc in percent
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 0
+message $SIGMA(ptoc)
+exec i_cant_believe_scales 0 0 0 0 0 1 0 0 0 0
+message $SIGMA(ptoc)
+message $SIGMA((1.17582-1.17867)/1.17582*100)
+
+
+
+
+exec i_cant_believe 1 'Visible energy / center-of-mass energy' 60 0. 1.2 visen $1&&$2&&$3&&$4&&$5
+exec i_cant_believe_oh_plot_it_anyway 1
+
+ve/cr par(8)
+ve/inp par 55000 0.15 0.1 12000 0.55 0.1 0 0
+ve/inp par 48870. 0.12815 0.24769E-02 10553 0.57836 0.56809E-01 0 0
+h/fit 141(0.05:0.7) twog.f ! 7 par
+
+
+ve/cr par(4)
+ve/inp par 48870. 0.12815 0.24769E-02 0.24769E-02
+h/fit 141(0.05:0.4) twog.f '0' 4 par
+
+message $HINFO(141,'SUM')
+f/plot twog.f 0 1.2 's'
+ve/print par
+* 6703.99*55 + (50000 + 20000 + 10000 + 5000) under peak
+* versus 610012
+message $SIGMA((6703.99*55+(50000+20000+10000+5000))/610012)
+* 74%
+
+fortran/file 65 twophoton_leakage.eps
+graphics/metafile 65 -111
+igset mtype 1
+h/copy 141 9999 'Visible energy / center-of-mass energy for continuum events'
+h/plot 9999 'histe'
+f/plot twog.f(x) 0. 1.2 's'
+set ltyp 2
+dline 0.35 0.35 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+close 65
+
+* integral is: 9629.66   (9894.41 out to infinity)
+
+*  FCN=   706.5469     FROM MIGRAD    STATUS=CONVERGED     47 CALLS       48 TOTAL
+*                      EDM=  0.35E-04    STRATEGY= 1      ERROR MATRIX ACCURATE 
+
+*   EXT PARAMETER                                   STEP         FIRST   
+*   NO.   NAME        VALUE          ERROR          SIZE      DERIVATIVE 
+*    1      P1        53098.        161.42        0.0000       0.20825E-05
+*    2      P2       0.10277       0.19042E-03    0.0000       -66.016    
+*    3      P3       0.41188E-03   0.53215E-05    0.0000        146.62    
+*    4      P4       0.74022E-01   0.26567E-03    0.0000       0.14052E-01
+
+*  CHISQUARE = 0.5047E+02  NPFIT =    18
+
+nt/plot //cont/cuts/1.visen $1&&$2&&$3&&$4&&$5&&visen>0.35
+f/plot twog.f(x) 0. 1.2 's'
+
+* 165045, or 6%
+
+
+
+* peak: [1]30
+* cont: [1]41
+* bge:  [1]42
+* bgp:  [1]43
+* cos:  [1]44
+* ee:   [1]14
+* mumu: [1]15
+* taus: [1]16
+
+
+
+
+
+exec i_cant_believe 2 'pass' 1 -0.5 0.5 0 $1&&$2&&$3&&$4&&$5&&$6
+
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight 2
+ve/cr davec(1)
+h/get_vect/contents 266 davec
+sigma daeff = davec(1)
+message nominal data: $SIGMA(daeff)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 0
+sigma ptoc = ptoc * 1.0003
+exec i_cant_believe_weight 2
+h/get_vect/contents 266 davec
+sigma daeup = davec(1)
+message +ptoc: $SIGMA(daeff-daeup)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 0
+sigma ptoc = ptoc / 1.0003
+exec i_cant_believe_weight 2
+h/get_vect/contents 266 davec
+sigma daeup = davec(1)
+message -ptoc: $SIGMA(daeff-daeup)
+
+* JUST 1--6 
+* background of two-photon at 1S: 0.01582%
+* background of two-photon at 2S: 0.04019%
+* background of two-photon at 3S: 0.05886%
+
+* ALL THE CUTS
+* background of two-photon at 1S: 0.01093%
+* background of two-photon at 2S: 0.02879%
+* background of two-photon at 3S: 0.04133%
+
+

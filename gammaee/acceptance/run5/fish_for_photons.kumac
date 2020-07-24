@@ -1,0 +1,333 @@
+* "t1had", "t1rad", "t1el", "t1tt",
+* "tracks", "visen", "ccen",
+* "p2", "e1",
+* "ci", "wz", "d0close", "z0close",
+* "run", "ebeam", "neue", "q",
+* "axial", "stereo", "cblo", "cbmd",
+* "rawtk", "pmiss", "tr1", "tr2", "trperp1", "trperp2", "e2",
+* "shperp", "shdot",
+* "l4dec", "l4tracks",
+* "mctype",
+* "wpz", "cotthp",
+* "nbunch", "bbunch",
+* "cvisen", "cccen", "cneue",
+* "avisen", "accen", "aneue"
+
+sigma mc16ld = 0
+sigma which = 1
+nt/cuts $1 (t1had>0).or.(t1rad>0).or.(t1el>0)
+nt/cuts $2 abs(d0close)<0.005
+nt/cuts $3 e1<0.85
+nt/cuts $4 p2<0.85
+nt/cuts $5 (wz>800&&abs(z0close)<0.075).or.(wz<800&&abs(wz)<0.075)
+nt/cuts $6 visen>0.35
+nt/cuts $7 ccen<0.85
+nt/cuts $8 tracks>1
+nt/cuts $9 l4dec>0
+if $SIGMA(which).eq.1 then
+  exec load_all1.kumac
+  sigma ptobge = 0.775	 
+  sigma ptobgp = 0.807666
+  sigma ctobge = 0.578646
+  sigma ctobgp = 0.642509
+  sigma ma = 140209
+  sigma pa = 105060
+  sigma ca = 23000 
+  sigma mb = 2525  
+  sigma pb = 81188 
+  sigma cb = 65674 
+  sigma ptomc  = (pa - pb*ca/cb)/(ma - mb*ca/cb)
+  sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  sigma ptocup = (pa*1.5*mb/ma - pb)/(ca*1.5*mb/ma - cb)
+  sigma ptocdo = (pa*0.5*mb/ma - pb)/(ca*0.5*mb/ma - cb)
+  ve/cr ptocy(3)
+  ve/inp ptocy $SIGMA(ptocup) $SIGMA(ptoc) $SIGMA(ptocdo)
+  ve/cr ptomcy(3)
+  ve/inp ptomcy 0.551738 0.549987 0.548247
+  ve/cr cosy(3)
+  ve/inp cosy -0.230925 -0.22559 -0.220286
+endif
+if $SIGMA(which).eq.2 then
+  exec load_all2.kumac
+  sigma ptobge = 2.96563
+  sigma ptobgp = 8.58676
+  sigma ctobge = 2.39375
+  sigma ctobgp = 8.95192
+  sigma ma = 168282
+  sigma pa = 228821
+  sigma ca = 92612 
+  sigma mb = 2654	 
+  sigma pb = 306556
+  sigma cb = 252568
+  sigma ptomc  = (pa - pb*ca/cb)/(ma - mb*ca/cb)
+  sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  sigma ptocup = (pa*1.5*mb/ma - pb)/(ca*1.5*mb/ma - cb)
+  sigma ptocdo = (pa*0.5*mb/ma - pb)/(ca*0.5*mb/ma - cb)
+  ve/cr ptocy(3)
+  ve/inp ptocy $SIGMA(ptocup) $SIGMA(ptoc) $SIGMA(ptocdo)
+  ve/cr ptomcy(3) 0.697823 0.695797 0.693778
+  ve/inp ptomcy 
+  ve/cr cosy(3)
+  ve/inp cosy 0.189363 0.203774 0.218146
+endif
+if $SIGMA(which).eq.3 then
+  exec load_all3.kumac
+  sigma ptobge = 6.67031
+  sigma ptobgp = 10.3596
+  sigma ctobge = 5.41458
+  sigma ctobgp = 8.87526
+  sigma ma = 94296
+  sigma pa = 265640
+  sigma ca = 141741
+  sigma mb = 1464
+  sigma pb = 383254
+  sigma cb = 324028
+  sigma ptomc  = (pa - pb*ca/cb)/(ma - mb*ca/cb)
+  sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  sigma ptocup = (pa*1.5*mb/ma - pb)/(ca*1.5*mb/ma - cb)
+  sigma ptocdo = (pa*0.5*mb/ma - pb)/(ca*0.5*mb/ma - cb)
+  ve/cr ptocy(3)
+  ve/inp ptocy $SIGMA(ptocup) $SIGMA(ptoc) $SIGMA(ptocdo)
+  ve/cr ptomcy(3)
+  ve/inp ptomcy 1.04988 1.0463 1.04274
+  ve/cr cosy(3)
+  ve/inp cosy -1.16454 -1.1469 -1.12934
+endif
+
+opt sta
+nt/plot //mc/cuts/1.cbmd $1
+message $SIGMA(ptomc)
+
+nt/plot //mc/cuts/1.cbmd $1&&cbmd>0 $SIGMA(155321*72367/77704-30)
+
+nt/plot //mc/cuts/1.cbmd mctype>0&&$1&&cbmd>0 $SIGMA(155321*72367/77704-30)
+nt/plot //mc/cuts/1.cbmd mctype>0&&cbmd>0 $SIGMA(155321*72367/77704-30)
+
+nt/plot //mc/cuts/1.cbmd mctype>0&&$1&&cbmd==0
+nt/plot //mc/cuts/1.cbmd mctype>0&&cbmd==0
+
+
+nt/plot //mc/cuts/1.cblo mctype>0&&$1&&cblo==7
+nt/plot //mc/cuts/1.cblo mctype>0&&cblo==7
+
+nt/plot //mc/cuts/1.cblo mctype>0&&$1&&cblo<7
+nt/plot //mc/cuts/1.cblo mctype>0&&cblo<7
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+opt sta
+
+nt/plot //peak/cuts/1.ebeam
+nt/plot //cont/cuts/1.ebeam
+
+
+message $SIGMA(0.9865*5.1793-0.9870*5.165)
+message $SIGMA(5.1793-5.165)
+
+
+
+
+
+zone 3 1
+h/cr/1d 100 'Biggest shower energy' 50 0.9 1.1
+h/cr/1d 101 'Biggest shower energy' 50 0.9 1.1
+h/cr/1d 102 'Biggest shower energy' 50 0.9 1.1
+h/cr/1d 110 'Biggest shower energy' 50 0.9 1.1
+h/cr/1d 111 'U(3S) Biggest shower energy' 50 0.9 1.1
+h/cr/1d 112 'Biggest shower energy' 50 0.9 1.1
+h/cr/1d 150 'Biggest shower energy' 50 0.9 1.1
+nt/plot //mc/cuts/1.e1 $1&&$2 ! ! ! 'N' 100
+nt/plot //peak/cuts/1.e1+0.0005 $1&&$2 ! ! ! 'N' 101
+nt/plot //cont/cuts/1.e1 $1&&$2 ! ! ! 'N' 102
+sub 101 102 110 1. $SIGMA(ptocup) 'e'
+sub 101 102 111 1. $SIGMA(ptoc) 'e'
+sub 101 102 112 1. $SIGMA(ptocdo) 'e'
+sub 100 100 150 $SIGMA(ptomc) 0. 'e'
+h/plot 111
+set dmod 1
+h/plot 150 'shist'
+pict/print 'e1_is_okay_1s.eps'
+
+ve/cr mchist(50)
+ve/cr mcerrs(50)
+ve/cr dahist(50)
+ve/cr daerrs(50)
+h/get_vect/contents 150 mchist
+h/get_vect/errors   150 mcerrs
+h/get_vect/contents 111 dahist
+h/get_vect/errors   111 daerrs
+sigma mchis = 0
+sigma mcerr = 0
+sigma dahis = 0
+sigma daerr = 0
+do i = 1, 50
+  sigma mchis = mchis + mchist([i])
+  sigma mcerr = mcerr + mcerrs([i])**2
+  sigma dahis = dahis + dahist([i])
+  sigma daerr = daerr + daerrs([i])**2
+enddo
+sigma mcerr = sqrt(mcerr)
+sigma daerr = sqrt(daerr)
+message * Monte Carlo $SIGMA(mchis) +/- $SIGMA(mcerr)
+message * Data $SIGMA(dahis) +/- $SIGMA(daerr)
+
+ * U(1S)
+ * Monte Carlo 1865.56 +/- 32.0317
+ * Data 1599.26 +/- 485.509
+
+ * U(2S)
+ * Monte Carlo 2527.13 +/- 41.9328
+ * Data 1645.84 +/- 946.979
+
+ * U(3S)
+ * Monte Carlo 2068.53 +/- 46.5221
+ * Data 3392.48 +/- 1049.91
+
+
+
+
+
+
+
+
+
+
+h/cr/1d 100 'Biggest shower energy / eBeam (MC, contsub data, peakonly)' 6 2. 8.
+h/cr/1d 101 'Biggest shower energy / eBeam (MC, contsub data, peakonly)' 6 2. 8.
+h/cr/1d 102 'Biggest shower energy / eBeam (MC, contsub data, peakonly)' 6 2. 8.
+h/cr/1d 103 'Biggest shower energy / eBeam (MC, contsub data, peakonly)' 6 2. 8.
+h/cr/1d 104 'Biggest shower energy / eBeam (MC, contsub data, peakonly)' 6 2. 8.
+nt/plot //mc/cuts/1.e1 $1&&$2 ! ! ! 'N' 100
+nt/plot //peak/cuts/1.e1 $1&&$2 ! ! ! 'N' 101
+nt/plot //cont/cuts/1.e1 $1&&$2 ! ! ! 'N' 102
+sub 101 102 103 1. $SIGMA(ptoc) 'e'
+sub 100 100 104 $SIGMA(ptomc) 0. 'e'
+max 104 190
+min 104 -10
+h/plot 104
+h/plot 103 's'
+h/plot 101 's'
+pict/print 'mc_overmodelling_shower_pileup3.eps'
+
+
+
+
+
+
+
+
+
+nt/chain mc1 /home/mccann/acceptance/rzn5/ntuple_db18.rzn
+nt/chain mc1 /home/mccann/acceptance/rzn5/ntuple_db19.rzn
+nt/chain mc2 /home/mccann/acceptance/rzn5/ntuple_db21.rzn
+nt/chain mc2 /home/mccann/acceptance/rzn5/ntuple_db23.rzn
+nt/chain mc3 /home/mccann/acceptance/rzn5/ntuple_db16.rzn
+
+nt/plot //mc1/cuts/1.mctype
+nt/plot //mc1/cuts/1.mctype $1&&$2&&(!$3)
+
+
+
+
+
+
+
+
+h/cr/1d 101 'Biggest shower energy for U(1,2,3S) to all gluons' 120 0. 1.2
+h/cr/1d 102 'Biggest shower energy for U(1,2,3S) to all gluons' 120 0. 1.2
+h/cr/1d 103 'Biggest shower energy for U(1,2,3S) to all gluons' 120 0. 1.2
+nt/plot //mc1/cuts/1.e1 mctype>49&&$1&&$2 ! ! ! 'N' 101
+nt/plot //mc2/cuts/1.e1 mctype>49&&$1&&$2 ! ! ! 'N' 102
+nt/plot //mc3/cuts/1.e1 mctype>49&&$1&&$2 ! ! ! 'N' 103
+normalize 101
+normalize 102
+normalize 103
+h/plot 101
+h/plot 102 's'
+h/plot 103 's'
+set ltyp 2
+dline 0.85 0.85 0 $GRAFINFO('WNYMAX')
+pict/print 'all_gluons.eps'
+
+zone 1 2
+opt sta
+nt/plot //mc1/cuts/1.p2 mctype==-22
+nt/plot //mc1/cuts/1.p2 mctype==-20.or.mctype==-21.or.mctype==-22
+message $SIGMA(93/3944)
+nt/plot //mc2/cuts/1.p2 mctype==-22
+nt/plot //mc2/cuts/1.p2 mctype==-20.or.mctype==-21.or.mctype==-22
+message $SIGMA(71/2736)
+
+zone 1 2
+opt sta
+nt/plot //mc2/cuts/1.p2 (mctype==11)&&$1&&$2&&$3&&$4
+nt/plot //mc2/cuts/1.p2 (mctype==11)
+
+h/cr/1d 201 'Biggest shower energy for ggg VS gg-gamma' 120 0. 8.
+h/cr/1d 202 'Biggest shower energy for ggg VS gg-gamma' 120 0. 8.
+nt/plot //mc1/cuts/1.e1 mctype>49&&$1&&$2 ! ! ! 'N' 201
+nt/plot //mc1/cuts/1.e1 mctype==40&&$1&&$2 ! ! ! 'N' 202
+max 201 800
+min 201 0
+h/plot 201
+h/plot 202 's'
+set ltyp 3
+dline 0.85 0.85 0 $GRAFINFO('WNYMAX')
+pict/print 'ggg_vs_gggamma_again.eps'
+
+nt/plot //mc2/cuts/1.p2 29<mctype<39&&$1&&$2&&$3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+h/cr/1d 100 'Biggest shower' 120 0. 1.2
+h/cr/1d 200 'Biggest shower' 120 0. 1.2
+h/cr/1d 300 'Biggest shower' 120 0. 1.2
+h/cr/1d 400 'Biggest shower' 120 0. 1.2
+h/cr/1d 500 'Biggest shower' 120 0. 1.2
+
+nt/plot //peak/cuts/1.e1 $1&&$2&&e2<0.5&&tr1<0.5 ! ! ! 'N' 100
+nt/plot //cont/cuts/1.e1 $1&&$2&&e2<0.5&&tr1<0.5 ! ! ! 'N' 200
+sub 200 200 300 $SIGMA(ptoc) 0.
+h/plot 100
+h/plot 300 's'
+
+nt/plot //mc/cuts/1.e1 mctype>0&&mctype!=40&&$1&&$2&&e2<0.5&&tr1<0.5 ! ! ! 'N' 400
+nt/plot //mc/cuts/1.e1 mctype==40&&$1&&$2&&e2<0.5&&tr1<0.5 ! ! ! 'N' 500
+h/plot 400
+h/plot 500
+
+nt/plot //mc/cuts/1.e1 mctype==40&&$1&&$2 ! ! ! ! 500
+nt/plot //mc/cuts/1.e1 mctype==40&&$1&&$2
+
+
+
+nt/plot //mc/cuts/1.e1 mctype==40&&$1&&$2 ! ! ! !  500
+nt/plot //mc/cuts/1.e1 mctype==40&&$1&&$2&&abs(shdot)<0.99 ! ! ! 's' 500
+nt/plot //mc/cuts/1.e1 mctype>0&&mctype!=40&&$1&&$2&&abs(shdot)<0.99 ! ! ! 's' 500

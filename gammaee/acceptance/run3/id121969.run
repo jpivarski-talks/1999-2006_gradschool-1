@@ -1,0 +1,25 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/id121969.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/acceptance/run3/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel cleo3_Pass2_Jan30_2002
+
+export USER_DB=16
+export USER_RUN=121969
+export USER_EA=false
+export USER_REL=cleo3_Pass2_Jan30_2002
+
+rm -f ../rzn3/raw$USER_RUN.pds
+suez -f run_index.tcl
+rm -f core
+
+c3rel Dec10_03
+
+suez -f trigger_only.tcl
+rm -f core
+
+suez -f ntuple.tcl
+rm -f core

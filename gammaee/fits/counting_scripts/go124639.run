@@ -1,0 +1,29 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/counting_logs/r124639.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/fits/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_DB=19
+export USER_RUN=124639
+
+echo $USER_DB $USER_RUN
+
+suez -f count.tcl | tee /cdat/tem/mccann/counting_logs/tmp124639.log
+rm -f core
+
+export USER_GOODEVENTS=`fgrep ' %% SYSTEM-Processor.CountEvents: goodEvents' /cdat/tem/mccann/counting_logs/tmp124639.log | awk '{print $4}'`
+export USER_COSMICEVENTS=`fgrep ' %% SYSTEM-Processor.CountEvents: goodEvents' /cdat/tem/mccann/counting_logs/tmp124639.log | awk '{print $6}'`
+export USER_BGPEVENTS=`fgrep ' %% SYSTEM-Processor.CountEvents: goodEvents' /cdat/tem/mccann/counting_logs/tmp124639.log | awk '{print $8}'`
+export USER_BGEEVENTS=`fgrep ' %% SYSTEM-Processor.CountEvents: goodEvents' /cdat/tem/mccann/counting_logs/tmp124639.log | awk '{print $10}'`
+rm -f /cdat/tem/mccann/counting_logs/tmp124639.log
+
+echo '$goodEvents{124639} =' $USER_GOODEVENTS >> goodEvents.pl
+echo '$cosmicEvents{124639} =' $USER_COSMICEVENTS >> cosmicEvents.pl
+echo '$bgpEvents{124639} =' $USER_BGPEVENTS >> bgpEvents.pl
+echo '$bgeEvents{124639} =' $USER_BGEEVENTS >> bgeEvents.pl
+
+exit

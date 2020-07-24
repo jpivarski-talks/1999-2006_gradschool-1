@@ -1,0 +1,43 @@
+This is the README file for TwoPhotonCuts. It shows you how to write
+a Processor in the new CLEO3 Suez environment.
+
+1.) You should only need to edit the TwoPhotonCuts.cc file (and
+    potentially also TwoPhotonCuts.h). Fill TwoPhotonCuts.cc with your
+    analysis code.
+
+2.) Make a shared library: "gmake CXX=<compiler>"
+This step requires that you have a standard type of build area,
+consisting of (../bin, ../lib, and ../shlib) directories.
+The shared processor library will end up in ../shlib!
+
+3.) Set the environment variable C3_SHLIB to include the ../shlib
+directory above: setenv C3_SHLIB /home/mkl/build/shlib
+
+4.) A tcl file to load your processor called loadTwoPhotonCuts.tcl is
+    located in TwoPhotonCuts's Test subdirectory.  It includes any other
+    packages needed for the auto-generated example code.
+
+5.) Start up Suez: suez
+
+6.) Here is a sample job:
+
+suez> file in test.rp
+suez> proc ls
+
+Listing all available Processors:
+
+in memory:
+
+and on disk:
+/home/mkl/build/shlib/ TwoPhotonCuts
+
+suez> run_file loadTwoPhotonCuts.tcl
+suez> go 1
+... 
+suez> exit
+
+
+ Please read the documentation: 
+     http://w4.lns.cornell.edu/restricted/CLEO/CLEO3/soft/index.html
+
+ That's It! Questions, Suggestions, Complaints --> Martin Lohner

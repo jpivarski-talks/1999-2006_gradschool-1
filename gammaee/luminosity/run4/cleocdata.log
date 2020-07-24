@@ -1,0 +1,360 @@
+------- Setting ulimits -------
+core file size        (blocks, -c) 0
+data seg size         (kbytes, -d) unlimited
+file size             (blocks, -f) unlimited
+max locked memory     (kbytes, -l) unlimited
+max memory size       (kbytes, -m) unlimited
+open files                    (-n) 1024
+pipe size          (512 bytes, -p) 8
+stack size            (kbytes, -s) unlimited
+cpu time             (seconds, -t) unlimited
+max user processes            (-u) 2044
+virtual memory        (kbytes, -v) unlimited
+ %% INFO-Suez: 
+// -----------------------------------------------------------
+//  Welcome to Suez, the CLEO III data access program         
+// -----------------------------------------------------------
+
+ %% INFO-Suez: $Id: SuezMain.cc,v 1.72 2003/04/25 15:42:19 vk Exp $
+
+ %% SYSTEM-Interpreter.TclInterpreter: 
+//  For a list of available commands, type "help".              
+//                                                                
+//  Since the command interpreter is based on a Tcl interpreter,  
+//  all Tcl commands are available.                               
+//  For info on tcl: "http://www.scriptics.com/resource/doc"    
+
+ %% SYSTEM-Interpreter.TclInterpreter: 
+// Renaming the following Tcl commands:
+//  (because they collide with Suez commands!)
+// -------------------------------------------
+//  source --> tcl_source or ::source
+//  proc   --> tcl_proc   or ::proc
+//  file   --> tcl_file   or ::file
+
+ %% SYSTEM-Module: added command "summary" from SummaryModule
+ %% SYSTEM-Module: added command "source_format" from SourceFormatMap
+ %% SYSTEM-Module: added command "sink_format" from SinkFormatMap
+ %% SYSTEM-Module: added command "source" from SourceManager
+ %% SYSTEM-Module: added command "stream" from SourceManager
+ %% SYSTEM-Module: added command "sink" from SinkManager
+ %% SYSTEM-Module: added command "prod" from MasterProducer
+ %% SYSTEM-Module: added command "proc" from MasterProcessor
+ %% SYSTEM-Module: added command "path" from PathModule
+ %% SYSTEM-Module: added command "default" from DefaultModule
+ %% SYSTEM-Module: added command "file" from FileModule
+ %% SYSTEM-Module: added command "emptysource" from EmptySourceModule
+Suez.cleocdata> default prompt off
+off
+Suez.cleocdata> exception continueEventLoop on
+on
+Suez.cleocdata> module sel LoadHbook4MModule
+ %% WARNING-CommandPattern.CompositeModule: no command(s) for module LoadHbook4MModule
+Suez.cleocdata> module sel HbookHistogramModule
+ %% SYSTEM-Module: added command "hbook" from HbookHistogramModule
+Suez.cleocdata> hbook file ../rzn4/cleocdata.rzn
+Suez.cleocdata> hbook init
+Suez.cleocdata> module sel CorbaModule
+ %% SYSTEM-Module: added command "corba" from CorbaModule
+Suez.cleocdata> corba init
+Suez.cleocdata> module sel RunStatisticsSourceModule
+ %% SYSTEM-Module: added command "runstatistics" from RunStatisticsSourceModule
+Suez.cleocdata> runstatistics in
+ %% INFO-JobControl.SourceManager: creating Source Name "RunStatistics" 
+Suez.cleocdata> module sel ConstantsModule
+ %% SYSTEM-Module: added command "constants" from ConstantsModule
+Suez.cleocdata> constants in $env(C3_CONST) standard PASS2-C_5 exclude_streams richgains
+ %% INFO-JobControl.SourceManager: creating Source Name "Codi" 
+Suez.cleocdata> prod sel NavigationProd
+ %% SYSTEM-Module: added command "NavigationProd" from NavigationProd
+Suez.cleocdata> prod sel TrackDeliveryProd
+ %% SYSTEM-Module: added command "TrackDeliveryProd" from TrackDeliveryProd
+Suez.cleocdata> prod sel C3ccProd
+ %% SYSTEM-Module: added command "C3ccProd" from C3ccProd
+Suez.cleocdata> param C3ccProd RequireRunGainsHotList false
+0
+Suez.cleocdata> prod sel MagFieldProd
+ %% SYSTEM-Module: added command "MagFieldProd" from MagFieldProd
+Suez.cleocdata> prod sel EventPropertiesProd
+ %% SYSTEM-Module: added command "EventPropertiesProd" from EventPropertiesProd
+Suez.cleocdata> prod sel EventTypeProd
+ %% SYSTEM-Module: added command "EventTypeProd" from EventTypeProd
+Suez.cleocdata> prod sel CesrBeamEnergyProd
+ %% SYSTEM-Module: added command "CesrBeamEnergyProd" from CesrBeamEnergyProd
+Suez.cleocdata> prod sel VFinderProd
+ %% SYSTEM-Module: added command "VFinderProd" from VFinderProd
+Suez.cleocdata> prod sel ElectronFromPionFitProd
+ %% SYSTEM-Module: added command "ElectronFromPionFitProd" from ElectronFromPionFitProd
+Suez.cleocdata> prod sel GoodThingsProd
+ %% SYSTEM-Module: added command "GoodThingsProd" from GoodThingsProd
+Suez.cleocdata> source_format sel BeamSpotFileSourceFormat
+Suez.cleocdata> file in $env(C3_INFO)/data/beamspot.beamspot beginrun
+ %% INFO-JobControl.SourceManager: creating Source Name "beamspot" 
+beamspot
+Suez.cleocdata> run_file $env(C3_SCRIPTS)/CcHotList.tcl
+Suez.CcHotList> source_format sel CcHotListFileSourceFormat
+Suez.CcHotList> file in $env(C3_INFO)/data/cchotlist.cchotlist beginrun
+ %% INFO-JobControl.SourceManager: creating Source Name "cchotlist" 
+cchotlist
+cchotlist
+Suez.cleocdata> prod sel DetectorConfigurationProd
+ %% SYSTEM-Module: added command "DetectorConfigurationProd" from DetectorConfigurationProd
+Suez.cleocdata> param DetectorConfigurationProd Override true
+1
+Suez.cleocdata> param DetectorConfigurationProd UseZDnotSI true
+1
+Suez.cleocdata> prod sel IRGeomProd
+ %% SYSTEM-Module: added command "IRGeomProd" from IRGeomProd
+Suez.cleocdata> prod sel DRGeom
+ %% SYSTEM-Module: added command "DRGeom" from DRGeom
+Suez.cleocdata> prod sel ZDGeomProd
+ %% SYSTEM-Module: added command "ZDGeomProd" from ZDGeomProd
+Suez.cleocdata> prod sel AZDGeomProd
+ %% SYSTEM-Module: added command "AZDGeomProd" from AZDGeomProd
+Suez.cleocdata> prod sel ADRGeomProd
+ %% SYSTEM-Module: added command "ADRGeomProd" from ADRGeomProd
+Suez.cleocdata> prod sel DRHitCorrectorProd
+ %% SYSTEM-Module: added command "DRHitCorrectorProd" from DRHitCorrectorProd
+Suez.cleocdata> prod sel CDOffCal
+ %% SYSTEM-Module: added command "CDOffCal" from CDOffCal
+Suez.cleocdata> source_format sel AsciiSourceFormat
+Suez.cleocdata> file in $env(C3_DATA)/material.asc material
+ %% INFO-JobControl.SourceManager: creating Source Name "material" 
+material
+Suez.cleocdata> proc sel EventTypeFilterProc
+ %% SYSTEM-Module: added command "EventTypeFilterProc" from EventTypeFilterProc
+Suez.cleocdata> param EventTypeFilterProc GamGam true
+ %% SYSTEM-Interpreter.TclInterpreter: Tcl_Eval error: invalid command name "GamGam"; type '
+help' for available commands
+invalid command name "GamGam"; type 'help' for available commands
+Suez.cleocdata> param EventTypeFilterProc BhabhaLoose true
+ %% SYSTEM-Interpreter.TclInterpreter: Tcl_Eval error: invalid command name "BhabhaLoose"; t
+ype 'help' for available commands
+invalid command name "BhabhaLoose"; type 'help' for available commands
+Suez.cleocdata> proc sel ../build_Linux/shlib/Convert
+ %% SYSTEM-Module: added command "Convert" from Convert
+Suez.cleocdata> module sel EventStoreModule
+ %% SYSTEM-Module: added command "eventstore" from EventStoreModule
+Suez.cleocdata> eventstore in 20050406 physics bhagam runs 202523 202656
+ %% SYSTEM-MySQLQuerier.MySQLQuerier: Connecting to EventStore@lnx150.lns.cornell.edu
+ %% INFO-JobControl.SourceManager: creating Source Name "eventstore" 
+Suez.cleocdata> go
+ %% INFO-JobControl.SourceManager: Opened data source "RunStatistics".
+ %% INFO-JobControl.SourceManager: Opened data source "Codi".
+ %% INFO-JobControl.SourceManager: Opened data source "beamspot".
+ %% INFO-JobControl.SourceManager: Opened data source "cchotlist".
+ %% INFO-JobControl.SourceManager: Opened data source "material".
+ %% INFO-JobControl.SourceManager: Opened data source "eventstore".
+ %% WARNING-HbookHistogram.HbookHistDir: 
+directory name EventTypeFilterProc exceeds hbook size limit of 16
+name has been truncated to EventTypeFilter
+ %% INFO-Processor.EventTypeFilterProc:  No selection made: passing all events:
+
+
+
+ %% INFO-GoodThingsProd.GoodThingsProd: Tracks selected with:
+FitsOK TRUE means Kalman fit must be ok            1
+RedCh2 Upper value of reduced chisq of fit         50
+HtFrac Lower limit on hit fraction                 0.5
+|DPCA| Upper limit on |dist closest approach|      0.02
+|ZPCA| Upper limit on |Z0 at d.c.a.|               0.1
+Mom_Lo Lower limit on momentum/EBeam               0.01
+Mom_Hi Upper limit on momentum/EBeam               1.2
+|CosT| Upper limit on |Cos(theta)|                 0.93
+EcotTh Upper limit on err(Cot(theta))              0.3
+Err_Z0 Upper limit on err(Z0)                      0.5
+
+Showers selected with:
+NoMtch TRUE to require not matched to a track      1
+NoMtCR TRUE to require no track match in ConReg    0
+GoodBE TRUE to require good barrel OR endcap       1
+NotHot TRUE to require not hot crystal             1
+NotBrm TRUE to require not bremmed from a track    0
+Enr_Lo Lower limit on energy/EBeam                 0.01
+Enr_Hi Upper limit on energy/EBeam                 1.2
+DisMat Lower limit on dist to nearest matched shwr -1
+DisUnm Lower limit on dist to nearest unmatched sh -1
+X925__ Lower limit on X925                         -1
+X925Un Lower limit on X925Unfolded                 -1
+
+ %% INFO-JobControl.SourceManager: Using eventstore for active streams: event 
+ %% INFO-JobControl.SourceManager: Defined active streams.
+
+ >> Fri Apr  8 19:41:55 2005 Run:  202527 Event:       6 Stop: event << 
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBBeamEnergyShift using version 1.1
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBMagFudge using version 1.4
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBSuperConductingQuadFieldMap using version 1
+.2
+ %% INFO-CCGECS: CC Energy-dependent calibration version of Jan 2004
+
+ >> Fri Apr  8 19:41:56 2005 Run:  202527 Event:      59 Stop: event << 
+ %% INFO-IRGeom.BeamPipeGeometry23: Constructing the CLEO2-3 beam pipe.
+ %% INFO-IRGeom.MaskInnerGeometry: Constructing inner mask.
+ %% INFO-IRGeom.MaskMainGeometry: Constructing main mask.
+ %% INFO-IRGeom.StainlessTubeGeometry: Constructing stainless support tubes.
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBZDGeomAlignment using version 1.4
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBAZDGeomWireSurvey using version 1.2
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBAZDGeomLayer using version 1.1
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRGeomAlignment using version 1.6
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBADRGeomLayer using version 1.4
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBADRGeomWireSurvey using version 1.1
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBADRGeomLayersEnds using version 1.1
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRWeight2LayerDriftEntAng using version 1.6
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRWeight2LayerTheta using version 1.6
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRWeight2LayerPhi using version 1.1
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRGarfield_DistanceCorrection using version
+ 1.15
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRGarfield_TimeCorrection using version 1.1
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRDaqCellIDMap using version 1.1
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRWireQuality using version 1.1
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRtdc2time using version 1.1
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRadc2charge using version 1.183
+ %% INFO-CDOffCal.DriftFunctionProxy: Extracting DriftDatav2 Constant Object
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRDriftDatav2 using version 1.40
+ %% INFO-CDOffCal.DriftFunctionProxy: Extracting DriftData Constant Object
+ %% WARNING-CDOffCal.DriftFunctionProxy: No drdriftdata Record found in the Frame
+ %% WARNING-CDOffCal.DriftFunctionProxy: DriftData Constant Object Not Found
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRvarious using version 1.1
+ %% INFO-CDOffCal.DriftFunctionProxy: Signal Propagation taken from Constants Database 0.75
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRadcpedestal using version 1.243
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRt0channelv2 using version 1.39
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRt0card using version 1.40
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRt0hvcard using version 1.40
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRt0crate using version 1.41
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBDRt0global using version 1.49
+ %% INFO-CDOffCal.DriftFunction: Global scale (user parameter): 0.000123
+ %% INFO-CDOffCal.DriftFunction: Global T0 offset 1 (user parameter): 0
+ %% INFO-CDOffCal.DriftFunction: Global T0 offset 2 (constants)     : 6.10274e+06
+ %% INFO-CDOffCal.DriftFunction: t0s loaded OK
+ %% INFO-CDOffCal.DriftFunction:  Found 80 Charge Dependent T0 Shifts 
+ %% INFO-CDOffCal.DriftFunction: Pedestals loaded OK
+ %% INFO-CDOffCal.DriftFunction: WireQuality Info loaded OK
+ %% INFO-CDOffCal.DriftFunction: WireMap loaded OK
+ %% INFO-CDOffCal.DriftFunction: ADC Gains loaded OK
+ %% INFO-CDOffCal.DriftFunction: No Zero ADC Gains
+ %% INFO-CDOffCal.DriftFunction: TDC Slopes loaded OK
+ %% INFO-CDOffCal.DriftFunction: ADC Gains loaded OK
+ %% INFO-CDOffCal.DataDriftFunction: Reading Drift Functions 
+ %% INFO-CDOffCal.DataDriftFunction: DriftDatav2 Object Used For DF Constants
+ %% INFO-CDOffCal.DataDriftFunction: Drift Correction File Size: 1924
+ %% INFO-CDOffCal.DataDriftFunction: Load constants for new (calibrated from data) drift dis
+t. vs time and E.A. correction
+ %% INFO-CDOffCal.DataDriftFunction: Entrance Angle Correction Parameters (for calibrated on
+ data map): 
+ %% INFO-CDOffCal.DataDriftFunction:  Entrance Angle: Range(degree) = +-90, # of bins =37, B
+in Size =5
+ %% INFO-CDOffCal.DataDriftFunction:  Drift Time: Range(ps) = from 0 to 500000, # of bins =2
+6, Bin Size =20000
+ %% INFO-CDOffCal.DataDriftFunction: E.A. Correction Statistics for Ambiguity = 0:
+                                     # of zero bins / Total=382 / 962
+                                     Max/Min correction(m) =0.00101416 / -0.00224654
+ %% INFO-CDOffCal.DataDriftFunction: E.A. Correction Statistics for Ambiguity = 1:
+                                     # of zero bins / Total=386 / 962
+                                     Max/Min correction(m) =0.00223611 / -0.00104809
+ %% INFO-CDOffCal.DataDriftFunction: Entrance Angle Statistics 
+                                     Time Correction vs. Distance 
+                                     Nonzero Correction Bins: 87%, 
+                                     RMS correction value   : 22388.9(ps),  
+                                     Zero Correction Bins   : 13%, 
+                                     Filled Correction Bins : 91%  
+
+ %% NOTICE-ConstantsPhase2Delivery.DBCP2Proxy: DBADRGeomCathodePanels using version 1.1
+
+ >> Fri Apr  8 19:42:36 2005 Run:  202530 Event:       9 Stop: event << 
+ %% INFO-CDOffCal.Statistics: 0 1 - CDOffCal Calibration Statistics?%G�%@
+
+
+ >> Fri Apr  8 19:42:54 2005 Run:  202530 Event:    1941 Stop: event << 
+ %% INFO-VXFit.VXFitSettings: >>>>>> Initializing default fitter settings.
+ %% INFO-VXFit.VXFitSettings:        epsilon: 1e-05
+ %% INFO-VXFit.VXFitSettings:        max. Iter.: 10
+ %% INFO-VXFit.VXFitSettings:        Debug? OFF (0)
+ %% INFO-VXFit.VXFitSettings:        Fast Inv.?  ON (1)
+ %% INFO-VXFit.VXFitSettings:        Fail at Max Itr? YES (0)
+ %% NOTICE-VFinderProd.VXFitVeeConversionProxy: Vee Fit failed...
+ %% NOTICE-VFinderProd.VXFitVeeConversionProxy: Vee Fit failed...
+
+ >> Fri Apr  8 19:42:59 2005 Run:  202530 Event:   10956 Stop: event << 
+ %% NOTICE-VFinderProd.VXFitVeeConversionProxy: Vee Fit failed...
+
+ >> Fri Apr  8 20:11:01 2005 Run:  202560 Event:   26538 Stop: event << 
+ %% NOTICE-VFinderProd.VXFitVeeConversionProxy: Vee Fit failed...
+
+ >> Fri Apr  8 20:11:14 2005 Run:  202560 Event:   39482 Stop: event << 
+ %% ERROR-VFinderProd.VXFitVeeConversionProxy: Fit Matrix is not positive definite: tracks 1
+ 4
+
+ >> Fri Apr  8 20:11:15 2005 Run:  202560 Event:   41657 Stop: event << 
+ %% NOTICE-VFinderProd.VXFitVeeConversionProxy: Vee Fit failed...
+
+ >> Fri Apr  8 20:51:05 2005 Run:  202656 Event:   41447 Stop: event << 
+ %% NOTICE-VFinderProd.VXFitVeeConversionProxy: Vee Fit failed...
+
+ >> Fri Apr  8 20:51:07 2005 Run:  202656 Event:   45634 Stop: event << 
+ %% NOTICE-VFinderProd.VXFitVeeConversionProxy: Vee Fit failed...
+
+ >> Fri Apr  8 20:51:08 2005 Run:  202656 Stop: none << 
+ %% INFO-JobControl.JobControl: Reached end of an active source
+ %% INFO-JobControl.SourceManager: Removed source-in-use "eventstore"
+Suez.cleocdata> hbook terminate
+Suez.cleocdata> summary
+
+ ***** Summary Info *****
+
+ Stream event : 1571346
+   Processed 1571346 stops.
+
+
+Suez.cleocdata> exit
+ %% INFO-Processor.EventTypeFilterProc: 
+
+ ****** Summary from EventTypeFilterProc  **** for  1571346 events ******
+
+    **** # passed EventTypeFilterProc  filtering =  1571346 events ******
+
+
+      Type           Excl   Incl      Overlap (in %, use Incl # as denom)
+      ----           ----   ----      -----------------------------------
+
+T00 Hadron              0   3559   0% T26=100 T07=100 T01= 66 T24= 52 T09= 48
+T01 HadronTight         0   2359   0% T00=100 T26=100 T07=100 T24= 78 T09= 59
+T02 Tau                 0  23824   2% T26=100 T07=100 T13= 44 T14= 40 T18= 31
+T03 Tau1vN              0   1774   0% T02=100 T26=100 T07=100 T24= 83 T09= 50
+T04 TauLoBgd            0   4927   0% T02=100 T07=100 T26=100 T09= 34 T13= 32
+T05 MuPair              0  15653   1% T26=100 T07=100 T08= 53 T06= 46 T09= 25
+T06 RadMuP              0   7174   0% T05=100 T07=100 T26=100 T08= 50 T09= 50
+T07 BhabhaLoose     880331270710  81% T08= 82 T26= 31 T09= 23 T23= 13 T24=  2
+T08 BhabhaTight         01046913  67% T07=100 T26= 25 T09= 20 T23=  9 T05=  1
+T09 RadBha              0 298533  19% T26=100 T07=100 T08= 71 T23= 37 T24=  4
+T10 GamGam         122493 300624  19% T26= 59 T11= 49 T25= 34
+T11 RadGam              0 147844   9% T26=100 T10=100 T25= 49
+T12 ElGamJunk           2      6   0% T26= 67 T25= 67
+T13 LoPtLoose           0  14621   1% T07=100 T14= 93 T26= 89 T02= 71 T15= 62
+T14 LoPtTwoTk           0  13617   1% T13=100 T07=100 T26= 89 T02= 70 T15= 67
+T15 LoPt2Leptons        0   9091   1% T26=100 T14=100 T13=100 T07=100 T02= 72
+T16 LoPtGT2Tk           0    566   0% T07=100 T13=100 T26= 96 T00= 95 T02= 93
+T17 LoPt4Pions          0     15   0% T26=100 T16=100 T13=100 T07=100 T02= 93
+T18 LoPtOneTag          0  14914   1% T07=100 T26= 64 T02= 50 T08= 20 T09= 19
+T19 LoPtTwotag          0   1984   0% T07=100 T26= 81 T09= 50 T23= 32 T24= 30
+T20 BeamGas             0      0   0%
+T21 Cosmic              0      0   0%
+T22 TranDiMuon          0   1335   0% T26=100 T07=100 T05= 69 T06= 57 T02= 44
+T23 TranDiElec          0 158869  10% T26=100 T07=100 T09= 69 T08= 61 T24=  3
+T24 TranLepTk           0  24283   2% T26=100 T07=100 T09= 48 T23= 17 T01=  8
+T25 HardGam             0 103638   7% T26=100 T10= 99 T11= 70 T07=  1 T09=  0
+T26 HadLep              0 568215  36% T07= 69 T09= 53 T08= 46 T10= 31 T23= 28
+T32 Known               01571345 100% T07= 81 T08= 67 T26= 36 T10= 19 T09= 19
+T33 Unknown             1      1   0%
+
+
+ %% INFO-JobControl.SummaryModule: 
+ ***** Summary Info *****
+
+ Stream event : 1571346
+   Processed 1571346 stops.
+
+
+EDT: 04/08/2005 20:51:14.911167 | xitman.cxx:278: info: (C) xitman starts cleaning...
+EDT: 04/08/2005 20:51:14.914329 | runtime.cxx:135: info: (C) BDT checks out...
+EDT: 04/08/2005 20:51:14.914610 | runtime.cxx:140: info: (C) Removed basics::theDict.
+EDT: 04/08/2005 20:51:14.914720 | xitman.cxx:288: info: (C) xitman done!

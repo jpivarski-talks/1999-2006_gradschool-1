@@ -1,0 +1,13 @@
+file add pdschain /cdat/dafe/mccann/acceptance/remc3/y1s/May12_03_MC/mcpass2_123651.pds physics event beginrun startrun endrun
+file add pdschain /cdat/dafe/mccann/acceptance/remc3/y1s/May12_03_MC/mcpass2_123652.pds physics event beginrun startrun endrun
+file add pdschain /cdat/dafe/mccann/acceptance/remc3/y1s/May12_03_MC/mcpass2_123653.pds physics event beginrun startrun endrun
+file add pdschain /cdat/dafe/mccann/acceptance/remc3/y1s/May12_03_MC/mcpass2_123654.pds physics event beginrun startrun endrun
+file add pdschain /cdat/dafe/mccann/acceptance/remc3/y1s/May12_03_MC/mcpass2_123656.pds physics event beginrun startrun endrun
+file add pdschain /cdat/dafe/mccann/acceptance/remc3/y1s/May12_03_MC/mcpass2_123658.pds physics event beginrun startrun endrun
+file add pdschain /cdat/dafe/mccann/acceptance/remc3/y1s/May12_03_MC/mcpass2_123659.pds physics event beginrun startrun endrun
+file add pdschain /cdat/dafe/mccann/acceptance/remc3/y1s/May12_03_MC/mcpass2_123665.pds physics event beginrun startrun endrun
+file add pdschain /cdat/dafe/mccann/acceptance/remc3/y1s/May12_03_MC/mcpass2_123670.pds physics event beginrun startrun endrun
+file add pdschain /cdat/dafe/mccann/acceptance/remc3/y1s/May12_03_MC/mcpass2_123673.pds physics event beginrun startrun endrun
+file add pdschain /cdat/dafe/mccann/acceptance/remc3/y1s/May12_03_MC/mcpass2_123674.pds physics event beginrun startrun endrun
+file add pdschain /cdat/dafe/mccann/acceptance/remc3/y1s/May12_03_MC/mcpass2_123675.pds physics event beginrun startrun endrun
+file add pdschain /cdat/dafe/mccann/acceptance/remc3/y1s/May12_03_MC/mcpass2_123678.pds physics event beginrun startrun endrun

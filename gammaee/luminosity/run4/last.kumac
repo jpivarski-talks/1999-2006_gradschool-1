@@ -1,0 +1,52 @@
+*** Begin of history file: Mon Apr 25 13:26:44 2005
+h/file 1 ../rzn4/cleocmc_cs.rzn
+h/file 2 ../rzn4/cleocdata_cs.rzn
+h/cr/2d 100 'ring1 vs ring2' 68 0.5 68.5 68 0.5 68.5
+nt/plot //lun1/crystalstudy/1.ring1%ring2 abs(ring1+ring2-69)<2.5&&ring2>-100 ! ! ! 'box' 100
+nt/cuts $1 abs(ring1+ring2-69)<2.5
+nt/cuts $2 (abs(ring1-34.5)<20.5.or.abs(ring2-34.5)<20.5)
+nt/cuts $3 (abs(ring1-34.5)>2.5.or.abs(ring2-34.5)>2.5)
+nt/cuts $4 (abs(mod(cell1,128.)-mod(cell2,128.)+64)<1.5.or.abs(mod(cell1,128.)-mod(cell2,128.)-64)<1.5)
+nt/plot //lun1/crystalstudy/1.ring1%ring2 ! ! ! ! 'box' 100
+nt/plot //lun1/crystalstudy/1.ring1%ring2 $1 ! ! ! 'box' 100
+nt/plot //lun1/crystalstudy/1.ring1%ring2 $1&&$2 ! ! ! 'box' 100
+nt/plot //lun1/crystalstudy/1.ring1%ring2 $1&&$2&&$3 ! ! ! 'box' 100
+nt/plot //lun1/crystalstudy/1.atan2(sin(phi1),cos(phi1))%mod(cell1,128.)
+h/cr/2d 100 'phi vs cell mod 128' 128 -0.5 127.5 128 -3.1415926 3.1415926
+nt/plot //lun1/crystalstudy/1.atan2(sin(phi1),cos(phi1))%mod(cell1,128.) ! ! ! ! 100
+nt/plot //lun1/crystalstudy/1.atan2(sin(phi1),cos(phi1))%mod(cell1,128.) ! ! ! ! ! 100
+nt/plot //lun1/crystalstudy/1.atan2(sin(phi1),cos(phi1))%mod(cell1+5,128.) ! ! ! ! ! 100
+nt/plot //lun1/crystalstudy/1.atan2(sin(phi1),cos(phi1))%mod(cell1+10,128.) ! ! ! ! ! 100
+nt/plot //lun1/crystalstudy/1.atan2(sin(phi1),cos(phi1))%mod(cell1+11,128.) ! ! ! ! ! 100
+h/plot 100(1:5,1:5)
+h/plot 100(1:5,1:5) box
+h/plot 100(120:128,120:128) box
+nt/plot //lun1/crystalstudy/1.atan2(sin(phi1),cos(phi1))%mod(cell1+11,128.) ! ! ! ! ! 100
+nt/plot //lun1/crystalstudy/1.atan2(sin(phi1),cos(phi1))%mod(cell1+11,128.) cos(th1)>0 ! ! ! ! 100
+nt/plot //lun1/crystalstudy/1.cos(th1) $1
+nt/plot //lun1/crystalstudy/1.cos(th1) $1&&$2
+nt/plot //lun1/crystalstudy/1.cos(th1) $1&&$2&&$3
+nt/plot //lun1/crystalstudy/1.ring1%ring2 $1&&$2&&$3 ! ! ! 'box' 100
+h/cr/2d 100 'ring1 vs ring2' 68 0.5 68.5 68 0.5 68.5
+nt/plot //lun1/crystalstudy/1.ring1%ring2 $1&&$2&&$3 ! ! ! 'box' 100
+dline 34.5 34.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $GRAFINFO('WNXMIN') $GRAFINFO('WNXMAX') 34.5 34.5
+nt/cuts $3 (abs(ring1-34.5)>1.5.or.abs(ring2-34.5)>1.5)
+h/cr/2d 100 'ring1 vs ring2' 68 0.5 68.5 68 0.5 68.5
+nt/plot //lun1/crystalstudy/1.ring1%ring2 $1&&$2&&$3 ! ! ! 'box' 100
+dline 34.5 34.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $GRAFINFO('WNXMIN') $GRAFINFO('WNXMAX') 34.5 34.5
+nt/plot //lun1/crystalstudy/1.cos(th1) $1&&$2&&$3
+nt/plot //lun1/crystalstudy/1.cos(th1) (abs(ring1+ring2-69)<0.5)&&$2&&$3
+nt/plot //lun1/crystalstudy/1.cos(th1) (abs(ring1+ring2-69)<0.5)
+nt/plot //lun1/crystalstudy/1.cos(th1) (abs(ring1+ring2-69)<0.5)&&$2&&$3 ! ! ! 's'
+nt/plot //lun1/crystalstudy/1.abs(cos(th1)) (abs(ring1+ring2-69)<0.5)
+nt/plot //lun1/crystalstudy/1.abs(cos(th1)) (abs(ring1+ring2-69)<0.5)&&$2&&$3
+nt/plot //lun1/crystalstudy/1.abs(cos(th1)) (abs(ring1+ring2-69)<0.5)&&$2&&$3&&0.05<abs(cos(th1))<0.15
+nt/plot //lun1/crystalstudy/1.abs(cos(th1)) (abs(ring1+ring2-69)<0.5)&&$2&&$3&&0.7<abs(cos(th1))<0.8
+nt/cuts $1 abs(ring1+ring2-69)<2.5
+nt/cuts $2 (abs(ring1-34.5)<19.5.or.abs(ring2-34.5)<19.5)
+nt/cuts $3 (abs(ring1-34.5)>1.5.or.abs(ring2-34.5)>1.5)
+nt/cuts $4 (abs(mod(cell1,128.)-mod(cell2,128.)+64)<1.5.or.abs(mod(cell1,128.)-mod(cell2,128.)-64)<1.5)
+nt/plot //lun1/crystalstudy/1.abs(cos(th1)) (abs(ring1+ring2-69)<0.5)&&$2&&$3&&0.7<abs(cos(th1))<0.8
+*** End   of history file: Mon Apr 25 14:07:46 2005

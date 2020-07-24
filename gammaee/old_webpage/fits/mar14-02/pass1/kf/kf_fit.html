@@ -1,0 +1,31 @@
+<table><tr><td>Fit Function</td><td>Kuraev-Fadin</td><td>=</td>
+    Module[{xMeV, areaGeV, sigmaGeV, t, z, F}, xMeV = x*1000; areaGeV = area/1000; sigmaGeV = sigma/1000; t = 2*1/(137.035999765*Pi)*Log[xMeV^2/0.51099890221^2 - 1]; z = (x - mean)/sigmaGeV; F = (Gamma[1 + t]*Exp[-(z^2/2)])/(Sqrt[2*Pi]*(0.31 - (0.73*z)/Sqrt[1 + (z/(1 + 1.37*t))^2] + z^2)^(t/2)) + 1.052*If[z > 0, 1, 0]*t*z^t*z^2.18/(1 + z^3.18)*(1 + ((1 - t)*(2 - t))/(2*(1.5*t + 2.44 + (z - 46/(z^2 + 21))^2))); (areaGeV*((2*sigmaGeV)/mean)^t*F)/sigmaGeV + background[x, back]]</td></tr></table>
+<table>  <tr><td>area</td><td>=</td><td>297.51360407899114</td><td>+/-</td><td>1.683629365655885</td><td>MeV nb</td></tr>
+  <tr><td>mean</td><td>=</td><td>9.46000860947111</td><td>+/-</td><td>0.00003175403274056299</td><td>GeV</td></tr>
+  <tr><td>sigma</td><td>=</td><td>3.836229424255173</td><td>+/-</td><td>0.021431650939509644</td><td>MeV</td></tr>
+  <tr><td>back</td><td>=</td><td>3.5697850585614357</td><td>+/-</td><td>0.009412399611028277</td><td>nb</td></tr>
+</table>
+<table><tr><td>Chi^2 / ndf</td><td>=</td><td>
+60.02024179490256 / 57</td><td>=</td><td>1.0529866981561853</td></tr></table>
+<table>
+  <tr>
+    <td align=center>2.8346078408988373</td>
+    <td align=center>0.0000391098299672784</td>
+    <td align=center>0.03503682010203555</td>
+    <td align=center>-0.004418060206342891</td>
+  <tr>
+    <td align=center>0.00003910982996727837</td>
+    <td align=center>1.0083185952887464e-9</td>
+    <td align=center>4.6817619974717145e-7</td>
+    <td align=center>-2.1596173353649688e-8</td>
+  <tr>
+    <td align=center>0.03503682010203555</td>
+    <td align=center>4.6817619974717235e-7</td>
+    <td align=center>0.00045931566199298464</td>
+    <td align=center>-0.000038157224377859894</td>
+  <tr>
+    <td align=center>-0.004418060206342898</td>
+    <td align=center>-2.1596173353649827e-8</td>
+    <td align=center>-0.000038157224377860056</td>
+    <td align=center>0.00008859326643768525</td>
+</table>

@@ -1,0 +1,10 @@
+#$ -l calibration
+#$ -o /cdat/tem/mccann/positrons_ntuple.out
+#$ -S /bin/bash
+#$ -j y
+
+cd /cdat/daf9/mccann/hadron_filter/run_before_pta_talk
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Jan24_03_P2
+
+suez -f positrons_ntuple.tcl > /cdat/tem/mccann/positrons_ntuple.log

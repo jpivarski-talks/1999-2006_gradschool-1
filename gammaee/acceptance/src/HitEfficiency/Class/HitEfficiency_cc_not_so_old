@@ -1,0 +1,305 @@
+// -*- C++ -*-
+//
+// Package:     HitEfficiency
+// Module:      HitEfficiency
+// 
+// Description: <one line class summary>
+//
+// Implementation:
+//     <Notes on implementation>
+//
+// Author:      Jim Pivarski
+// Created:     Mon Sep 20 12:49:11 EDT 2004
+// $Id$
+//
+// Revision history
+//
+// $Log$
+//
+
+#include "Experiment/Experiment.h"
+
+// system include files
+
+// user include files
+#include "HitEfficiency/HitEfficiency.h"
+#include "Experiment/report.h"
+#include "Experiment/units.h"  // for converting to/from standard CLEO units
+
+#include "DataHandler/Record.h"
+#include "DataHandler/Frame.h"
+#include "FrameAccess/extract.h"
+#include "FrameAccess/FAItem.h"
+#include "FrameAccess/FATable.h"
+
+#include "Navigation/NavTrack.h"
+#include "TrackRoot/TRHelixFit.h"
+#include "TrackRoot/TRTrackFitQuality.h"
+#include "TrackRoot/TRSeedTrackQuality.h"
+#include "TrackDelivery/TDKinematicFit.h"
+#include "Navigation/NavTkShMatch.h"
+#include "BeamEnergy/BeamEnergy.h"
+#include "CleoDB/DBEventHeader.h"
+#include "TriggerData/TriggerData.h"
+#include "CalibratedData/CalibratedDRHit.h"
+
+// STL classes
+// You may have to uncomment some of these or other stl headers 
+// depending on what other header files you include (e.g. FrameAccess etc.)!
+//#include <string>
+//#include <vector>
+//#include <set>
+//#include <map>
+//#include <algorithm>
+//#include <utility>
+
+//
+// constants, enums and typedefs
+//
+static const char* const kFacilityString = "Processor.HitEfficiency" ;
+
+// ---- cvs-based strings (Id and Tag with which file was checked out)
+static const char* const kIdString  = "$Id: processor.cc,v 1.33 2002/12/18 01:45:06 cdj Exp $";
+static const char* const kTagString = "$Name: v06_08_00 $";
+
+//
+// static data member definitions
+//
+
+
+
+//
+// constructors and destructor
+//
+HitEfficiency::HitEfficiency( void )               // anal1
+   : Processor( "HitEfficiency" )
+{
+   report( DEBUG, kFacilityString ) << "here in ctor()" << endl;
+
+   // ---- bind a method to a stream -----
+   // These lines ARE VERY IMPORTANT! If you don't bind the 
+   // code you've just written (the "action") to a stream, 
+   // your code won't get executed!
+
+   bind( &HitEfficiency::event,    Stream::kEvent );
+   //bind( &HitEfficiency::beginRun, Stream::kBeginRun );
+   //bind( &HitEfficiency::endRun,   Stream::kEndRun );
+
+   // do anything here that needs to be done at creation time
+   // (e.g. allocate resources etc.)
+
+   m_goodtracks = 0;
+   m_alltracks = 0;
+   m_run = 0;
+   for (int i = 0;  i < 30;  i++) m_tracks[i] = 0;
+}
+
+HitEfficiency::~HitEfficiency()                    // anal5
+{
+   report( DEBUG, kFacilityString ) << "here in dtor()" << endl;
+ 
+   // do anything here that needs to be done at desctruction time
+   // (e.g. close files, deallocate resources etc.)
+
+}
+
+//
+// member functions
+//
+
+// ------------ methods for beginning/end "Interactive" ------------
+// --------------------------- init method -------------------------
+void
+HitEfficiency::init( void )          // anal1 "Interactive"
+{
+   report( DEBUG, kFacilityString ) << "here in init()" << endl;
+
+   // do any initialization here based on Parameter Input by User
+   // (e.g. run expensive algorithms that are based on parameters
+   //  specified by user at run-time)
+
+   m_goodtracks = 0;
+   m_alltracks = 0;
+   m_run = 0;
+   for (int i = 0;  i < 30;  i++) m_tracks[i] = 0;
+}
+
+// -------------------- terminate method ----------------------------
+void
+HitEfficiency::terminate( void )     // anal5 "Interactive"
+{
+   report( DEBUG, kFacilityString ) << "here in terminate()" << endl;
+
+   // do anything here BEFORE New Parameter Change
+   // (e.g. write out result based on parameters from user-input)
+ 
+   report(SYSTEM, kFacilityString)
+      << "RUN " << m_run << " eff = " << m_goodtracks << " / " << m_alltracks << " trackshist";
+   for (int i = 0;  i < 30;  i++) report(SYSTEM, kFacilityString) << " " << m_tracks[i];
+   report(SYSTEM, kFacilityString) << endl;
+}
+
+
+// ---------------- standard place to book histograms ---------------
+void
+HitEfficiency::hist_book( HIHistoManager& iHistoManager )
+{
+   report( DEBUG, kFacilityString ) << "here in hist_book()" << endl;
+
+   // book your histograms here
+
+}
+
+// --------------------- methods bound to streams -------------------
+ActionBase::ActionResult
+HitEfficiency::event( Frame& iFrame )          // anal3 equiv.
+{
+   report( DEBUG, kFacilityString ) << "here in event()" << endl;
+
+   FAItem<DBEventHeader> head;
+   extract(iFrame.record(Stream::kEvent), head);
+
+   if (head->run() != m_run) {
+      if (m_run != 0) {
+	 report(SYSTEM, kFacilityString)
+	    << "RUN " << m_run << " eff = " << m_goodtracks << " / " << m_alltracks << " trackshist";
+	 for (int i = 0;  i < 30;  i++) report(SYSTEM, kFacilityString) << " " << m_tracks[i];
+	 report(SYSTEM, kFacilityString) << endl;
+      }
+      m_goodtracks = 0;
+      m_alltracks = 0;
+
+      m_run = head->run();
+   }
+
+   FAItem<BeamEnergy> ebeamandstuff;
+   extract(iFrame.record(Stream::kStartRun), ebeamandstuff);
+   double eBeam = ebeamandstuff->value();
+
+   FATable<NavTrack> tracks;
+   extract(iFrame.record(Stream::kEvent), tracks);
+
+//    FATable<CalibratedDRHit> drhits;
+//    extract(iFrame.record(Stream::kEvent), drhits);
+
+   FAItem<TriggerData> trigdat;
+   extract(iFrame.record(Stream::kEvent), trigdat);
+
+   int l1accept = trigdat->getLumiL1AcceptBucket();
+//    int trtime = trigdat->getTrackingTimeBucket();
+//    if (l1accept == -1  ||  trtime < l1accept  ||  trtime > (l1accept + 2)) {
+//       report(SYSTEM, kFacilityString) << "Ack! " << trtime << " " << l1accept << endl;
+//       return ActionBase::kFailed;
+//    }
+   
+   UInt32 axMap[TriggerData::kNumberOfAxialKeyWires];
+   trigdat->getAxialTrackMap(axMap);
+
+   int number = 0;
+   FATable<NavTrack>::const_iterator track_iter = tracks.begin();
+   FATable<NavTrack>::const_iterator track_end = tracks.end();
+   for (; track_iter != track_end;  ++track_iter)
+      if (!track_iter->pionQuality()->fitAbort()  &&
+	  !track_iter->seedQuality()->originUsed()  &&
+	  track_iter->pionFit()->momentum().perp() > 1./6.  &&
+	  track_iter->pionQuality()->numberHitsExpected() > 0  &&
+	  track_iter->pionQuality()->ratioNumberHitsToExpected() > 0.4  &&
+	  abs(track_iter->pionHelix()->cotTheta()/sqrt(1. + sqr(track_iter->pionHelix()->cotTheta()))) < 0.93  &&
+	  track_iter->pionQuality()->degreesOfFreedom() > 0 &&
+	  track_iter->pionQuality()->chiSquare() / double(track_iter->pionQuality()->degreesOfFreedom()) < 3.5  &&
+	  abs(track_iter->pionHelix()->d0()))
+	 number++;
+
+   if (number >= 29) m_tracks[29]++;
+   else m_tracks[number]++;
+
+   int prevwire = -2;
+   int alltrigs = 0;
+   for (int t = 0;  t < 112;  t++) {
+      if (axMap[t] != 0  &&  t - prevwire > 1) {
+	 alltrigs++;
+	 prevwire = t;
+      }
+   }
+
+   if (number > 2)
+      report(SYSTEM, kFacilityString)
+	 << alltrigs << " " << trigdat->getAxTrackCount(l1accept) << " " << number << endl;
+
+   if (false) {
+//    if (number >= 4  &&  number <= 8) {
+      track_iter = tracks.begin();
+      for (; track_iter != track_end;  ++track_iter) {
+	 if (!track_iter->pionQuality()->fitAbort()  &&
+	     !track_iter->seedQuality()->originUsed()  &&
+	     track_iter->pionFit()->momentum().perp() > 1./6.  &&
+	     track_iter->pionQuality()->numberHitsExpected() > 0  &&
+	     track_iter->pionQuality()->ratioNumberHitsToExpected() > 0.4  &&
+	     abs(track_iter->pionHelix()->cotTheta()/sqrt(1. + sqr(track_iter->pionHelix()->cotTheta()))) < 0.93  &&
+	     track_iter->pionQuality()->degreesOfFreedom() > 0 &&
+	     track_iter->pionQuality()->chiSquare() / double(track_iter->pionQuality()->degreesOfFreedom()) < 3.5  &&
+	     abs(track_iter->pionHelix()->d0())) {
+
+	    KTHelix myHelix = *track_iter->pionHelix();
+	    double adistmoved;
+	    myHelix.moveToRadius(0.2445, adistmoved, KTMoveControl::kDirectionForward);
+	    int key = int(56/M_PI * fmod(myHelix.referencePoint().phi() + 2*M_PI, 2*M_PI));
+	    bool matched = (axMap[(key - 1) % 112] != 0  ||
+			    axMap[(key + 0) % 112] != 0  ||
+			    axMap[(key + 1) % 112] != 0    );
+
+// 	    const NavTrack::DRHitTable* myHitTable = track_iter->seedDRHits();
+	    int first = 0;
+	    int second = 0;
+// 	    for (int i = 0;  i < myHitTable->size();  i++) {
+// 	       cout << "j " << (*myHitTable)[i] << endl;
+// 	       if ((*myHitTable)[i]->layer() <= 8) {
+// 		  if ((*myHitTable)[i]->time() > 0  &&  (*myHitTable)[i]->time()/1000 < 450)
+// 		     first++;
+// 	       }
+// 	       else if ((*myHitTable)[i]->layer() <= 16) {
+// 		  if ((*myHitTable)[i]->time() > 0  &&  (*myHitTable)[i]->time()/1000 < 450)
+// 		     second++;
+// 	       }
+// 	    }
+	    if (matched || (first >= 6  &&  second >= 6)) m_goodtracks++;
+	    m_alltracks++;
+	 }
+      }
+   }
+
+//    report(SYSTEM, kFacilityString)
+//       << "mid run eff = " << m_goodtracks << " / " << m_alltracks << " trackshist";
+//    for (int i = 0;  i < 30;  i++) report(SYSTEM, kFacilityString) << " " << m_tracks[i];
+//    report(SYSTEM, kFacilityString) << endl;
+
+   return ActionBase::kPassed;
+}
+
+/*
+ActionBase::ActionResult
+HitEfficiency::beginRun( Frame& iFrame )       // anal2 equiv.
+{
+   report( DEBUG, kFacilityString ) << "here in beginRun()" << endl;
+
+   return ActionBase::kPassed;
+}
+*/
+
+/*
+ActionBase::ActionResult
+HitEfficiency::endRun( Frame& iFrame )         // anal4 equiv.
+{
+   report( DEBUG, kFacilityString ) << "here in endRun()" << endl;
+
+   return ActionBase::kPassed;
+}
+*/
+
+//
+// const member functions
+//
+
+//
+// static member functions
+//

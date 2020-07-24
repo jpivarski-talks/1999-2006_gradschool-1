@@ -1,0 +1,17 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/lumint_m_129564.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/luminosity/run2/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_DIR=rzn5
+export USER_RUN=129564
+export USER_HASB=0
+
+suez -f ntuple_data_m.tcl
+rm -f core
+
+exit

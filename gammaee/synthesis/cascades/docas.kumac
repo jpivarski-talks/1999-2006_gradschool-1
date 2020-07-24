@@ -1,0 +1,14 @@
+zone 1 2
+nt/plot //data/UPSLNGMMEECSCDES/1.m ([1])&&([2]) ! ! ! 'N' 100
+ve/inp para 1. 1. 1552.6
+ve/inp erra 0. 0. 0.
+h/fit 100 casf.f ! 3 para ! ! ! erra
+nt/plot //data/UPSLNGMMEECSCDES/1.m !([1])&&([2]) ! ! ! 'N' 101
+ve/inp parb 1. 1. 0.
+ve/inp errb 0. 0. 0.
+h/fit 101 casf.f ! 3 parb ! ! ! errb
+sigma a = para(3)
+sigma ae = erra(3)
+sigma b = parb(3)
+sigma be = errb(3)
+message $SIGMA(a) +/- $SIGMA(ae), $SIGMA(b) +/- $SIGMA(be), $SIGMA(a/(a+b)*100.)% +/- $SIGMA(sqrt(ae**2*b**2+be**2*a**2)/(a+b)**2*100.)%

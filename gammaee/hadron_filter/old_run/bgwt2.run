@@ -1,0 +1,54 @@
+#!/usr/local/bin/tcsh
+
+cd $HOME/hadron_filter/run
+. /nfs/cleo3/scripts/cleo3defs
+c3rel cleo3_Pass2_Oct09_2001
+
+#  OSAGENT_PORT=31416
+#  export OSAGENT_PORT
+#  C3_CONST=/nfs/c3con/ccon3/constants/Codi
+#  export C3_CONST
+#  echo Using OSAGENT_PORT $OSAGENT_PORT and constants server $C3_CONST
+
+suez -q > $USER_TMP/beamgaswalltester.log << EOF
+
+default prompt off
+exception continueEventLoop on
+
+module sel HbookHistogramModule
+# hbook file test.rzn
+hbook file z0_charge_energy_12K.123592.rzn
+hbook init
+
+module sel CorbaModule
+corba init
+module sel ConstantsModule
+constants in \$env(C3_CONST) meta Offline MetaListRetrieval
+constants in \$env(C3_CONST) meta CesrOffset MetaListRetrieval
+constants in \$env(C3_CONST) meta BaseGeometry MetaListRetrieval
+constants in \$env(C3_CONST) meta SVHybridEfficiency MetaListRetrieval
+constants in \$env(C3_CONST) meta Alignment MetaListRetrieval
+
+source_format sel AsciiSourceFormat
+file in \$env(C3_DATA)/material.asc basegeometry
+
+module sel RunStatisticsSourceModule
+runstatistics in
+
+prod sel C3ccProd
+prod sel TrackDeliveryProd
+prod sel SeedToTRTrackProd
+prod sel NavigationProd
+prod sel MagFieldProd
+
+source_format sel PDSSourceFormat
+file in ../dafedir/run_123592.pds event startrun beginrun endrun
+source activate run_123592 event startrun beginrun endrun
+
+proc sel ../build_\$env(OS_NAME)/shlib/BeamGasWallTester
+# proc sel HistogramViewerProc
+
+go 12947
+exit
+
+EOF

@@ -1,0 +1,8 @@
+sigma bot = min($HINFO([1]54,'MIN'), $HINFO([1]66,'MIN'))
+sigma top = max($HINFO([1]54,'MAX'), $HINFO([1]66,'MAX'))
+min [1]54 $SIGMA((top+bot)/2-1.2*(top-bot)/2)
+max [1]54 $SIGMA((top+bot)/2+1.2*(top-bot)/2)
+h/plot [1]54 'shist'
+h/plot [1]66 's'
+set ltyp 1
+dline $GRAFINFO('WNXMIN') $GRAFINFO('WNXMAX') 0 0

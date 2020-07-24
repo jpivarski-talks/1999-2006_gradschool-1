@@ -1,0 +1,32 @@
+h/cr/1d $SIGMA(pre+10) 'P(2 STEREO tracks) versus average energy (cT "l#0.8)' 12 0. 6.
+h/cr/1d $SIGMA(pre+11) 'P(2 STEREO tracks) versus average energy (cT "l#0.8)' 12 0. 6.
+h/cr/1d $SIGMA(pre+20) 'P(2 STEREO tracks) versus average cos(theta)' 10 0. 1.
+h/cr/1d $SIGMA(pre+21) 'P(2 STEREO tracks) versus average cos(theta)' 10 0. 1.
+
+nt/plot //[1]/getradbhas/1.(e1+e2)/2 e3/ebeam>0.08&&abs(p1z/e1-p2z/e2)/2<0.8&&radtau>0.5 ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //[1]/getradbhas/1.(e1+e2)/2 e3/ebeam>0.08&&abs(p1z/e1-p2z/e2)/2<0.8 ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //[1]/getradbhas/1.abs(p1z/e1-p2z/e2)/2 e3/ebeam>0.08&&radtau>0.5 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //[1]/getradbhas/1.abs(p1z/e1-p2z/e2)/2 e3/ebeam>0.08 ! ! ! 'N' $SIGMA(pre+21)
+
+div $SIGMA(pre+10) $SIGMA(pre+11) $SIGMA(pre+12)
+div $SIGMA(pre+20) $SIGMA(pre+21) $SIGMA(pre+22)
+
+ve/cr num(12)
+ve/cr den(12)
+ve/cr err(12)
+h/get_vect/contents $SIGMA(pre+10) num
+h/get_vect/contents $SIGMA(pre+11) den
+do i=1,12
+  ve/inp err([i]) $SIGMA(sqrt((num([i])/den([i]))*(1-num([i])/den([i]))/den([i])))
+enddo
+h/put_vect/errors $SIGMA(pre+12) err
+
+ve/cr num(10)
+ve/cr den(10)
+ve/cr err(10)
+h/get_vect/contents $SIGMA(pre+20) num
+h/get_vect/contents $SIGMA(pre+21) den
+do i=1,10
+  ve/inp err([i]) $SIGMA(sqrt((num([i])/den([i]))*(1-num([i])/den([i]))/den([i])))
+enddo
+h/put_vect/errors $SIGMA(pre+22) err

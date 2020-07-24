@@ -1,0 +1,164 @@
+------- Setting ulimits -------
+core file size (blocks)     0
+data seg size (kbytes)      2097148
+file size (blocks)          unlimited
+open files                  1024
+pipe size (512 bytes)       10
+stack size (kbytes)         2097148
+cpu time (seconds)          unlimited
+max user processes          3941
+virtual memory (kbytes)     unlimited
+ %% INFO-Suez: 
+// -----------------------------------------------------------
+//  Welcome to Suez, the CLEO III data access program         
+// -----------------------------------------------------------
+
+ %% INFO-Suez: $Id: SuezMain.cc,v 1.69 2002/10/16 20:46:36 cdj Exp $
+
+ %% SYSTEM-Interpreter.TclInterpreter: 
+//  For a list of available commands, type "help".              
+//                                                                
+//  Since the command interpreter is based on a Tcl interpreter,  
+//  all Tcl commands are available.                               
+//  For info on tcl: "http://www.scriptics.com/resource/doc"    
+
+ %% SYSTEM-Interpreter.TclInterpreter: 
+// Renaming the following Tcl commands:
+//  (because they collide with Suez commands!)
+// -------------------------------------------
+//  source --> tcl_source
+//  proc   --> tcl_proc
+//  file   --> tcl_file
+
+ %% SYSTEM-Module: added command "summary" from SummaryModule
+ %% SYSTEM-Module: added command "source_format" from SourceFormatMap
+ %% SYSTEM-Module: added command "sink_format" from SinkFormatMap
+ %% SYSTEM-Module: added command "source" from SourceManager
+ %% SYSTEM-Module: added command "stream" from SourceManager
+ %% SYSTEM-Module: added command "sink" from SinkManager
+ %% SYSTEM-Module: added command "default" from DefaultModule
+ %% SYSTEM-Module: added command "prod" from MasterProducer
+ %% SYSTEM-Module: added command "proc" from MasterProcessor
+ %% SYSTEM-Module: added command "file" from FileModule
+ %% SYSTEM-Module: added command "emptysource" from EmptySourceModule
+Suez> 
+[1]+  Stopped                 ${C3_LIB}/bin/${OS_NAME}/${CXX}/suez "$@"
+sol210% ls ../rzn/electrons.pds 
+sol210% fg
+${C3_LIB}/bin/${OS_NAME}/${CXX}/suez "$@"
+
+Suez> source_format sel PDSSourceFormat
+ %% SYSTEM-Loader: trying to load "PDSSourceFormat"...
+Suez> file in ../rzn/electrons.ps
+ %% SYSTEM-JobControl.FileCommand: Input Source non-existent: "../rzn/electrons.ps".
+Suez> file in ../rzn/electrons.pds
+ %% INFO-JobControl.FileModule: using default streams: beginrun endrun event startrun
+ %% INFO-JobControl.SourceManager: creating Source Name "electrons" 
+electrons
+Suez> exception continueEventLoop on
+on
+Suez> go 10
+ %% INFO-JobControl.SourceManager: Opened data source "electrons".
+ %% WARNING-JobControl.JobControl: no histogram manager selected! using default.
+ %% WARNING-DummyHistogram.DummyHistoManager: Creating Dummy HistogramManager.
+ %% ERROR-JobControl.SourceManager: No Active Streams specified!
+(Make sure you have a processor selected
+with at least one action bound to a stream!)
+Suez> proc sel ../build_SunOS/shlib/BeamGasFilterProc.so
+ %% SYSTEM-Loader: trying to load "../build_SunOS/shlib/BeamGasFilterProc.so"...
+Suez> go 10
+ %% INFO-JobControl.SourceManager: Using ../rzn/electrons.pds for active streams: beginrun event 
+ %% INFO-JobControl.SourceManager: Defined active streams.
+
+ >> Mon Mar 10 12:30:47 2003 Run:  126828 Stop: beginrun << 
+ %% ERROR-JobControl.JobControl: -eventLoop: caught a DAException:
+"No data of type "BeamSpot" "" "" in Record beginrun"
+; will continue...
+
+ >> Mon Mar 10 12:30:47 2003 Run:  126828 Event:     451 Stop: event << 
+ %% ERROR-JobControl.JobControl: -eventLoop: caught a DAException:
+"No data of type "DBEventHeader" "" "" in Record event"
+; will continue...
+
+ >> Mon Mar 10 12:30:47 2003 Run:  126828 Event:     583 Stop: event << 
+ %% ERROR-JobControl.JobControl: -eventLoop: caught a DAException:
+"No data of type "DBEventHeader" "" "" in Record event"
+; will continue...
+
+ >> Mon Mar 10 12:30:47 2003 Run:  126828 Event:    6869 Stop: event << 
+ %% ERROR-JobControl.JobControl: -eventLoop: caught a DAException:
+"No data of type "DBEventHeader" "" "" in Record event"
+; will continue...
+
+ >> Mon Mar 10 12:30:47 2003 Run:  126828 Event:   14114 Stop: event << 
+ %% ERROR-JobControl.JobControl: -eventLoop: caught a DAException:
+"No data of type "DBEventHeader" "" "" in Record event"
+; will continue...
+
+ >> Mon Mar 10 12:30:47 2003 Run:  126828 Event:   15204 Stop: event << 
+ %% ERROR-JobControl.JobControl: -eventLoop: caught a DAException:
+"No data of type "DBEventHeader" "" "" in Record event"
+; will continue...
+
+ >> Mon Mar 10 12:30:47 2003 Run:  126828 Event:   16454 Stop: event << 
+ %% ERROR-JobControl.JobControl: -eventLoop: caught a DAException:
+"No data of type "DBEventHeader" "" "" in Record event"
+; will continue...
+
+ >> Mon Mar 10 12:30:47 2003 Run:  126828 Event:   17887 Stop: event << 
+ %% ERROR-JobControl.JobControl: -eventLoop: caught a DAException:
+"No data of type "DBEventHeader" "" "" in Record event"
+; will continue...
+
+ >> Mon Mar 10 12:30:48 2003 Run:  126828 Event:   19375 Stop: event << 
+ %% ERROR-JobControl.JobControl: -eventLoop: caught a DAException:
+"No data of type "DBEventHeader" "" "" in Record event"
+; will continue...
+
+ >> Mon Mar 10 12:30:48 2003 Run:  126828 Event:   23292 Stop: event << 
+ %% ERROR-JobControl.JobControl: -eventLoop: caught a DAException:
+"No data of type "DBEventHeader" "" "" in Record event"
+; will continue...
+
+ >> Mon Mar 10 12:30:48 2003 Run:  126828 Event:   23488 Stop: event << 
+ %% ERROR-JobControl.JobControl: -eventLoop: caught a DAException:
+"No data of type "DBEventHeader" "" "" in Record event"
+; will continue...
+ %% INFO-JobControl.JobControl: Reached end of requested number of stops.
+Suez>  %% SYSTEM-Processor.BeamGasFilterProc: RUN_SUMMARY for 000000 : Passed 0 out of 0 events, or NaN %.
+ %% SYSTEM-Processor.BeamGasFilterProc: RUN_BEAMGAS for 000000 : Shoulder of 0 implies 0 +/- 0 +/- 0 beamgas events passed the cuts.
+ %% SYSTEM-Processor.BeamGasFilterProc: RUN_COSMICS for 000000 : Shoulder of 0 implies 0 +/- 0 +/- 0 cosmic rays passed the cuts.
+ %% SYSTEM-Processor.BeamGasFilterProc: RUN_CONCLUSION for 000000 : Saw 0 +/- 0 +/- 0 real e+e- collisions.
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: Beamgas shoulder events are events which pass the RPHI cut (closest intersection < 5mm)
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: and are outside the Z cut (5cm < |event z| < 20cm).  The first uncertainty is
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: statistical; disjoint datasets are independent.  The second uncertainty is common to
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: all datasets.
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: Cosmic shoulder events are events which pass the Z cut (|event z| < 5cm) and have
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: a closest intersection between 20cm and 40cm.  Again, the first uncertainty is
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: statistical while the second is systematic, with the same dependencies.
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: The conclusion is just a convenient subtraction, with statistical uncertainties
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: combined in quadrature as the first +/- and systematic uncertainties combined
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: as a straight sum for the second +/-.
+ %% SYSTEM-Processor.BeamGasFilterProc: RUN_BEAMSPOTCHECK for 000000 : RPHI mean is NaN and Z mean is NaN
+ %% SYSTEM-Processor.BeamGasFilterProc: CUMULATIVE_SUMMARY: Passed 0 out of 0 events, or NaN %.
+ %% SYSTEM-Processor.BeamGasFilterProc: CUMULATIVE_BEAMGAS: Shoulder of 0 implies 0 +/- 0 +/- 0 beamgas events passed the cuts.
+ %% SYSTEM-Processor.BeamGasFilterProc: CUMULATIVE_COSMICS: Shoulder of 0 implies 0 +/- 0 +/- 0 cosmic rays passed the cuts.
+ %% SYSTEM-Processor.BeamGasFilterProc: CUMULATIVE_CONCLUSION: Saw 0 +/- 0 +/- 0 real e+e- collisions.
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: Beamgas shoulder events are events which pass the RPHI cut (closest intersection < 5mm)
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: and are outside the Z cut (5cm < |event z| < 20cm).  The first uncertainty is
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: statistical; disjoint datasets are independent.  The second uncertainty is common to
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: all datasets.
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: Cosmic shoulder events are events which pass the Z cut (|event z| < 5cm) and have
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: a closest intersection between 20cm and 40cm.  Again, the first uncertainty is
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: statistical while the second is systematic, with the same dependencies.
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: The conclusion is just a convenient subtraction, with statistical uncertainties
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: combined in quadrature as the first +/- and systematic uncertainties combined
+ %% SYSTEM-Processor.BeamGasFilterProc: EXPLAINATION: as a straight sum for the second +/-.
+ %% INFO-JobControl.SummaryModule: 
+ ***** Summary Info *****
+
+ Stream beginrun : 1
+ Stream event : 10
+   Processed 11 stops.
+
+

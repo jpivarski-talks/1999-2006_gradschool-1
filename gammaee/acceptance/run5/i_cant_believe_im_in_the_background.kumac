@@ -1,0 +1,521 @@
+exec i_cant_believe 80 'pass anything' 1 0.5 1.5 axial>-10 [1]
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight 80
+ve/cr bkvec(1)
+ve/cr bkerr(1)
+h/get_vect/contents 8060 bkvec
+h/get_vect/errors   8060 bkerr
+sigma signal = bkvec(1)
+sigma sigerr = bkerr(1)
+sigma nonbb = 0
+sigma nonerr = 0
+h/get_vect/contents 8042 bkvec
+h/get_vect/errors   8042 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8043 bkvec
+h/get_vect/errors   8043 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8044 bkvec
+h/get_vect/errors   8044 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+sigma nonerr = sqrt(nonerr)
+sigma nombb = nonbb/(signal-nonbb)
+message non-beam-beam/surviving signal: $SIGMA(nombb*100) +- $SIGMA(sqrt(nonbb**2*sigerr**2+signal**2*nonerr**2)/(signal-nonbb)**2*100) %
+exec i_cant_believe_scales 0 0 0 0 0 1 0 0 0 0
+exec i_cant_believe_weight 80
+sigma nonbb = 0
+sigma nonerr = 0
+h/get_vect/contents 8042 bkvec
+h/get_vect/errors   8042 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8043 bkvec
+h/get_vect/errors   8043 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8044 bkvec
+h/get_vect/errors   8044 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+sigma nonerr = sqrt(nonerr)
+message +ptoc: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 -1 0 0 0 0
+exec i_cant_believe_weight 80
+sigma nonbb = 0
+sigma nonerr = 0
+h/get_vect/contents 8042 bkvec
+h/get_vect/errors   8042 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8043 bkvec
+h/get_vect/errors   8043 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8044 bkvec
+h/get_vect/errors   8044 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+sigma nonerr = sqrt(nonerr)
+message -ptoc: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 1 0 0 0
+exec i_cant_believe_weight 80
+sigma nonbb = 0
+sigma nonerr = 0
+h/get_vect/contents 8042 bkvec
+h/get_vect/errors   8042 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8043 bkvec
+h/get_vect/errors   8043 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8044 bkvec
+h/get_vect/errors   8044 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+sigma nonerr = sqrt(nonerr)
+message +bge: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 -1 0 0 0
+exec i_cant_believe_weight 80
+sigma nonbb = 0
+sigma nonerr = 0
+h/get_vect/contents 8042 bkvec
+h/get_vect/errors   8042 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8043 bkvec
+h/get_vect/errors   8043 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8044 bkvec
+h/get_vect/errors   8044 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+sigma nonerr = sqrt(nonerr)
+message -bge: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 1 0 0
+exec i_cant_believe_weight 80
+sigma nonbb = 0
+sigma nonerr = 0
+h/get_vect/contents 8042 bkvec
+h/get_vect/errors   8042 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8043 bkvec
+h/get_vect/errors   8043 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8044 bkvec
+h/get_vect/errors   8044 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+sigma nonerr = sqrt(nonerr)
+message +bgp: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 -1 0 0
+exec i_cant_believe_weight 80
+sigma nonbb = 0
+sigma nonerr = 0
+h/get_vect/contents 8042 bkvec
+h/get_vect/errors   8042 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8043 bkvec
+h/get_vect/errors   8043 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8044 bkvec
+h/get_vect/errors   8044 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+sigma nonerr = sqrt(nonerr)
+message -bgp: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 1 0
+exec i_cant_believe_weight 80
+sigma nonbb = 0
+sigma nonerr = 0
+h/get_vect/contents 8042 bkvec
+h/get_vect/errors   8042 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8043 bkvec
+h/get_vect/errors   8043 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8044 bkvec
+h/get_vect/errors   8044 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+sigma nonerr = sqrt(nonerr)
+message +cos: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 -1 0
+exec i_cant_believe_weight 80
+sigma nonbb = 0
+sigma nonerr = 0
+h/get_vect/contents 8042 bkvec
+h/get_vect/errors   8042 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8043 bkvec
+h/get_vect/errors   8043 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8044 bkvec
+h/get_vect/errors   8044 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+sigma nonerr = sqrt(nonerr)
+message -cos: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 1
+exec i_cant_believe_weight 80
+sigma nonbb = 0
+sigma nonerr = 0
+h/get_vect/contents 8042 bkvec
+h/get_vect/errors   8042 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8043 bkvec
+h/get_vect/errors   8043 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8044 bkvec
+h/get_vect/errors   8044 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+sigma nonerr = sqrt(nonerr)
+message +ptomc: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 -1
+exec i_cant_believe_weight 80
+sigma nonbb = 0
+sigma nonerr = 0
+h/get_vect/contents 8042 bkvec
+h/get_vect/errors   8042 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8043 bkvec
+h/get_vect/errors   8043 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8044 bkvec
+h/get_vect/errors   8044 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+sigma nonerr = sqrt(nonerr)
+message -ptomc: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 1 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight 80
+sigma nonbb = 0
+sigma nonerr = 0
+h/get_vect/contents 8042 bkvec
+h/get_vect/errors   8042 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8043 bkvec
+h/get_vect/errors   8043 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8044 bkvec
+h/get_vect/errors   8044 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+sigma nonerr = sqrt(nonerr)
+message +bmm: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales -1 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight 80
+sigma nonbb = 0
+sigma nonerr = 0
+h/get_vect/contents 8042 bkvec
+h/get_vect/errors   8042 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8043 bkvec
+h/get_vect/errors   8043 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+h/get_vect/contents 8044 bkvec
+h/get_vect/errors   8044 bkerr
+sigma nonbb = nonbb + bkvec(1)
+sigma nonerr = nonerr + bkerr(1)**2
+sigma nonerr = sqrt(nonerr)
+message -bmm: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8014 bkvec
+h/get_vect/errors   8014 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+sigma nombb = nonbb/(signal-nonbb)
+message ee/surviving signal: $SIGMA(nombb*100) +- $SIGMA(sqrt(nonbb**2*sigerr**2+signal**2*nonerr**2)/(signal-nonbb)**2*100) %
+exec i_cant_believe_scales 0 0 0 0 0 1 0 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8014 bkvec
+h/get_vect/errors   8014 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +ptoc: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 -1 0 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8014 bkvec
+h/get_vect/errors   8014 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -ptoc: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 1 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8014 bkvec
+h/get_vect/errors   8014 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +bge: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 -1 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8014 bkvec
+h/get_vect/errors   8014 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -bge: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 1 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8014 bkvec
+h/get_vect/errors   8014 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +bgp: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 -1 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8014 bkvec
+h/get_vect/errors   8014 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -bgp: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 1 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8014 bkvec
+h/get_vect/errors   8014 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +cos: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 -1 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8014 bkvec
+h/get_vect/errors   8014 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -cos: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 1
+exec i_cant_believe_weight 80
+h/get_vect/contents 8014 bkvec
+h/get_vect/errors   8014 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +ptomc: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 -1
+exec i_cant_believe_weight 80
+h/get_vect/contents 8014 bkvec
+h/get_vect/errors   8014 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -ptomc: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 1 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8014 bkvec
+h/get_vect/errors   8014 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +bmm: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales -1 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8014 bkvec
+h/get_vect/errors   8014 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -bmm: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8015 bkvec
+h/get_vect/errors   8015 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+sigma nombb = nonbb/(signal-nonbb)
+message mumu/surviving signal: $SIGMA(nombb*100) +- $SIGMA(sqrt(nonbb**2*sigerr**2+signal**2*nonerr**2)/(signal-nonbb)**2*100) %
+exec i_cant_believe_scales 0 0 0 0 0 1 0 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8015 bkvec
+h/get_vect/errors   8015 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +ptoc: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 -1 0 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8015 bkvec
+h/get_vect/errors   8015 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -ptoc: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 1 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8015 bkvec
+h/get_vect/errors   8015 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +bge: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 -1 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8015 bkvec
+h/get_vect/errors   8015 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -bge: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 1 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8015 bkvec
+h/get_vect/errors   8015 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +bgp: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 -1 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8015 bkvec
+h/get_vect/errors   8015 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -bgp: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 1 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8015 bkvec
+h/get_vect/errors   8015 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +cos: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 -1 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8015 bkvec
+h/get_vect/errors   8015 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -cos: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 1
+exec i_cant_believe_weight 80
+h/get_vect/contents 8015 bkvec
+h/get_vect/errors   8015 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +ptomc: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 -1
+exec i_cant_believe_weight 80
+h/get_vect/contents 8015 bkvec
+h/get_vect/errors   8015 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -ptomc: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 1 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8015 bkvec
+h/get_vect/errors   8015 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +bmm: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales -1 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8015 bkvec
+h/get_vect/errors   8015 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -bmm: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8016 bkvec
+h/get_vect/errors   8016 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+sigma nombb = nonbb/(signal-nonbb)
+message tautau/surviving signal: $SIGMA(nombb*100) +- $SIGMA(sqrt(nonbb**2*sigerr**2+signal**2*nonerr**2)/(signal-nonbb)**2*100) %
+exec i_cant_believe_scales 0 0 0 0 0 1 0 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8016 bkvec
+h/get_vect/errors   8016 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +ptoc: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 -1 0 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8016 bkvec
+h/get_vect/errors   8016 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -ptoc: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 1 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8016 bkvec
+h/get_vect/errors   8016 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +bge: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 -1 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8016 bkvec
+h/get_vect/errors   8016 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -bge: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 1 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8016 bkvec
+h/get_vect/errors   8016 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +bgp: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 -1 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8016 bkvec
+h/get_vect/errors   8016 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -bgp: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 1 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8016 bkvec
+h/get_vect/errors   8016 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +cos: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 -1 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8016 bkvec
+h/get_vect/errors   8016 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -cos: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 1
+exec i_cant_believe_weight 80
+h/get_vect/contents 8016 bkvec
+h/get_vect/errors   8016 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +ptomc: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 -1
+exec i_cant_believe_weight 80
+h/get_vect/contents 8016 bkvec
+h/get_vect/errors   8016 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -ptomc: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales 1 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8016 bkvec
+h/get_vect/errors   8016 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message +bmm: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)
+exec i_cant_believe_scales -1 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight 80
+h/get_vect/contents 8016 bkvec
+h/get_vect/errors   8016 bkerr
+sigma nonbb = bkvec(1)
+sigma nonerr = bkerr(1)
+message -bmm: $SIGMA(((nonbb/(signal-nonbb))-nombb)*100)

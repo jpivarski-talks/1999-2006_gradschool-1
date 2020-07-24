@@ -1,0 +1,59 @@
+*** Begin of history file: Tue Nov  8 18:54:07 2005
+nt/chain mc ../rzn2/mc21cascades.rzn
+nt/chain data ../rzn2/db21cascades.rzn
+nt/chain data ../rzn2/db22cascades.rzn
+nt/chain data ../rzn2/db23cascades.rzn
+nt/chain data ../rzn2/db25cascades.rzn
+nt/chain data ../rzn2/db27cascades.rzn
+sigma s1 = 9.441
+sigma s2 = 9.454
+sigma s3 = 9.472
+sigma s4 = 9.480
+nt/cuts $1 (abs(p1z)>0.060&&abs(p2z)>0.060)&&(mctag<10)
+zone 2 2
+h/cr/1d 200 'unbiased sample' 78 $SIGMA(s1) $SIGMA(s4)
+set dmod 1
+nt/plot //data/UPSLNGMMEECSCDES/1.m $1 ! ! ! 'N' 200
+ve/cr par(6)
+ve/inp par $SIGMA(670586./19.) $SIGMA(-70342.3/19.) $SIGMA(20873486./19.) 0.0015 0.002 9.46333
+ve/cr step(6)
+ve/inp step $SIGMA(par(1)/5.) $SIGMA(-par(2)/5.) $SIGMA(par(3)/5.) $SIGMA(par(4)/5.) $SIGMA(par(5)/5.) $SIGMA(par(6)/5.)
+ve/cr err(6)
+ve/inp err $SIGMA(par(1)/5.) $SIGMA(-par(2)/5.) $SIGMA(par(3)/5.) $SIGMA(par(4)/5.) $SIGMA(par(5)/5.) $SIGMA(par(6)/5.)
+h/fit 200 refit.f '0' 6 par step ! ! err
+set dmod 1
+h/plot 200 'e'
+set dmod 2
+f/plot ($SIGMA(par(1)))+($SIGMA(par(2)))*x $SIGMA(s1) $SIGMA(s4) 's'
+message 'unbiased: visible' $SIGMA(par(3)) +/- $SIGMA(err(3))
+zone 2 2 3 's'
+h/cr/1d 201 'unbiased sample, invisible' 78 $SIGMA(s1) $SIGMA(s4)
+set dmod 1
+nt/plot //data/UPSLNGMMEECSCDES/1.m $1&&(thad==0) ! ! ! 'N' 201
+ve/cr bar(6)
+ve/inp bar $SIGMA(par(1)) $SIGMA(par(2)) $SIGMA(par(3)) $SIGMA(par(4)) $SIGMA(par(5)) $SIGMA(par(6))
+ve/cr step(6)
+ve/inp step $SIGMA(bar(1)/5.) $SIGMA(-bar(2)/5.) $SIGMA(bar(3)/5.) $SIGMA(bar(4)/5.) $SIGMA(bar(5)/5.) $SIGMA(bar(6)/5.)
+ve/cr werr(6)
+ve/inp werr 0 0 0 0 0 0
+h/fit 201 refit.f '0e' 3 bar step ! ! werr
+set dmod 1
+h/plot 201 'e'
+set dmod 2
+f/plot ($SIGMA(bar(1)))+($SIGMA(bar(2)))*x $SIGMA(s1) $SIGMA(s4) 's'
+message 'unbiased: invisible' $SIGMA(bar(3)) +/- $SIGMA(werr(3))
+nt/plot //mc/UPSLNGMMEECSCDES/1.mctag
+nt/plot //mc/UPSLNGMMEECSCDES/1.mctag mctag<10
+zone 1 1
+set dmod 1
+nt/plot //mc/UPSLNGMMEECSCDES/1.mctag mctag<10
+nt/plot //mc/UPSLNGMMEECSCDES/1.mctag 0<mctag<10
+nt/plot //mc/UPSLNGMMEECSCDES/1.m $1&&0<mctag<10 ! ! ! 200
+nt/plot //mc/UPSLNGMMEECSCDES/1.m $1&&0<mctag<10 ! ! ! ! 200
+nt/plot //mc/UPSLNGMMEECSCDES/1.m $1&&0<mctag<10&&(thad==0) ! ! ! ! 200
+nt/plot //mc/UPSLNGMMEECSCDES/1.m $1&&0<mctag<10 ! ! ! ! 200
+opt sta
+nt/plot //mc/UPSLNGMMEECSCDES/1.m $1&&0<mctag<10 ! ! ! ! 200
+nt/plot //mc/UPSLNGMMEECSCDES/1.m $1&&0<mctag<10&&(thad==0) ! ! ! ! 200
+exit
+*** End   of history file: Tue Nov  8 19:12:36 2005

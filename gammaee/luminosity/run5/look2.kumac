@@ -1,0 +1,182 @@
+h/file 1 ../rzn5/highcont2.rzn
+h/file 2 ../rzn5/lowcont2.rzn
+
+* "tfit", "tchi", "thit", "td0", "tz0", "tp", "tcot", "tert", "terz"
+* "shot", "senergy", "stheta", "sphi"
+
+*       const DABoolean thisTrackIsGood ( trackFitOK
+* 					&& reducedChi2 < 100.0
+* 					&& hitFraction > 0.5
+* 					&& hitFraction < 1.2
+* 					&& adacd       < 0.03
+* 					&& az0         < 0.18
+* 					&& pTk         > 0.01*eBeam->value()
+* 					&& pTk         < 1.500*eBeam->value()
+* 					&& aCotTheta   < 3.0424 // |cosTh|<0.95
+* 					&& errCotTheta < 0.5
+* 					&& errz0       < 0.25 ) ;
+
+zone 1 1
+opt liny
+
+h/cr/1d 900 'track fit' 2 -0.5 1.5
+h/cr/1d 901 'track fit' 2 -0.5 1.5
+nt/plot //lun1/whatswrong/1.tfit ! ! ! ! 'N' 900
+nt/plot //lun2/whatswrong/1.tfit ! ! ! ! 'N' 901
+normalize 900
+normalize 901
+h/plot 900
+h/plot 901 's'
+
+h/cr/1d 100 'track chi2' 100 0. 200.
+h/cr/1d 101 'track chi2' 100 0. 200.
+nt/plot //lun1/whatswrong/1.tchi ! ! ! ! 'N' 100
+nt/plot //lun2/whatswrong/1.tchi ! ! ! ! 'N' 101
+normalize 100
+normalize 101
+h/plot 100
+h/plot 101 's'
+
+h/cr/1d 200 'track hit fraction' 100 0. 1.5
+h/cr/1d 201 'track hit fraction' 100 0. 1.5
+nt/plot //lun1/whatswrong/1.thit ! ! ! ! 'N' 200
+nt/plot //lun2/whatswrong/1.thit ! ! ! ! 'N' 201
+normalize 200
+normalize 201
+h/plot 200
+h/plot 201 's'
+
+h/cr/1d 300 'track d0' 100 0. 0.06
+h/cr/1d 301 'track d0' 100 0. 0.06
+nt/plot //lun1/whatswrong/1.td0 ! ! ! ! 'N' 300
+nt/plot //lun2/whatswrong/1.td0 ! ! ! ! 'N' 301
+normalize 300
+normalize 301
+h/plot 300
+h/plot 301 's'
+
+h/cr/1d 400 'track z0' 100 0. 0.36
+h/cr/1d 401 'track z0' 100 0. 0.36
+nt/plot //lun1/whatswrong/1.tz0 ! ! ! ! 'N' 400
+nt/plot //lun2/whatswrong/1.tz0 ! ! ! ! 'N' 401
+normalize 400
+normalize 401
+h/plot 400
+h/plot 401 's'
+
+h/cr/1d 500 'track p/ebeam' 100 0. 1.5
+h/cr/1d 501 'track p/ebeam' 100 0. 1.5
+nt/plot //lun1/whatswrong/1.tp/5.1676 ! ! ! ! 'N' 500
+nt/plot //lun2/whatswrong/1.tp/5.1676 ! ! ! ! 'N' 501
+normalize 500
+normalize 501
+h/plot 500
+h/plot 501 's'
+
+h/cr/1d 600 'track cottheta' 100 0. 4.
+h/cr/1d 601 'track cottheta' 100 0. 4.
+nt/plot //lun1/whatswrong/1.tcot ! ! ! ! 'N' 600
+nt/plot //lun2/whatswrong/1.tcot ! ! ! ! 'N' 601
+normalize 600
+normalize 601
+h/plot 600
+h/plot 601 's'
+
+h/cr/1d 700 'track cottheta error' 100 0. 1.
+h/cr/1d 701 'track cottheta error' 100 0. 1.
+nt/plot //lun1/whatswrong/1.tert ! ! ! ! 'N' 700
+nt/plot //lun2/whatswrong/1.tert ! ! ! ! 'N' 701
+normalize 700
+normalize 701
+h/plot 700
+h/plot 701 's'
+
+h/cr/1d 800 'track z0 error' 100 0. 0.5
+h/cr/1d 801 'track z0 error' 100 0. 0.5
+nt/plot //lun1/whatswrong/1.terz ! ! ! ! 'N' 800
+nt/plot //lun2/whatswrong/1.terz ! ! ! ! 'N' 801
+normalize 800
+normalize 801
+h/plot 800
+h/plot 801 's'
+
+
+
+
+*       const DABoolean thisTrackIsGood ( trackFitOK
+* 					&& reducedChi2 < 100.0
+* 					&& hitFraction > 0.5
+* 					&& hitFraction < 1.2
+* 					&& adacd       < 0.03
+* 					&& az0         < 0.18
+* 					&& pTk         > 0.01*eBeam->value()
+* 					&& pTk         < 1.500*eBeam->value()
+* 					&& aCotTheta   < 3.0424 // |cosTh|<0.95
+* 					&& errCotTheta < 0.5
+* 					&& errz0       < 0.25 ) ;
+
+
+fortran/file 65 'look2_quality_cuts.ps'
+graphics/metafile 65 -111
+igset mtype 1
+
+opt logy
+
+h/plot 900
+h/plot 901 's'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline 0.5 0.5 $SIGMA(10**bot) $SIGMA(10**top)
+h/plot 100
+h/plot 101 's'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline 100. 100. $SIGMA(10**bot) $SIGMA(10**top)
+h/plot 200
+h/plot 201 's'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline 0.5 0.5 $SIGMA(10**bot) $SIGMA(10**top)
+dline 1.2 1.2 $SIGMA(10**bot) $SIGMA(10**top)
+h/plot 300
+h/plot 301 's'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline 0.03 0.03 $SIGMA(10**bot) $SIGMA(10**top)
+h/plot 400
+h/plot 401 's'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline 0.18 0.18 $SIGMA(10**bot) $SIGMA(10**top)
+h/plot 500
+h/plot 501 's'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline 0.01 0.01 $SIGMA(10**bot) $SIGMA(10**top)
+dline 1.5 1.5 $SIGMA(10**bot) $SIGMA(10**top)
+h/plot 600
+h/plot 601 's'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline 3.0424 3.0424 $SIGMA(10**bot) $SIGMA(10**top)
+h/plot 700
+h/plot 701 's'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline 0.5 0.5 $SIGMA(10**bot) $SIGMA(10**top)
+h/plot 800
+h/plot 801 's'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline 0.25 0.25 $SIGMA(10**bot) $SIGMA(10**top)
+
+close 65

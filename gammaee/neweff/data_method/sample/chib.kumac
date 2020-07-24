@@ -1,0 +1,98 @@
+*       "e1", "e2", "p1", "p2", "q2", "costh",
+*       "rawntk", "epntk", "visen", "ccen", "bgntk", "bgrphi", "bgz", "bgd0", "bgz0",
+*       "neue", "q", "nsh10", "nsh50", "nsh100", "nsh500",
+*       "trig1", "level4",
+*       "ph1px", "ph1py", "ph1pz", "ph2px", "ph2py", "ph2pz",
+*       "tr1px", "tr1py", "tr1pz", "tr2px", "tr2py", "tr2pz",
+*       "mc"
+
+h/file 1 ../../data_method_rzn/sample/qqmcother.rzn
+h/file 2 ../../data_method_rzn/sample/qqmcll.rzn
+h/file 3 ../../data_method_rzn/sample/qqmcchib.rzn
+
+h/file 20 ../../data_method_rzn/sample/d2_129564.rzn
+h/file 21 ../../data_method_rzn/sample/d2_129566.rzn
+h/file 30 ../../data_method_rzn/sample/d2_129863.rzn
+h/file 31 ../../data_method_rzn/sample/d2_129864.rzn
+
+
+
+
+
+
+nt/cuts $1 (sqrt(tr1px**2+tr1py**2+tr1pz**2)+sqrt(tr2px**2+tr2py**2+tr2pz**2))**2-(tr1px+tr2px)**2-(tr1py+tr2py)**2-(tr1pz+tr2pz)**2>0.
+
+h/cr/1d 200 'mass of l+l-' 100 9. 10.
+nt/plot //lun2/dupercuts2/1.sqrt((sqrt(tr1px**2+tr1py**2+tr1pz**2)+sqrt(tr2px**2+tr2py**2+tr2pz**2))**2-(tr1px+tr2px)**2-(tr1py+tr2py)**2-(tr1pz+tr2pz)**2) $1 ! ! ! ! 200
+
+nt/cuts $2 abs(sqrt((sqrt(tr1px**2+tr1py**2+tr1pz**2)+sqrt(tr2px**2+tr2py**2+tr2pz**2))**2-(tr1px+tr2px)**2-(tr1py+tr2py)**2-(tr1pz+tr2pz)**2)-9.460)<0.1
+
+nt/plot //lun2/dupercuts2/1.p1%p2 p1<1.1&&p2<1.1
+nt/plot //lun2/dupercuts2/1.e1%e2 e1<1.1&&e2<1.1
+
+nt/cuts $3 p1>0.75&&p2>0.75&&e1<0.2&&e2<0.2
+
+nt/plot //lun20/dupercuts2/1.sqrt((sqrt(tr1px**2+tr1py**2+tr1pz**2)+sqrt(tr2px**2+tr2py**2+tr2pz**2))**2-(tr1px+tr2px)**2-(tr1py+tr2py)**2-(tr1pz+tr2pz)**2) $3 ! ! ! ! 200
+
+h/cr/2d 300 'photon1 VS photon2' 120 0. 0.6 120 0. 0.6
+nt/plot //lun3/dupercuts2/1.sqrt(ph1px**2+ph1py**2+ph1pz**2)%sqrt(ph2px**2+ph2py**2+ph2pz**2) $1&&$2&&$3 ! ! ! ! 300
+h/plot 300 box
+set ltyp 2
+dline 0 0.6 0.275 0.275
+dline 0 0.6 0.500 0.500
+dline 0.075 0.075 0 0.6
+dline 0.225 0.225 0 0.6
+
+nt/cuts $4 0.275<sqrt(ph1px**2+ph1py**2+ph1pz**2)<0.500&&0.075<sqrt(ph2px**2+ph2py**2+ph2pz**2)<0.225
+
+nt/plot //lun20/dupercuts2/1.sqrt(ph1px**2+ph1py**2+ph1pz**2)%sqrt(ph2px**2+ph2py**2+ph2pz**2) $1&&$2&&$3 ! ! ! ! 300
+nt/plot //lun21/dupercuts2/1.sqrt(ph1px**2+ph1py**2+ph1pz**2)%sqrt(ph2px**2+ph2py**2+ph2pz**2) $1&&$2&&$3 ! ! ! ! 300
+
+opt sta
+nt/plot //lun20/dupercuts2/1.sqrt(ph1px**2+ph1py**2+ph1pz**2) rawntk>1&&p2>0.4&&e1<0.85&&e2<0.85&&0.275<sqrt(ph1px**2+ph1py**2+ph1pz**2)<0.500&&0.075<sqrt(ph2px**2+ph2py**2+ph2pz**2)<0.225
+
+
+
+
+h/cr/1d 100 'all four particles transverse momentum' 100 0 1.
+nt/plot //lun3/dupercuts2/1.sqrt((ph1px+ph2px+tr1px+tr2px)**2+(ph1py+ph2py+tr1py+tr2py)**2) ! ! ! ! ! 100
+nt/plot //lun20/dupercuts2/1.sqrt((ph1px+ph2px+tr1px+tr2px)**2+(ph1py+ph2py+tr1py+tr2py)**2) $1&&$2&&$3&&$4 ! ! ! ! 100
+
+h/cr/1d 100 'all four particles momentum' 100 0 1.
+nt/plot //lun3/dupercuts2/1.sqrt((ph1px+ph2px+tr1px+tr2px)**2+(ph1py+ph2py+tr1py+tr2py)**2+(ph1pz+ph2pz+tr1pz+tr2pz)**2) ! ! ! ! ! 100
+nt/plot //lun20/dupercuts2/1.sqrt((ph1px+ph2px+tr1px+tr2px)**2+(ph1py+ph2py+tr1py+tr2py)**2+(ph1pz+ph2pz+tr1pz+tr2pz)**2) $1&&$2&&$3&&$4 ! ! ! ! 100
+
+h/cr/1d 100 'all four particles energy' 100 8. 11.
+nt/plot //lun3/dupercuts2/1.sqrt(ph1px**2+ph1py**2+ph1pz**2)+sqrt(ph2px**2+ph2py**2+ph2pz**2)+sqrt(tr1px**2+tr1py**2+tr1pz**2)+sqrt(tr2px**2+tr2py**2+tr2pz**2) ! ! ! ! ! 100
+nt/plot //lun20/dupercuts2/1.sqrt(ph1px**2+ph1py**2+ph1pz**2)+sqrt(ph2px**2+ph2py**2+ph2pz**2)+sqrt(tr1px**2+tr1py**2+tr1pz**2)+sqrt(tr2px**2+tr2py**2+tr2pz**2) $1&&$2&&$3&&$4 ! ! ! ! 100
+opt sta
+set stat 1111111
+h/plot 100
+
+
+
+nt/cuts $5 (sqrt(tr1px**2+tr1py**2+tr1pz**2)+sqrt(tr2px**2+tr2py**2+tr2pz**2)+sqrt(ph1px**2+ph1py**2+ph1pz**2))**2-(tr1px+tr2px+ph1px)**2-(tr1py+tr2py+ph1py)**2-(tr1pz+tr2pz+ph1pz)**2>0.
+
+h/cr/1d 100 'mass of chib' 100 8. 11.
+h/cr/1d 200 'mass of chib' 100 8. 11.
+h/cr/1d 300 'mass of chib' 100 8. 11.
+h/cr/1d 400 'mass of chib' 100 8. 11.
+h/cr/1d 500 'mass of chib' 100 8. 11.
+nt/plot //lun1/dupercuts2/1.sqrt((sqrt(tr1px**2+tr1py**2+tr1pz**2)+sqrt(tr2px**2+tr2py**2+tr2pz**2)+sqrt(ph1px**2+ph1py**2+ph1pz**2))**2-(tr1px+tr2px+ph1px)**2-(tr1py+tr2py+ph1py)**2-(tr1pz+tr2pz+ph1pz)**2) $5 ! ! ! ! 100
+nt/plot //lun2/dupercuts2/1.sqrt((sqrt(tr1px**2+tr1py**2+tr1pz**2)+sqrt(tr2px**2+tr2py**2+tr2pz**2)+sqrt(ph1px**2+ph1py**2+ph1pz**2))**2-(tr1px+tr2px+ph1px)**2-(tr1py+tr2py+ph1py)**2-(tr1pz+tr2pz+ph1pz)**2) $5 ! ! ! ! 200
+nt/plot //lun3/dupercuts2/1.sqrt((sqrt(tr1px**2+tr1py**2+tr1pz**2)+sqrt(tr2px**2+tr2py**2+tr2pz**2)+sqrt(ph1px**2+ph1py**2+ph1pz**2))**2-(tr1px+tr2px+ph1px)**2-(tr1py+tr2py+ph1py)**2-(tr1pz+tr2pz+ph1pz)**2) $5 ! ! ! ! 300
+nt/plot //lun20/dupercuts2/1.sqrt((sqrt(tr1px**2+tr1py**2+tr1pz**2)+sqrt(tr2px**2+tr2py**2+tr2pz**2)+sqrt(ph1px**2+ph1py**2+ph1pz**2))**2-(tr1px+tr2px+ph1px)**2-(tr1py+tr2py+ph1py)**2-(tr1pz+tr2pz+ph1pz)**2) $5 ! ! ! ! 400
+nt/plot //lun20/dupercuts2/1.sqrt((sqrt(tr1px**2+tr1py**2+tr1pz**2)+sqrt(tr2px**2+tr2py**2+tr2pz**2)+sqrt(ph1px**2+ph1py**2+ph1pz**2))**2-(tr1px+tr2px+ph1px)**2-(tr1py+tr2py+ph1py)**2-(tr1pz+tr2pz+ph1pz)**2) $1&&$2&&$3&&$4&&$5 ! ! ! ! 500
+
+h/plot 200
+h/plot 300 's'
+h/plot 400 's'
+set ltyp 3
+dline 9.8599 9.8599 0 $GRAFINFO('WNYMAX')
+dline 9.8927 9.8927 0 $GRAFINFO('WNYMAX')
+dline 9.9126 9.9126 0 $GRAFINFO('WNYMAX')
+h/plot 500
+set ltyp 3
+dline 9.8599 9.8599 0 $GRAFINFO('WNYMAX')
+dline 9.8927 9.8927 0 $GRAFINFO('WNYMAX')
+dline 9.9126 9.9126 0 $GRAFINFO('WNYMAX')

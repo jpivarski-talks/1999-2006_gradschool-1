@@ -1,0 +1,124 @@
+sigma which = 1
+nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db18.rzn
+nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db19.rzn
+nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y1gggam_db18.rzn
+nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y1ggg_db18.rzn
+nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y1qq_db18.rzn
+* nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y1gggam_db19.rzn
+* nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y1ggg_db19.rzn
+* nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y1qq_db19.rzn
+nt/chain cont /home/mccann/acceptance/rzn5/ntuple_123817.rzn
+nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_123817.rzn
+nt/chain peak /home/mccann/acceptance/rzn5/ntuple_123853.rzn
+nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_123853.rzn
+nt/chain cont /home/mccann/acceptance/rzn5/ntuple_125176.rzn
+nt/chain tcont /home/mccann/acceptance/rzn5/ntuple_trigger_125176.rzn
+nt/chain peak /home/mccann/acceptance/rzn5/ntuple_124684.rzn
+nt/chain tpeak /home/mccann/acceptance/rzn5/ntuple_trigger_124684.rzn
+sigma ptobge = 0.775	 
+sigma ptobgp = 0.807666
+sigma ctobge = 0.578646
+sigma ctobgp = 0.642509
+sigma ma = 0.925731
+sigma mb = 0.0183919
+sigma pa = 105060
+sigma ca = 23000 
+sigma pb = 81188 
+sigma cb = 65674 
+nt/chain bge /home/mccann/acceptance/rzn5/bgneg.rzn
+nt/chain bgp /home/mccann/acceptance/rzn5/bgpos.rzn
+nt/chain cos /home/mccann/acceptance/rzn5/cosmic.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger126828.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger126920.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger126922.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger127014.rzn
+nt/chain tbgp /home/mccann/acceptance/rzn3/trigger126785.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128706.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128736.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128741.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128748.rzn
+
+* Analysis cuts
+nt/cuts $1 (t1had>0).or.(t1rad>0).or.(t1el>0)
+nt/cuts $2 abs(d0close)<0.005
+nt/cuts $3 e1<0.85
+nt/cuts $4 p2<0.85
+nt/cuts $5 (wz>800&&abs(z0close)<0.075).or.(wz<800&&abs(wz)<0.075)
+nt/cuts $6 visen>0.35
+nt/cuts $7 tracks>1
+nt/cuts $8 l4dec>0
+nt/cuts $9 ccen<0.85
+* Bhabha luminosity cuts
+nt/cuts $15 (rawtk>=2).and.(tracks<=4).and.(pmiss<0.2).and.(abs(2-tr1-tr2-pmiss)<0.2).and.(visen>0.75).and.(ccen>0.75).and.(abs(d0close)<0.005).and.(abs(z0close)<0.05)
+* MC cuts
+nt/cuts $10 nbunch<15&&bbunch<10
+nt/cuts $11 -12<=mctype<=-10
+nt/cuts $12 -22<=mctype<=-20
+nt/cuts $13 -32<=mctype<=-30
+nt/cuts $21 10<=mctype<=12
+nt/cuts $22 20<=mctype<=22
+nt/cuts $23 !$21&&!$22
+
+nt/plot //mcggg/cuts/1.mctype $10 ! ! ! 'N' 1000000
+sigma nmcggg = $HINFO(1000000,'ENTRIES')
+nt/plot //mcgam/cuts/1.mctype $10 ! ! ! 'N' 1000000
+sigma nmcgam = $HINFO(1000000,'ENTRIES')
+nt/plot //mcqq/cuts/1.mctype $10 ! ! ! 'N' 1000000
+sigma nmcqq = $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.mctype $10&&$11 ! ! ! 'N' 1000000
+sigma nmcee = $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.mctype $10&&$12 ! ! ! 'N' 1000000
+sigma nmcmm = $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.mctype $10&&$13 ! ! ! 'N' 1000000
+sigma nmctt = $HINFO(1000000,'ENTRIES')
+if $SIGMA(which).ne.1 then
+  nt/plot //mccas/cuts/1.mctype $10&&$21 ! ! ! 'N' 1000000
+  sigma nmccee = $HINFO(1000000,'ENTRIES')
+  nt/plot //mccas/cuts/1.mctype $10&&$22 ! ! ! 'N' 1000000
+  sigma nmccmm = $HINFO(1000000,'ENTRIES')
+  nt/plot //mccas/cuts/1.mctype $10&&$23 ! ! ! 'N' 1000000
+  sigma nmccas = $HINFO(1000000,'ENTRIES')
+endif
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0
+
+
+
+
+
+
+h/file 28 ../rzn5/kaon_123853.rzn
+h/file 29 ../rzn5/kaon_123817.rzn
+h/file 31 ../rzn5/kaon_ldmc_y1ggg_db18.rzn
+h/file 41 ../rzn5/kaon_ldmc_y1ggg_db19.rzn
+h/file 32 ../rzn5/kaon_ldmc_y1qq_db18.rzn
+h/file 42 ../rzn5/kaon_ldmc_y1qq_db19.rzn
+h/file 33 ../rzn5/kaon_ldmc_y1gggam_db18.rzn
+h/file 43 ../rzn5/kaon_ldmc_y1gggam_db19.rzn
+
+h/plot //lun31/kaonmonitorproc/200
+h/plot //lun41/kaonmonitorproc/200
+h/plot //lun32/kaonmonitorproc/200
+h/plot //lun42/kaonmonitorproc/200
+h/plot //lun33/kaonmonitorproc/200
+h/plot //lun43/kaonmonitorproc/200
+
+sub //lun28/KAONMONITORPROC/200 //lun29/KAONMONITORPROC/200 10000 1. $SIGMA(ptoc) 'e'
+add //lun31/kaonmonitorproc/200 //lun41/kaonmonitorproc/200 10001 $SIGMA(ptomc*smcggg) $SIGMA(ptomc*smcggg) 'e'
+add //lun32/kaonmonitorproc/200 //lun42/kaonmonitorproc/200 10002 $SIGMA(ptomc*smcqq) $SIGMA(ptomc*smcqq) 'e'
+add //lun33/kaonmonitorproc/200 //lun43/kaonmonitorproc/200 10003 $SIGMA(ptomc*smcgam) $SIGMA(ptomc*smcgam) 'e'
+add 10001 10002 20000 1. 1. 'e'
+add 20000 10003 20001 1. 1. 'e'
+add 20001 20001 20002 0.25 0. 'e'
+
+h/plot 10000
+h/plot 20002 's'
+
+sigma ds = 0
+sigma ms = 0
+* 100 bins
+
+
+message data = $HINFO(10000,'SUM')
+message mc = $HINFO(20002,'SUM')
+
+

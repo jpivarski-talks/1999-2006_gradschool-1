@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title> Initialization of Geant and Cleog Under Suez </title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<h1> Initialization of Geant and Cleog Under Suez </h1>
+This note documents how we initialize Geant and Cleog when running Cleog under
+Suez.  Currently, the MCResponseProd library is coupled to Geant as
+the routines that read the Geants hits get them by reading Fortran
+common blocks (by calling <code>GFHITS</code> which reads to Zebra banks - which are
+common blocks).  The Cleo3 standard says one cannot use Fortran common
+blocks for intermodule communication; therefore all Geant calls are
+made from the MCResponseProd library.  In the future, we will create
+C++ objects to replace reading the hits from <code>GFHITS</code>,
+and the MCResponseProd library will be independent of Geant.  At that
+time, we will move the Geant calls to another producer and then 
+the MCResponeProd can be used with a "fast" Monte Carlo simulation.
+<p>
+<br>
+
+<p>
+<a href="cleog_init.ps">
+<img alt="Cleog/Geant Initialization diagram" src="cleog_init.gif">
+</a>
+<br>
+The figures from xfig will not show correctly in ghostview but
+should print (although xfig is not WYSIWYG so there might
+be minor problems).  
+<p>
+<br>
+
+<h1> Description of <code>SETUP_GEANT</code> </h1>
+The Fortran subroutine <code>setup_geant</code> is called
+by the Suez producer <code>MCResponseProd</code> constructor.
+<code>setup_geant</code> replaces the Geant main routine,
+<code>guser/gxint_321/gxint.F</code> and
+<code>guser/gxint_321/gpaw.F</code>.
+The calls in <code>gxint</code> sets up the
+Zebra common block size & calls guser/gxint_321/gpaw.F to
+initialize Geant.  
+<p>
+<br>
+
+
+<h1> Description of <code>USER_GEANT_INIT</code> </h1>
+The Geant user initialization is done by the subroutine
+<code>USER_GEANT_INIT</code>, 
+which replaces <code>UGINIT</code> (to avoid
+name conficts with the current UGINIT).  This routine
+is based on the example given in the
+<a href="http://wwwinfo.cern.ch/asdoc/geant_html3/geantall.html">
+Geant 3.21 manual</a> (although the example code only exists
+in the postscript version of the manual, go figure).
+The Geant geometry is not defined at this point as it
+is done at begin run time.  <code>CLEOG_INIT</code>
+is called to initialize Cleog specific code.
+<p>
+<br>
+
+<h1> Description of <code>CLEOG_INIT</code> </h1>
+This routine initializes Cleo specific code for Cleog.
+Currently calls are made to Zfiles, I/O related calls,
+QQ, the B field, etc.
+
+
+<p>
+<br>
+
+<h1> Geant Geometry Definitions </h1>
+The Geant geometry is not built at initialization time
+but at begin run time as there are geometry constants that
+vary with run number.  The object <code>BuildGeantGeometry</code>
+creates the Geant geometry
+and is called by <code>MCResponseProd::updateCleogBeginRun</code>.
+The <code>BuildGeantGeometry</code> object makes calls to the Cleo3
+geometry system - the detector geometry
+(DGDetectorStore) and the extra Geant
+specific info (G3iExtraVolSpecsStore).  
+
+
+<hr>
+Go back to <a href="MCResponseProd.html">
+MCResponseProd</a> documentation
+
+<hr>
+<address><a href="http://w4.lns.cornell.edu/~jjo/">John O'Neill &lt;jjo@mail.lns.cornell.edu &gt;</a></address>
+
+$Id: Cleog_under_Suez_Geant_notes.html,v 1.5 1999/10/13 17:51:54 jjo Exp $
+<!-- 
+$Log: Cleog_under_Suez_Geant_notes.html,v $
+Revision 1.5  1999/10/13 17:51:54  jjo
+Update documentation
+
+Revision 1.4  1999/05/18 14:19:39  jjo
+no changes
+
+Revision 1.3  1999/05/03 20:21:21  jjo
+Reorganize code to make running Cleog under Suez more robust
+
+Revision 1.2  1999/04/19 19:20:10  jjo
+Add figure of geant calls by the producer
+
+-->
+
+<!-- hhmts start -->
+Last modified: Wed Oct 13 13:36:43 EDT 1999
+<!-- hhmts end -->
+</body> </html>

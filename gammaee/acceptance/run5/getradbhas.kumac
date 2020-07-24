@@ -1,0 +1,92 @@
+h/file 1 /cdat/dafe/mccann/getradbhas.rzn
+h/file 2 /cdat/dafe/mccann/getradbhas_3.5.rzn
+h/file 3 /cdat/dafe/mccann/getradbhas_4.2.rzn
+h/file 4 /cdat/dafe/mccann/getradbhas_16.rzn
+
+* h/cr/1d 11 'Number of Tracks' 6 -0.5 5.5
+* h/cr/1d 12 'Number of Tracks' 6 -0.5 5.5
+* h/cr/1d 21 'Matches to Top Two Showers' 3 -0.5 2.5
+* h/cr/1d 22 'Matches to Top Two Showers' 3 -0.5 2.5
+* h/cr/1d 31 'Matches to Third Shower' 2 -0.5 1.5
+* h/cr/1d 32 'Matches to Third Shower' 2 -0.5 1.5
+* h/cr/1d 41 'Energy of Top Three Showers / eCM' 100 0.9 1.1
+* h/cr/1d 42 'Energy of Top Three Showers / eCM' 100 0.9 1.1
+* h/cr/1d 51 'CC Energy - Top Three Showers / eCM' 98 -0.05 0.3
+* h/cr/1d 52 'CC Energy - Top Three Showers / eCM' 98 -0.05 0.3
+* h/cr/1d 61 'Net Momentum of Top Three Showers (corrected) / eCM' 100 0 0.1
+* h/cr/1d 62 'Net Momentum of Top Three Showers (corrected) / eCM' 100 0 0.1
+
+* nt/plot //lun1/getradbhas/1.tracks ! ! ! ! 'N' 11
+* nt/plot //lun2/getradbhas/1.tracks ! ! ! ! 'N' 12
+* nt/plot //lun1/getradbhas/1.m1+m2 ! ! ! ! 'N' 21
+* nt/plot //lun2/getradbhas/1.m1+m2 ! ! ! ! 'N' 22
+* nt/plot //lun1/getradbhas/1.m3 ! ! ! ! 'N' 31
+* nt/plot //lun2/getradbhas/1.m3 ! ! ! ! 'N' 32
+* nt/plot //lun1/getradbhas/1.(e1+e2+e3)/2/ebeam ! ! ! ! 'N' 41
+* nt/plot //lun2/getradbhas/1.(e1+e2+e3)/2/ebeam ! ! ! ! 'N' 42
+* nt/plot //lun1/getradbhas/1.(ccen-(e1+e2+e3))/2/ebeam ! ! ! ! 'N' 51
+* nt/plot //lun2/getradbhas/1.(ccen-(e1+e2+e3))/2/ebeam ! ! ! ! 'N' 52
+* nt/plot //lun1/getradbhas/1.sqrt((p1x+p2x+p3x)**2+(p1y+p2y+p3y)**2+(p1z+p2z+p3z)**2)/2/ebeam ! ! ! ! 'N' 61
+* nt/plot //lun2/getradbhas/1.sqrt((p1x+p2x+p3x)**2+(p1y+p2y+p3y)**2+(p1z+p2z+p3z)**2)/2/ebeam ! ! ! ! 'N' 62
+
+* normalize 11
+* normalize 12
+* normalize 21
+* normalize 22
+* normalize 31
+* normalize 32
+* normalize 41
+* normalize 42
+* normalize 51
+* normalize 52
+* normalize 61
+* normalize 62
+
+* h/plot 11
+* h/plot 12 's'
+* h/plot 21
+* h/plot 22 's'
+* h/plot 31
+* h/plot 32 's'
+* h/plot 41
+* h/plot 42 's'
+* h/plot 51
+* h/plot 52 's'
+* h/plot 61
+* h/plot 62 's'
+
+* sigma pre = 100
+* exec getradbhas_helper lun1
+* min $SIGMA(pre+12) 0.99
+* max $SIGMA(pre+12) 1.01
+* min $SIGMA(pre+22) 0.99
+* max $SIGMA(pre+22) 1.01
+
+sigma pre = 200
+exec getradbhas_helper lun2
+min $SIGMA(pre+12) -0.1
+max $SIGMA(pre+12) 1.01
+min $SIGMA(pre+22) 0.5
+max $SIGMA(pre+22) 1.01
+
+sigma pre = 300
+exec getradbhas_helper lun3
+min $SIGMA(pre+12) -0.1
+max $SIGMA(pre+12) 1.01
+min $SIGMA(pre+22) 0.5
+max $SIGMA(pre+22) 1.01
+
+sigma pre = 400
+exec getradbhas_helper lun4
+min $SIGMA(pre+12) -0.1
+max $SIGMA(pre+12) 1.01
+min $SIGMA(pre+22) 0.5
+max $SIGMA(pre+22) 1.01
+
+h/plot 412
+h/plot 312 's'
+h/plot 212 's'
+
+h/plot 422
+h/plot 322 's'
+h/plot 222 's'

@@ -1,0 +1,99 @@
+***************************************************************
+*
+* "t1had", "t1rad", "t1el", "t1tt",
+* "tracks", "visen", "ccen",
+* "p2", "e1",
+* "ci", "wz", "d0close", "z0close",
+* "run", "ebeam", "neue", "q",
+* "axial", "stereo", "cblo", "cbmd",
+* "rawtk", "pmiss", "tr1", "tr2", "trperp1", "trperp2", "e2",
+* "shperp", "shdot",
+* "l4dec", "l4tracks",
+* "mctype",
+* "wpz", "cotthp",
+* "nbunch", "bbunch",
+* "cvisen", "cccen", "cneue",
+* "avisen", "accen", "aneue"
+*
+***************************************************************
+
+sigma which = 3
+if $SIGMA(which).eq.2 then
+  nt/chain mc /cdat/daf9/mccann/acceptance_home/rzn5/ntuple_db21.rzn
+  exec goget2.kumac
+endif
+if $SIGMA(which).eq.3 then
+  nt/chain mc /cdat/daf9/mccann/acceptance_home/rzn5/ntuple_db16.rzn
+  exec goget3.kumac
+endif
+
+nt/cuts $1 tr1>-100&&tr2>-100&&pmiss>-100&&visen>0.4&&abs(d0close)<0.005&&((abs(wz)>800&&abs(z0close)<0.075).or.(abs(wz)<800&&abs(wz)<0.075))&&e1<0.7&&(tr1+tr2)**2-pmiss**2>0.
+
+h/cr/1d 100 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+h/cr/1d 200 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+h/cr/1d 300 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+h/cr/1d 400 '([m]^+![m]^-! mass)/M?[U]! in [U](2S)' 100 0.7 1.2
+nt/plot //mc/cuts/1.sqrt((tr1+tr2)**2-pmiss**2)/2. $1&&mctype==-20 ! ! ! ! 100
+nt/plot //mc/cuts/1.sqrt((tr1+tr2)**2-pmiss**2)/2. $1&&mctype==20 ! ! ! ! 200
+nt/plot //peak/cuts/1.sqrt((tr1+tr2)**2-pmiss**2)/2. $1 ! ! ! ! 300
+nt/plot //cont/cuts/1.sqrt((tr1+tr2)**2-pmiss**2)/2. $1 ! ! ! ! 400
+
+ve/cr p(100)
+ve/cr e(100)
+h/get_vect/contents 100 p
+h/get_vect/errors   100 e
+message 'mc2mm = ['
+do i=1, 100
+  message $SIGMA(p([i])),
+enddo
+message ']'
+message 'mc2mm_err = ['
+do i=1, 100
+  message $SIGMA(e([i])),
+enddo
+message ']'
+
+ve/cr p(100)
+ve/cr e(100)
+h/get_vect/contents 200 p
+h/get_vect/errors   200 e
+message 'mc2cas = ['
+do i=1, 100
+  message $SIGMA(p([i])),
+enddo
+message ']'
+message 'mc2cas_err = ['
+do i=1, 100
+  message $SIGMA(e([i])),
+enddo
+message ']'
+
+ve/cr p(100)
+ve/cr e(100)
+h/get_vect/contents 300 p
+h/get_vect/errors   300 e
+message 'peak2 = ['
+do i=1, 100
+  message $SIGMA(p([i])),
+enddo
+message ']'
+message 'peak2_err = ['
+do i=1, 100
+  message $SIGMA(e([i])),
+enddo
+message ']'
+
+ve/cr p(100)
+ve/cr e(100)
+h/get_vect/contents 400 p
+h/get_vect/errors   400 e
+message 'cont2 = ['
+do i=1, 100
+  message $SIGMA(p([i])),
+enddo
+message ']'
+message 'cont2_err = ['
+do i=1, 100
+  message $SIGMA(e([i])),
+enddo
+message ']'

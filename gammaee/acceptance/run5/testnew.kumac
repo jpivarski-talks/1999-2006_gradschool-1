@@ -1,0 +1,62 @@
+#!/usr/local/bin/perl
+
+foreach $rzn (
+	      "ntuple_trigger_121899.rzn",
+	      "ntuple_trigger_121904.rzn",
+	      "ntuple_trigger_121906.rzn",
+	      "ntuple_trigger_121969.rzn",
+	      "ntuple_trigger_121972.rzn",
+	      "ntuple_trigger_122080.rzn",
+	      "ntuple_trigger_122081.rzn",
+	      "ntuple_trigger_122083.rzn",
+	      "ntuple_trigger_122091.rzn",
+	      "ntuple_trigger_122132.rzn",
+	      "ntuple_trigger_122133.rzn",
+	      "ntuple_trigger_122136.rzn",
+	      "ntuple_trigger_122143.rzn",
+	      "ntuple_trigger_122147.rzn",
+	      "ntuple_trigger_122418.rzn",
+	      "ntuple_trigger_122429.rzn",
+	      "ntuple_trigger_122430.rzn",
+	      "ntuple_trigger_122576.rzn",
+	      "ntuple_trigger_122586.rzn",
+	      "ntuple_trigger_122587.rzn",
+	      "ntuple_trigger_122594.rzn",
+	      "ntuple_trigger_122647.rzn",
+	      "ntuple_trigger_122800.rzn",
+	      "ntuple_trigger_122802.rzn",
+	      "ntuple_trigger_122816.rzn",
+	      "ntuple_trigger_122829.rzn",
+	      "ntuple_trigger_122831.rzn",
+	      "ntuple_trigger_122832.rzn",
+	      "ntuple_trigger_123043.rzn",
+	      "ntuple_trigger_123044.rzn",
+	      "ntuple_trigger_123817.rzn",
+	      "ntuple_trigger_123853.rzn",
+	      "ntuple_trigger_124684.rzn",
+	      "ntuple_trigger_125176.rzn",
+	      "ntuple_trigger_126473.rzn",
+	      "ntuple_trigger_126488.rzn",
+	      "ntuple_trigger_126563.rzn",
+	      "ntuple_trigger_126831.rzn",
+	      "ntuple_trigger_126835.rzn",
+	      "ntuple_trigger_126870.rzn",
+	      "ntuple_trigger_127317.rzn",
+	      "ntuple_trigger_127319.rzn",
+	      "ntuple_trigger_129071.rzn",
+	      "ntuple_trigger_129564.rzn",
+	      "ntuple_trigger_129572.rzn",
+	      "ntuple_trigger_129630.rzn",
+	      "ntuple_trigger_129845.rzn",
+	      "ntuple_trigger_129848.rzn",
+	      "ntuple_trigger_130427.rzn",
+	      "ntuple_trigger_130473.rzn",
+	      ) {
+    open(PAW, "| /nfs/cleo/dlib/cern/bin/pawX11");
+    print PAW "0
+h/file 1 /home/mccann/acceptance/rzn5/$rzn
+echo THERZNIS $rzn
+nt/print //lun1/triggeronlyproc/1
+";
+    close(PAW);
+}

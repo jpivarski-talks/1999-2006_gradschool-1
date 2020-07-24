@@ -1,0 +1,43 @@
+#! /usr/local/bin/tcsh
+# script to run a generator job inside driver
+# overwriting the official qqseq.ini (run number)
+# Usage: ./qqgo.scr arunnumber
+
+# point C_RUNFIL to my version of it:
+# !!! EDIT NEXT LINE to point to your runfil area:
+setenv C_RUNFIL runfil
+# !!! EDIT PREVIOUS LINE to point to your runfil area!
+
+# dump my run number into qqseq.ini
+if ($#argv<1) then
+   echo '***********************************'
+   echo 'Usage: ./qqgo.scr A_RUN_NUMBER'
+   echo 'Please try again!'
+   echo '***********************************'
+   exit
+else
+   echo 'got your number'
+   if (-f $C_RUNFIL/qqseq.ini) then
+     rm -f $C_RUNFIL/qqseq.ini
+   endif
+   echo '    '$1  > $C_RUNFIL/qqseq.ini
+endif
+
+# control file, example:
+# setenv CTRFILE /nfs/cleo3/cleomc/single_pion.ctr
+setenv CTRFILE qqrdin.ctr
+# output file:
+setenv OUTFILE test.rp
+
+# start qq:
+$C_EXE/qq << END
+$CTRFILE
+maxevt 5000
+datad out $OUTFILE 
+write single
+go
+exit
+END
+
+# finito.
+

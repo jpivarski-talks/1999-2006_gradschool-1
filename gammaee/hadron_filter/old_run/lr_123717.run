@@ -1,0 +1,38 @@
+#!/usr/local/bin/tcsh
+
+cd $HOME/hadron_filter/run
+. /nfs/cleo3/scripts/cleo3defs
+c3rel cleo3_Pass2_Oct09_2001
+
+suez -q > $USER_TMP/littlerunner_123717.log << EOF
+
+default prompt off
+exception continueEventLoop on
+
+module sel CorbaModule
+corba init
+module sel ConstantsModule
+constants in \$env(C3_CONST) meta Offline MetaListRetrieval
+constants in \$env(C3_CONST) meta CesrOffset MetaListRetrieval
+constants in \$env(C3_CONST) meta BaseGeometry MetaListRetrieval
+constants in \$env(C3_CONST) meta SVHybridEfficiency MetaListRetrieval
+constants in \$env(C3_CONST) meta Alignment MetaListRetrieval
+
+source_format sel AsciiSourceFormat
+file in \$env(C3_DATA)/material.asc basegeometry
+
+module sel RunStatisticsSourceModule
+runstatistics in
+
+prod sel DBEventHeaderProd
+
+source_format sel PDSSourceFormat
+file in ../dafedir/bug-free2_123717_peak.pds event startrun beginrun endrun
+source activate bug-free2_123717_peak event startrun beginrun endrun
+
+proc sel ../build_\$env(OS_NAME)/shlib/LittleRunner
+
+go
+exit
+
+EOF

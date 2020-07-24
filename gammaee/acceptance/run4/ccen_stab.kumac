@@ -1,0 +1,219 @@
+* 20 290 270 520
+
+ve/read peak1 peak1.sigmas
+ve/read cont1 cont1.sigmas
+ve/read peak2 peak2.sigmas
+ve/read cont2 cont2.sigmas
+ve/read peak3 peak3.sigmas
+ve/read cont3 cont3.sigmas
+ve/read peak1l peak1.sigmas.lottery
+ve/read cont1l cont1.sigmas.lottery
+ve/read peak2l peak2.sigmas.lottery
+ve/read cont2l cont2.sigmas.lottery
+ve/read peak3l peak3.sigmas.lottery
+ve/read cont3l cont3.sigmas.lottery
+
+opt fit
+set fit 101
+
+h/cr/1d 100 'U(1S) on-res' 50 -7. 7.
+h/cr/1d 150 'U(1S) off-res' 50 -5. 5.
+h/cr/1d 200 'U(2S) on-res' 50 -5. 5.
+h/cr/1d 250 'U(2S) off-res' 50 -5. 5.
+h/cr/1d 300 'U(3S) on-res' 50 -5. 5.
+h/cr/1d 350 'U(3S) off-res' 50 -5. 5.
+h/cr/1d 101 'U(1S) on-res' 50 -7. 7.
+h/cr/1d 151 'U(1S) off-res' 50 -5. 5.
+h/cr/1d 201 'U(2S) on-res' 50 -5. 5.
+h/cr/1d 251 'U(2S) off-res' 50 -5. 5.
+h/cr/1d 301 'U(3S) on-res' 50 -5. 5.
+h/cr/1d 351 'U(3S) off-res' 50 -5. 5.
+ve/hfill peak1 100
+ve/hfill cont1 150
+ve/hfill peak2 200
+ve/hfill cont2 250
+ve/hfill peak3 300
+ve/hfill cont3 350
+ve/hfill peak1l 101
+ve/hfill cont1l 151
+ve/hfill peak2l 201
+ve/hfill cont2l 251
+ve/hfill peak3l 301
+ve/hfill cont3l 351
+
+sigma pre = 100
+zone 2 2
+set hcol 0
+h/fit $SIGMA(pre+0) g
+set hcol 1404
+h/plot $SIGMA(pre+1) 's'
+pict/print 'peak1_sigmas.eps'
+
+sigma pre = 150
+zone 2 2
+set hcol 0
+h/fit $SIGMA(pre+0) g
+set hcol 1404
+h/plot $SIGMA(pre+1) 's'
+pict/print 'cont1_sigmas.eps'
+
+sigma pre = 200
+zone 2 2
+set hcol 0
+h/fit $SIGMA(pre+0) g
+set hcol 1404
+h/plot $SIGMA(pre+1) 's'
+pict/print 'peak2_sigmas.eps'
+
+sigma pre = 250
+zone 2 2
+set hcol 0
+h/fit $SIGMA(pre+0) g
+set hcol 1404
+h/plot $SIGMA(pre+1) 's'
+pict/print 'cont2_sigmas.eps'
+
+sigma pre = 300
+zone 2 2
+set hcol 0
+h/fit $SIGMA(pre+0) g
+set hcol 1404
+h/plot $SIGMA(pre+1) 's'
+pict/print 'peak3_sigmas.eps'
+
+sigma pre = 350
+zone 2 2
+set hcol 0
+h/fit $SIGMA(pre+0) g
+set hcol 1404
+h/plot $SIGMA(pre+1) 's'
+pict/print 'cont3_sigmas.eps'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+h/file 1 ../rzn4/db18peak.rzn
+h/file 2 ../rzn4/db19peak.rzn
+
+* Analysis cuts
+nt/cuts $1 (t1had>0).or.(t1rad>0).or.(t1el>0)
+nt/cuts $2 abs(d0close)<0.005
+nt/cuts $3 e1<0.85
+nt/cuts $4 p2<0.85
+nt/cuts $5 (wz>800&&abs(z0close)<0.075).or.(wz<800&&abs(wz)<0.075)
+nt/cuts $6 visen>0.2
+nt/cuts $7 ccen<0.85
+nt/cuts $8 tracks>1
+nt/cuts $9 l4dec>0
+
+nt/cuts $11 (t1had>0).or.(t1rad>0).or.(t1el>0)
+nt/cuts $12 visen>0.2
+nt/cuts $13 (tracks>=5).or.(ccen<0.75).or.(e1<0.75)
+nt/cuts $14 (tracks>=5).or.(ccen>0.15)
+nt/cuts $15 tracks>=3
+nt/cuts $16 l4dec>0
+nt/cuts $17 (ci<0.005).and.(abs(wz)<0.05)
+
+nt/plot //lun1/cuts/1.e2 $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9
+nt/plot //lun1/cuts/1.e2 $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&ccen>0.75 ! ! ! 's'
+
+nt/plot //lun1/cuts/1.p2 $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9
+nt/plot //lun1/cuts/1.p2 $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&ccen>0.75 ! ! ! 's'
+
+
+
+
+zone 1 1
+set hcol 0
+
+h/cr/1d 1000 'first' 120 0. 1.2
+h/cr/1d 2000 'second' 120 0. 1.2
+h/cr/1d 1001 'first' 120 0. 1.2
+h/cr/1d 2001 'second' 120 0. 1.2
+nt/plot //lun1/cuts/1.ccen $11&&$12&&$13&&$14&&$15&&$16&&$17&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! ! 1000
+nt/plot //lun2/cuts/1.ccen $11&&$12&&$13&&$14&&$15&&$16&&$17&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! ! 2000
+nt/plot //lun1/cuts/1.ccen $11&&$12&&$13&&$14&&$15&&$16&&$17&&$7&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! ! 1001
+nt/plot //lun2/cuts/1.ccen $11&&$12&&$13&&$14&&$15&&$16&&$17&&ccen<0.85&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! ! 2001
+
+* nt/cuts $13 (tracks>=5).or.(ccen<0.75).or.(e1<0.75)
+* nt/cuts $15 tracks>=3
+
+zone 1 2
+nt/plot //lun1/cuts/1.ccen $15&&$13&&$14&&$17&&$11&&$12&&$16&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! ! 1000
+nt/plot //lun2/cuts/1.ccen $15&&$13&&$14&&$17&&$11&&$12&&$16&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! ! 2000
+
+zone 1 1
+h/cr/1d 10000 'first' 19 -0.5 18.5
+h/cr/1d 20000 'first' 19 -0.5 18.5
+nt/plot //lun1/cuts/1.tracks $11&&$12&&$13&&$14&&$15&&$16&&$17&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&ccen>0.85 ! ! ! ! 10000
+nt/plot //lun2/cuts/1.tracks $11&&$12&&$13&&$14&&$15&&$16&&$17&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&ccen>0.85 ! ! ! ! 20000
+normalize 10000
+normalize 20000
+max 10000 200
+set dmod 1
+h/plot 10000 'e'
+set dmod 2
+h/plot 20000 'se'
+
+
+
+h/cr/1d 1000 'first' 120 0. 1.2
+h/cr/1d 2000 'second' 120 0. 1.2
+h/cr/1d 1001 'first' 120 0. 1.2
+h/cr/1d 2001 'second' 120 0. 1.2
+nt/plot //lun1/cuts/1.ccen $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! ! 1000
+nt/plot //lun2/cuts/1.ccen*5057/5039 $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! ! 2000
+nt/plot //lun1/cuts/1.ccen $7&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! ! 1001
+nt/plot //lun2/cuts/1.ccen*5057/5039 ccen*5057/5039<0.85&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! ! 2001
+
+sigma rat1 = $HINFO(1001,'ENTRIES')/$HINFO(1000,'ENTRIES')
+sigma rat2 = $HINFO(2001,'ENTRIES')/$HINFO(2000,'ENTRIES')
+message $SIGMA(rat1) $SIGMA(rat2)
+
+zone 1 2
+h/plot 1000
+set ltyp 3
+dline 0.85 0.85 0 $GRAFINFO('WNYMAX')
+h/plot 2000
+set ltyp 3
+dline 0.85 0.85 0 $GRAFINFO('WNYMAX')
+
+zone 1 1
+normalize 1000
+normalize 2000
+set dmod 1
+h/plot 1000(0.85:1.2)
+set dmod 2
+h/plot 2000(0.85:1.2) 's'
+
+
+
+
+
+h/file 3 ../rzn4/db18cont.rzn
+
+opt sta
+nt/plot //lun1/cuts/1.ccen $1&&e1<0.85&&ccen>0.85
+message $sigma(2134/131088)
+nt/plot //lun3/cuts/1.ccen $1&&e1<0.85&&ccen>0.85
+message $sigma(1673/74804)
+

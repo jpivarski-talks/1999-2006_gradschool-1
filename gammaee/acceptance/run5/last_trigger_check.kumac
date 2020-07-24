@@ -1,0 +1,208 @@
+***************************************************************
+*
+* "t1had", "t1rad", "t1el", "t1tt",
+* "tracks", "visen", "ccen",
+* "p2", "e1",
+* "ci", "wz", "d0close", "z0close",
+* "run", "ebeam", "neue", "q",
+* "axial", "stereo", "cblo", "cbmd",
+* "rawtk", "pmiss", "tr1", "tr2", "trperp1", "trperp2", "e2",
+* "shperp", "shdot",
+* "l4dec", "l4tracks",
+* "mctype",
+* "wpz", "cotthp"
+*
+***************************************************************
+
+sigma mc16ld = 0
+sigma which = 1
+if $SIGMA(which).eq.1 then
+  exec load_all1.kumac
+  sigma ptobge = 0.775	 
+  sigma ptobgp = 0.807666
+  sigma ctobge = 0.578646
+  sigma ctobgp = 0.642509
+  sigma ma = 140209
+  sigma pa = 105060
+  sigma ca = 23000 
+  sigma mb = 2525  
+  sigma pb = 81188 
+  sigma cb = 65674 
+  sigma ptomc  = (pa - pb*ca/cb)/(ma - mb*ca/cb)
+  sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  sigma ptocup = (pa*1.5*mb/ma - pb)/(ca*1.5*mb/ma - cb)
+  sigma ptocdo = (pa*0.5*mb/ma - pb)/(ca*0.5*mb/ma - cb)
+  ve/cr ptocy(3)
+  ve/inp ptocy $SIGMA(ptocup) $SIGMA(ptoc) $SIGMA(ptocdo)
+  ve/cr ptomcy(3)
+  ve/inp ptomcy 0.551738 0.549987 0.548247
+  ve/cr cosy(3)
+  ve/inp cosy -0.230925 -0.22559 -0.220286
+endif
+if $SIGMA(which).eq.2 then
+  exec load_all2.kumac
+  sigma ptobge = 2.96563
+  sigma ptobgp = 8.58676
+  sigma ctobge = 2.39375
+  sigma ctobgp = 8.95192
+  sigma ma = 168282
+  sigma pa = 228821
+  sigma ca = 92612 
+  sigma mb = 2654	 
+  sigma pb = 306556
+  sigma cb = 252568
+  sigma ptomc  = (pa - pb*ca/cb)/(ma - mb*ca/cb)
+  sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  sigma ptocup = (pa*1.5*mb/ma - pb)/(ca*1.5*mb/ma - cb)
+  sigma ptocdo = (pa*0.5*mb/ma - pb)/(ca*0.5*mb/ma - cb)
+  ve/cr ptocy(3)
+  ve/inp ptocy $SIGMA(ptocup) $SIGMA(ptoc) $SIGMA(ptocdo)
+  ve/cr ptomcy(3) 0.697823 0.695797 0.693778
+  ve/inp ptomcy 
+  ve/cr cosy(3)
+  ve/inp cosy 0.189363 0.203774 0.218146
+endif
+if $SIGMA(which).eq.3 then
+  exec load_all3.kumac
+  sigma ptobge = 6.67031
+  sigma ptobgp = 10.3596
+  sigma ctobge = 5.41458
+  sigma ctobgp = 8.87526
+  sigma ma = 94296
+  sigma pa = 265640
+  sigma ca = 141741
+  sigma mb = 1464
+  sigma pb = 383254
+  sigma cb = 324028
+  sigma ptomc  = (pa - pb*ca/cb)/(ma - mb*ca/cb)
+  sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  sigma ptocup = (pa*1.5*mb/ma - pb)/(ca*1.5*mb/ma - cb)
+  sigma ptocdo = (pa*0.5*mb/ma - pb)/(ca*0.5*mb/ma - cb)
+  ve/cr ptocy(3)
+  ve/inp ptocy $SIGMA(ptocup) $SIGMA(ptoc) $SIGMA(ptocdo)
+  ve/cr ptomcy(3)
+  ve/inp ptomcy 1.04988 1.0463 1.04274
+  ve/cr cosy(3)
+  ve/inp cosy -1.16454 -1.1469 -1.12934
+endif
+nt/chain bge /home/mccann/acceptance/rzn5/bgneg.rzn
+nt/chain bgp /home/mccann/acceptance/rzn5/bgpos.rzn
+nt/chain cos /home/mccann/acceptance/rzn5/cosmic.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger126828.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger126920.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger126922.rzn
+nt/chain tbge /home/mccann/acceptance/rzn3/trigger127014.rzn
+nt/chain tbgp /home/mccann/acceptance/rzn3/trigger126785.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128706.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128736.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128741.rzn
+nt/chain tcos /home/mccann/acceptance/rzn3/trigger128748.rzn
+
+* Analysis cuts
+nt/cuts $1 (t1had>0).or.(t1rad>0).or.(t1el>0)
+nt/cuts $2 abs(d0close)<0.005
+nt/cuts $3 e1<0.85
+nt/cuts $4 p2<0.85
+nt/cuts $5 (wz>800&&abs(z0close)<0.075).or.(wz<800&&abs(wz)<0.075)
+nt/cuts $6 visen>0.35
+nt/cuts $7 ccen<0.85
+nt/cuts $8 tracks>1
+nt/cuts $9 l4dec>0
+
+h/cr/2d 100 'trigger VS reconstructed tracks' 20 -0.5 19.5 20 -0.5 19.5
+h/cr/1d 101 'trigger tracks for 2 reconstructed tracks' 20 -0.5 19.5
+h/cr/1d 102 'reconstructed tracks for 2 trigger tracks' 20 -0.5 19.5
+nt/plot //mc/cuts/1.axial%tracks mctype>0 ! ! ! 'N' 100
+nt/plot //mc/cuts/1.axial tracks==2&&mctype>0 ! ! ! 'N' 101
+nt/plot //mc/cuts/1.tracks axial==2&&mctype>0 ! ! ! 'N' 102
+zone 1 2
+h/plot 100 'box'
+zone 2 2 3 's'
+h/plot 101 'box'
+h/plot 102 'box'
+pict/print 'last_trigger_check.ps'
+
+
+
+
+zone 1 2
+opt sta
+
+nt/plot //mc/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&t1had==1
+nt/plot //mc/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1
+
+nt/plot //mc/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&t1rad==1
+nt/plot //mc/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1
+
+nt/plot //mc/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&t1el==1
+nt/plot //mc/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1
+
+nt/plot //mc/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&(t1had==1.or.t1rad==1)
+nt/plot //mc/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1
+
+nt/plot //mc/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&(t1rad==1.or.t1el==1)
+nt/plot //mc/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1
+
+nt/plot //mc/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&(t1had==1.or.t1el==1)
+nt/plot //mc/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1
+
+nt/plot //mc/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&(t1had==1.or.t1rad==1.or.t1el==1)
+nt/plot //mc/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1
+
+
+
+
+
+
+
+
+nt/plot //peak/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1
+nt/plot //cont/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1
+
+nt/plot //peak/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&t1had==1
+nt/plot //cont/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&t1had==1
+
+nt/plot //peak/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&t1rad==1
+nt/plot //cont/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&t1rad==1
+
+nt/plot //peak/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&t1el==1
+nt/plot //cont/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&t1el==1
+
+nt/plot //peak/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&(t1had==1.or.t1rad==1)
+nt/plot //cont/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&(t1had==1.or.t1rad==1)
+
+nt/plot //peak/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&(t1rad==1.or.t1el==1)
+nt/plot //cont/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&(t1rad==1.or.t1el==1)
+
+nt/plot //peak/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&(t1had==1.or.t1el==1)
+nt/plot //cont/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&(t1had==1.or.t1el==1)
+
+nt/plot //peak/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&(t1had==1.or.t1rad==1.or.t1el==1)
+nt/plot //cont/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&(t1had==1.or.t1rad==1.or.t1el==1)
+
+
+
+nt/plot //mc/cuts/1.tracks mctype<0&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1&&(t1had==1.or.t1rad==1.or.t1el==1)
+
+
+
+nt/plot //mc/cuts/1.tracks mctype>0&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&visen-neue>0.35&&t1tt==1&&(t1had==1.or.t1rad==1.or.t1el==1)
+nt/plot //mc/cuts/1.tracks mctype>0&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&visen-neue>0.35&&t1tt==1
+
+nt/plot //peak/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&visen-neue>0.35&&t1tt==1&&(t1had==1.or.t1rad==1.or.t1el==1)
+nt/plot //peak/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&visen-neue>0.35&&t1tt==1
+
+nt/plot //cont/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&visen-neue>0.35&&t1tt==1&&(t1had==1.or.t1rad==1.or.t1el==1)
+nt/plot //cont/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&visen-neue>0.35&&t1tt==1
+
+nt/plot //mc/cuts/1.tracks mctype<0&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&visen-neue>0.35&&t1tt==1&&(t1had==1.or.t1rad==1.or.t1el==1)
+nt/plot //mc/cuts/1.tracks mctype<0&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&visen-neue>0.35&&t1tt==1
+
+
+nt/plot //mc/cuts/1.t1tt t1tt==1&&t1had==1
+nt/plot //mc/cuts/1.t1tt t1had==1
+message $SIGMA(42460/141571)
+
+nt/plot //peak/cuts/1.t1tt t1tt==1&&t1had==1
+nt/plot //peak/cuts/1.t1tt t1had==1
+message $SIGMA(5887/111159)

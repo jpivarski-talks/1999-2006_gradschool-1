@@ -1,0 +1,53 @@
+message DOING DATA with [1] in [2]
+
+sigma scale0 = (0.85714285*dp(1) + 0.0039795918*dp(2) - 0.00015388419*dp(3))/dp(1)
+sigma scale1 = (0.85714285*(dp(1)+de(1)) + 0.0039795918*dp(2) - 0.00015388419*dp(3))/(dp(1)+de(1))
+sigma scale2 = (0.85714285*dp(1) + 0.0039795918*(dp(2)+de(2)) - 0.00015388419*dp(3))/dp(1)
+sigma scale3 = (0.85714285*dp(1) + 0.0039795918*dp(2) - 0.00015388419*(dp(3)+de(3)))/dp(1)
+
+nt/plot //data/UPSLNGMMEECSCDES/1.([1]) $1&&([2]) ! ! ! 'N' 200
+nt/plot //data/UPSLNGMMEECSCDES/1.([1]) $2&&([2]) ! ! ! 'N' 201
+
+h/delete 202
+h/cr/1d 202 'pass"H#, sideband-subtracted' 2 -0.5 1.5
+sub 200 201 202 1.0 $SIGMA(scale0) 'e'
+h/get_vect/contents 202 cont
+h/get_vect/errors 202 errs
+sigma a = cont(2)
+sigma ae = errs(2)
+sigma b = cont(1)
+sigma be = errs(1)
+message nominal     $SIGMA(a) +/- $SIGMA(ae), $SIGMA(b) +/- $SIGMA(be), $SIGMA(a/(a+b)*100.)% +/- $SIGMA(sqrt(ae**2*b**2+be**2*a**2)/(a+b)**2*100.)%
+
+h/delete 202
+h/cr/1d 202 'pass"H#, sideband-subtracted' 2 -0.5 1.5
+sub 200 201 202 1.0 $SIGMA(scale1) 'e'
+h/get_vect/contents 202 cont
+h/get_vect/errors 202 errs
+sigma a = cont(2)
+sigma ae = errs(2)
+sigma b = cont(1)
+sigma be = errs(1)
+message shiftconst  $SIGMA(a) +/- $SIGMA(ae), $SIGMA(b) +/- $SIGMA(be), $SIGMA(a/(a+b)*100.)% +/- $SIGMA(sqrt(ae**2*b**2+be**2*a**2)/(a+b)**2*100.)%
+
+h/delete 202
+h/cr/1d 202 'pass"H#, sideband-subtracted' 2 -0.5 1.5
+sub 200 201 202 1.0 $SIGMA(scale2) 'e'
+h/get_vect/contents 202 cont
+h/get_vect/errors 202 errs
+sigma a = cont(2)
+sigma ae = errs(2)
+sigma b = cont(1)
+sigma be = errs(1)
+message shiftlinear $SIGMA(a) +/- $SIGMA(ae), $SIGMA(b) +/- $SIGMA(be), $SIGMA(a/(a+b)*100.)% +/- $SIGMA(sqrt(ae**2*b**2+be**2*a**2)/(a+b)**2*100.)%
+
+h/delete 202
+h/cr/1d 202 'pass"H#, sideband-subtracted' 2 -0.5 1.5
+sub 200 201 202 1.0 $SIGMA(scale3) 'e'
+h/get_vect/contents 202 cont
+h/get_vect/errors 202 errs
+sigma a = cont(2)
+sigma ae = errs(2)
+sigma b = cont(1)
+sigma be = errs(1)
+message shiftquad   $SIGMA(a) +/- $SIGMA(ae), $SIGMA(b) +/- $SIGMA(be), $SIGMA(a/(a+b)*100.)% +/- $SIGMA(sqrt(ae**2*b**2+be**2*a**2)/(a+b)**2*100.)%

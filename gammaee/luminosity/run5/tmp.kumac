@@ -1,0 +1,24 @@
+fortran/file 65 'whatswrong_look3.ps'
+graphics/metafile 65 -111
+igset mtype 1
+
+sigma pre = 1900
+h/cr/1d $SIGMA(pre+10) 'cotT' 70 0 1.4
+h/cr/1d $SIGMA(pre+11) 'cotT' 70 0 1.4
+h/cr/1d $SIGMA(pre+20) 'cotT' 70 0 1.4
+h/cr/1d $SIGMA(pre+21) 'cotT' 70 0 1.4
+nt/plot //lun1/whatswrong/1.cott ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.cott ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.cott ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18)*0.638478 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.cott ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19)*0.638478 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.15 0.15 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 1.28 1.28 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message cott 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+close 65

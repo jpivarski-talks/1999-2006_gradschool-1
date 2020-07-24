@@ -1,0 +1,11 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/eff_mc2.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/acceptance/run5/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+suez -f effcheck_mc2.tcl
+rm -f core

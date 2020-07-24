@@ -1,0 +1,786 @@
+nt/chain mc ../rzn2/mc21cascades.rzn
+
+nt/chain data ../rzn2/db21cascades.rzn
+nt/chain data ../rzn2/db22cascades.rzn
+nt/chain data ../rzn2/db23cascades.rzn
+nt/chain data ../rzn2/db25cascades.rzn
+nt/chain data ../rzn2/db27cascades.rzn
+
+nt/chain data2 ../rzn2/db21cascades2.rzn
+nt/chain data2 ../rzn2/db22cascades2.rzn
+nt/chain data2 ../rzn2/db23cascades2.rzn
+nt/chain data2 ../rzn2/db25cascades2.rzn
+nt/chain data2 ../rzn2/db27cascades2.rzn
+
+* don't change these--- the fit function was optimized for them!
+sigma s1 = 9.441
+sigma s2 = 9.454
+sigma s3 = 9.472
+sigma s4 = 9.480
+
+* signal region
+nt/cuts $1 (($SIGMA(s2)<m<$SIGMA(s3)))
+* sideband region
+nt/cuts $2 ((m<$SIGMA(s2).or.m>$SIGMA(s3)))
+* cuts applied to everything
+nt/cuts $3 ((abs(p1z)>0.060)&&(abs(p2z)>0.060)&&(mctag<10))
+
+set tsiz 0.4
+set vsiz 0.35
+
+***********************************
+
+* nt/plot //data/UPSLNGMMEECSCDES/1.eop1*p1*9.46030/2 p1>0.9&&eop1>-100&&eop1*p1*9.46030/2<1
+* nt/plot //mc/UPSLNGMMEECSCDES/1.sqrt(0.13957018**2+p1x**2+p1y**2+p1z**2)
+* nt/plot //mc/UPSLNGMMEECSCDES/1.sqrt(0.13957018**2+p2x**2+p2y**2+p2z**2)
+
+
+
+h/cr/1d 100 '[p]^+![p]^-! recoil mass (in GeV)' 78 $SIGMA(s1) $SIGMA(s4)
+nt/plot //data/UPSLNGMMEECSCDES/1.m $2&&$3 ! ! ! ! 100
+ve/cr dp(3)
+ve/cr de(3)
+ve/inp dp 0. 0. 0.
+h/fit 100 casfunc9.f 'E' 3 dp ! ! ! de
+* migrad
+* hesse
+* minos
+* show cov
+* exit
+sigma ds = (24225256894.2*dp(1)+0.00000200114*dp(2)+dp(3))
+sigma ds = -41643.9356190+(10088558029.6*dp(1)*100000-10192746.1964*dp(2))/ds
+
+h/cr/1d 100 '[p]^+![p]^-! recoil mass (in GeV) with TwoTrack trigger' 78 $SIGMA(s1) $SIGMA(s4)
+set dmod 1
+nt/plot //data/UPSLNGMMEECSCDES/1.m $3 ! ! ! ! 100
+set dmod 2
+f/plot ($SIGMA(dp(3)))*(1-0.21139165885844988*x+0.01117158214919767*x**2)+($SIGMA(dp(2)))*(1-0.10572660610042615*x)+($SIGMA(dp(1))) $SIGMA(s1) $SIGMA(s4) 's'
+set ltyp 3
+dline $SIGMA(s2) $SIGMA(s2) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(s3) $SIGMA(s3) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+set dmod 1
+
+h/cr/1d 101 'dummy' 19 -0.5 18.5
+h/cr/1d 102 'dummy' 19 -0.5 18.5
+h/cr/1d 103 'dummy' 19 -0.5 18.5
+nt/plot //data/UPSLNGMMEECSCDES/1.axish $1&&$3 ! ! ! 'N' 101
+nt/plot //data/UPSLNGMMEECSCDES/1.axish $SIGMA(ds)*($2&&$3) ! ! ! 'N' 102
+sub 101 102 103 ! ! 'e'
+h/plot 103
+dline -0.5 1.5 0 0
+
+sigma ds = (24225256894.2*dp(1)+0.00000200114*dp(2)+dp(3)+de(3))
+sigma ds = -41643.9356190+(10088558029.6*dp(1)*100000-10192746.1964*dp(2))/ds
+
+h/cr/1d 101 'dummy' 2 -0.5 1.5
+h/cr/1d 102 'dummy' 2 -0.5 1.5
+h/cr/1d 103 'dummy' 2 -0.5 1.5
+nt/plot //data/UPSLNGMMEECSCDES/1.thad==1 $1&&$3 ! ! ! 'N' 101
+nt/plot //data/UPSLNGMMEECSCDES/1.thad==1 $SIGMA(ds)*($2&&$3) ! ! ! 'N' 102
+sub 101 102 103 ! ! 'e'
+h/plot 103
+dline -0.5 1.5 0 0
+
+ve/cr d(2)
+ve/cr e(2)
+h/get_vect/contents 103 d
+h/get_vect/errors 103 e
+ve/print d
+ve/print e
+
+
+
+
+
+
+
+
+
+
+
+
+h/cr/1d 100 '[p]^+![p]^-! recoil mass (in GeV)' 78 $SIGMA(s1) $SIGMA(s4)
+nt/plot //data2/UPSLNGMMEECSCDES/1.m $2&&$3 ! ! ! ! 100
+ve/cr d2p(3)
+ve/cr d2e(3)
+ve/inp d2p 0. 0. 0.
+h/fit 100 casfunc9.f 'M' 3 d2p ! ! ! d2e
+migrad
+hesse
+minos
+show cov
+exit
+sigma d2s = (24225256894.2*d2p(1)+0.00000200114*d2p(2)+d2p(3))
+sigma d2s = -41643.9356190+(10088558029.6*d2p(1)*100000-10192746.1964*d2p(2))/d2s
+
+h/cr/1d 100 '[p]^+![p]^-! recoil mass (in GeV) with TwoTrack trigger' 78 $SIGMA(s1) $SIGMA(s4)
+set dmod 1
+nt/plot //data2/UPSLNGMMEECSCDES/1.m $3 ! ! ! ! 100
+set dmod 2
+f/plot ($SIGMA(d2p(3)))*(1-0.21139165885844988*x+0.01117158214919767*x**2)+($SIGMA(d2p(2)))*(1-0.10572660610042615*x)+($SIGMA(d2p(1))) $SIGMA(s1) $SIGMA(s4) 's'
+set ltyp 3
+dline $SIGMA(s2) $SIGMA(s2) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(s3) $SIGMA(s3) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+set dmod 1
+
+h/cr/1d 101 'dummy' 2 -0.5 1.5
+h/cr/1d 102 'dummy' 2 -0.5 1.5
+h/cr/1d 103 'dummy' 2 -0.5 1.5
+nt/plot //data2/UPSLNGMMEECSCDES/1.(axish>2&&(abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz==-1000.&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) (axish>0&&cbloish>0&&thad==1)&&$1&&$3 ! ! ! 'N' 101
+nt/plot //data2/UPSLNGMMEECSCDES/1.(axish>2&&(abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz==-1000.&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) $SIGMA(d2s)*((axish>0&&cbloish>0&&thad==1)&&$2&&$3) ! ! ! 'N' 102
+sub 101 102 103 ! ! 'e'
+h/plot 103
+dline -0.5 1.5 0 0
+
+ve/cr d(2)
+ve/cr e(2)
+h/get_vect/contents 103 d
+h/get_vect/errors 103 e
+ve/print d
+ve/print e
+
+h/cr/1d 103 'dummy' 2 -0.5 1.5
+nt/plot //mc/UPSLNGMMEECSCDES/1.(axish>0&&cbloish>0&&thad==1) mctag==1 ! ! ! ! 103
+nt/plot //mc/UPSLNGMMEECSCDES/1.(axish>2&&(abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz==-1000.&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) mctag==1&&((axish>0&&cbloish>0&&thad==1)) ! ! ! ! 103
+ve/cr d(2)
+h/get_vect/contents 103 d
+message $SIGMA(d(2)/(d(1)+d(2)))
+
+h/cr/1d 103 'dummy' 2 -0.5 1.5
+nt/plot //mc/UPSLNGMMEECSCDES/1.(axish>0&&cbloish>0&&thad==1) mctag==2 ! ! ! ! 103
+nt/plot //mc/UPSLNGMMEECSCDES/1.(axish>2&&(abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz==-1000.&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) mctag==2&&((axish>0&&cbloish>0&&thad==1)) ! ! ! ! 103
+ve/cr d(2)
+h/get_vect/contents 103 d
+message $SIGMA(d(2)/(d(1)+d(2)))
+
+h/cr/1d 103 'dummy' 2 -0.5 1.5
+nt/plot //mc/UPSLNGMMEECSCDES/1.(axish>0&&cbloish>0&&thad==1) mctag==3 ! ! ! ! 103
+nt/plot //mc/UPSLNGMMEECSCDES/1.(axish>2&&(abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz==-1000.&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) mctag==3&&((axish>0&&cbloish>0&&thad==1)) ! ! ! ! 103
+nt/plot //mc/UPSLNGMMEECSCDES/1.(axish>2&&(axish>0&&cbloish>0&&thad==1)&&(abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz==-1000.&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) mctag==3 ! ! ! ! 103
+ve/cr d(2)
+h/get_vect/contents 103 d
+message $SIGMA(d(2)/(d(1)+d(2)))
+
+
+
+* * These are to be done manually (they will crash an automatic job)
+* * It's the only way to read out correlations
+* * Make sure that the parameters and errors are the same as in an automatic job
+
+* h/cr/1d 100 '[p]^+![p]^-! recoil mass (in GeV)' 78 $SIGMA(s1) $SIGMA(s4)
+* nt/plot //data/UPSLNGMMEECSCDES/1.m ((sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))&&$2 ! ! ! ! 100
+
+* ve/cr dp(3)
+* ve/cr de(3)
+* ve/inp dp 0. 0. 0.
+* h/fit 100 casfunc9.f 'M' 3 dp ! ! ! de
+* migrad
+* hesse
+* minos
+* show cov
+* exit
+* sigma ds = (0.85714285*dp(1) + 0.0039795918*dp(2) - 0.00015388419*dp(3))/dp(1)
+
+* h/cr/1d 100 '[p]^+![p]^-! recoil mass (in GeV)' 78 $SIGMA(s1) $SIGMA(s4)
+* nt/plot //data2/UPSLNGMMEECSCDES/1.m ((sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))&&$2 ! ! ! ! 100
+* ve/cr d2p(3)
+* ve/cr d2e(3)
+* ve/inp d2p 0. 0. 0.
+* h/fit 100 casfunc9.f 'M' 3 d2p ! ! ! d2e
+* migrad
+* hesse
+* minos
+* show cov
+* exit
+* sigma d2s = (0.85714285*d2p(1) + 0.0039795918*d2p(2) - 0.00015388419*d2p(3))/d2p(1)
+
+* h/cr/1d 100 '[p]^+![p]^-! recoil mass (in GeV)' 78 $SIGMA(s1) $SIGMA(s4)
+* nt/plot //mc/UPSLNGMMEECSCDES/1.m ((sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))&&$2 ! ! ! ! 100
+* ve/cr mp(3)
+* ve/cr me(3)
+* ve/inp mp 0. 0. 0.
+* h/fit 100 casfunc9.f 'M' 3 mp ! ! ! me
+* migrad
+* hesse
+* minos
+* show cov
+* exit
+* sigma ms = (0.85714285*mp(1) + 0.0039795918*mp(2) - 0.00015388419*mp(3))/mp(1)
+
+* h/cr/1d 100 '[p]^+![p]^-! recoil mass (in GeV)' 78 $SIGMA(s1) $SIGMA(s4)
+* nt/plot //data/UPSLNGMMEECSCDES/1.m $2 ! ! ! ! 100
+* ve/cr dp(3)
+* ve/cr de(3)
+* ve/inp dp 0. 0. 0.
+* h/fit 100 casfunc9.f 'M' 3 dp ! ! ! de
+* migrad
+* hesse
+* minos
+* show cov
+* exit
+* sigma ds = (0.85714285*dp(1) + 0.0039795918*dp(2) - 0.00015388419*dp(3))/dp(1)
+
+* h/cr/1d 100 '[p]^+![p]^-! recoil mass (in GeV)' 78 $SIGMA(s1) $SIGMA(s4)
+* nt/plot //data2/UPSLNGMMEECSCDES/1.m $2 ! ! ! ! 100
+* ve/cr d2p(3)
+* ve/cr d2e(3)
+* ve/inp d2p 0. 0. 0.
+* h/fit 100 casfunc9.f 'M' 3 d2p ! ! ! d2e
+* migrad
+* hesse
+* minos
+* show cov
+* exit
+* sigma d2s = (0.85714285*d2p(1) + 0.0039795918*d2p(2) - 0.00015388419*d2p(3))/d2p(1)
+
+* h/cr/1d 100 '[p]^+![p]^-! recoil mass (in GeV)' 78 $SIGMA(s1) $SIGMA(s4)
+* nt/plot //mc/UPSLNGMMEECSCDES/1.m $2 ! ! ! ! 100
+* ve/cr mp(3)
+* ve/cr me(3)
+* ve/inp mp 0. 0. 0.
+* h/fit 100 casfunc9.f 'M' 3 mp ! ! ! me
+* migrad
+* hesse
+* minos
+* show cov
+* exit
+* sigma ms = (0.85714285*mp(1) + 0.0039795918*mp(2) - 0.00015388419*mp(3))/mp(1)
+
+***********************************
+
+exec refit_data9.kumac (1.eq.1)
+exec refit_data29.kumac (1.eq.1)
+exec refit_mc9.kumac (1.eq.1)
+
+***********************************
+
+zone 1 2
+
+* h/cr/1d 100 '[p]^+![p]^-! recoil mass (in GeV) with TwoTrack trigger' 78 $SIGMA(s1) $SIGMA(s4)
+* set dmod 1
+* nt/plot //data/UPSLNGMMEECSCDES/1.m (abs(p1z)>0.060&&abs(p2z)>0.060&&(mctag<10)) ! ! ! ! 100
+* set dmod 2
+* f/plot ($SIGMA(dp(1)))+($SIGMA(dp(2)))*(x-9.458357142857055)+($SIGMA(dp(3)))*(x**2-18.92233477371051*x+89.51347812358851) $SIGMA(s1) $SIGMA(s4) 's'
+* set ltyp 3
+* dline 9.454 9.454 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* dline 9.472 9.472 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* set ltyp 1
+* dline 9.4603 9.4603 $SIGMA(150.0/2.5) $SIGMA(600.0/2.5)
+* dline 9.4603 $SIGMA(9.4603-0.0005) $SIGMA(150.0/2.5) $SIGMA(300.0/2.5)
+* dline 9.4603 $SIGMA(9.4603+0.0005) $SIGMA(150.0/2.5) $SIGMA(300.0/2.5)
+* set dmod 1
+
+* h/cr/1d 100 '[p]^+![p]^-! recoil mass (in GeV) with Hadron trigger' 78 $SIGMA(s1) $SIGMA(s4)
+* set dmod 1
+* nt/plot //data2/UPSLNGMMEECSCDES/1.m (abs(p1z)>0.060&&abs(p2z)>0.060&&(mctag<10)) ! ! ! ! 100
+* set dmod 2
+* f/plot ($SIGMA(d2p(1)))+($SIGMA(d2p(2)))*(x-9.458357142857055)+($SIGMA(d2p(3)))*(x**2-18.92233477371051*x+89.51347812358851) $SIGMA(s1) $SIGMA(s4) 's'
+* set ltyp 3
+* dline 9.454 9.454 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* dline 9.472 9.472 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* set ltyp 1
+* dline 9.4603 9.4603 $SIGMA(7.7*150) $SIGMA(7.7*600)
+* dline 9.4603 $SIGMA(9.4603-0.0005) $SIGMA(7.7*150) $SIGMA(7.7*300)
+* dline 9.4603 $SIGMA(9.4603+0.0005) $SIGMA(7.7*150) $SIGMA(7.7*300)
+* set dmod 1
+
+* pict/print 'cascades_recoilmass.eps'
+
+* ***********************************
+
+* zone 1 2
+* exec change3.kumac (thad==1)
+
+* h/cr/1d 101 'dummy' 70 -7. 0.
+* h/cr/1d 102 'dummy' 70 -7. 0.
+* h/cr/1d 103 'd?XY! (in log m) with no cuts applied' 70 -7. 0.
+* h/cr/1d 111 'dummy' 70 -7. 0.
+* h/cr/1d 112 'dummy' 70 -7. 0.
+* h/cr/1d 113 'dummy' 70 -7. 0.
+* nt/plot //data/UPSLNGMMEECSCDES/1.log10(abs(d0close)) $1 ! ! ! 'N' 101
+* nt/plot //data/UPSLNGMMEECSCDES/1.log10(abs(d0close)) $SIGMA(ds)*($2) ! ! ! 'N' 102
+* nt/plot //mc/UPSLNGMMEECSCDES/1.log10(abs(d0close)) $1 ! ! ! 'N' 111
+* nt/plot //mc/UPSLNGMMEECSCDES/1.log10(abs(d0close)) $SIGMA(ms)*($2) ! ! ! 'N' 112
+* sub 101 102 103 ! ! 'e'
+* sub 111 112 113 ! ! 'e'
+* sigma norm = ($HINFO(103,'SUM')+$HINFO(103,'UNDERFLOW')+$HINFO(103,'OVERFLOW'))
+* normalize 113 $SIGMA(norm)
+* opt logx
+* null 1e-7 1.01 $SIGMA(-100.0/2.5) $SIGMA(1500.0/2.5)
+* opt linx
+* set dmod 1
+* h/plot 113 'shist'
+* h/plot 103 'se'
+* text -3.5 $SIGMA(-465.0/2.5) 'd?XY! (in log m) with no cuts applied' 0.4 ! 'c'
+* dline -7 0 0 0
+* set ltyp 3
+* dline $SIGMA(log10(0.005)) $SIGMA(log10(0.005)) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* h/cr/1d 101 'dummy' 70 -7. 0.
+* h/cr/1d 102 'dummy' 70 -7. 0.
+* h/cr/1d 103 'd?XY! (in log m) with minimal trigger' 70 -7. 0.
+* h/cr/1d 111 'dummy' 70 -7. 0.
+* h/cr/1d 112 'dummy' 70 -7. 0.
+* h/cr/1d 113 'dummy' 70 -7. 0.
+* nt/plot //data2/UPSLNGMMEECSCDES/1.log10(abs(d0close)) $1&&$3 ! ! ! 'N' 101
+* nt/plot //data2/UPSLNGMMEECSCDES/1.log10(abs(d0close)) $SIGMA(d2s)*($2&&$3) ! ! ! 'N' 102
+* nt/plot //mc/UPSLNGMMEECSCDES/1.log10(abs(d0close)) $1&&$3 ! ! ! 'N' 111
+* nt/plot //mc/UPSLNGMMEECSCDES/1.log10(abs(d0close)) $SIGMA(ms)*($2&&$3) ! ! ! 'N' 112
+* sub 101 102 103 ! ! 'e'
+* sub 111 112 113 ! ! 'e'
+* sigma norm = ($HINFO(103,'SUM')+$HINFO(103,'UNDERFLOW')+$HINFO(103,'OVERFLOW'))
+* normalize 113 $SIGMA(norm)
+* opt logx
+* null 1e-7 1.01 $SIGMA(-2000.0/2.5) $SIGMA(30000.0/2.5)
+* opt linx
+* set dmod 1
+* h/plot 113 'shist'
+* h/plot 103 'se'
+* text -3.5 $SIGMA(-9300.0/2.5) 'd?XY! (in log m) with minimal trigger' 0.4 ! 'c'
+* dline -7 0 0 0
+* set ltyp 3
+* dline $SIGMA(log10(0.005)) $SIGMA(log10(0.005)) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* pict/print 'cascades_logd0close.eps'
+
+* exec change3.kumac (thad==1)&&(abs(d0close)<0.005)
+
+* h/cr/1d 101 'dummy' 60 -6. 0.
+* h/cr/1d 102 'dummy' 60 -6. 0.
+* h/cr/1d 103 'd?Z! (in log m) with no cuts applied' 60 -6. 0.
+* h/cr/1d 111 'dummy' 60 -6. 0.
+* h/cr/1d 112 'dummy' 60 -6. 0.
+* h/cr/1d 113 'dummy' 60 -6. 0.
+* nt/plot //data/UPSLNGMMEECSCDES/1.log10(abs(wz)) $1&&wz>-100 ! ! ! 'N' 101
+* nt/plot //data/UPSLNGMMEECSCDES/1.log10(abs(wz)) $SIGMA(ds)*($2&&wz>-100) ! ! ! 'N' 102
+* nt/plot //mc/UPSLNGMMEECSCDES/1.log10(abs(wz)) $1&&wz>-100 ! ! ! 'N' 111
+* nt/plot //mc/UPSLNGMMEECSCDES/1.log10(abs(wz)) $SIGMA(ms)*($2&&wz>-100) ! ! ! 'N' 112
+* sub 101 102 103 ! ! 'e'
+* sub 111 112 113 ! ! 'e'
+* sigma norm = ($HINFO(103,'SUM')+$HINFO(103,'UNDERFLOW')+$HINFO(103,'OVERFLOW'))
+* normalize 113 $SIGMA(norm)
+* opt logx
+* null 1e-6 1.01 $SIGMA(-150.0/2.5) $SIGMA(2000.0/2.5)
+* opt linx
+* set dmod 1
+* h/plot 113 'shist'
+* h/plot 103 'se'
+* text -3 $SIGMA(-645.0/2.5) 'd?Z! (in log m) with no cuts applied' 0.4 ! 'c'
+* dline -6 0 0 0
+* set ltyp 3
+* dline $SIGMA(log10(0.075)) $SIGMA(log10(0.075)) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* h/cr/1d 101 'dummy' 60 -6. 0.
+* h/cr/1d 102 'dummy' 60 -6. 0.
+* h/cr/1d 103 'd?Z! (in log m) with previous cuts' 60 -6. 0.
+* h/cr/1d 111 'dummy' 60 -6. 0.
+* h/cr/1d 112 'dummy' 60 -6. 0.
+* h/cr/1d 113 'dummy' 60 -6. 0.
+* nt/plot //data2/UPSLNGMMEECSCDES/1.log10(abs(wz)) $1&&$3&&wz>-100 ! ! ! 'N' 101
+* nt/plot //data2/UPSLNGMMEECSCDES/1.log10(abs(wz)) $SIGMA(d2s)*($2&&$3&&wz>-100) ! ! ! 'N' 102
+* nt/plot //mc/UPSLNGMMEECSCDES/1.log10(abs(wz)) $1&&$3&&wz>-100 ! ! ! 'N' 111
+* nt/plot //mc/UPSLNGMMEECSCDES/1.log10(abs(wz)) $SIGMA(ms)*($2&&$3&&wz>-100) ! ! ! 'N' 112
+* sub 101 102 103 ! ! 'e'
+* sub 111 112 113 ! ! 'e'
+* sigma norm = ($HINFO(103,'SUM')+$HINFO(103,'UNDERFLOW')+$HINFO(103,'OVERFLOW'))
+* normalize 113 $SIGMA(norm)
+* opt logx
+* null 1e-6 1.01 $SIGMA(-2600.0/2.5) $SIGMA(40000.0/2.5)
+* opt linx
+* set dmod 1
+* h/plot 113 'shist'
+* h/plot 103 'se'
+* text -3 $SIGMA(-12500.0/2.5) 'd?Z! (in log m) with previous cuts' 0.4 ! 'c'
+* dline -6 0 0 0
+* set ltyp 3
+* dline $SIGMA(log10(0.075)) $SIGMA(log10(0.075)) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* pict/print 'cascades_logwz.eps'
+
+* exec change3.kumac (thad==1)&&(abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz==-1000.&&abs(z0close)<0.075))
+
+* h/cr/1d 101 'dummy' 60 0 1.2
+* h/cr/1d 102 'dummy' 60 0 1.2
+* h/cr/1d 103 'p?1!*2/M?[U](1S)! with no cuts applied' 60 0 1.2
+* h/cr/1d 111 'dummy' 60 0 1.2
+* h/cr/1d 112 'dummy' 60 0 1.2
+* h/cr/1d 113 'dummy' 60 0 1.2
+* h/cr/1d 121 'dummy' 60 0 1.2
+* h/cr/1d 122 'dummy' 60 0 1.2
+* h/cr/1d 123 'dummy' 60 0 1.2
+* nt/plot //data/UPSLNGMMEECSCDES/1.p1 $1 ! ! ! 'N' 101
+* nt/plot //data/UPSLNGMMEECSCDES/1.p1 $SIGMA(ds)*($2) ! ! ! 'N' 102
+* nt/plot //mc/UPSLNGMMEECSCDES/1.p1 $1 ! ! ! 'N' 111
+* nt/plot //mc/UPSLNGMMEECSCDES/1.p1 $SIGMA(ms)*($2) ! ! ! 'N' 112
+* nt/plot //mc/UPSLNGMMEECSCDES/1.p1 (mctag==1.or.mctag==2)&&$1 ! ! ! 'N' 121
+* nt/plot //mc/UPSLNGMMEECSCDES/1.p1 $SIGMA(ms)*((mctag==1.or.mctag==2)&&$2) ! ! ! 'N' 122
+* sub 101 102 103 ! ! 'e'
+* sub 111 112 113 ! ! 'e'
+* sub 121 122 123 ! ! 'e'
+* sigma norm = ($HINFO(103,'SUM')+$HINFO(103,'UNDERFLOW')+$HINFO(103,'OVERFLOW'))
+* normalize 113 $SIGMA(norm)
+* sigma norm2 = ($HINFO(103,'SUM')+$HINFO(103,'UNDERFLOW')+$HINFO(103,'OVERFLOW'))/($HINFO(113,'SUM')+$HINFO(113,'UNDERFLOW')+$HINFO(113,'OVERFLOW'))*($HINFO(123,'SUM')+$HINFO(123,'UNDERFLOW')+$HINFO(123,'OVERFLOW'))
+* normalize 123 $SIGMA(norm2)
+* set dmod 1
+* min 103 $SIGMA(-500.0/2.5)
+* max 103 $SIGMA(1600.0/2.5)
+* h/plot 103 'e'
+* h/plot 113 'shist'
+* set htyp 244
+* h/plot 123 'shist'
+* set htyp 0
+* h/plot 103 'se'
+* dline 0 1.2 0 0
+* set ltyp 3
+* dline 0.8 0.8 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* h/cr/1d 101 'dummy' 60 0 1.2
+* h/cr/1d 102 'dummy' 60 0 1.2
+* h/cr/1d 103 'p?1!*2/M?[U](1S)! with previous cuts' 60 0 1.2
+* h/cr/1d 111 'dummy' 60 0 1.2
+* h/cr/1d 112 'dummy' 60 0 1.2
+* h/cr/1d 113 'dummy' 60 0 1.2
+* h/cr/1d 121 'dummy' 60 0 1.2
+* h/cr/1d 122 'dummy' 60 0 1.2
+* h/cr/1d 123 'dummy' 60 0 1.2
+* nt/plot //data2/UPSLNGMMEECSCDES/1.p1 $1&&$3 ! ! ! 'N' 101
+* nt/plot //data2/UPSLNGMMEECSCDES/1.p1 $SIGMA(d2s)*($2&&$3) ! ! ! 'N' 102
+* nt/plot //mc/UPSLNGMMEECSCDES/1.p1 $1&&$3 ! ! ! 'N' 111
+* nt/plot //mc/UPSLNGMMEECSCDES/1.p1 $SIGMA(ms)*($2&&$3) ! ! ! 'N' 112
+* nt/plot //mc/UPSLNGMMEECSCDES/1.p1 (mctag==1.or.mctag==2)&&$1&&$3 ! ! ! 'N' 121
+* nt/plot //mc/UPSLNGMMEECSCDES/1.p1 $SIGMA(ms)*((mctag==1.or.mctag==2)&&$2&&$3) ! ! ! 'N' 122
+* sub 101 102 103 ! ! 'e'
+* sub 111 112 113 ! ! 'e'
+* sub 121 122 123 ! ! 'e'
+* sigma norm = ($HINFO(103,'SUM')+$HINFO(103,'UNDERFLOW')+$HINFO(103,'OVERFLOW'))
+* normalize 113 $SIGMA(norm)
+* sigma norm2 = ($HINFO(103,'SUM')+$HINFO(103,'UNDERFLOW')+$HINFO(103,'OVERFLOW'))/($HINFO(113,'SUM')+$HINFO(113,'UNDERFLOW')+$HINFO(113,'OVERFLOW'))*($HINFO(123,'SUM')+$HINFO(123,'UNDERFLOW')+$HINFO(123,'OVERFLOW'))
+* normalize 123 $SIGMA(norm2)
+* set dmod 1
+* min 103 $SIGMA(-2000.0/2.5)
+* max 103 $SIGMA(28000.0/2.5)
+* h/plot 103 'e'
+* h/plot 113 'shist'
+* set htyp 244
+* h/plot 123 'shist'
+* set htyp 0
+* h/plot 103 'se'
+* dline 0 1.2 0 0
+* set ltyp 3
+* dline 0.8 0.8 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* pict/print 'cascades_p1.eps'
+
+* exec change3.kumac (thad==1)&&(abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz==-1000.&&abs(z0close)<0.075))&&(p1<0.8)
+
+* h/cr/1d 101 'dummy' 60 0 1.2
+* h/cr/1d 102 'dummy' 60 0 1.2
+* h/cr/1d 103 'E?vis!/M?[U](1S)! with no cuts applied' 60 0 1.2
+* h/cr/1d 111 'dummy' 60 0 1.2
+* h/cr/1d 112 'dummy' 60 0 1.2
+* h/cr/1d 113 'dummy' 60 0 1.2
+* h/cr/1d 121 'dummy' 60 0 1.2
+* h/cr/1d 122 'dummy' 60 0 1.2
+* h/cr/1d 123 'dummy' 60 0 1.2
+* nt/plot //data/UPSLNGMMEECSCDES/1.chen+cneue $1 ! ! ! 'N' 101
+* nt/plot //data/UPSLNGMMEECSCDES/1.chen+cneue $SIGMA(ds)*($2) ! ! ! 'N' 102
+* nt/plot //mc/UPSLNGMMEECSCDES/1.chen+cneue $1 ! ! ! 'N' 111
+* nt/plot //mc/UPSLNGMMEECSCDES/1.chen+cneue $SIGMA(ms)*($2) ! ! ! 'N' 112
+* nt/plot //mc/UPSLNGMMEECSCDES/1.chen+cneue (mctag==3)&&$1 ! ! ! 'N' 121
+* nt/plot //mc/UPSLNGMMEECSCDES/1.chen+cneue $SIGMA(ms)*((mctag==3)&&$2) ! ! ! 'N' 122
+* sub 101 102 103 ! ! 'e'
+* sub 111 112 113 ! ! 'e'
+* sub 121 122 123 ! ! 'e'
+* sigma norm = ($HINFO(103,'SUM')+$HINFO(103,'UNDERFLOW')+$HINFO(103,'OVERFLOW'))
+* normalize 113 $SIGMA(norm)
+* sigma norm2 = ($HINFO(103,'SUM')+$HINFO(103,'UNDERFLOW')+$HINFO(103,'OVERFLOW'))/($HINFO(113,'SUM')+$HINFO(113,'UNDERFLOW')+$HINFO(113,'OVERFLOW'))*($HINFO(123,'SUM')+$HINFO(123,'UNDERFLOW')+$HINFO(123,'OVERFLOW'))
+* normalize 123 $SIGMA(norm2)
+* set dmod 1
+* min 103 $SIGMA(-500.0/2.5)
+* max 103 $SIGMA(1200.0/2.5)
+* h/plot 103 'e'
+* h/plot 113 'shist'
+* * set htyp 244
+* * h/plot 123 'shist'
+* * set htyp 0
+* h/plot 103 'se'
+* dline 0 1.2 0 0
+* set ltyp 3
+* dline 0.4 0.4 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* h/cr/1d 101 'dummy' 60 0 1.2
+* h/cr/1d 102 'dummy' 60 0 1.2
+* h/cr/1d 103 'E?vis!/M?[U](1S)! with previous cuts' 60 0 1.2
+* h/cr/1d 111 'dummy' 60 0 1.2
+* h/cr/1d 112 'dummy' 60 0 1.2
+* h/cr/1d 113 'dummy' 60 0 1.2
+* h/cr/1d 121 'dummy' 60 0 1.2
+* h/cr/1d 122 'dummy' 60 0 1.2
+* h/cr/1d 123 'dummy' 60 0 1.2
+* nt/plot //data2/UPSLNGMMEECSCDES/1.chen+cneue $1&&$3 ! ! ! 'N' 101
+* nt/plot //data2/UPSLNGMMEECSCDES/1.chen+cneue $SIGMA(d2s)*($2&&$3) ! ! ! 'N' 102
+* nt/plot //mc/UPSLNGMMEECSCDES/1.chen+cneue $1&&$3 ! ! ! 'N' 111
+* nt/plot //mc/UPSLNGMMEECSCDES/1.chen+cneue $SIGMA(ms)*($2&&$3) ! ! ! 'N' 112
+* nt/plot //mc/UPSLNGMMEECSCDES/1.chen+cneue (mctag==3)&&$1&&$3 ! ! ! 'N' 121
+* nt/plot //mc/UPSLNGMMEECSCDES/1.chen+cneue $SIGMA(ms)*((mctag==3)&&$2&&$3) ! ! ! 'N' 122
+* sub 101 102 103 ! ! 'e'
+* sub 111 112 113 ! ! 'e'
+* sub 121 122 123 ! ! 'e'
+* sigma norm = ($HINFO(103,'SUM')+$HINFO(103,'UNDERFLOW')+$HINFO(103,'OVERFLOW'))
+* normalize 113 $SIGMA(norm)
+* sigma norm2 = ($HINFO(103,'SUM')+$HINFO(103,'UNDERFLOW')+$HINFO(103,'OVERFLOW'))/($HINFO(113,'SUM')+$HINFO(113,'UNDERFLOW')+$HINFO(113,'OVERFLOW'))*($HINFO(123,'SUM')+$HINFO(123,'UNDERFLOW')+$HINFO(123,'OVERFLOW'))
+* normalize 123 $SIGMA(norm2)
+* set dmod 1
+* min 103 $SIGMA(-2000.0/2.5)
+* max 103 $SIGMA(20000.0/2.5)
+* h/plot 103 'e'
+* h/plot 113 'shist'
+* * set htyp 244
+* * h/plot 123 'shist'
+* * set htyp 0
+* h/plot 103 'se'
+* dline 0 1.2 0 0
+* set ltyp 3
+* dline 0.4 0.4 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* pict/print 'cascades_visen.eps'
+
+exec change3.kumac (thad==1)&&(abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz==-1000.&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)
+
+h/cr/1d 101 'dummy' 19 -0.5 18.5
+h/cr/1d 102 'dummy' 19 -0.5 18.5
+h/cr/1d 103 '"f#tracks with no cuts applied' 19 -0.5 18.5
+h/cr/1d 111 'dummy' 19 -0.5 18.5
+h/cr/1d 112 'dummy' 19 -0.5 18.5
+h/cr/1d 113 'dummy' 19 -0.5 18.5
+h/cr/1d 121 'dummy' 19 -0.5 18.5
+h/cr/1d 122 'dummy' 19 -0.5 18.5
+h/cr/1d 123 'dummy' 19 -0.5 18.5
+nt/plot //data/UPSLNGMMEECSCDES/1.tracks $1 ! ! ! 'N' 101
+nt/plot //data/UPSLNGMMEECSCDES/1.tracks $SIGMA(ds)*$2 ! ! ! 'N' 102
+nt/plot //mc/UPSLNGMMEECSCDES/1.tracks $1 ! ! ! 'N' 111
+nt/plot //mc/UPSLNGMMEECSCDES/1.tracks $SIGMA(ms)*$2 ! ! ! 'N' 112
+nt/plot //mc/UPSLNGMMEECSCDES/1.tracks (mctag>0)&&$1 ! ! ! 'N' 121
+nt/plot //mc/UPSLNGMMEECSCDES/1.tracks $SIGMA(ms)*((mctag>0)&&$2) ! ! ! 'N' 122
+sub 101 102 103 ! ! 'e'
+sub 111 112 113 ! ! 'e'
+sub 121 122 123 ! ! 'e'
+sigma norm = ($HINFO(103,'SUM')+$HINFO(103,'UNDERFLOW')+$HINFO(103,'OVERFLOW'))
+normalize 113 $SIGMA(norm)
+sigma norm2 = ($HINFO(103,'SUM')+$HINFO(103,'UNDERFLOW')+$HINFO(103,'OVERFLOW'))/($HINFO(113,'SUM')+$HINFO(113,'UNDERFLOW')+$HINFO(113,'OVERFLOW'))*($HINFO(123,'SUM')+$HINFO(123,'UNDERFLOW')+$HINFO(123,'OVERFLOW'))
+normalize 123 $SIGMA(norm2)
+set dmod 1
+min 103 $SIGMA(-1000.0/2.5)
+max 103 $SIGMA(3000.0/2.5)
+h/plot 103 'e'
+h/plot 113 'shist'
+set htyp 244
+h/plot 123 'shist'
+set htyp 0
+h/plot 103 'se'
+dline -0.5 18.5 0 0
+h/cr/1d 101 'dummy' 19 -0.5 18.5
+h/cr/1d 102 'dummy' 19 -0.5 18.5
+h/cr/1d 103 '"f#tracks with all hadron cuts' 19 -0.5 18.5
+h/cr/1d 111 'dummy' 19 -0.5 18.5
+h/cr/1d 112 'dummy' 19 -0.5 18.5
+h/cr/1d 113 'dummy' 19 -0.5 18.5
+h/cr/1d 121 'dummy' 19 -0.5 18.5
+h/cr/1d 122 'dummy' 19 -0.5 18.5
+h/cr/1d 123 'dummy' 19 -0.5 18.5
+nt/plot //data2/UPSLNGMMEECSCDES/1.tracks $1&&$3 ! ! ! 'N' 101
+nt/plot //data2/UPSLNGMMEECSCDES/1.tracks $SIGMA(d2s)*$2&&$3 ! ! ! 'N' 102
+nt/plot //mc/UPSLNGMMEECSCDES/1.tracks $1&&$3 ! ! ! 'N' 111
+nt/plot //mc/UPSLNGMMEECSCDES/1.tracks $SIGMA(ms)*$2&&$3 ! ! ! 'N' 112
+nt/plot //mc/UPSLNGMMEECSCDES/1.tracks (mctag>0)&&$1&&$3 ! ! ! 'N' 121
+nt/plot //mc/UPSLNGMMEECSCDES/1.tracks $SIGMA(ms)*((mctag>0)&&$2&&$3) ! ! ! 'N' 122
+sub 101 102 103 ! ! 'e'
+sub 111 112 113 ! ! 'e'
+sub 121 122 123 ! ! 'e'
+sigma norm = ($HINFO(103,'SUM')+$HINFO(103,'UNDERFLOW')+$HINFO(103,'OVERFLOW'))
+normalize 113 $SIGMA(norm)
+sigma norm2 = ($HINFO(103,'SUM')+$HINFO(103,'UNDERFLOW')+$HINFO(103,'OVERFLOW'))/($HINFO(113,'SUM')+$HINFO(113,'UNDERFLOW')+$HINFO(113,'OVERFLOW'))*($HINFO(123,'SUM')+$HINFO(123,'UNDERFLOW')+$HINFO(123,'OVERFLOW'))
+normalize 123 $SIGMA(norm2)
+set dmod 1
+min 103 $SIGMA(-3000.0/2.5)
+max 103 $SIGMA(52000.0/2.5)
+h/plot 103 'e'
+h/plot 113 'shist'
+set htyp 244
+h/plot 123 'shist'
+set htyp 0
+h/plot 103 'se'
+dline -0.5 18.5 0 0
+pict/print 'cascades_tracks.eps'
+
+ve/cr vals(19)
+ve/cr errs(19)
+h/get_vect/contents 103 vals
+h/get_vect/errors 103 errs
+ve/print vals
+ve/print errs
+
+h/get_vect/contents 113 vals
+h/get_vect/errors 113 errs
+ve/print vals
+ve/print errs
+
+h/get_vect/contents 123 vals
+h/get_vect/errors 123 errs
+ve/print vals
+ve/print errs
+
+h/plot 113
+h/plot 123 's'
+
+
+***********************************
+
+h/cr/1d 200 'pass"H# in signal' 2 -0.5 1.5
+h/cr/1d 201 'pass"H# in sideband' 2 -0.5 1.5
+h/cr/1d 202 'pass"H#, sideband-subtracted' 2 -0.5 1.5
+ve/cr cont(2)
+ve/cr errs(2)
+
+message "*********************************"
+message minimal and maximal triggers in MC
+nt/cuts $4 (thad==1)
+nt/cuts $5 ((thad==1)&&((axish>2).or.(trad==1).or.(axish>0&&tel==1))&&(sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+exec do_mc.kumac ($4) (1.eq.1)
+exec refit_mc9.kumac ((sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+exec do_mc.kumac ($5) ((thad==1)&&(sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+exec do_mc.kumac ($5) ((sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+exec refit_mc9.kumac (1.eq.1)
+
+message minimal and maximal triggers in MC with p1 applied
+exec do_mc.kumac ($4) (p1<0.8)
+exec refit_mc9.kumac ((p1<0.8)&&(sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+exec do_mc.kumac ($5) ((p1<0.8)&&(thad==1)&&(sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+exec do_mc.kumac ($5) ((p1<0.8)&&(sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+exec refit_mc9.kumac (1.eq.1)
+
+message everything given minimal trigger
+exec refit_mc9.kumac (1.eq.1)
+exec do_mc.kumac ((abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) ($4)
+
+message everything given minimal trigger
+exec refit_mc9.kumac ((sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+exec do_mc.kumac ((abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) ($5)
+exec refit_mc9.kumac (1.eq.1)
+
+
+message everything given minimal trigger HADRONS ONLY
+exec refit_mc9.kumac (1.eq.1)
+exec do_mc.kumac ((abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) ($4&&mctag==0)
+
+message everything given minimal trigger HADRONS ONLY
+exec refit_mc9.kumac ((sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+exec do_mc.kumac ((abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) ($5&&mctag==0)
+exec refit_mc9.kumac (1.eq.1)
+
+
+
+message "*********************************"
+message non-cumulative cuts
+exec do_mc.kumac (abs(d0close)<0.005) (1.eq.1)
+exec do_mc.kumac (abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075)) (1.eq.1)
+exec do_mc.kumac (p1<0.8) (1.eq.1)
+exec do_mc.kumac (chen+cneue>0.4) (1.eq.1)
+
+message "*********************************"
+message with minimal trigger
+exec change3.kumac (1.eq.1)
+exec do_mc.kumac (abs(d0close)<0.005) ($3&&$4)
+exec change3.kumac (abs(d0close)<0.005)
+exec do_mc.kumac (abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075)) ($3&&$4)
+exec change3.kumac (abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))
+exec do_mc.kumac (p1<0.8) ($3&&$4)
+exec change3.kumac (abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)
+exec do_mc.kumac (chen+cneue>0.4) ($3&&$4)
+exec do_mc.kumac ($4&&(abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) (1.eq.1)
+
+message all given minimal trigger
+exec do_mc.kumac ($4&&(abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) ($4)
+
+message minimal trigger p1 HADRONS ONLY
+exec change3.kumac (abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))
+exec do_mc.kumac (p1<0.8) ($3&&$4&&mctag==0)
+
+
+message "*********************************"
+message with maximal trigger
+exec refit_mc9.kumac ((sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+exec change3.kumac (1.eq.1)
+exec do_mc.kumac (abs(d0close)<0.005) ($3&&$5)
+exec change3.kumac (abs(d0close)<0.005)
+exec do_mc.kumac (abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075)) ($3&&$5)
+exec change3.kumac (abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))
+exec do_mc.kumac (p1<0.8) ($3&&$5)
+exec change3.kumac (abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)
+exec do_mc.kumac (chen+cneue>0.4) ($3&&$5)
+exec do_mc.kumac ($5&&(abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) (thad==1&&(sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+
+message all given maximal trigger
+exec do_mc.kumac ($5&&(abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) ($5)
+
+message maximal trigger p1 HADRONS ONLY
+exec change3.kumac (abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))
+exec do_mc.kumac (p1<0.8) ($3&&$5&&mctag==0)
+
+message "*********************************"
+message minimal and maximal triggers in data
+nt/cuts $4 (thad==1)
+nt/cuts $5 ((thad==1)&&((axish>2).or.(trad==1).or.(axish>0&&tel==1))&&(sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+exec do_data.kumac ($4) (1.eq.1)
+exec refit_data29.kumac ((sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+exec do_data2.kumac ($5) ((thad==1)&&(sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+exec refit_data9.kumac ((sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+exec do_data.kumac ($5) ((sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+exec refit_data29.kumac (1.eq.1)
+exec refit_data9.kumac (1.eq.1)
+
+message "*********************************"
+message non-cumulative cuts
+exec do_data.kumac (abs(d0close)<0.005) (1.eq.1)
+exec do_data.kumac (abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075)) (1.eq.1)
+exec do_data.kumac (p1<0.8) (1.eq.1)
+exec do_data.kumac (chen+cneue>0.4) (1.eq.1)
+
+message "*********************************"
+message with minimal trigger
+exec change3.kumac (1.eq.1)
+exec do_data2.kumac (abs(d0close)<0.005) ($3&&$4)
+exec change3.kumac (abs(d0close)<0.005)
+exec do_data2.kumac (abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075)) ($3&&$4)
+exec change3.kumac (abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))
+exec do_data2.kumac (p1<0.8) ($3&&$4)
+exec change3.kumac (abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)
+exec do_data2.kumac (chen+cneue>0.4) ($3&&$4)
+message all cuts (including minimal trigger)
+exec do_data.kumac ($4&&(abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) (1.eq.1)
+message all cuts (given minimal trigger)
+exec do_data2.kumac ($4&&(abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) ($4)
+exec change3.kumac (abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)
+message number of tracks cuts
+exec do_data2.kumac (tracks>2) ($3&&$4)
+exec do_data2.kumac (tracks>4) ($3&&$4)
+
+message visen bigger than 0.3
+exec change3.kumac (abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)
+exec do_data2.kumac (chen+cneue>0.3) ($3&&$4)
+
+message "*********************************"
+message with maximal trigger
+exec refit_data9.kumac ((sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+exec refit_data29.kumac ((sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+exec change3.kumac (1.eq.1)
+exec do_data2.kumac (abs(d0close)<0.005) ($3&&$5)
+exec change3.kumac (abs(d0close)<0.005)
+exec do_data2.kumac (abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075)) ($3&&$5)
+exec change3.kumac (abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))
+exec do_data2.kumac (p1<0.8) ($3&&$5)
+exec change3.kumac (abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)
+exec do_data2.kumac (chen+cneue>0.4) ($3&&$5)
+message all cuts (including maximal trigger)
+exec do_data.kumac ($5&&(abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) ((sqrt(p1x**2+p1y**2)<0.200)&&(sqrt(p2x**2+p2y**2)<0.200))
+message all cuts (given maximal trigger)
+exec do_data2.kumac ($5&&(abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)&&(chen+cneue>0.4)) ($5)
+message number of tracks cuts
+exec do_data2.kumac (tracks>2) ($3&&$5)
+exec do_data2.kumac (tracks>4) ($3&&$5)
+
+message visen bigger than 0.3
+exec change3.kumac (abs(d0close)<0.005)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(p1<0.8)
+exec do_data2.kumac (chen+cneue>0.3) ($3&&$5)

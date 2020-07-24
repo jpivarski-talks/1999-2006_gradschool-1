@@ -1,0 +1,71 @@
+#!/usr/bin/sh
+
+for tag in nov29-01 dec06-01 dec13-01 dec20-01 dec25-01 jan03-02 jan10-02
+do
+    echo fitting $tag
+    awk '{ print $3*2, $4, $5 }' ../../fits/$tag/pass1/data.dat > ../../fits/$tag/pass1/datause.dat
+    cp ../../fits/$tag/pass1/datause.dat expt.dat
+    ./fitY3s < expt.dat | tee tmp.log
+#    grep theo tmp.log | awk '{ print $2/1000, $3 }' > theo.dat
+    awk -f present.awk tmp.log > ../../fits/$tag/pass1/real.txt
+    gnuplot << EOF
+set xlabel 'Energy in GeV'
+set ylabel 'Hadronic Cross-Section in nb'
+set nokey
+set term postscript eps
+set output 'tmp.eps'
+plot [10.32:10.41][0:10] "expt.dat" with errorbars 1 4, "theo.dat" with lines
+exit
+EOF
+    mv -f tmp.eps ../../fits/$tag/pass1/real.eps
+    mv -f theo.dat ../../fits/$tag/pass1/real.theo
+    mv -f tmp.log ../../fits/$tag/pass1/real.log
+    rm -f expt.dat
+done
+
+perl mass_shift.pl nov29-01 dec06-01 dec13-01 dec20-01 dec25-01 jan03-02 jan10-02 > fullexpt.dat
+
+echo fitting full data
+./fitY3s < fullexpt.dat | tee tmp.log
+# grep theo tmp.log | awk '{ print $2/1000, $3 }' > theo.dat
+awk -f present.awk tmp.log > ../../fits/realY3s.txt
+gnuplot << EOF
+set xlabel 'Energy in GeV'
+set ylabel 'Hadronic Cross-Section in nb'
+set title 'Kuraev-Fadin Fit to All Y(3s) Data'
+set nokey
+set term postscript eps
+set output 'tmp.eps'
+plot [10.32:10.41][0:10] "fullexpt.dat" with errorbars 1 4, "theo.dat" with lines
+EOF
+mv -f tmp.eps ../../fits/realY3s.eps
+
+awk -f combineY3s.awk fullexpt.dat > combexpt.dat
+gnuplot << EOF
+set xlabel 'Energy in GeV'
+set ylabel 'Hadronic Cross-Section in nb'
+set title 'Kuraev-Fadin Fit to All Y(3s) Data'
+set nokey
+set term postscript eps
+set output 'tmp.eps'
+plot [10.32:10.41][0:8] "combexpt.dat" with errorbars 1 4, "theo.dat" with lines
+set term postscript landscape color solid
+set output 'tmp.ps'
+plot [10.32:10.41][0:8] "combexpt.dat" with errorbars 1 4, "theo.dat" with lines
+set term pbm color
+set output 'tmp.pbm'
+plot [10.32:10.41][0:8] "combexpt.dat" with errorbars 1 4, "theo.dat" with lines
+set term fig color
+set output 'tmp.fig'
+plot [10.32:10.41][0:8] "combexpt.dat" with errorbars 1 4, "theo.dat" with lines
+EOF
+mv -f tmp.eps ../../fits/realY3s_comb.eps
+mv -f tmp.ps ../../fits/realY3s_comb.ps
+mv -f tmp.pbm ../../fits/realY3s_comb.pbm
+$USER_DAF/software/pbmplus/ppmtogif ../../fits/realY3s_comb.pbm > ../../fits/realY3s_comb.gif
+mv -f tmp.fig ../../fits/realY3s_comb.fig
+
+cp -f fullexpt.dat ../../fits/realY3s.fullexpt
+cp -f combexpt.dat ../../fits/realY3s.combexpt
+mv -f theo.dat ../../fits/realY3s.theo
+mv -f tmp.log ../../fits/realY3s.log

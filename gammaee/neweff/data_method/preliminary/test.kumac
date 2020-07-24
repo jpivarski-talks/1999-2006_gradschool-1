@@ -1,0 +1,72 @@
+h/file 1 ../data_method_rzn/test.rzn
+
+* cd beamgasfilter
+* opt logy
+* opt sta
+* set stat 0110010
+* h/plot 100
+* h/plot 101
+* h/plot 200
+* h/plot 201
+
+cd supercuts
+*       "mc",
+*       "rawtk", "eptk", "tmtk",
+*       "ccen", "visen",
+*       "p1", "p2", "p3", "p4",
+*       "d1", "d2", "d3", "d4",
+*       "z1", "z2", "z3", "z4",
+*       "me1", "me2", "me3", "me4",
+*       "md1", "md2", "md3", "md4",
+*       "e1", "e2", "e3", "e4",
+*       "p2x", "p2y", "p2z",
+*       "p4x", "p4y", "p4z",
+*       "pallx", "pally", "pallz",
+*       "pepx", "pepy", "pepz"};
+
+
+nt/plot 1.ccen mc==0
+nt/plot 1.ccen ! ! ! ! 's'
+
+nt/plot 1.visen mc==0
+nt/plot 1.visen ! ! ! ! 's'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*********************** comparing ways of identifying tracks
+
+h/cr/2d 100 'raw tracks VS EventProperties tracks' 7 -0.5 6.5 7 -0.5 6.5
+h/cr/2d 200 'Trkman tracks VS EventProperties tracks' 7 -0.5 6.5 7 -0.5 6.5
+h/cr/2d 300 'raw tracks VS Trkman tracks' 7 -0.5 6.5 7 -0.5 6.5
+
+nt/plot 1.rawtk%eptk ! ! ! ! 'N' 100
+nt/plot 1.tmtk%eptk ! ! ! ! 'N' 200
+nt/plot 1.rawtk%tmtk ! ! ! ! 'N' 300
+
+h/plot 100 'box'
+dline -0.5 6.5 -0.5 6.5
+h/plot 200 'box'
+dline -0.5 6.5 -0.5 6.5
+h/plot 300 'box'
+dline -0.5 6.5 -0.5 6.5
+
+h/plot 100 'text'
+dline -0.5 6.5 -0.5 6.5
+h/plot 200 'text'
+dline -0.5 6.5 -0.5 6.5
+h/plot 300 'text'
+dline -0.5 6.5 -0.5 6.5
+
+*************************************************************

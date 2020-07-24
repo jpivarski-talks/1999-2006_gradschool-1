@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title> BuildGeantGeometry - Manages Geant Geometry for Cleog under Suez </title>
+</head>
+
+<body>
+<h1> BuildGeantGeometry - Manages Geant Geometry for Cleog under Suez </h1>
+
+<h1> Source Code </h1>
+See <a href="http://www.lns.cornell.edu/~cleo3/development/src/MCResponseProd/MCResponseProd/BuildGeantGeometry.h">
+ BuildGeantGeometry.h </a>
+
+and 
+<a href="http://www.lns.cornell.edu/~cleo3/development/src/MCResponseProd/Class/BuildGeantGeometry.cc">
+ BuildGeantGeometry.cc </a>
+
+
+<h1> Description </h1>
+<ul>
+  <li> Responsibilities
+       <ul>
+	 <li> Manage a STL map of different geometry streams with their synch values 
+	 <li> Creates Geant geometry 
+	 <li> Check that the geometry is consistent.  Look at synch values
+	      of the different geometry stream and see if it's changed.
+       </ul> 
+       <p>
+       
+  <li> Geant Geometry Creation
+       <ul>
+	 <li> Extract detector geometry from the Frame
+	 <li> Extract G3iExtraVolSpecsStore for Geant specific geometry info
+	 <li> Create Geant volumes via Brian's G3iCreatePlacedVolumes routine
+       </ul>
+       <p>
+
+  <li> Status
+       <ul>
+	 <li> Currently extracts SV, DR, CC detector geometry (with perfect alignment)
+	 <li> Extracts CC G3iExtraVolSpecsStore - only available for the CC
+	 <li> Does not create geometry via old Fortran geometry libraries
+       </ul>
+       <p>
+
+  <li> TODO
+       <ul>
+	 <li> Use aligned detector geometry stores when available
+	 <li> Create map of synch values with the different geometry streams
+	 <li> Check that the geometry is valid, else abort job
+       </ul>
+</ul>
+
+
+<hr>
+<address><a href="http://w4.lns.cornell.edu/~jjo/">John O'Neill &lt;jjo@mail.lns.cornell.edu &gt;</a></address>
+<br>
+$Id: BuildGeantGeometry.html,v 1.1 1999/05/05 15:57:09 jjo Exp $
+<br>
+<!-- 
+$Log: BuildGeantGeometry.html,v $
+Revision 1.1  1999/05/05 15:57:09  jjo
+Add file on BuildGeantGeometry object
+
+-->
+
+<!-- hhmts start -->
+Last modified: Wed May  5 11:49:37 EDT 1999
+<!-- hhmts end -->
+</body> </html>

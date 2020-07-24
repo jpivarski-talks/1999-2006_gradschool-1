@@ -1,0 +1,10 @@
+#$ -l calibration
+#$ -o /cdat/tem/mccann/tbg_mc_3s.out
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/super_hadrons/run
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Jan24_03_P2
+
+suez -f tbg_mc_3s.tcl > /cdat/tem/mccann/tbg_mc_3s.log

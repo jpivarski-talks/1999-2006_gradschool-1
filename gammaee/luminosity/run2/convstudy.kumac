@@ -1,0 +1,1757 @@
+nt/chain bb ../rzn2/ntuple_bhabha.rzn
+nt/chain gg ../rzn2/ntuple_gamgam.rzn
+
+nt/chain da ../rzn2/ntuple_123817.rzn
+nt/chain da ../rzn2/ntuple_125176.rzn
+nt/chain da ../rzn2/ntuple_126473.rzn
+nt/chain da ../rzn2/ntuple_126488.rzn
+nt/chain da ../rzn2/ntuple_126835.rzn
+nt/chain da ../rzn2/ntuple_129071.rzn
+nt/chain da ../rzn2/ntuple_129845.rzn
+nt/chain da ../rzn2/ntuple_129848.rzn
+nt/chain da ../rzn2/ntuple_130427.rzn
+nt/chain da ../rzn2/ntuple_121899.rzn
+nt/chain da ../rzn2/ntuple_121904.rzn
+nt/chain da ../rzn2/ntuple_121906.rzn
+nt/chain da ../rzn2/ntuple_122080.rzn
+nt/chain da ../rzn2/ntuple_122081.rzn
+nt/chain da ../rzn2/ntuple_122083.rzn
+nt/chain da ../rzn2/ntuple_122418.rzn
+nt/chain da ../rzn2/ntuple_122429.rzn
+nt/chain da ../rzn2/ntuple_122586.rzn
+nt/chain da ../rzn2/ntuple_122587.rzn
+nt/chain da ../rzn2/ntuple_122594.rzn
+nt/chain da ../rzn2/ntuple_122800.rzn
+nt/chain da ../rzn2/ntuple_122802.rzn
+nt/chain da ../rzn2/ntuple_122091.rzn
+nt/chain da ../rzn2/ntuple_122430.rzn
+
+nt/chain da3 ../rzn2/ntuple_122800.rzn
+
+* investigating visen peak at 0.55-0.6 as possible double-tagged two-photon
+nt/cuts $1 epp1<0.8&&abs(d0close)<0.005&&abs(z0close)<0.075&&(l1rt>0.or.l1el>0)
+nt/plot //da/lumi2/1.sh1e/sh1mat/ebeam sh1mat>-100&&sh1e/sh1mat/ebeam<1.5&&0.55<neue+chen<0.6&&$1 100000
+nt/plot //da/lumi2/1.sh2e/sh2mat/ebeam sh1mat>-100&&sh2mat>-100&&sh1e/sh1mat/ebeam<1.5&&0.55<neue+chen<0.6&&$1 100000
+nt/plot //da/lumi2/1.sh1mat*ebeam-abs(tr1p) sh1mat>-100&&sh2mat>-100&&tr1p>-100&&sh1e/sh1mat/ebeam<1.5&&0.55<neue+chen<0.6&&$1 100000
+nt/plot //da/lumi2/1.sh2mat*ebeam-abs(tr2p) sh1mat>-100&&sh2mat>-100&&tr2p>-100&&sh1e/sh1mat/ebeam<1.5&&0.55<neue+chen<0.6&&$1 100000
+nt/plot //da/lumi2/1.sh1cos tr1p>0&&epp2>0.25&&epe2>0.25&&sh1mat>-100&&sh2mat>-100&&sh1e/sh1mat/ebeam<1.5&&0.55<neue+chen<0.6&&$1 1000000
+nt/plot //da/lumi2/1.sh2cos tr2p>0&&sh1mat>-100&&sh2mat>-100&&sh1e/sh1mat/ebeam<1.5&&0.55<neue+chen<0.6&&$1 100000
+
+
+
+
+
+
+* e+e-GAMMA cuts
+nt/cuts $1 (l1el==1)
+nt/cuts $2 (abs(sh1cos)<0.4)
+nt/cuts $3 (sh1mat<0)
+nt/cuts $4 (sh1e/ebeam>0.8)
+nt/cuts $5 (ntrack==2)
+nt/cuts $6 (abs(sh2mat*ebeam/sh2e-1)<0.1)
+nt/cuts $7 (abs(sh3mat*ebeam/sh3e-1)<0.1)
+nt/cuts $8 (abs(tr1p/ebeam)<0.9)
+nt/cuts $9 (nvxfit==1.or.nvxfit==2)
+
+* e+e- cuts
+nt/cuts $11 (l1el==1)
+nt/cuts $12 (abs(tr1cos-tr2cos)/2<0.6)
+nt/cuts $15 (ntrack>1)
+nt/cuts $16 (epp2>0.75)
+nt/cuts $17 (epe2>0.4)
+nt/cuts $18 (pmiss<0.2)
+nt/cuts $19 (2-epp1-epp2-pmiss<0.2)
+
+   if (l1trig->isBarrelBhabha()                              &&
+       l4dec->decision() > 0                                 &&
+       props->nbChargedTracks() < 2                          &&
+       props->secondLargestEShower() / eBeam->value() > 0.4  &&
+       one != showers->end()  &&  two != showers->end()) {
+      double sh1phi = one->attributes().phi();
+      double sh2phi = two->attributes().phi();
+      double sh1cos = cos(one->attributes().theta());
+      double sh2cos = cos(two->attributes().theta());
+      if (abs(sin(sh1phi-sh2phi)) < 0.05     &&
+	  0.45 < abs(sh1cos-sh2cos)/2.       &&
+                 abs(sh1cos-sh2cos)/2. < 0.7   ) {
+
+   if (l1trig->isElTrack()                                   &&
+       props->nbChargedTracks() > 1                          &&
+       props->secondLargestEShower() / eBeam->value() > 0.4  &&
+       props->secondLargestPTrack() / eBeam->value() > 0.75  &&
+
+
+
+h/cr/1d 100 'blah' 100 -0.025 0.025
+h/cr/1d 101 'blah' 100 -0.025 0.025
+nt/plot //gg/lumi2/1.sh1cos+sh2cos l4dec>0&&ntrack<2&&epe2>0.4&&abs(sin(sh1phi-sh2phi))<0.05&&0.45<abs(sh1cos-sh2cos)/2<0.7&&abs(sh1cos+sh2cos)<0.1 ! ! ! ! 100
+nt/plot //bb/lumi2/1.sh1cos+sh2cos l4dec>0&&ntrack>1&&epe2>0.4&&epp2>0.75&&l1el>0&&abs(sh1cos+sh2cos)<0.1 ! ! ! 's' 101
+normalize 100
+normalize 101
+h/plot 100
+h/plot 101 's'
+
+
+h/cr/1d 200 'blah' 64 -3.1415926 3.1415926
+nt/plot //gg/lumi2/1.atan2(cos(sh1phi+sh2phi),sin(sh1phi+sh2phi)) ! ! ! ! ! 200
+
+h/cr/1d 300 'blah' 1000 0 1.5
+h/cr/1d 400 'blah' 1000 0 1
+nt/plot //gg/lumi2/1.abs(sh1cos-sh2cos)/2/sqrt(1-((sh1cos-sh2cos)/2)**2) sh2cos>-100 ! ! ! ! 300
+nt/plot //gg/lumi2/1.abs(sh1cos-sh2cos)/2 sh2cos>-100 ! ! ! ! 400
+zone 1 5
+h/plot 300(1:200)
+dline $SIGMA(1.3479+0.0881) $SIGMA(1.3479+0.0881) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*0) $SIGMA(1.3479-0.0881*0) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*1) $SIGMA(1.3479-0.0881*1) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*2) $SIGMA(1.3479-0.0881*2) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*3) $SIGMA(1.3479-0.0881*3) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*4) $SIGMA(1.3479-0.0881*4) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*5) $SIGMA(1.3479-0.0881*5) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*6) $SIGMA(1.3479-0.0881*6) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*7) $SIGMA(1.3479-0.0881*7) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*8) $SIGMA(1.3479-0.0881*8) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*9) $SIGMA(1.3479-0.0881*9) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*10) $SIGMA(1.3479-0.0881*10) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*11) $SIGMA(1.3479-0.0881*11) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*12) $SIGMA(1.3479-0.0881*12) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*13) $SIGMA(1.3479-0.0881*13) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*14) $SIGMA(1.3479-0.0881*14) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*15) $SIGMA(1.3479-0.0881*15) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+h/plot 300(201:400)
+dline $SIGMA(1.3479+0.0881) $SIGMA(1.3479+0.0881) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*0) $SIGMA(1.3479-0.0881*0) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*1) $SIGMA(1.3479-0.0881*1) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*2) $SIGMA(1.3479-0.0881*2) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*3) $SIGMA(1.3479-0.0881*3) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*4) $SIGMA(1.3479-0.0881*4) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*5) $SIGMA(1.3479-0.0881*5) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*6) $SIGMA(1.3479-0.0881*6) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*7) $SIGMA(1.3479-0.0881*7) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*8) $SIGMA(1.3479-0.0881*8) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*9) $SIGMA(1.3479-0.0881*9) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*10) $SIGMA(1.3479-0.0881*10) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*11) $SIGMA(1.3479-0.0881*11) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*12) $SIGMA(1.3479-0.0881*12) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*13) $SIGMA(1.3479-0.0881*13) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*14) $SIGMA(1.3479-0.0881*14) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*15) $SIGMA(1.3479-0.0881*15) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+h/plot 300(401:600)
+dline $SIGMA(1.3479+0.0881) $SIGMA(1.3479+0.0881) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*0) $SIGMA(1.3479-0.0881*0) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*1) $SIGMA(1.3479-0.0881*1) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*2) $SIGMA(1.3479-0.0881*2) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*3) $SIGMA(1.3479-0.0881*3) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*4) $SIGMA(1.3479-0.0881*4) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*5) $SIGMA(1.3479-0.0881*5) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*6) $SIGMA(1.3479-0.0881*6) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*7) $SIGMA(1.3479-0.0881*7) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*8) $SIGMA(1.3479-0.0881*8) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*9) $SIGMA(1.3479-0.0881*9) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*10) $SIGMA(1.3479-0.0881*10) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*11) $SIGMA(1.3479-0.0881*11) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*12) $SIGMA(1.3479-0.0881*12) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*13) $SIGMA(1.3479-0.0881*13) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*14) $SIGMA(1.3479-0.0881*14) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*15) $SIGMA(1.3479-0.0881*15) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+h/plot 300(601:800)
+dline $SIGMA(1.3479+0.0881) $SIGMA(1.3479+0.0881) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*0) $SIGMA(1.3479-0.0881*0) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*1) $SIGMA(1.3479-0.0881*1) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*2) $SIGMA(1.3479-0.0881*2) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*3) $SIGMA(1.3479-0.0881*3) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*4) $SIGMA(1.3479-0.0881*4) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*5) $SIGMA(1.3479-0.0881*5) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*6) $SIGMA(1.3479-0.0881*6) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*7) $SIGMA(1.3479-0.0881*7) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*8) $SIGMA(1.3479-0.0881*8) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*9) $SIGMA(1.3479-0.0881*9) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*10) $SIGMA(1.3479-0.0881*10) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*11) $SIGMA(1.3479-0.0881*11) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*12) $SIGMA(1.3479-0.0881*12) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*13) $SIGMA(1.3479-0.0881*13) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*14) $SIGMA(1.3479-0.0881*14) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*15) $SIGMA(1.3479-0.0881*15) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+h/plot 300(801:1000)
+dline $SIGMA(1.3479+0.0881) $SIGMA(1.3479+0.0881) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*0) $SIGMA(1.3479-0.0881*0) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*1) $SIGMA(1.3479-0.0881*1) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*2) $SIGMA(1.3479-0.0881*2) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*3) $SIGMA(1.3479-0.0881*3) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*4) $SIGMA(1.3479-0.0881*4) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*5) $SIGMA(1.3479-0.0881*5) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*6) $SIGMA(1.3479-0.0881*6) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*7) $SIGMA(1.3479-0.0881*7) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*8) $SIGMA(1.3479-0.0881*8) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*9) $SIGMA(1.3479-0.0881*9) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*10) $SIGMA(1.3479-0.0881*10) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*11) $SIGMA(1.3479-0.0881*11) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*12) $SIGMA(1.3479-0.0881*12) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*13) $SIGMA(1.3479-0.0881*13) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*14) $SIGMA(1.3479-0.0881*14) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $SIGMA(1.3479-0.0881*15) $SIGMA(1.3479-0.0881*15) $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+zone 1 1
+h/fit 300(1.24:1.28) g
+h/fit 300(1.33:1.37) g
+h/plot 300(801:1000)
+* two at 1.2598 and 1.3479, separated by 0.0881
+
+h/cr/1d 400 'blah' 1000 0.45 0.7
+nt/plot //gg/lumi2/1.abs(sh1cos-sh2cos)/2 sh2cos>-100 ! ! ! ! 400
+dline 0.50 0.50 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 0.55 0.55 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 0.60 0.60 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 0.65 0.65 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+
+
+h/cr/1d 200 'blah' 1000 -3.1415926 3.1415926
+nt/plot //bb/lumi2/1.atan2(cos(tr1phi+tr2phi),sin(tr1phi+tr2phi)) tr2p>=0 ! ! ! ! 200
+h/plot 200(1:100) 'e'
+h/fit 200 p0
+ve/cr tmp(64)
+ve/cr tmp2(64)
+ve/cr tmp3(64)
+h/get_vect/contents 200 tmp
+h/get_vect/errors 200 tmp2
+do i = 1, 64
+  ve/inp tmp3([i]) $SIGMA((tmp([i])-2970.8)/tmp2([i]))
+enddo
+ve/plot tmp3
+h/cr/1d 201 'tmp' 40 -4 4
+ve/hfill tmp3 201
+h/plot 201
+
+
+
+
+nt/plot //gg/lumi2/1.l4dec ((sh2e/ebeam>0.4)&&(ntrack==0)&&(abs(sin(sh1phi-sh2phi))<0.05)&&(0.45<abs(sh1cos-sh2cos)/2<0.7))
+
+nt/plot //da/lumi2/1.l4dec ((sh2e/ebeam>0.4)&&(ntrack==0)&&(abs(sin(sh1phi-sh2phi))<0.05)&&(0.45<abs(sh1cos-sh2cos)/2<0.7))
+
+nt/plot //gg/lumi2/1.sh1cos+sh2cos ((sh2e/ebeam>0.4)&&(ntrack==0)&&(abs(sin(sh1phi-sh2phi))<0.05)&&(0.45<abs(sh1cos-sh2cos)/2<0.7))
+dline 0.1 0.1 1 10e5
+dline -0.1 -0.1 1 10e5
+
+
+
+
+zone 1 2
+h/cr/1d 100 'gamgam shower angle for data/MC' 100 0.45 0.7
+h/cr/1d 101 'gamgam shower angle for MC' 100 0.45 0.7
+nt/plot //da/lumi2/1.abs(sh1cos-sh2cos)/2 ((sh2e/ebeam>0.4)&&(ntrack==0)&&(abs(sin(sh1phi-sh2phi))<0.05)&&(0.45<abs(sh1cos-sh2cos)/2<0.7)) ! ! ! ! 100
+nt/plot //gg/lumi2/1.abs(sh1cos-sh2cos)/2 0.389562*((sh2e/ebeam>0.4)&&(ntrack==0)&&(abs(sin(sh1phi-sh2phi))<0.05)&&(0.45<abs(sh1cos-sh2cos)/2<0.7)) ! ! ! 's' 101
+h/plot 101
+pict/print 'angular_systematic.ps'
+zone 1 2
+h/cr/1d 100 'gamgam shower angle for data/MC' 100 0.45 0.7
+h/cr/1d 101 'gamgam shower angle for MC' 100 0.45 0.7
+nt/plot //da/lumi2/1.abs(sh1cos-sh2cos)/2 ((sh2e/ebeam>0.4)&&(ntrack==0)&&(abs(sin(sh1phi-sh2phi))<0.05)&&(0.45<abs(sh1cos-sh2cos)/2<0.55)) ! ! ! ! 100
+nt/plot //gg/lumi2/1.abs(sh1cos-sh2cos)/2 0.389562*((sh2e/ebeam>0.4)&&(ntrack==0)&&(abs(sin(sh1phi-sh2phi))<0.05)&&(0.45<abs(sh1cos-sh2cos)/2<0.55)) ! ! ! 's' 101
+h/plot 101
+pict/print 'angular_systematic2.ps'
+
+
+
+
+
+
+
+
+nt/plot //bb/lumi2/1.sin(sh1phi-sh2phi) (0.45<abs(sh1cos)<0.7)&&(epe2>0.4)&&(sh3e<0.6*ebeam)&&(abs(sin(sh1phi-sh2phi))<0.6)&&(abs(sh1cos+sh2cos)<1)&&(rawtk>1)
+nt/plot //gg/lumi2/1.sin(sh1phi-sh2phi) (0.45<abs(sh1cos)<0.7)&&(epe2>0.4)&&(sh3e<0.6*ebeam)&&(abs(sin(sh1phi-sh2phi))<0.6)&&(abs(sh1cos+sh2cos)<1)&&(rawtk<2)
+
+
+
+
+
+nt/plot //bb/lumi2/1.sh1cos (0.45<abs(sh1cos)<0.7)
+nt/plot //bb/lumi2/1.epe2 (0.45<abs(sh1cos)<0.7)&&(l1el>0.or.l1rt>0)
+nt/plot //bb/lumi2/1.sh1phi-sh2phi (0.45<abs(sh1cos)<0.7)&&(l1el>0.or.l1rt>0)&&(epe2>0.4)&&(sh3e<0.6*ebeam)&&(abs(sin(sh1phi-sh2phi))<0.6)
+nt/plot //bb/lumi2/1.sh1cos+sh2cos (0.45<abs(sh1cos)<0.7)&&(l1el>0.or.l1rt>0)&&(epe2>0.4)&&(sh3e<0.6*ebeam)&&(abs(sin(sh1phi-sh2phi))<0.6)&&(abs(sh1cos+sh2cos)<1)
+nt/plot //bb/lumi2/1.ntrack (0.45<abs(sh1cos)<0.7)&&(l1el>0.or.l1rt>0)&&(epe2>0.4)&&(sh3e<0.6*ebeam)&&(abs(sin(sh1phi-sh2phi))<0.6)&&(abs(sh1cos+sh2cos)<1)&&(ntrack>1)
+
+
+
+
+
+
+* the shower equivalent of pmiss (without /ebeam)
+nt/plot //bb/lumi2/1.sqrt((sh1e*cos(sh1phi)*sin(acos(sh1cos))+sh2e*cos(sh2phi)*sin(acos(sh2cos)))**2+(sh1e*sin(sh1phi)*sin(acos(sh1cos))+sh2e*sin(sh2phi)*sin(acos(sh2cos)))**2+(sh1e*sh1cos+sh2e*sh2cos)**2) epe2>0.4
+
+nt/plot //bb/lumi2/1.(2*ebeam-sh1e-sh2e-sqrt((sh1e*cos(sh1phi)*sin(acos(sh1cos))+sh2e*cos(sh2phi)*sin(acos(sh2cos)))**2+(sh1e*sin(sh1phi)*sin(acos(sh1cos))+sh2e*sin(sh2phi)*sin(acos(sh2cos)))**2+(sh1e*sh1cos+sh2e*sh2cos)**2))/ebeam (4.048536)*(0.45<abs(sh1cos)<0.7)&&(l1el>0.or.l1rt>0)&&(epe2>0.4)&&(sh3e<0.6*ebeam)&&(sh2e>=0) ! ! ! 's'
+
+h/cr/1d 100 'tmp' 100 -1 1
+nt/plot //da/lumi2/1.(2*ebeam-sh1e-sh2e-sqrt((sh1e*cos(sh1phi)*sin(acos(sh1cos))+sh2e*cos(sh2phi)*sin(acos(sh2cos)))**2+(sh1e*sin(sh1phi)*sin(acos(sh1cos))+sh2e*sin(sh2phi)*sin(acos(sh2cos)))**2+(sh1e*sh1cos+sh2e*sh2cos)**2))/ebeam (0.45<abs(sh1cos)<0.7)&&(l1el>0.or.l1rt>0)&&(epe2>0.4)&&(sh3e<0.6*ebeam)&&(sh2e>=0) ! ! ! ! 100
+
+
+
+
+
+
+
+nt/plot //bb/lumi2/1.epe2 (abs(sh1cos)<0.7)&&(l1el>0.or.l1rt>0)
+nt/plot //bb/lumi2/1.sin(sh1phi-sh2phi) (abs(sh1cos)<0.7)&&(l1el>0.or.l1rt>0)&&(epe2>0.4)
+nt/plot //bb/lumi2/1.sin(sh1phi-sh2phi) (abs(sh1cos)<0.7)&&(l1el>0.or.l1rt>0)&&(epe2>0.4)&&(abs(sin(sh1phi-sh2phi))<0.4)
+
+
+nt/plot //da/lumi2/1.sin(sh1phi-sh2phi) (abs(sh1cos)<0.7)&&(l1el>0.or.l1rt>0)&&(epe2>0.4)
+nt/plot //da/lumi2/1.sin(sh1phi-sh2phi) (abs(sh1cos)<0.7)&&(l1el>0.or.l1rt>0)&&(epe2>0.4)&&(l1bb>0) ! ! ! 's'
+pict/print 'what_no_phicut_in_l1bb.eps'
+
+
+
+fortran/file 65 'convstudy_bb_1.eps'
+graphics/metafile 65 -111
+igset mtype 1
+* h/cr/1d 1200 'BHABHA cos([Q?+!])' 100 -1 1
+* h/cr/1d 1201 'BHABHA cos([Q?+!])' 100 -1 1
+* h/cr/1d 1202 'BHABHA cos([Q?+!])' 100 -1 1
+* nt/project 1200 //da/lumi2/1.tr1cos (tr1p>0&&$11&&$15&&$16&&$17&&$18&&$19)
+* nt/project 1200 //da/lumi2/1.tr2cos (tr1p<=0&&$11&&$15&&$16&&$17&&$18&&$19)
+* nt/project 1201 //bb/lumi2/1.tr1cos 4.048536*(tr1p>0&&$11&&$15&&$16&&$17&&$18&&$19)
+* nt/project 1201 //bb/lumi2/1.tr2cos 4.048536*(tr1p<=0&&$11&&$15&&$16&&$17&&$18&&$19)
+* nt/project 1202 //da/lumi2/1.tr1cos (tr1p>0&&$11&&$12&&$15&&$16&&$17&&$18&&$19)
+* nt/project 1202 //da/lumi2/1.tr2cos (tr1p<=0&&$11&&$12&&$15&&$16&&$17&&$18&&$19)
+opt liny
+h/plot 1200 'e'
+h/plot 1202 'shist'
+set dmod 1
+h/plot 1201 'shist'
+close 65
+
+fortran/file 65 'convstudy_bb_2.eps'
+graphics/metafile 65 -111
+igset mtype 1
+* h/cr/1d 1300 'BHABHA cos([Q?-!])' 100 -1 1
+* h/cr/1d 1301 'BHABHA cos([Q?-!])' 100 -1 1
+* h/cr/1d 1302 'BHABHA cos([Q?-!])' 100 -1 1
+* nt/project 1300 //da/lumi2/1.tr1cos (tr1p<0&&$11&&$15&&$16&&$17&&$18&&$19)
+* nt/project 1300 //da/lumi2/1.tr2cos (tr1p>=0&&$11&&$15&&$16&&$17&&$18&&$19)
+* nt/project 1301 //bb/lumi2/1.tr1cos 4.048536*(tr1p<0&&$11&&$15&&$16&&$17&&$18&&$19)
+* nt/project 1301 //bb/lumi2/1.tr2cos 4.048536*(tr1p>=0&&$11&&$15&&$16&&$17&&$18&&$19)
+* nt/project 1302 //da/lumi2/1.tr1cos (tr1p<0&&$11&&$12&&$15&&$16&&$17&&$18&&$19)
+* nt/project 1302 //da/lumi2/1.tr2cos (tr1p>=0&&$11&&$12&&$15&&$16&&$17&&$18&&$19)
+opt liny
+h/plot 1300 'e'
+h/plot 1302 'shist'
+set dmod 1
+h/plot 1301 'shist'
+close 65
+
+fortran/file 65 'convstudy_bb_3.eps'
+graphics/metafile 65 -111
+igset mtype 1
+* h/cr/1d 1400 'BHABHA (cos([Q?+!])-cos([Q?-!]))/2' 100 -1 1
+* h/cr/1d 1401 'BHABHA (cos([Q?+!])-cos([Q?-!]))/2' 100 -1 1
+* nt/project 1400 //da/lumi2/1.(tr1cos-tr2cos)/2 (tr1p>0&&$11&&$15&&$16&&$17&&$18&&$19)
+* nt/project 1400 //da/lumi2/1.(tr2cos-tr1cos)/2 (tr1p<=0&&$11&&$15&&$16&&$17&&$18&&$19)
+* nt/project 1401 //bb/lumi2/1.(tr1cos-tr2cos)/2 4.048536*(tr1p>0&&$11&&$15&&$16&&$17&&$18&&$19)
+* nt/project 1401 //bb/lumi2/1.(tr2cos-tr1cos)/2 4.048536*(tr1p<=0&&$11&&$15&&$16&&$17&&$18&&$19)
+opt liny
+h/plot 1400 'e'
+set dmod 1
+h/plot 1401 'shist'
+set ltyp 2
+dline 0.6 0.6 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline -0.6 -0.6 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+close 65
+
+fortran/file 65 'convstudy_bb_4.eps'
+graphics/metafile 65 -111
+igset mtype 1
+* h/cr/1d 1500 'BHABHA "f#tracks' 7 -0.5 6.5
+* h/cr/1d 1501 'BHABHA "f#tracks' 7 -0.5 6.5
+* nt/project 1500 //da/lumi2/1.ntrack ($11&&$12&&$16&&$17&&$18&&$19)
+* nt/project 1501 //bb/lumi2/1.ntrack 4.048536*($11&&$12&&$16&&$17&&$18&&$19)
+zone 1 2
+opt logy
+h/plot 1500 'e'
+set dmod 1
+h/plot 1501 'shist'
+set ltyp 2
+dline 1.5 1.5 $SIGMA(10**$GRAFINFO('WNYMIN')) $SIGMA(10**$GRAFINFO('WNYMAX'))
+opt liny
+h/plot 1500 'e'
+set dmod 1
+h/plot 1501 'shist'
+set ltyp 2
+dline 1.5 1.5 $SIGMA($GRAFINFO('WNYMIN')) $SIGMA($GRAFINFO('WNYMAX'))
+close 65
+
+fortran/file 65 'convstudy_bb_5.eps'
+graphics/metafile 65 -111
+igset mtype 1
+* h/cr/1d 1600 'BHABHA 2nd track momentum' 120 0 1.2
+* h/cr/1d 1601 'BHABHA 2nd track momentum' 120 0 1.2
+* nt/project 1600 //da/lumi2/1.epp2 ($11&&$12&&$15&&$17&&$18&&$19)
+* nt/project 1601 //bb/lumi2/1.epp2 4.048536*($11&&$12&&$15&&$17&&$18&&$19)
+zone 1 2
+opt logy
+h/plot 1600 'e'
+set dmod 1
+h/plot 1601 'shist'
+set ltyp 2
+dline 0.75 0.75 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+h/plot 1600 'e'
+set dmod 1
+h/plot 1601 'shist'
+set ltyp 2
+dline 0.75 0.75 $SIGMA($GRAFINFO('WNYMIN')) $SIGMA($GRAFINFO('WNYMAX'))
+close 65
+
+fortran/file 65 'convstudy_bb_6.eps'
+graphics/metafile 65 -111
+igset mtype 1
+* h/cr/1d 1700 'BHABHA 2nd shower energy' 120 0 1.2
+* h/cr/1d 1701 'BHABHA 2nd shower energy' 120 0 1.2
+* nt/project 1700 //da/lumi2/1.epe2 ($11&&$12&&$15&&$16&&$18&&$19)
+* nt/project 1701 //bb/lumi2/1.epe2 4.048536*($11&&$12&&$15&&$16&&$18&&$19)
+zone 1 2
+opt logy
+h/plot 1700 'e'
+set dmod 1
+h/plot 1701 'shist'
+set ltyp 2
+dline 0.4 0.4 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+h/plot 1700 'e'
+set dmod 1
+h/plot 1701 'shist'
+set ltyp 2
+dline 0.4 0.4 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+close 65
+
+fortran/file 65 'convstudy_bb_7.eps'
+graphics/metafile 65 -111
+igset mtype 1
+* h/cr/1d 1800 'BHABHA unobserved ISR' 100 0 1
+* h/cr/1d 1801 'BHABHA unobserved ISR' 100 0 1
+* nt/project 1800 //da/lumi2/1.pmiss ($11&&$12&&$15&&$16&&$17&&$19)
+* nt/project 1801 //bb/lumi2/1.pmiss 4.048536*($11&&$12&&$15&&$16&&$17&&$19)
+zone 1 2
+opt logy
+h/plot 1800 'e'
+set dmod 1
+h/plot 1801 'shist'
+set ltyp 2
+dline 0.2 0.2 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+h/plot 1800 'e'
+set dmod 1
+h/plot 1801 'shist'
+set ltyp 2
+dline 0.2 0.2 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+close 65
+
+fortran/file 65 'convstudy_bb_8.eps'
+graphics/metafile 65 -111
+igset mtype 1
+* h/cr/1d 1900 'BHABHA unobserved ISR photon mass constraint' 150 -0.5 1
+* h/cr/1d 1901 'BHABHA unobserved ISR photon mass constraint' 150 -0.5 1
+* nt/project 1900 //da/lumi2/1.2-epp1-epp2-pmiss ($11&&$12&&$15&&$16&&$17&&$18)
+* nt/project 1901 //bb/lumi2/1.2-epp1-epp2-pmiss 4.048536*($11&&$12&&$15&&$16&&$17&&$18)
+zone 1 2
+opt logy
+h/plot 1900 'e'
+set dmod 1
+h/plot 1901 'shist'
+set ltyp 2
+dline 0.2 0.2 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+h/plot 1900 'e'
+set dmod 1
+h/plot 1901 'shist'
+set ltyp 2
+dline 0.2 0.2 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+close 65
+
+
+
+
+
+
+
+
+
+
+* h/cr/1d 100 'log10(intersection radius in meters)' 100 -5 -0.
+* h/cr/1d 101 'log10(intersection radius in meters)' 100 -5 -0.
+* h/cr/1d 102 'log10(intersection radius in meters)' 100 -5 -0.
+* nt/plot //da/lumi2/1.log10(c12r) ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9) ! ! ! ! 100
+* nt/plot //bb/lumi2/1.log10(c12r) 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9) ! ! ! ! 101
+* nt/plot //gg/lumi2/1.log10(c12r) *($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9) ! ! ! ! 102
+
+* h/plot 100
+* h/plot 101 's'
+* h/plot 102 's'
+
+* nt/plot //da/lumi2/1.sh2mat*ebeam/sh2e ($11&&$12&&$15&&$16&&$17&&$18&&$19) ! ! ! ! 200
+* nt/plot //bb/lumi2/1.sh2mat*ebeam/sh2e ($11&&$12&&$15&&$16&&$17&&$18&&$19) ! ! ! ! 201
+* message $HINFO(200,'ENTRIES')
+* message $HINFO(201,'ENTRIES')
+
+
+
+
+fortran/file 65 'convstudy_gg2_1.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 100 'GAMCONV cos([Q?[g]!])' 25 -1 1
+h/cr/1d 101 'GAMCONV cos([Q?[g]!])' 25 -1 1
+nt/project 100 //da/lumi2/1.sh1cos ($1&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+nt/project 101 //bb/lumi2/1.sh1cos 4.048536*($1&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+h/copy 101 102
+nt/project 101 //gg/lumi2/1.sh1cos 0.389562*($1&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+zone 1 2
+opt logy
+set dmod 1
+set hcol 1
+h/plot 100 'e'
+set hcol 1105
+h/plot 101 'shist'
+set hcol 1106
+h/plot 102 'shist'
+set hcol 1
+h/plot 100 'se'
+set ltyp 2
+dline 0.4 0.4 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+dline -0.4 -0.4 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+set dmod 1
+set hcol 1
+h/plot 100 'e'
+set hcol 1105
+h/plot 101 'shist'
+set hcol 1106
+h/plot 102 'shist'
+set hcol 1
+h/plot 100 'se'
+set ltyp 2
+dline 0.4 0.4 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline -0.4 -0.4 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+close 65
+
+fortran/file 65 'convstudy_gg2_2.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 200 'GAMCONV E?[g]!/ebeam' 30 0 1.2
+h/cr/1d 201 'GAMCONV E?[g]!/ebeam' 30 0 1.2
+nt/project 200 //da/lumi2/1.sh1e/ebeam ($1&&$2&&$3&&$5&&$6&&$7&&$8&&$9)
+nt/project 201 //bb/lumi2/1.sh1e/ebeam 4.048536*($1&&$2&&$3&&$5&&$6&&$7&&$8&&$9)
+h/copy 201 202
+nt/project 201 //gg/lumi2/1.sh1e/ebeam 0.389562*($1&&$2&&$3&&$5&&$6&&$7&&$8&&$9)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 200 'e'
+set hcol 1105
+h/plot 201 'shist'
+set hcol 1106
+h/plot 202 'shist'
+set hcol 1
+h/plot 200 'se'
+set ltyp 2
+dline 0.8 0.8 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+set dmod 1
+set hcol 1
+h/plot 200 'e'
+set hcol 1105
+h/plot 201 'shist'
+set hcol 1106
+h/plot 202 'shist'
+set hcol 1
+h/plot 200 'se'
+set ltyp 2
+dline 0.8 0.8 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+close 65
+
+fortran/file 65 'convstudy_gg2_3.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 300 'GAMCONV "f# tracks' 7 -0.5 6.5
+h/cr/1d 301 'GAMCONV "f# tracks' 7 -0.5 6.5
+nt/project 300 //da/lumi2/1.ntrack ($1&&$2&&$3&&$4&&$6&&$7&&$8&&$9)
+nt/project 301 //bb/lumi2/1.ntrack 4.048536*($1&&$2&&$3&&$4&&$6&&$7&&$8&&$9)
+h/copy 301 302
+nt/project 301 //gg/lumi2/1.ntrack 0.389562*($1&&$2&&$3&&$4&&$6&&$7&&$8&&$9)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 300 'e'
+set hcol 1105
+h/plot 301 'shist'
+set hcol 1106
+h/plot 302 'shist'
+set hcol 1
+h/plot 300 'se'
+set ltyp 2
+dline 1.5 1.5 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+dline 2.5 2.5 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+set dmod 1
+set hcol 1
+h/plot 300 'e'
+set hcol 1105
+h/plot 301 'shist'
+set hcol 1106
+h/plot 302 'shist'
+set hcol 1
+h/plot 300 'se'
+set ltyp 2
+dline 1.5 1.5 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+dline 2.5 2.5 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+close 65
+
+fortran/file 65 'convstudy_gg2_4.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 400 'GAMCONV 2nd shower e/p' 25 0 2
+h/cr/1d 401 'GAMCONV 2nd shower e/p' 25 0 2
+nt/project 400 //da/lumi2/1.sh2mat*ebeam/sh2e ($1&&$2&&$3&&$4&&$5&&$7&&$8&&$9)
+nt/project 401 //bb/lumi2/1.sh2mat*ebeam/sh2e 4.048536*($1&&$2&&$3&&$4&&$5&&$7&&$8&&$9)
+h/copy 401 402
+nt/project 401 //gg/lumi2/1.sh2mat*ebeam/sh2e 0.389562*($1&&$2&&$3&&$4&&$5&&$7&&$8&&$9)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 400 'e'
+set hcol 1105
+h/plot 401 'shist'
+set hcol 1106
+h/plot 402 'shist'
+set hcol 1
+h/plot 400 'se'
+set ltyp 2
+dline 0.9 0.9 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+dline 1.1 1.1 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+set dmod 1
+set hcol 1
+h/plot 400 'e'
+set hcol 1105
+h/plot 401 'shist'
+set hcol 1106
+h/plot 402 'shist'
+set hcol 1
+h/plot 400 'se'
+set ltyp 2
+dline 0.9 0.9 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+dline 1.1 1.1 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+close 65
+
+fortran/file 65 'convstudy_gg2_5.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 500 'GAMCONV 3rd shower e/p' 25 0 2
+h/cr/1d 501 'GAMCONV 3rd shower e/p' 25 0 2
+nt/project 500 //da/lumi2/1.sh3mat*ebeam/sh3e ($1&&$2&&$3&&$4&&$5&&$6&&$8&&$9)
+nt/project 501 //bb/lumi2/1.sh3mat*ebeam/sh3e 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$8&&$9)
+h/copy 501 502
+nt/project 501 //gg/lumi2/1.sh3mat*ebeam/sh3e 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$8&&$9)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 500 'e'
+set hcol 1105
+h/plot 501 'shist'
+set hcol 1106
+h/plot 502 'shist'
+set hcol 1
+h/plot 500 'se'
+set ltyp 2
+dline 0.9 0.9 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+dline 1.1 1.1 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+set dmod 1
+set hcol 1
+h/plot 500 'e'
+set hcol 1105
+h/plot 501 'shist'
+set hcol 1106
+h/plot 502 'shist'
+set hcol 1
+h/plot 500 'se'
+set ltyp 2
+dline 0.9 0.9 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+dline 1.1 1.1 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+close 65
+
+fortran/file 65 'convstudy_gg2_6.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 600 'GAMCONV 1st track p / ebeam' 30 0 1.2
+h/cr/1d 601 'GAMCONV 1st track p / ebeam' 30 0 1.2
+nt/project 600 //da/lumi2/1.abs(tr1p/ebeam) ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$9)
+nt/project 601 //bb/lumi2/1.abs(tr1p/ebeam) 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$9)
+h/copy 601 602
+nt/project 601 //gg/lumi2/1.abs(tr1p/ebeam) 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$9)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 600 'e'
+set hcol 1105
+h/plot 601 'shist'
+set hcol 1106
+h/plot 602 'shist'
+set hcol 1
+h/plot 600 'se'
+set ltyp 2
+dline 0.9 0.9 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+set dmod 1
+set hcol 1
+h/plot 600 'e'
+set hcol 1105
+h/plot 601 'shist'
+set hcol 1106
+h/plot 602 'shist'
+set hcol 1
+h/plot 600 'se'
+set ltyp 2
+dline 0.9 0.9 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+close 65
+
+* fortran/file 65 'convstudy_gg2_7.eps'
+* graphics/metafile 65 -111
+* igset mtype 1
+* h/cr/1d 700 'GAMCONV z of two-track intersection (cm)' 25 -5 5
+* h/cr/1d 701 'GAMCONV z of two-track intersection (cm)' 25 -5 5
+* nt/project 700 //da/lumi2/1.c12z*100 ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&c12r!=-1000)
+* nt/project 701 //bb/lumi2/1.c12z*100 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&c12r!=-1000)
+* h/copy 701 702
+* nt/project 701 //gg/lumi2/1.c12z*100 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&c12r!=-1000)
+* opt logy
+* set dmod 1
+* set hcol 1
+* h/plot 700 'e'
+* set hcol 1105
+* h/plot 701 'shist'
+* set hcol 1106
+* h/plot 702 'shist'
+* set hcol 1
+* h/plot 700 'se'
+* set ltyp 2
+* dline 2 2 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+* dline -2 -2 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+* opt liny
+* set dmod 1
+* set hcol 1
+* h/plot 700 'e'
+* set hcol 1105
+* h/plot 701 'shist'
+* set hcol 1106
+* h/plot 702 'shist'
+* set hcol 1
+* h/plot 700 'se'
+* set ltyp 2
+* dline 2 2 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+* dline -2 -2 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+* close 65
+
+fortran/file 65 'convstudy_gg2_8.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 800 'GAMCONV 2nd track p / ebeam' 30 0 1.2
+h/cr/1d 801 'GAMCONV 2nd track p / ebeam' 30 0 1.2
+nt/project 800 //da/lumi2/1.abs(tr2p/ebeam) ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+nt/project 801 //bb/lumi2/1.abs(tr2p/ebeam) 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+h/copy 801 802
+nt/project 801 //gg/lumi2/1.abs(tr2p/ebeam) 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 800 'e'
+set hcol 1105
+h/plot 801 'shist'
+set hcol 1106
+h/plot 802 'shist'
+set hcol 1
+h/plot 800 'se'
+set ltyp 2
+* dline 0.9 0.9 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+set dmod 1
+set hcol 1
+h/plot 800 'e'
+set hcol 1105
+h/plot 801 'shist'
+set hcol 1106
+h/plot 802 'shist'
+set hcol 1
+h/plot 800 'se'
+set ltyp 2
+* dline 0.9 0.9 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+close 65
+
+fortran/file 65 'convstudy_gg2_9.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 900 'GAMCONV radius of two-track intersection (cm)' 40 0 20
+h/cr/1d 901 'GAMCONV radius of two-track intersection (cm)' 40 0 20
+nt/project 900 //da/lumi2/1.sqrt(v1x**2+v1y**2)*100 ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+nt/project 901 //bb/lumi2/1.sqrt(v1x**2+v1y**2)*100 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+h/copy 901 902
+nt/project 901 //gg/lumi2/1.sqrt(v1x**2+v1y**2)*100 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 900 'e'
+set hcol 1105
+h/plot 901 'shist'
+set hcol 1106
+h/plot 902 'shist'
+set hcol 1
+h/plot 900 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 900 'e'
+set hcol 1105
+h/plot 901 'shist'
+set hcol 1106
+h/plot 902 'shist'
+set hcol 1
+h/plot 900 'se'
+close 65
+
+fortran/file 65 'convstudy_gg2_9.onlyzplus.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 910 'GAMCONV radius of two-track intersection (cm)' 40 0 20
+h/cr/1d 911 'GAMCONV radius of two-track intersection (cm)' 40 0 20
+nt/project 910 //da/lumi2/1.sqrt(v1x**2+v1y**2)*100 ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&v1z>0)
+nt/project 911 //bb/lumi2/1.sqrt(v1x**2+v1y**2)*100 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&v1z>0)
+h/copy 911 912
+nt/project 911 //gg/lumi2/1.sqrt(v1x**2+v1y**2)*100 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&v1z>0)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 910 'e'
+set hcol 1105
+h/plot 911 'shist'
+set hcol 1106
+h/plot 912 'shist'
+set hcol 1
+h/plot 910 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 910 'e'
+set hcol 1105
+h/plot 911 'shist'
+set hcol 1106
+h/plot 912 'shist'
+set hcol 1
+h/plot 910 'se'
+close 65
+
+fortran/file 65 'convstudy_gg2_9.onlyzminus.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 920 'GAMCONV radius of two-track intersection (cm)' 40 0 20
+h/cr/1d 921 'GAMCONV radius of two-track intersection (cm)' 40 0 20
+nt/project 920 //da/lumi2/1.sqrt(v1x**2+v1y**2)*100 ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&v1z<0)
+nt/project 921 //bb/lumi2/1.sqrt(v1x**2+v1y**2)*100 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&v1z<0)
+h/copy 921 922
+nt/project 921 //gg/lumi2/1.sqrt(v1x**2+v1y**2)*100 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&v1z<0)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 920 'e'
+set hcol 1105
+h/plot 921 'shist'
+set hcol 1106
+h/plot 922 'shist'
+set hcol 1
+h/plot 920 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 920 'e'
+set hcol 1105
+h/plot 921 'shist'
+set hcol 1106
+h/plot 922 'shist'
+set hcol 1
+h/plot 920 'se'
+close 65
+
+fortran/file 65 'convstudy_gg2_9.5.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 950 'GAMCONV radius of two-track intersection (log base meter)' 50 -5 0
+h/cr/1d 951 'GAMCONV radius of two-track intersection (log base meter)' 50 -5 0
+nt/project 950 //da/lumi2/1.log10(sqrt(v1x**2+v1y**2)) ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+nt/project 951 //bb/lumi2/1.log10(sqrt(v1x**2+v1y**2)) 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+h/copy 951 952
+nt/project 951 //gg/lumi2/1.log10(sqrt(v1x**2+v1y**2)) 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 950 'e'
+set hcol 1105
+h/plot 951 'shist'
+set hcol 1106
+h/plot 952 'shist'
+set hcol 1
+h/plot 950 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 950 'e'
+set hcol 1105
+h/plot 951 'shist'
+set hcol 1106
+h/plot 952 'shist'
+set hcol 1
+h/plot 950 'se'
+close 65
+
+fortran/file 65 'convstudy_gg2_10.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 1000 'GAMCONV neutral energy beyond biggest shower /2/ebeam' 25 0 0.1
+h/cr/1d 1001 'GAMCONV neutral energy beyond biggest shower /2/ebeam' 25 0 0.1
+nt/project 1000 //da/lumi2/1.neue-sh1e/2/ebeam ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+nt/project 1001 //bb/lumi2/1.neue-sh1e/2/ebeam 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+h/copy 1001 1002
+nt/project 1001 //gg/lumi2/1.neue-sh1e/2/ebeam 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 1000 'e'
+set hcol 1105
+h/plot 1001 'shist'
+set hcol 1106
+h/plot 1002 'shist'
+set hcol 1
+h/plot 1000 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 1000 'e'
+set hcol 1105
+h/plot 1001 'shist'
+set hcol 1106
+h/plot 1002 'shist'
+set hcol 1
+h/plot 1000 'se'
+close 65
+
+fortran/file 65 'convstudy_gg2_11.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 1010 'GAMCONV track energy sum / ebeam' 40 0 2
+h/cr/1d 1011 'GAMCONV track energy sum / ebeam' 40 0 2
+nt/project 1010 //da/lumi2/1.(abs(tr1p)+abs(tr2p))/ebeam ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+nt/project 1011 //bb/lumi2/1.(abs(tr1p)+abs(tr2p))/ebeam 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+h/copy 1011 1012
+nt/project 1011 //gg/lumi2/1.(abs(tr1p)+abs(tr2p))/ebeam 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 1010 'e'
+set hcol 1105
+h/plot 1011 'shist'
+set hcol 1106
+h/plot 1012 'shist'
+set hcol 1
+h/plot 1010 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 1010 'e'
+set hcol 1105
+h/plot 1011 'shist'
+set hcol 1106
+h/plot 1012 'shist'
+set hcol 1
+h/plot 1010 'se'
+close 65
+
+fortran/file 65 'convstudy_gg2_12.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 1020 'GAMCONV track cos([Q]) difference' 50 -2 2
+h/cr/1d 1021 'GAMCONV track cos([Q]) difference' 50 -2 2
+nt/project 1020 //da/lumi2/1.tr1cos-tr2cos ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+nt/project 1021 //bb/lumi2/1.tr1cos-tr2cos 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+h/copy 1021 1022
+nt/project 1021 //gg/lumi2/1.tr1cos-tr2cos 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 1020 'e'
+set hcol 1105
+h/plot 1021 'shist'
+set hcol 1106
+h/plot 1022 'shist'
+set hcol 1
+h/plot 1020 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 1020 'e'
+set hcol 1105
+h/plot 1021 'shist'
+set hcol 1106
+h/plot 1022 'shist'
+set hcol 1
+h/plot 1020 'se'
+close 65
+
+fortran/file 65 'convstudy_gg2_13.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 1030 'GAMCONV track sin([f]?1! - [f]?2!)' 50 -1 1
+h/cr/1d 1031 'GAMCONV track sin([f]?1! - [f]?2!)' 50 -1 1
+nt/project 1030 //da/lumi2/1.sin(tr1phi-tr2phi) ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+nt/project 1031 //bb/lumi2/1.sin(tr1phi-tr2phi) 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+h/copy 1031 1032
+nt/project 1031 //gg/lumi2/1.sin(tr1phi-tr2phi) 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 1030 'e'
+set hcol 1105
+h/plot 1031 'shist'
+set hcol 1106
+h/plot 1032 'shist'
+set hcol 1
+h/plot 1030 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 1030 'e'
+set hcol 1105
+h/plot 1031 'shist'
+set hcol 1106
+h/plot 1032 'shist'
+set hcol 1
+h/plot 1030 'se'
+close 65
+
+fortran/file 65 'convstudy_gg2_14.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 1040 'GAMCONV shower cos([Q]) + tracks cos([Q]) average' 50 -1 1
+h/cr/1d 1041 'GAMCONV shower cos([Q]) + tracks cos([Q]) average' 50 -1 1
+nt/project 1040 //da/lumi2/1.sh1cos+(tr1cos+tr2cos)/2 ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+nt/project 1041 //bb/lumi2/1.sh1cos+(tr1cos+tr2cos)/2 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+h/copy 1041 1042
+nt/project 1041 //gg/lumi2/1.sh1cos+(tr1cos+tr2cos)/2 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 1040 'e'
+set hcol 1105
+h/plot 1041 'shist'
+set hcol 1106
+h/plot 1042 'shist'
+set hcol 1
+h/plot 1040 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 1040 'e'
+set hcol 1105
+h/plot 1041 'shist'
+set hcol 1106
+h/plot 1042 'shist'
+set hcol 1
+h/plot 1040 'se'
+close 65
+
+fortran/file 65 'convstudy_gg2_12.5.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 1050 'GAMCONV track cos([Q]) difference' 50 -0.1 0.1
+h/cr/1d 1051 'GAMCONV track cos([Q]) difference' 50 -0.1 0.1
+nt/project 1050 //da/lumi2/1.tr1cos-tr2cos ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+nt/project 1051 //bb/lumi2/1.tr1cos-tr2cos 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+h/copy 1051 1052
+nt/project 1051 //gg/lumi2/1.tr1cos-tr2cos 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 1050 'e'
+set hcol 1105
+h/plot 1051 'shist'
+set hcol 1106
+h/plot 1052 'shist'
+set hcol 1
+h/plot 1050 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 1050 'e'
+set hcol 1105
+h/plot 1051 'shist'
+set hcol 1106
+h/plot 1052 'shist'
+set hcol 1
+h/plot 1050 'se'
+close 65
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+fortran/file 65 'convstudy_gg3_1.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 100 'GAMCONV cos([Q?[g]!])' 25 -1 1
+h/cr/1d 101 'GAMCONV cos([Q?[g]!])' 25 -1 1
+nt/project 100 //da/lumi2/1.sh1cos ($1&&$3&&$4&&$5&&$6&&$7&&$8)
+nt/project 101 //bb/lumi2/1.sh1cos 4.048536*($1&&$3&&$4&&$5&&$6&&$7&&$8)
+h/copy 101 102
+nt/project 101 //gg/lumi2/1.sh1cos 0.389562*($1&&$3&&$4&&$5&&$6&&$7&&$8)
+zone 1 2
+opt logy
+set dmod 1
+set hcol 1
+h/plot 100 'e'
+set hcol 1105
+h/plot 101 'shist'
+set hcol 1106
+h/plot 102 'shist'
+set hcol 1
+h/plot 100 'se'
+set ltyp 2
+dline 0.4 0.4 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+dline -0.4 -0.4 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+set dmod 1
+set hcol 1
+h/plot 100 'e'
+set hcol 1105
+h/plot 101 'shist'
+set hcol 1106
+h/plot 102 'shist'
+set hcol 1
+h/plot 100 'se'
+set ltyp 2
+dline 0.4 0.4 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline -0.4 -0.4 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+close 65
+
+fortran/file 65 'convstudy_gg3_2.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 200 'GAMCONV E?[g]!/ebeam' 30 0 1.2
+h/cr/1d 201 'GAMCONV E?[g]!/ebeam' 30 0 1.2
+nt/project 200 //da/lumi2/1.sh1e/ebeam ($1&&$2&&$3&&$5&&$6&&$7&&$8)
+nt/project 201 //bb/lumi2/1.sh1e/ebeam 4.048536*($1&&$2&&$3&&$5&&$6&&$7&&$8)
+h/copy 201 202
+nt/project 201 //gg/lumi2/1.sh1e/ebeam 0.389562*($1&&$2&&$3&&$5&&$6&&$7&&$8)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 200 'e'
+set hcol 1105
+h/plot 201 'shist'
+set hcol 1106
+h/plot 202 'shist'
+set hcol 1
+h/plot 200 'se'
+set ltyp 2
+dline 0.8 0.8 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+set dmod 1
+set hcol 1
+h/plot 200 'e'
+set hcol 1105
+h/plot 201 'shist'
+set hcol 1106
+h/plot 202 'shist'
+set hcol 1
+h/plot 200 'se'
+set ltyp 2
+dline 0.8 0.8 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+close 65
+
+fortran/file 65 'convstudy_gg3_3.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 300 'GAMCONV "f# tracks' 7 -0.5 6.5
+h/cr/1d 301 'GAMCONV "f# tracks' 7 -0.5 6.5
+nt/project 300 //da/lumi2/1.ntrack ($1&&$2&&$3&&$4&&$6&&$7&&$8)
+nt/project 301 //bb/lumi2/1.ntrack 4.048536*($1&&$2&&$3&&$4&&$6&&$7&&$8)
+h/copy 301 302
+nt/project 301 //gg/lumi2/1.ntrack 0.389562*($1&&$2&&$3&&$4&&$6&&$7&&$8)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 300 'e'
+set hcol 1105
+h/plot 301 'shist'
+set hcol 1106
+h/plot 302 'shist'
+set hcol 1
+h/plot 300 'se'
+set ltyp 2
+dline 1.5 1.5 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+dline 2.5 2.5 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+set dmod 1
+set hcol 1
+h/plot 300 'e'
+set hcol 1105
+h/plot 301 'shist'
+set hcol 1106
+h/plot 302 'shist'
+set hcol 1
+h/plot 300 'se'
+set ltyp 2
+dline 1.5 1.5 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+dline 2.5 2.5 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+close 65
+
+fortran/file 65 'convstudy_gg3_4.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 400 'GAMCONV 2nd shower e/p' 25 0 2
+h/cr/1d 401 'GAMCONV 2nd shower e/p' 25 0 2
+nt/project 400 //da/lumi2/1.sh2mat*ebeam/sh2e ($1&&$2&&$3&&$4&&$5&&$7&&$8)
+nt/project 401 //bb/lumi2/1.sh2mat*ebeam/sh2e 4.048536*($1&&$2&&$3&&$4&&$5&&$7&&$8)
+h/copy 401 402
+nt/project 401 //gg/lumi2/1.sh2mat*ebeam/sh2e 0.389562*($1&&$2&&$3&&$4&&$5&&$7&&$8)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 400 'e'
+set hcol 1105
+h/plot 401 'shist'
+set hcol 1106
+h/plot 402 'shist'
+set hcol 1
+h/plot 400 'se'
+set ltyp 2
+dline 0.9 0.9 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+dline 1.1 1.1 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+set dmod 1
+set hcol 1
+h/plot 400 'e'
+set hcol 1105
+h/plot 401 'shist'
+set hcol 1106
+h/plot 402 'shist'
+set hcol 1
+h/plot 400 'se'
+set ltyp 2
+dline 0.9 0.9 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+dline 1.1 1.1 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+close 65
+
+fortran/file 65 'convstudy_gg3_5.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 500 'GAMCONV 3rd shower e/p' 25 0 2
+h/cr/1d 501 'GAMCONV 3rd shower e/p' 25 0 2
+nt/project 500 //da/lumi2/1.sh3mat*ebeam/sh3e ($1&&$2&&$3&&$4&&$5&&$6&&$8)
+nt/project 501 //bb/lumi2/1.sh3mat*ebeam/sh3e 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$8)
+h/copy 501 502
+nt/project 501 //gg/lumi2/1.sh3mat*ebeam/sh3e 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$8)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 500 'e'
+set hcol 1105
+h/plot 501 'shist'
+set hcol 1106
+h/plot 502 'shist'
+set hcol 1
+h/plot 500 'se'
+set ltyp 2
+dline 0.9 0.9 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+dline 1.1 1.1 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+set dmod 1
+set hcol 1
+h/plot 500 'e'
+set hcol 1105
+h/plot 501 'shist'
+set hcol 1106
+h/plot 502 'shist'
+set hcol 1
+h/plot 500 'se'
+set ltyp 2
+dline 0.9 0.9 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+dline 1.1 1.1 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+close 65
+
+fortran/file 65 'convstudy_gg3_6.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 600 'GAMCONV 1st track p / ebeam' 30 0 1.2
+h/cr/1d 601 'GAMCONV 1st track p / ebeam' 30 0 1.2
+nt/project 600 //da/lumi2/1.abs(tr1p/ebeam) ($1&&$2&&$3&&$4&&$5&&$6&&$7)
+nt/project 601 //bb/lumi2/1.abs(tr1p/ebeam) 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7)
+h/copy 601 602
+nt/project 601 //gg/lumi2/1.abs(tr1p/ebeam) 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 600 'e'
+set hcol 1105
+h/plot 601 'shist'
+set hcol 1106
+h/plot 602 'shist'
+set hcol 1
+h/plot 600 'se'
+set ltyp 2
+dline 0.9 0.9 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+set dmod 1
+set hcol 1
+h/plot 600 'e'
+set hcol 1105
+h/plot 601 'shist'
+set hcol 1106
+h/plot 602 'shist'
+set hcol 1
+h/plot 600 'se'
+set ltyp 2
+dline 0.9 0.9 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+close 65
+
+* fortran/file 65 'convstudy_gg3_7.eps'
+* graphics/metafile 65 -111
+* igset mtype 1
+* h/cr/1d 700 'GAMCONV z of two-track intersection (cm)' 25 -5 5
+* h/cr/1d 701 'GAMCONV z of two-track intersection (cm)' 25 -5 5
+* nt/project 700 //da/lumi2/1.c12z*100 ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&c12r!=-1000)
+* nt/project 701 //bb/lumi2/1.c12z*100 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&c12r!=-1000)
+* h/copy 701 702
+* nt/project 701 //gg/lumi2/1.c12z*100 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&c12r!=-1000)
+* opt logy
+* set dmod 1
+* set hcol 1
+* h/plot 700 'e'
+* set hcol 1105
+* h/plot 701 'shist'
+* set hcol 1106
+* h/plot 702 'shist'
+* set hcol 1
+* h/plot 700 'se'
+* set ltyp 2
+* dline 2 2 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+* dline -2 -2 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+* opt liny
+* set dmod 1
+* set hcol 1
+* h/plot 700 'e'
+* set hcol 1105
+* h/plot 701 'shist'
+* set hcol 1106
+* h/plot 702 'shist'
+* set hcol 1
+* h/plot 700 'se'
+* set ltyp 2
+* dline 2 2 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+* dline -2 -2 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+* close 65
+
+fortran/file 65 'convstudy_gg3_8.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 800 'GAMCONV 2nd track p / ebeam' 30 0 1.2
+h/cr/1d 801 'GAMCONV 2nd track p / ebeam' 30 0 1.2
+nt/project 800 //da/lumi2/1.abs(tr2p/ebeam) ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+nt/project 801 //bb/lumi2/1.abs(tr2p/ebeam) 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+h/copy 801 802
+nt/project 801 //gg/lumi2/1.abs(tr2p/ebeam) 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 800 'e'
+set hcol 1105
+h/plot 801 'shist'
+set hcol 1106
+h/plot 802 'shist'
+set hcol 1
+h/plot 800 'se'
+set ltyp 2
+* dline 0.9 0.9 $SIGMA(10**($GRAFINFO('WNYMIN'))) $SIGMA(10**($GRAFINFO('WNYMAX')))
+opt liny
+set dmod 1
+set hcol 1
+h/plot 800 'e'
+set hcol 1105
+h/plot 801 'shist'
+set hcol 1106
+h/plot 802 'shist'
+set hcol 1
+h/plot 800 'se'
+set ltyp 2
+* dline 0.9 0.9 $SIGMA(($GRAFINFO('WNYMIN'))) $SIGMA(($GRAFINFO('WNYMAX')))
+close 65
+
+* fortran/file 65 'convstudy_gg3_9.eps'
+* graphics/metafile 65 -111
+* igset mtype 1
+* h/cr/1d 900 'GAMCONV radius of two-track intersection (cm)' 40 0 20
+* h/cr/1d 901 'GAMCONV radius of two-track intersection (cm)' 40 0 20
+* nt/project 900 //da/lumi2/1.sqrt(v1x**2+v1y**2)*100 ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+* nt/project 901 //bb/lumi2/1.sqrt(v1x**2+v1y**2)*100 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+* h/copy 901 902
+* nt/project 901 //gg/lumi2/1.sqrt(v1x**2+v1y**2)*100 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+* opt logy
+* set dmod 1
+* set hcol 1
+* h/plot 900 'e'
+* set hcol 1105
+* h/plot 901 'shist'
+* set hcol 1106
+* h/plot 902 'shist'
+* set hcol 1
+* h/plot 900 'se'
+* opt liny
+* set dmod 1
+* set hcol 1
+* h/plot 900 'e'
+* set hcol 1105
+* h/plot 901 'shist'
+* set hcol 1106
+* h/plot 902 'shist'
+* set hcol 1
+* h/plot 900 'se'
+* close 65
+
+* fortran/file 65 'convstudy_gg3_9.5.eps'
+* graphics/metafile 65 -111
+* igset mtype 1
+* h/cr/1d 950 'GAMCONV radius of two-track intersection (log base meter)' 50 -5 0
+* h/cr/1d 951 'GAMCONV radius of two-track intersection (log base meter)' 50 -5 0
+* nt/project 950 //da/lumi2/1.log10(sqrt(v1x**2+v1y**2)) ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+* nt/project 951 //bb/lumi2/1.log10(sqrt(v1x**2+v1y**2)) 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+* h/copy 951 952
+* nt/project 951 //gg/lumi2/1.log10(sqrt(v1x**2+v1y**2)) 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+* opt logy
+* set dmod 1
+* set hcol 1
+* h/plot 950 'e'
+* set hcol 1105
+* h/plot 951 'shist'
+* set hcol 1106
+* h/plot 952 'shist'
+* set hcol 1
+* h/plot 950 'se'
+* opt liny
+* set dmod 1
+* set hcol 1
+* h/plot 950 'e'
+* set hcol 1105
+* h/plot 951 'shist'
+* set hcol 1106
+* h/plot 952 'shist'
+* set hcol 1
+* h/plot 950 'se'
+* close 65
+
+fortran/file 65 'convstudy_gg3_10.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 1000 'GAMCONV neutral energy beyond biggest shower /2/ebeam' 25 0 0.1
+h/cr/1d 1001 'GAMCONV neutral energy beyond biggest shower /2/ebeam' 25 0 0.1
+nt/project 1000 //da/lumi2/1.neue-sh1e/2/ebeam ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+nt/project 1001 //bb/lumi2/1.neue-sh1e/2/ebeam 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+h/copy 1001 1002
+nt/project 1001 //gg/lumi2/1.neue-sh1e/2/ebeam 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 1000 'e'
+set hcol 1105
+h/plot 1001 'shist'
+set hcol 1106
+h/plot 1002 'shist'
+set hcol 1
+h/plot 1000 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 1000 'e'
+set hcol 1105
+h/plot 1001 'shist'
+set hcol 1106
+h/plot 1002 'shist'
+set hcol 1
+h/plot 1000 'se'
+close 65
+
+fortran/file 65 'convstudy_gg3_11.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 1010 'GAMCONV track energy sum / ebeam' 40 0 2
+h/cr/1d 1011 'GAMCONV track energy sum / ebeam' 40 0 2
+nt/project 1010 //da/lumi2/1.(abs(tr1p)+abs(tr2p))/ebeam ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+nt/project 1011 //bb/lumi2/1.(abs(tr1p)+abs(tr2p))/ebeam 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+h/copy 1011 1012
+nt/project 1011 //gg/lumi2/1.(abs(tr1p)+abs(tr2p))/ebeam 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 1010 'e'
+set hcol 1105
+h/plot 1011 'shist'
+set hcol 1106
+h/plot 1012 'shist'
+set hcol 1
+h/plot 1010 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 1010 'e'
+set hcol 1105
+h/plot 1011 'shist'
+set hcol 1106
+h/plot 1012 'shist'
+set hcol 1
+h/plot 1010 'se'
+close 65
+
+fortran/file 65 'convstudy_gg3_12.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 1020 'GAMCONV track cos([Q]) difference' 50 -2 2
+h/cr/1d 1021 'GAMCONV track cos([Q]) difference' 50 -2 2
+nt/project 1020 //da/lumi2/1.tr1cos-tr2cos ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+nt/project 1021 //bb/lumi2/1.tr1cos-tr2cos 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+h/copy 1021 1022
+nt/project 1021 //gg/lumi2/1.tr1cos-tr2cos 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 1020 'e'
+set hcol 1105
+h/plot 1021 'shist'
+set hcol 1106
+h/plot 1022 'shist'
+set hcol 1
+h/plot 1020 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 1020 'e'
+set hcol 1105
+h/plot 1021 'shist'
+set hcol 1106
+h/plot 1022 'shist'
+set hcol 1
+h/plot 1020 'se'
+close 65
+
+fortran/file 65 'convstudy_gg3_13.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 1030 'GAMCONV track sin([f]?1! - [f]?2!)' 50 -1 1
+h/cr/1d 1031 'GAMCONV track sin([f]?1! - [f]?2!)' 50 -1 1
+nt/project 1030 //da/lumi2/1.sin(tr1phi-tr2phi) ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+nt/project 1031 //bb/lumi2/1.sin(tr1phi-tr2phi) 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+h/copy 1031 1032
+nt/project 1031 //gg/lumi2/1.sin(tr1phi-tr2phi) 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 1030 'e'
+set hcol 1105
+h/plot 1031 'shist'
+set hcol 1106
+h/plot 1032 'shist'
+set hcol 1
+h/plot 1030 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 1030 'e'
+set hcol 1105
+h/plot 1031 'shist'
+set hcol 1106
+h/plot 1032 'shist'
+set hcol 1
+h/plot 1030 'se'
+close 65
+
+fortran/file 65 'convstudy_gg3_14.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 1040 'GAMCONV shower cos([Q]) + tracks cos([Q]) average' 50 -1 1
+h/cr/1d 1041 'GAMCONV shower cos([Q]) + tracks cos([Q]) average' 50 -1 1
+nt/project 1040 //da/lumi2/1.sh1cos+(tr1cos+tr2cos)/2 ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+nt/project 1041 //bb/lumi2/1.sh1cos+(tr1cos+tr2cos)/2 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+h/copy 1041 1042
+nt/project 1041 //gg/lumi2/1.sh1cos+(tr1cos+tr2cos)/2 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 1040 'e'
+set hcol 1105
+h/plot 1041 'shist'
+set hcol 1106
+h/plot 1042 'shist'
+set hcol 1
+h/plot 1040 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 1040 'e'
+set hcol 1105
+h/plot 1041 'shist'
+set hcol 1106
+h/plot 1042 'shist'
+set hcol 1
+h/plot 1040 'se'
+close 65
+
+fortran/file 65 'convstudy_gg3_12.5.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 1050 'GAMCONV track cos([Q]) difference' 50 -0.1 0.1
+h/cr/1d 1051 'GAMCONV track cos([Q]) difference' 50 -0.1 0.1
+nt/project 1050 //da/lumi2/1.tr1cos-tr2cos ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+nt/project 1051 //bb/lumi2/1.tr1cos-tr2cos 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+h/copy 1051 1052
+nt/project 1051 //gg/lumi2/1.tr1cos-tr2cos 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)
+opt logy
+set dmod 1
+set hcol 1
+h/plot 1050 'e'
+set hcol 1105
+h/plot 1051 'shist'
+set hcol 1106
+h/plot 1052 'shist'
+set hcol 1
+h/plot 1050 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 1050 'e'
+set hcol 1105
+h/plot 1051 'shist'
+set hcol 1106
+h/plot 1052 'shist'
+set hcol 1
+h/plot 1050 'se'
+close 65
+
+fortran/file 65 'convstudy_gg3_15.eps'
+graphics/metafile 65 -111
+igset mtype 1
+h/cr/1d 1050 'GAMCONV track cos([Q]) difference with a 0.2 phi cut' 50 -0.025 0.025
+h/cr/1d 1051 'GAMCONV track cos([Q]) difference with a 0.2 phi cut' 50 -0.025 0.025
+nt/project 1050 //da/lumi2/1.tr1cos-tr2cos ($1&&(abs(sh1cos)<0.7)&&$3&&$4&&$5&&$6&&$7&&$8&&(abs(sin(tr1phi-tr2phi))<0.2))
+nt/project 1051 //bb/lumi2/1.tr1cos-tr2cos 4.048536*($1&&(abs(sh1cos)<0.7)&&$3&&$4&&$5&&$6&&$7&&$8&&(abs(sin(tr1phi-tr2phi))<0.2))
+h/copy 1051 1052
+nt/project 1051 //gg/lumi2/1.tr1cos-tr2cos 0.389562*($1&&(abs(sh1cos)<0.7)&&$3&&$4&&$5&&$6&&$7&&$8&&(abs(sin(tr1phi-tr2phi))<0.2))
+opt logy
+set dmod 1
+set hcol 1
+h/plot 1050 'e'
+set hcol 1105
+h/plot 1051 'shist'
+set hcol 1106
+h/plot 1052 'shist'
+set hcol 1
+h/plot 1050 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 1050 'e'
+set hcol 1105
+h/plot 1051 'shist'
+set hcol 1106
+h/plot 1052 'shist'
+set hcol 1
+h/plot 1050 'se'
+close 65
+
+*            data                 just bb         bb+gg
+message $HINFO(1050,'SUM') $HINFO(1052,'SUM') $HINFO(1051,'SUM')
+
+h/cr/1d 1061 'GAMCONV dummy' 1 0.5 1.5
+nt/project 1061 //gg/lumi2/1.1 0.389562*(abs(sh1cos)<0.7)
+h/plot 1061 'hist'
+
+message $HINFO(1061,'SUM') 
+
+
+
+h/cr/1d 1070 'GAMCONV track cos([Q]) difference with a 0.2 phi cut' 50 -2 2
+h/cr/1d 1071 'GAMCONV track cos([Q]) difference with a 0.2 phi cut' 50 -2 2
+nt/project 1070 //da/lumi2/1.tr1cos-tr2cos ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&(abs(tr1cos-tr2cos)>0.025)&&(abs(sin(tr1phi-tr2phi))<0.2))
+nt/project 1071 //bb/lumi2/1.tr1cos-tr2cos 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&(abs(tr1cos-tr2cos)>0.025)&&(abs(sin(tr1phi-tr2phi))<0.2))
+h/copy 1071 1072
+nt/project 1071 //gg/lumi2/1.tr1cos-tr2cos 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&(abs(tr1cos-tr2cos)>0.025)&&(abs(sin(tr1phi-tr2phi))<0.2))
+opt logy
+set dmod 1
+set hcol 1
+h/plot 1070 'e'
+set hcol 1105
+h/plot 1071 'shist'
+set hcol 1106
+h/plot 1072 'shist'
+set hcol 1
+h/plot 1070 'se'
+opt liny
+set dmod 1
+set hcol 1
+h/plot 1070 'e'
+set hcol 1105
+h/plot 1071 'shist'
+set hcol 1106
+h/plot 1072 'shist'
+set hcol 1
+h/plot 1070 'se'
+
+
+
+
+
+h/cr/1d 1080 'GAMCONV cos([Q]) difference for QED' 50 -2 2
+h/cr/1d 1081 'GAMCONV cos([Q]) difference for QED' 50 -2 2
+nt/project 1080 //da/lumi2/1.tr1cos-tr2cos ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&(abs(tr1cos-tr2cos)>0.025)&&(abs(sin(tr1phi-tr2phi))>0.2))
+nt/project 1081 //bb/lumi2/1.tr1cos-tr2cos 4.048536*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&(abs(tr1cos-tr2cos)>0.025)&&(abs(sin(tr1phi-tr2phi))>0.2))
+h/copy 1081 1082
+nt/project 1081 //gg/lumi2/1.tr1cos-tr2cos 0.389562*($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&(abs(tr1cos-tr2cos)>0.025)&&(abs(sin(tr1phi-tr2phi))>0.2))
+zone 1 1
+opt liny
+set dmod 1
+set hcol 1
+h/plot 1080 'e'
+set hcol 1105
+h/plot 1081 'shist'
+set hcol 1106
+h/plot 1082 'shist'
+set hcol 1
+h/plot 1080 'se'
+message $HINFO(1080,'SUM') $HINFO(1081,'SUM') $HINFO(1082,'SUM')
+
+nt/plot //bb/lumi2/1.tr1cos-tr2cos ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&(abs(tr1cos-tr2cos)>0.025)&&(abs(sin(tr1phi-tr2phi))>0.2))
+
+
+
+
+
+
+
+nt/plot //gg/lumi2/1.tr1cos-tr2cos ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&(abs(tr1cos-tr2cos)>0.025)&&(abs(sin(tr1phi-tr2phi))>0.2))

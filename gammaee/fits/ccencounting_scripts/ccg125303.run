@@ -1,0 +1,24 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/ccencounting_logs/r125303.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/fits/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Jan24_03_P2
+
+export USER_DB=19
+export USER_RUN=125303
+export USER_EA=true
+export USER_REL=Jan24_03_P2
+export USER_BSX=-0.000424
+export USER_BSY=0.000817
+export USER_BSZ=0.000182
+export USER_EBEAM=4.7301
+
+suez -f ccencount.tcl | tee /cdat/tem/mccann/ccencounting_logs/tmp125303.log
+rm -f core
+fgrep "passedAllButccen" /cdat/tem/mccann/ccencounting_logs/tmp125303.log >> allbutccen.log
+rm -f /cdat/tem/mccann/ccencounting_logs/tmp125303.log
+
+exit

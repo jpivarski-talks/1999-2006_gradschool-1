@@ -1,0 +1,73 @@
+* exec i_cant_believe 4 'title' 19 -0.5 18.5 tracks $1&&$2&&$3
+
+h/cr/1d [1]01 [2] [3] [4] [5]
+h/cr/1d [1]02 [2] [3] [4] [5]
+h/cr/1d [1]03 [2] [3] [4] [5]
+h/cr/1d [1]04 [2] [3] [4] [5]
+h/cr/1d [1]05 [2] [3] [4] [5]
+h/cr/1d [1]06 [2] [3] [4] [5]
+h/cr/1d [1]07 [2] [3] [4] [5]
+h/cr/1d [1]08 [2] [3] [4] [5]
+h/cr/1d [1]09 [2] [3] [4] [5]
+h/cr/1d [1]11 [2] [3] [4] [5]
+h/cr/1d [1]12 [2] [3] [4] [5]
+h/cr/1d [1]13 [2] [3] [4] [5]
+h/cr/1d [1]14 [2] [3] [4] [5]
+h/cr/1d [1]15 [2] [3] [4] [5]
+h/cr/1d [1]16 [2] [3] [4] [5]
+h/cr/1d [1]17 [2] [3] [4] [5]
+h/cr/1d [1]18 [2] [3] [4] [5]
+h/cr/1d [1]19 [2] [3] [4] [5]
+h/cr/1d [1]30 [2] [3] [4] [5]
+h/cr/1d [1]31 [2] [3] [4] [5]
+h/cr/1d [1]32 [2] [3] [4] [5]
+h/cr/1d [1]33 [2] [3] [4] [5]
+h/cr/1d [1]34 [2] [3] [4] [5]
+h/cr/1d [1]41 [2] [3] [4] [5]
+h/cr/1d [1]42 [2] [3] [4] [5]
+h/cr/1d [1]43 [2] [3] [4] [5]
+h/cr/1d [1]44 [2] [3] [4] [5]
+h/cr/1d [1]50 [2] [3] [4] [5]
+h/cr/1d [1]51 [2] [3] [4] [5]
+h/cr/1d [1]52 [2] [3] [4] [5]
+h/cr/1d [1]53 [2] [3] [4] [5]
+h/cr/1d [1]54 [2] [3] [4] [5]
+h/cr/1d [1]60 [2] [3] [4] [5]
+h/cr/1d [1]61 [2] [3] [4] [5]
+h/cr/1d [1]62 [2] [3] [4] [5]
+h/cr/1d [1]63 [2] [3] [4] [5]
+h/cr/1d [1]64 [2] [3] [4] [5]
+h/cr/1d [1]65 [2] [3] [4] [5]
+h/cr/1d [1]66 [2] [3] [4] [5]
+message one
+nt/plot //mcggg/cuts/1.[6] $10&&[7] ! ! ! 'N' [1]01
+message two
+nt/plot //mcgam/cuts/1.[6] $10&&[7] ! ! ! 'N' [1]02
+message three
+nt/plot //mcqq/cuts/1.[6] $10&&[7] ! ! ! 'N' [1]03
+message four
+nt/plot //mc/cuts/1.[6] $10&&$11&&[7] ! ! ! 'N' [1]04
+message five
+nt/plot //mc/cuts/1.[6] $10&&$12&&[7] ! ! ! 'N' [1]05
+message six
+nt/plot //mc/cuts/1.[6] $10&&$13&&[7] ! ! ! 'N' [1]06
+if $SIGMA(which).ne.1 then
+  message six and a half
+  nt/plot //mccas/cuts/1.[6] $10&&$21&&[7] ! ! ! 'N' [1]07
+  message six and three quarters
+  nt/plot //mccas/cuts/1.[6] $10&&$22&&[7] ! ! ! 'N' [1]08
+  message six and nine tenths
+  nt/plot //mccas/cuts/1.[6] $10&&$23&&[7] ! ! ! 'N' [1]09
+endif
+message seven
+nt/plot //peak/cuts/1.[6] [7] ! ! ! 'N' [1]30
+message eight
+nt/plot //cont/cuts/1.[6] [7] ! ! ! 'N' [1]31
+message nine
+nt/plot //bge/cuts/1.[6] [7] ! ! ! 'N' [1]32
+message ten
+nt/plot //bgp/cuts/1.[6] [7] ! ! ! 'N' [1]33
+message eleven
+nt/plot //cos/cuts/1.[6] [7] ! ! ! 'N' [1]34
+message twelve
+exec i_cant_believe_weight [1]

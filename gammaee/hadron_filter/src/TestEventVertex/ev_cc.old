@@ -1,0 +1,1114 @@
+#include <iostream>
+#include <vector>
+#include <math.h>
+#include <assert.h>
+#include "ev.h"
+
+int main( int argc, char** argv )
+{
+   HepSymMatrix err;
+   vector< KTHelix* > helix;
+
+//     err.setval( 1, 1, 0.000001 );
+//     err.setval( 2, 2, 0.000000001 );
+//     err.setval( 3, 3, 0.00003 );
+//     err.setval( 1, 2, err(1,1)*err(2,2) );
+//     err.setval( 1, 3, err(1,1)*err(3,3) );
+//     err.setval( 2, 3, err(2,2)*err(3,3) );
+   helix.push_back( new KTHelix( 1., 1.57, 0.0001, 0., 0., err ) );
+
+//     err.setval( 1, 1, 0.000001 );
+//     err.setval( 2, 2, 0.000000001 );
+//     err.setval( 3, 3, 0.00003 );
+//     err.setval( 1, 2, err(1,1)*err(2,2) );
+//     err.setval( 1, 3, err(1,1)*err(3,3) );
+//     err.setval( 2, 3, err(2,2)*err(3,3) );
+   helix.push_back( new KTHelix( 0.9, 1.57, -0.0001, 0., 0., err ) );
+
+   double x(0.), y(0.), sig2x(0.), sig2y(0.);
+   event_vertex( x, y, sig2x, sig2y, helix );
+
+   cout << " x = " << x << " +/- " << sqrt(sig2x) << endl
+	<< " y = " << y << " +/- " << sqrt(sig2y) << endl;
+}
+
+const int kRa = 0;
+const int kXa = 1;
+const int kYa = 2;
+const int kRb = 3;
+const int kXb = 4;
+const int kYb = 5;
+const int kNumCirc = 6;
+
+const int kCurva = 0;
+const int kD0a = 1;
+const int kPhi0a = 2;
+const int kCurvb = 3;
+const int kD0b = 4;
+const int kPhi0b = 5;
+const int kNumTrack = 6;
+
+void BigNTuple2::event_vertex(
+   double& x, double& y, double& sig2x, double& sig2y, vector< KTHelix* >& helix )
+{
+   vector< KTHelix* >::const_iterator helix_iter;
+   vector< KTHelix* >::const_iterator helix_end = helix.end();
+   vector< KTHelix* >::const_iterator helix_other_iter;
+
+   vector< double > xpoints;
+   vector< double > ypoints;
+   vector< double > sig2xpoints;
+   vector< double > sig2ypoints;
+   vector< double > sig2xypoints;
+
+   cout << endl << "Show[ Graphics[{}]" << endl;
+
+   for ( helix_iter = helix.begin();  helix_iter != helix_end;  helix_iter++ ) {
+      double r( 1./2./(*helix_iter)->curvature() );
+      double x( -((*helix_iter)->d0() + r) * sin((*helix_iter)->phi0()) );
+      double y( ((*helix_iter)->d0() + r) * cos((*helix_iter)->phi0()) );
+
+      cout << "    , ParametricPlot[ {" << x << " + " << r << "*Cos[t], "
+	   << y << " + " << r << "*Sin[t]}" << endl
+	   << "		    , {t,0,2 Pi}" << endl
+	   << "             , PlotPoints -> 1000" << endl
+	   << "		    , DisplayFunction -> Identity" << endl
+	   << "		  ]" << endl;
+   }
+
+   for ( helix_iter = helix.begin();  helix_iter != helix_end;  helix_iter++ )
+      for ( helix_other_iter = helix_iter;  helix_other_iter != helix_end;  helix_other_iter++ )
+	 if ( helix_iter != helix_other_iter ) {
+	    double intx(0.), inty(0.), intsig2x(0.), intsig2y(0.), intsig2xy(0.);
+	    if ( ! calc_intersection( intx, inty, intsig2x, intsig2y, intsig2xy,
+				      **helix_iter, **helix_other_iter ) ) {
+	       calc_closest( intx, inty, intsig2x, intsig2y, intsig2xy,
+			     **helix_iter, **helix_other_iter );
+	    }
+
+	    if ( intsig2x < 1.  &&  intsig2y < 1.  &&  abs( intsig2xy ) < 1. ) {
+	       cout << "    , Graphics[{Point[{" << intx << ", " << inty << "}]" << endl;
+	       cout << "		, Line[{{" << intx-sqrt(intsig2x) << ", " << inty << "}, {"
+		    << intx+sqrt(intsig2x) << ", " << inty << "}}]" << endl;
+	       cout << "            , Line[{{" << intx << ", " << inty-sqrt(intsig2y) << "}, {"
+		    << intx << ", " << inty+sqrt(intsig2y) << "}}]}]" << endl;
+
+	       xpoints.push_back( intx );
+	       ypoints.push_back( inty );
+	       sig2xpoints.push_back( intsig2x );
+	       sig2ypoints.push_back( intsig2y );
+	       sig2xypoints.push_back( intsig2xy );
+	    } // end if uncertainties are all right
+
+	 } // end loop over pairs of helices
+
+   int i, j, k, length( xpoints.size() );
+
+   if ( length == 0 ) {
+      x = 0;
+      y = 0;
+      sig2x = 0;
+      sig2y = 0;
+
+      cout << "    , AspectRatio -> 1" << endl
+	   << "    , PlotRange -> {{" << x-0.25 << ", " << x+0.25 << "}, {"
+	   << y-0.25 << ", " << y+0.25 << "}}" << endl
+	   << "    , DisplayFunction -> $DisplayFunction" << endl
+	   << "    ];" << endl << endl;
+
+      return;
+   }
+
+   if ( length == 1 ) {
+      x = xpoints[0];
+      y = ypoints[0];
+      sig2x = sig2xpoints[0];
+      sig2y = sig2ypoints[0];
+
+      cout << "    , AspectRatio -> 1" << endl
+	   << "    , PlotRange -> {{" << x-0.25 << ", " << x+0.25 << "}, {"
+	   << y-0.25 << ", " << y+0.25 << "}}" << endl
+	   << "    , DisplayFunction -> $DisplayFunction" << endl
+	   << "    ];" << endl << endl;
+
+      return;
+   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   vector< vector< int > > cluster;
+   vector< int > bad;
+
+   for ( i = 0;  i < length;  i++ ) {
+      // is point `i' within 300 microns of any other point
+
+	    
+
+
+
+
+
+
+
+   } // end loop over intersections
+
+
+
+
+
+
+
+
+
+
+
+
+   cout << "    , Graphics[{RGBColor[1,0,0], Point[{" << x << ", " << y << "}]" << endl;
+   cout << "		, Line[{{" << x-sqrt(sig2x) << ", " << y << "}, {"
+	<< x+sqrt(sig2x) << ", " << y << "}}]" << endl;
+   cout << "            , Line[{{" << x << ", " << y-sqrt(sig2y) << "}, {"
+	<< x << ", " << y+sqrt(sig2y) << "}}]}]" << endl;
+
+   cout << "    , AspectRatio -> 1" << endl
+	<< "    , PlotRange -> {{-0.25, 0.25}, {-0.25, 0.25}}" << endl
+	<< "    , DisplayFunction -> $DisplayFunction" << endl
+	<< "    ];" << endl << endl;
+}
+
+void BigNTuple2::average_others(
+   double& xothers, double& yothers, double& sig2xothers, double& sig2yothers, double& sig2xyothers,
+   vector< double >& xpoints, vector< double >& ypoints,
+   vector< double >& sig2xpoints, vector< double >& sig2ypoints, vector< double >& sig2xypoints,
+   int i, int length )
+{
+   double xnumer(0.), xdenom(0.), ynumer(0.), ydenom(0.), corsum(0.);
+   int in_average(0);
+
+   for ( int j = 0;  j < length;  j++ ) if ( j != i ) {
+      if ( sig2xpoints[j] < 1. && sig2ypoints[j] < 1. ) {
+	 in_average++;
+	 xnumer += xpoints[j] / sig2xpoints[j];
+	 xdenom += 1. / sig2xpoints[j];
+	 ynumer += ypoints[j] / sig2ypoints[j];
+	 ydenom += 1. / sig2ypoints[j];
+	 corsum += sig2xypoints[j] / sqrt(sig2xpoints[j]) / sqrt(sig2ypoints[j]);
+      } // end if it has a small uncertainty
+   }
+
+   xothers = xnumer / xdenom;
+   yothers = ynumer / ydenom;
+   sig2xothers = 1. / xdenom;
+   sig2yothers = 1. / ydenom;
+   sig2xyothers = ( corsum / double(in_average) ) * sqrt(sig2xothers) * sqrt(sig2yothers);
+}
+
+double BigNTuple2::chi2separation( 
+   double xthis, double ythis, double sig2xthis, double sig2ythis, double sig2xythis,
+   double xothers, double yothers, double sig2xothers, double sig2yothers, double sig2xyothers )
+{
+   // This whole algorithm was cribbed from calc_closest()
+   if ( xthis == xothers  &&  ythis == yothers ) {
+      return 0.;
+   }
+   else {
+      double xthisprime( ( xthis*(xothers - xthis) + ythis*(yothers - ythis) )
+		      / sqrt( sqr(xothers - xthis) + sqr(yothers - ythis) ) );
+      double xothersprime( ( xothers*(xothers - xthis) + yothers*(yothers - ythis) )
+		      / sqrt( sqr(xothers - xthis) + sqr(yothers - ythis) ) );
+
+      double dxthisprime_dxthis( ((xthis - xothers)*(sqr(xthis) - xthis*xothers
+						     + ythis*(ythis - yothers)) + 
+				  (-2*xthis + xothers)*(sqr(xthis - xothers) +
+							sqr(ythis - yothers)))/
+				 pow(sqr(xthis - xothers) + sqr(ythis - yothers),1.5) );
+      double dxthisprime_dythis( ((sqr(xthis) - xthis*xothers +
+				   ythis*(ythis - yothers))*(ythis - yothers) + 
+				  (sqr(xthis - xothers) +
+				   sqr(ythis - yothers))*(-2*ythis + yothers))/
+				 pow(sqr(xthis - xothers) + sqr(ythis - yothers),1.5) );
+      double dxothersprime_dxothers( (-pow(xthis,3) + 3*sqr(xthis)*xothers - 
+				      xthis*(sqr(ythis) + 3*sqr(xothers) - ythis*yothers) + 
+				      xothers*(2*sqr(ythis) + sqr(xothers) -
+					       3*ythis*yothers + sqr(yothers)))/
+				     pow(sqr(xthis - xothers) + sqr(ythis - yothers),1.5) );
+      double dxothersprime_dyothers( (-pow(ythis,3) + xthis*xothers*(ythis - 3*yothers) -
+				      sqr(xthis)*(ythis - 2*yothers) + 
+				      3*sqr(ythis)*yothers + sqr(xothers)*yothers -
+				      3*ythis*sqr(yothers) + pow(yothers,3))/
+				     pow(sqr(xthis - xothers) + sqr(ythis - yothers),1.5) );
+
+      double sig2xthisprime( sig2xthis*sqr(dxthisprime_dxthis) +
+			     sig2ythis*sqr(dxthisprime_dythis)
+			     + 2*sig2xythis*dxthisprime_dxthis*dxthisprime_dythis );
+      double sig2xothersprime( sig2xothers*sqr(dxothersprime_dxothers) +
+			       sig2yothers*sqr(dxothersprime_dyothers)
+			       + 2*sig2xyothers*dxothersprime_dxothers*
+			       dxothersprime_dyothers );
+
+      if ( sig2xthisprime == 0.  &&  sig2xothersprime == 0. )
+	 return HUGE_VAL;
+      else {
+	 double chi2sep( sqr(xothersprime - xthisprime) /
+			 ( sig2xthisprime + sig2xothersprime ) );
+	 
+//  	 // These four variables are just for output
+//  	 double xlower( (xthisprime-sqrt(chi2sep)) * (xothers - xthis)
+//  			/ sqrt(sqr(xothers - xthis) + sqr(yothers - ythis)) );
+//  	 double ylower( (xthisprime-sqrt(chi2sep)) * (yothers - ythis)
+//  			/ sqrt(sqr(xothers - xthis) + sqr(yothers - ythis)) );
+//  	 double xupper( (xthisprime+sqrt(chi2sep)) * (xothers - xthis)
+//  			/ sqrt(sqr(xothers - xthis) + sqr(yothers - ythis)) );
+//  	 double yupper( (xthisprime+sqrt(chi2sep)) * (yothers - ythis)
+//  			/ sqrt(sqr(xothers - xthis) + sqr(yothers - ythis)) );
+//  	 cout << "         , Line[{{" << xlower << ", " << ylower << "}, {"
+//  	      << xupper << ", " << yupper << "}}]" << endl;
+
+	 return chi2sep;
+      }
+
+   } // end if same place
+}
+
+bool BigNTuple2::calc_intersection(
+   double& x, double& y, double& sig2x, double& sig2y, double& sig2xy,
+   KTHelix& a, KTHelix& b )
+{
+   // see intersections4.m and my "Resonance Studies" notebook for a derivation
+
+   double ra( 1./2./a.curvature() );
+   double xa( -(a.d0() + ra) * sin(a.phi0()) );
+   double ya( (a.d0() + ra) * cos(a.phi0()) );
+
+   double rb( 1./2./b.curvature() );
+   double xb( -(b.d0() + rb) * sin(b.phi0()) );
+   double yb( (b.d0() + rb) * cos(b.phi0()) );
+
+//     report( DEBUG, kFacilityString ) << "curva = " << a.curvature() << ", "
+//  				    << "d0a = " << a.d0() << ", "
+//  				    << "phi0a = " << a.phi0() << ", "
+//  				    << "curvb = " << b.curvature() << ", "
+//  				    << "d0b = " << b.d0() << ", "
+//  				    << "phi0b = " << b.phi0() << endl;
+
+//     report( DEBUG, kFacilityString ) << "ra = " << ra << ", "
+//  				    << "xa = " << xa << ", "
+//  				    << "ya = " << ya << ", "
+//  				    << "rb = " << rb << ", "
+//  				    << "xb = " << xb << ", "
+//  				    << "yb = " << yb << endl;
+
+//     report( VERIFY, kFacilityString )
+//        << "Show[ " << endl
+//        << "    ParametricPlot[ {" << xa << "+" << ra << "*Cos[t], " << ya << "+" << ra << "*Sin[t]}" << endl
+//        << "		    , {t,0,2 Pi}" << endl
+//        << "		    , DisplayFunction -> Identity" << endl
+//        << "		  ]" << endl
+//        << "    , ParametricPlot[ {" << xb << "+" << rb << "*Cos[t], " << yb << "+" << rb << "*Sin[t]}" << endl
+//        << "		    , {t,0,2 Pi}" << endl
+//        << "		    , DisplayFunction -> Identity" << endl
+//        << "		  ]" << endl;
+
+   // Zero or infinitely many solutions
+   // I don't want to deal with either case
+   if ( xa == xb  &&  ya == yb ) {
+//        report( VERIFY, kFacilityString )
+//  	 << "    , AspectRatio -> 1" << endl
+//  	 << "    , PlotRange -> {{-1.0,1.0},{-1.0,1.0}}" << endl
+//  	 << "    , DisplayFunction -> $DisplayFunction" << endl
+//  	 << "    ];" << endl;
+
+//        report( DEBUG, kFacilityString ) << endl;
+
+      return false;
+   }
+
+   double disc( (pow(4.*sqr(ra)*(xa - xb) - 
+		     4.*(sqr(rb)*(xa - xb) + 
+			(xa + xb)*(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb)))
+		     ,2.) - 16.*(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb))*
+		 (pow(xa,4.) - 2.*sqr(xa)*sqr(xb) + pow(xb,4.) + 
+		  2.*sqr(xb)*(sqr(ra) - sqr(rb) + sqr(ya - yb)) + 
+		  2.*sqr(xa)*(-sqr(ra) + sqr(rb) + sqr(ya - yb)) + 
+		  pow(-sqr(ra) + sqr(rb) + sqr(ya - yb),2.) - 
+		  4.*sqr(rb)*sqr(ya - yb)))/
+		(64.*pow(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb),2.)) );
+   // no real solutions
+   if ( disc < 0 ) {
+//        report( VERIFY, kFacilityString )
+//  	 << "    , AspectRatio -> 1" << endl
+//  	 << "    , PlotRange -> {{-1.0,1.0},{-1.0,1.0}}" << endl
+//  	 << "    , DisplayFunction -> $DisplayFunction" << endl
+//  	 << "    ];" << endl;
+
+//        report( DEBUG, kFacilityString ) << endl;
+
+      return false;
+   }
+
+   double pre( (sqr(rb)*(xa - xb) + sqr(ra)*(-xa + xb) + 
+		(xa + xb)*(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb)))/
+	       (2.*(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb))) );
+
+   // The two x solutions
+   double xsol1( pre + sqrt( disc ) );
+   double xsol2( pre - sqrt( disc ) );
+
+   // Two possibilities for the y solution to each x solution
+   double ysol1a( yb + sqrt( sqr(rb) - sqr(xsol1 - xb) ) );
+   double ysol1b( yb - sqrt( sqr(rb) - sqr(xsol1 - xb) ) );
+   double ysol1;
+   if ( abs( sqr(xsol1 - xa) + sqr(ysol1a - ya) - sqr(ra) ) <
+	abs( sqr(xsol1 - xa) + sqr(ysol1b - ya) - sqr(ra) )   )
+      ysol1 = ysol1a;
+   else
+      ysol1 = ysol1b;
+
+   double ysol2a( yb + sqrt( sqr(rb) - sqr(xsol2 - xb) ) );
+   double ysol2b( yb - sqrt( sqr(rb) - sqr(xsol2 - xb) ) );
+   double ysol2;
+   if ( abs( sqr(xsol2 - xa) + sqr(ysol2a - ya) - sqr(ra) ) <
+	abs( sqr(xsol2 - xa) + sqr(ysol2b - ya) - sqr(ra) )   )
+      ysol2 = ysol2a;
+   else
+      ysol2 = ysol2b;
+
+//     report( VERIFY, kFacilityString )
+//        << "    , Graphics[{Point[{" << xsol1 << "," << ysol1 << "}]" << endl
+//        << "		, Point[{" << xsol2 << "," << ysol2 << "}]" << endl;
+
+   // Take the x-y solution closest to the origin
+   int which_num;
+   char which_let;
+   if ( sqr(xsol1) + sqr(ysol1) < sqr(xsol2) + sqr(ysol2) ) {
+      x = xsol1;
+      y = ysol1;
+      which_num = 1;
+      if ( abs( ysol1 - ysol1a ) < abs( ysol1 - ysol1b ) )
+	 which_let = 'a';
+      else
+	 which_let = 'b';
+   }
+   else {
+      x = xsol2;
+      y = ysol2;
+      which_num = 2;
+      if ( abs( ysol2 - ysol2a ) < abs( ysol2 - ysol2b ) )
+	 which_let = 'a';
+      else
+	 which_let = 'b';
+   }
+
+   // now for the derivatives
+   double dpre_dra( (ra*(-xa + xb))/(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb)) );
+   double dpre_dxa( (sqr(ra)*(sqr(xa) - 2.*xa*xb + sqr(xb) - sqr(ya - yb)) + 
+		     sqr(rb)*(-sqr(xa) + 2.*xa*xb - sqr(xb) + sqr(ya - yb)) + 
+		     pow(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb),2.))/
+		    (2.*pow(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb),2.)) );
+   double dpre_dya( ((sqr(ra) - sqr(rb))*(xa - xb)*(ya - yb))/
+		    pow(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb),2.) );
+   double dpre_drb( (rb*(xa - xb))/(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb)) );
+   double dpre_dxb( (sqr(rb)*(sqr(xa) - 2.*xa*xb + sqr(xb) - sqr(ya - yb)) + 
+		     sqr(ra)*(-sqr(xa) + 2.*xa*xb - sqr(xb) + sqr(ya - yb)) + 
+		     pow(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb),2.))/
+		    (2.*pow(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb),2.)) );
+   double dpre_dyb( -(((sqr(ra) - sqr(rb))*(xa - xb)*(ya - yb))/
+		      pow(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb),2.)) );
+
+   double ddisc_dra( (ra*sqr(ya - yb)*(-sqr(ra) + sqr(rb) + sqr(xa) - 2.*xa*xb + 
+					 sqr(xb) + sqr(ya) - 2.*ya*yb + sqr(yb)))/
+		     pow(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb),2.) );
+   double ddisc_dxa( -(((xa - xb)*sqr(ya - yb)*
+			(-pow(ra,4.) + sqr(rb)*
+			 (-sqr(rb) + sqr(xa) - 2.*xa*xb + sqr(xb) + 
+			  sqr(ya) - 2.*ya*yb + sqr(yb)) + 
+			 sqr(ra)*(2.*sqr(rb) + sqr(xa) - 2.*xa*xb + sqr(xb) + 
+				    sqr(ya) - 2.*ya*yb + sqr(yb))))/
+		       pow(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb),3.)) );
+   double ddisc_dya( ((-pow(4.*sqr(ra)*(xa - xb) - 
+			    4.*(sqr(rb)*(xa - xb) + 
+			       (xa + xb)*(sqr(xa) - 2.*xa*xb + sqr(xb) + 
+					  sqr(ya - yb))),2.) + 
+		       4.*(-((xa + xb)*(4.*sqr(ra)*(xa - xb) - 
+				       4.*(sqr(rb)*(xa - xb) + 
+					  (xa + xb)*(sqr(xa) - 2.*xa*xb + sqr(xb) + 
+						     sqr(ya - yb))))) - 
+			  4.*(-sqr(ra) - sqr(rb) + sqr(xa) + sqr(xb) + 
+			     sqr(ya - yb))*
+			  (sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb)) - 
+			  2.*(pow(xa,4.) - 2.*sqr(xa)*sqr(xb) + pow(xb,4.) + 
+			     2.*sqr(xb)*(sqr(ra) - sqr(rb) + sqr(ya - yb)) + 
+			     2.*sqr(xa)*(-sqr(ra) + sqr(rb) + sqr(ya - yb)) + 
+			     pow(-sqr(ra) + sqr(rb) + sqr(ya - yb),2.) - 
+			     4.*sqr(rb)*sqr(ya - yb)))*
+		       (sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb)) + 
+		       16.*(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb))*
+		       (pow(xa,4.) - 2.*sqr(xa)*sqr(xb) + pow(xb,4.) + 
+			2.*sqr(xb)*(sqr(ra) - sqr(rb) + sqr(ya - yb)) + 
+			2.*sqr(xa)*(-sqr(ra) + sqr(rb) + sqr(ya - yb)) + 
+			pow(-sqr(ra) + sqr(rb) + sqr(ya - yb),2.) - 
+			4.*sqr(rb)*sqr(ya - yb)))*(ya - yb))/
+		     (1.6*pow(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb),3.)) );
+   double ddisc_drb( (rb*sqr(ya - yb)*(sqr(ra) - sqr(rb) + sqr(xa) - 2.*xa*xb + 
+					 sqr(xb) + sqr(ya) - 2.*ya*yb + sqr(yb)))/
+		     pow(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb),2.) );
+   double ddisc_dxb( ((xa - xb)*sqr(ya - yb)*(-pow(ra,4.) + 
+						sqr(rb)*(-sqr(rb) + sqr(xa)
+							   - 2.*xa*xb + sqr(xb) + 
+							   sqr(ya) - 2.*ya*yb + sqr(yb)) + 
+						sqr(ra)*(2.*sqr(rb) + sqr(xa)
+							   - 2.*xa*xb + sqr(xb) + 
+							   sqr(ya) - 2.*ya*yb + sqr(yb))))/
+		     pow(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb),3.) );
+   double ddisc_dyb( ((pow(4.*sqr(ra)*(xa - xb) - 
+			   4.*(sqr(rb)*(xa - xb) + 
+			      (xa + xb)*(sqr(xa) - 2.*xa*xb + sqr(xb) + 
+					 sqr(ya - yb))),2.) + 
+		       4.*((xa + xb)*(4.*sqr(ra)*(xa - xb) - 
+				     4.*(sqr(rb)*(xa - xb) + 
+					(xa + xb)*(sqr(xa) - 2.*xa*xb + sqr(xb) + 
+						   sqr(ya - yb)))) - 
+			  4.*(sqr(ra) + sqr(rb) - sqr(xa) - sqr(xb) - 
+			     sqr(ya - yb))*
+			  (sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb)) + 
+			  2.*(pow(xa,4.) - 2.*sqr(xa)*sqr(xb) + pow(xb,4.) + 
+			     2.*sqr(xb)*(sqr(ra) - sqr(rb) + sqr(ya - yb)) + 
+			     2.*sqr(xa)*(-sqr(ra) + sqr(rb) + sqr(ya - yb)) + 
+			     pow(-sqr(ra) + sqr(rb) + sqr(ya - yb),2.) - 
+			     4.*sqr(rb)*sqr(ya - yb)))*
+		       (sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb)) - 
+		       16.*(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb))*
+		       (pow(xa,4.) - 2.*sqr(xa)*sqr(xb) + pow(xb,4.) + 
+			2.*sqr(xb)*(sqr(ra) - sqr(rb) + sqr(ya - yb)) + 
+			2.*sqr(xa)*(-sqr(ra) + sqr(rb) + sqr(ya - yb)) + 
+			pow(-sqr(ra) + sqr(rb) + sqr(ya - yb),2.) - 
+			4.*sqr(rb)*sqr(ya - yb)))*(ya - yb))/
+		     (1.6*pow(sqr(xa) - 2.*xa*xb + sqr(xb) + sqr(ya - yb),3.)) );
+
+//     report( DEBUG, kFacilityString ) << "dpre_dra = " << dpre_dra << ", "
+//  				    << "dpre_dxa = " << dpre_dxa << ", "
+//  				    << "dpre_dya = " << dpre_dya << ", "
+//  				    << "dpre_drb = " << dpre_drb << ", "
+//  				    << "dpre_dxb = " << dpre_dxb << ", "
+//  				    << "dpre_dyb = " << dpre_dyb << ", "
+//  				    << "ddisc_dra = " << ddisc_dra << ", "
+//  				    << "ddisc_dxa = " << ddisc_dxa << ", "
+//  				    << "ddisc_dya = " << ddisc_dya << ", "
+//  				    << "ddisc_drb = " << ddisc_drb << ", "
+//  				    << "ddisc_dxb = " << ddisc_dxb << ", "
+//  				    << "ddisc_dyb = " << ddisc_dyb << endl;
+
+   double dx_dcirc[kNumCirc];
+   double dy_dcirc[kNumCirc];
+
+   if ( which_num == 1 ) {
+      dx_dcirc[kRa] = dpre_dra + ddisc_dra / 2. / sqrt( disc );
+      dx_dcirc[kXa] = dpre_dxa + ddisc_dxa / 2. / sqrt( disc );
+      dx_dcirc[kYa] = dpre_dya + ddisc_dya / 2. / sqrt( disc );
+      dx_dcirc[kRb] = dpre_drb + ddisc_drb / 2. / sqrt( disc );
+      dx_dcirc[kXb] = dpre_dxb + ddisc_dxb / 2. / sqrt( disc );
+      dx_dcirc[kYb] = dpre_dyb + ddisc_dyb / 2. / sqrt( disc );
+   }
+   else {
+      dx_dcirc[kRa] = dpre_dra - ddisc_dra / 2. / sqrt( disc );
+      dx_dcirc[kXa] = dpre_dxa - ddisc_dxa / 2. / sqrt( disc );
+      dx_dcirc[kYa] = dpre_dya - ddisc_dya / 2. / sqrt( disc );
+      dx_dcirc[kRb] = dpre_drb - ddisc_drb / 2. / sqrt( disc );
+      dx_dcirc[kXb] = dpre_dxb - ddisc_dxb / 2. / sqrt( disc );
+      dx_dcirc[kYb] = dpre_dyb - ddisc_dyb / 2. / sqrt( disc );
+   }
+
+   if ( which_let == 'a' ) {
+      dy_dcirc[kRa] = -(x - xb) * dx_dcirc[kRa] / sqrt( sqr(rb) - sqr(x - xb) );
+      dy_dcirc[kXa] = -(x - xb) * dx_dcirc[kXa] / sqrt( sqr(rb) - sqr(x - xb) );
+      dy_dcirc[kYa] = -(x - xb) * dx_dcirc[kYa] / sqrt( sqr(rb) - sqr(x - xb) );
+      dy_dcirc[kRb] = (rb - (x - xb)*dx_dcirc[kRb]) / sqrt( sqr(rb) - sqr(x - xb) );
+      dy_dcirc[kXb] = -(x - xb) * (dx_dcirc[kXb] - 1.) / sqrt( sqr(rb) - sqr(x - xb) );
+      dy_dcirc[kYb] = 1. - (x - xb)*dx_dcirc[kYb]/sqrt( sqr(rb) - sqr(x - xb) );
+   }
+   else {
+      dy_dcirc[kRa] = (x - xb) * dx_dcirc[kRa] / sqrt( sqr(rb) - sqr(x - xb) );
+      dy_dcirc[kXa] = (x - xb) * dx_dcirc[kXa] / sqrt( sqr(rb) - sqr(x - xb) );
+      dy_dcirc[kYa] = (x - xb) * dx_dcirc[kYa] / sqrt( sqr(rb) - sqr(x - xb) );
+      dy_dcirc[kRb] = (-rb + (x - xb)*dx_dcirc[kRb]) / sqrt( sqr(rb) - sqr(x - xb) );
+      dy_dcirc[kXb] = (x - xb) * (dx_dcirc[kXb] - 1.) / sqrt( sqr(rb) - sqr(x - xb) );
+      dy_dcirc[kYb] = 1. + (x - xb)*dx_dcirc[kYb]/sqrt( sqr(rb) - sqr(x - xb) );
+   }
+
+//     report( DEBUG, kFacilityString ) << "dx_dra = " << dx_dcirc[kRa] << ", "
+//  				    << "dx_dxa = " << dx_dcirc[kXa] << ", "
+//  				    << "dx_dya = " << dx_dcirc[kYa] << ", "
+//  				    << "dx_drb = " << dx_dcirc[kRb] << ", "
+//  				    << "dx_dxb = " << dx_dcirc[kXb] << ", "
+//  				    << "dx_dyb = " << dx_dcirc[kYb] << endl;
+//     report( DEBUG, kFacilityString ) << "dy_dra = " << dy_dcirc[kRa] << ", "
+//  				    << "dy_dxa = " << dy_dcirc[kXa] << ", "
+//  				    << "dy_dya = " << dy_dcirc[kYa] << ", "
+//  				    << "dy_drb = " << dy_dcirc[kRb] << ", "
+//  				    << "dy_dxb = " << dy_dcirc[kXb] << ", "
+//  				    << "dy_dyb = " << dy_dcirc[kYb] << endl;
+
+   calc_errors( x, y, dx_dcirc, dy_dcirc, a, b, sig2x, sig2y, sig2xy );
+
+//     report( VERIFY, kFacilityString )
+//        << "		, Line[{{" << x-sqrt(sig2x) << "," << y << "},{" << x+sqrt(sig2x) << "," << y << "}}]" << endl
+//        << "		, Line[{{" << x << "," << y-sqrt(sig2y) << "},{" << x << "," << y+sqrt(sig2y) << "}}]}]" << endl
+//        << "    , AspectRatio -> 1" << endl
+//        << "    , PlotRange -> {{-1.0,1.0},{-1.0,1.0}}" << endl
+//        << "    , DisplayFunction -> $DisplayFunction" << endl
+//        << "    ];" << endl;
+}
+
+bool BigNTuple2::calc_closest(
+   double& x, double& y, double& sig2x, double& sig2y, double& sig2xy,
+   KTHelix& a, KTHelix& b )
+{
+   double ra( 1./2./a.curvature() );
+   double xa( -(a.d0() + ra) * sin(a.phi0()) );
+   double ya( (a.d0() + ra) * cos(a.phi0()) );
+
+   double rb( 1./2./b.curvature() );
+   double xb( -(b.d0() + rb) * sin(b.phi0()) );
+   double yb( (b.d0() + rb) * cos(b.phi0()) );
+
+//     report( DEBUG, kFacilityString ) << "curva = " << a.curvature() << ", "
+//  				    << "d0a = " << a.d0() << ", "
+//  				    << "phi0a = " << a.phi0() << ", "
+//  				    << "curvb = " << b.curvature() << ", "
+//  				    << "d0b = " << b.d0() << ", "
+//  				    << "phi0b = " << b.phi0() << endl;
+
+//     report( DEBUG, kFacilityString ) << "ra = " << ra << ", "
+//  				    << "xa = " << xa << ", "
+//  				    << "ya = " << ya << ", "
+//  				    << "rb = " << rb << ", "
+//  				    << "xb = " << xb << ", "
+//  				    << "yb = " << yb << endl;
+
+//     report( VERIFY, kFacilityString )
+//        << "Show[ " << endl
+//        << "    ParametricPlot[ {" << xa << "+" << ra << "*Cos[t], " << ya << "+" << ra << "*Sin[t]}" << endl
+//        << "		    , {t,0,2 Pi}" << endl
+//        << "		    , DisplayFunction -> Identity" << endl
+//        << "		  ]" << endl
+//        << "    , ParametricPlot[ {" << xb << "+" << rb << "*Cos[t], " << yb << "+" << rb << "*Sin[t]}" << endl
+//        << "		    , {t,0,2 Pi}" << endl
+//        << "		    , DisplayFunction -> Identity" << endl
+//        << "		  ]" << endl;
+
+   // Zero or infinitely many solutions
+   // I don't want to deal with either case
+   if ( xa == xb  &&  ya == yb ) {
+//        report( VERIFY, kFacilityString )
+//  	 << "    , AspectRatio -> 1" << endl
+//  	 << "    , PlotRange -> {{-1.0,1.0},{-1.0,1.0}}" << endl
+//  	 << "    , DisplayFunction -> $DisplayFunction" << endl
+//  	 << "    ];" << endl;
+
+//        report( DEBUG, kFacilityString ) << endl;
+
+      return false;
+   }
+
+   // The point on circle a and on circle b closest to the other circle
+   double ax(0.), ay(0.);
+   double bx(0.), by(0.);
+
+   double dax_dcirc[kNumCirc];
+   double day_dcirc[kNumCirc];
+   double dbx_dcirc[kNumCirc];
+   double dby_dcirc[kNumCirc];
+
+   int i;
+   for ( i = 0;  i < kNumCirc;  i++ ) {
+      dax_dcirc[i] = 0.;
+      day_dcirc[i] = 0.;
+      dbx_dcirc[i] = 0.;
+      dby_dcirc[i] = 0.;
+   }
+
+   // Special case for two circles directly above one another.
+   if ( xa == xb ) {
+      ax = bx = xa;
+
+      double ay1( ya + ra );
+      double ay2( ya - ra );
+      int awhich(0);
+      if ( sqr(ax - xb) + sqr(ay1 - yb) < sqr(ax - xb) + sqr(ay2 - yb) ) {
+	 ay = ay1;
+	 awhich = 1;
+      }
+      else {
+	 ay = ay2;
+	 awhich = 2;
+      }
+
+      double by1( yb + rb );
+      double by2( yb - rb );
+      int bwhich(0);
+      if ( sqr(bx - xa) + sqr(by1 - ya) < sqr(bx - xa) + sqr(by2 - ya) ) {
+	 by = by1;
+	 bwhich = 1;
+      }
+      else {
+	 by = by2;
+	 bwhich = 2;
+      }
+
+      dax_dcirc[kXa] = 1.;
+      dax_dcirc[kXb] = 1.;
+      dbx_dcirc[kXa] = 1.;
+      dbx_dcirc[kXb] = 1.;
+
+      day_dcirc[kRa] = ( awhich == 1 ? 1. : -1. );
+      day_dcirc[kYa] = 1.;
+      dby_dcirc[kRb] = ( bwhich == 1 ? 1. : -1. );
+      dby_dcirc[kYb] = 1.;
+   }
+   // Typical case of two general circles.
+   else {
+      double denomdisc( 1 + sqr( (yb - ya)/(xb - xa) ) );
+      
+      double ax1( xa + ra / sqrt(denomdisc) );
+      double ax2( xa - ra / sqrt(denomdisc) );
+      double bx1( xb + rb / sqrt(denomdisc) );
+      double bx2( xb - rb / sqrt(denomdisc) );
+
+      double ay1( ya + (yb - ya)/(xb - xa) * (ax1 - xa) );
+      double ay2( ya + (yb - ya)/(xb - xa) * (ax2 - xa) );
+      double by1( yb + (yb - ya)/(xb - xa) * (bx1 - xb) );
+      double by2( yb + (yb - ya)/(xb - xa) * (bx2 - xb) );
+
+      int awhich(0);
+      if ( abs( sqr(ax1 - xb) + sqr(ay1 - yb) - sqr(rb) ) <
+	   abs( sqr(ax2 - xb) + sqr(ay2 - yb) - sqr(rb) ) ) {
+	 ax = ax1;
+	 ay = ay1;
+	 awhich = 1;
+      }
+      else {
+	 ax = ax2;
+	 ay = ay2;
+	 awhich = 2;
+      }
+
+      int bwhich(0);
+      if ( abs( sqr(bx1 - xa) + sqr(by1 - ya) - sqr(ra) ) <
+	   abs( sqr(bx2 - xa) + sqr(by2 - ya) - sqr(ra) ) ) {
+	 bx = bx1;
+	 by = by1;
+	 bwhich = 1;
+      }
+      else {
+	 bx = bx2;
+	 by = by2;
+	 bwhich = 2;
+      }
+
+      double ddd_dxa( 2. * sqr(yb - ya) / pow(xb - xa, 3) );
+      double ddd_dxb( -2. * sqr(yb - ya) / pow(xb - xa, 3) );
+      double ddd_dya( -2. * (yb - ya) / sqr(xb - xa) );
+      double ddd_dyb( 2. * (yb - ya) / sqr(xb - xa) );
+
+      double asign( awhich == 1 ? 1. : -1. );
+      dax_dcirc[kRa] = asign / sqrt(denomdisc);
+      dax_dcirc[kXa] = 1. - asign * ra / 2. / pow(denomdisc, 3./2.) * ddd_dxa;
+      dax_dcirc[kYa] = -asign * ra / 2. / pow(denomdisc, 3./2.) * ddd_dya;
+      dax_dcirc[kRb] = 0.;
+      dax_dcirc[kXb] = -asign * ra / 2. / pow(denomdisc, 3./2.) * ddd_dxb;
+      dax_dcirc[kYb] = -asign * ra / 2. / pow(denomdisc, 3./2.) * ddd_dyb;
+
+      double bsign( bwhich == 1 ? 1. : -1. );
+      dbx_dcirc[kRa] = 0.;
+      dbx_dcirc[kXa] = -bsign * rb / 2. / pow(denomdisc, 3./2.) * ddd_dxa;
+      dbx_dcirc[kYa] = -bsign * rb / 2. / pow(denomdisc, 3./2.) * ddd_dya;
+      dbx_dcirc[kRb] = bsign / sqrt(denomdisc);
+      dbx_dcirc[kXb] = 1. - bsign * rb / 2. / pow(denomdisc, 3./2.) * ddd_dxb;
+      dbx_dcirc[kYb] = -bsign * rb / 2. / pow(denomdisc, 3./2.) * ddd_dyb;
+
+      double slope( (yb - ya)/(xb - xa) );
+      double dslope_dxa( (yb - ya)/sqr(xb - xa) );
+      double dslope_dya( -1./(xb - xa) );
+      double dslope_dxb( -(yb - ya)/sqr(xb - xa) );
+      double dslope_dyb( 1./(xb - xa) );
+
+      day_dcirc[kRa] = slope * dax_dcirc[kRa];
+      day_dcirc[kXa] = slope * (dax_dcirc[kXa] - 1.) + dslope_dxa * (ax - xa);
+      day_dcirc[kYa] = 1. + slope * dax_dcirc[kYa] + dslope_dya * (ax - xa);
+      day_dcirc[kRb] = slope * dax_dcirc[kRb];
+      day_dcirc[kXb] = slope * dax_dcirc[kXb] + dslope_dxb * (ax - xa);
+      day_dcirc[kYb] = slope * dax_dcirc[kYb] + dslope_dyb * (ax - xa);
+
+      dby_dcirc[kRa] = slope * dbx_dcirc[kRa];
+      dby_dcirc[kXa] = slope * dbx_dcirc[kXa] + dslope_dxa * (bx - xb);
+      dby_dcirc[kYa] = slope * dbx_dcirc[kYa] + dslope_dya * (bx - xb);
+      dby_dcirc[kRb] = slope * dbx_dcirc[kRb];
+      dby_dcirc[kXb] = slope * (dbx_dcirc[kXb] - 1.) + dslope_dxb * (bx - xb);
+      dby_dcirc[kYb] = 1. + slope * dbx_dcirc[kYb] + dslope_dyb * (bx - xb);
+   } // end if xa =?= xb
+
+//     report( DEBUG, kFacilityString ) << "dax_dra = " << dax_dcirc[kRa] << ", "
+//  				    << "dax_dxa = " << dax_dcirc[kXa] << ", "
+//  				    << "dax_dya = " << dax_dcirc[kYa] << ", "
+//  				    << "dax_drb = " << dax_dcirc[kRb] << ", "
+//  				    << "dax_dxb = " << dax_dcirc[kXb] << ", "
+//  				    << "dax_dyb = " << dax_dcirc[kYb] << endl;
+//     report( DEBUG, kFacilityString ) << "day_dra = " << day_dcirc[kRa] << ", "
+//  				    << "day_dxa = " << day_dcirc[kXa] << ", "
+//  				    << "day_dya = " << day_dcirc[kYa] << ", "
+//  				    << "day_drb = " << day_dcirc[kRb] << ", "
+//  				    << "day_dxb = " << day_dcirc[kXb] << ", "
+//  				    << "day_dyb = " << day_dcirc[kYb] << endl;
+
+//     report( DEBUG, kFacilityString ) << "dbx_dra = " << dbx_dcirc[kRa] << ", "
+//  				    << "dbx_dxa = " << dbx_dcirc[kXa] << ", "
+//  				    << "dbx_dya = " << dbx_dcirc[kYa] << ", "
+//  				    << "dbx_drb = " << dbx_dcirc[kRb] << ", "
+//  				    << "dbx_dxb = " << dbx_dcirc[kXb] << ", "
+//  				    << "dbx_dyb = " << dbx_dcirc[kYb] << endl;
+//     report( DEBUG, kFacilityString ) << "dby_dra = " << dby_dcirc[kRa] << ", "
+//  				    << "dby_dxa = " << dby_dcirc[kXa] << ", "
+//  				    << "dby_dya = " << dby_dcirc[kYa] << ", "
+//  				    << "dby_drb = " << dby_dcirc[kRb] << ", "
+//  				    << "dby_dxb = " << dby_dcirc[kXb] << ", "
+//  				    << "dby_dyb = " << dby_dcirc[kYb] << endl;
+
+   double sig2ax(0.), sig2ay(0.), sig2axay(0.), sig2bx(0.), sig2by(0.), sig2bxby(0.);
+   calc_errors( ax, ay, dax_dcirc, day_dcirc, a, b, sig2ax, sig2ay, sig2axay );
+   calc_errors( bx, by, dbx_dcirc, dby_dcirc, a, b, sig2bx, sig2by, sig2bxby );
+
+   double chi2sep(0.);
+   if ( ax == bx  &&  ay == by ) {
+      // if they are in the same spot, chi2sep == 0
+      x = ax;
+      y = ay;
+   }
+   else {
+      double axprime( ( ax*(bx - ax) + ay*(by - ay) )
+		      / sqrt( sqr(bx - ax) + sqr(by - ay) ) );
+      double bxprime( ( bx*(bx - ax) + by*(by - ay) )
+		      / sqrt( sqr(bx - ax) + sqr(by - ay) ) );
+
+      double daxprime_dax( ((ax - bx)*(sqr(ax) - ax*bx + ay*(ay - by)) + 
+			    (-2*ax + bx)*(sqr(ax - bx) + sqr(ay - by)))/
+			   pow(sqr(ax - bx) + sqr(ay - by),1.5) );
+      double daxprime_day( ((sqr(ax) - ax*bx + ay*(ay - by))*(ay - by) + 
+			    (sqr(ax - bx) + sqr(ay - by))*(-2*ay + by))/
+			   pow(sqr(ax - bx) + sqr(ay - by),1.5) );
+      double dbxprime_dbx( (-pow(ax,3) + 3*sqr(ax)*bx - 
+			    ax*(sqr(ay) + 3*sqr(bx) - ay*by) + 
+			    bx*(2*sqr(ay) + sqr(bx) - 3*ay*by + sqr(by)))/
+			   pow(sqr(ax - bx) + sqr(ay - by),1.5) );
+      double dbxprime_dby( (-pow(ay,3) + ax*bx*(ay - 3*by) - sqr(ax)*(ay - 2*by) + 
+			    3*sqr(ay)*by + sqr(bx)*by - 3*ay*sqr(by) + pow(by,3))/
+			   pow(sqr(ax - bx) + sqr(ay - by),1.5) );
+
+      double sig2axprime( sig2ax*sqr(daxprime_dax) + sig2ay*sqr(daxprime_day)
+			  + 2*sig2axay*daxprime_dax*daxprime_day );
+      double sig2bxprime( sig2bx*sqr(dbxprime_dbx) + sig2by*sqr(dbxprime_dby)
+			  + 2*sig2bxby*dbxprime_dbx*dbxprime_dby );
+
+      if ( sig2axprime == 0.  &&  sig2bxprime == 0. ) {
+	 chi2sep = HUGE_VAL;
+	 x = (bx + ax) / 2.;
+	 y = (by + ay) / 2.;
+      }
+      else { 
+	 chi2sep = sqr(bxprime - axprime) / ( sig2axprime + sig2bxprime );
+	 double sig2xprime( 1./(1./sig2axprime + 1./sig2bxprime) );
+	 double xprime( (axprime/sig2axprime + bxprime/sig2bxprime) * sig2xprime );
+
+	 x = xprime * (bx - ax) / sqrt(sqr(bx - ax) + sqr(by - ay));
+	 y = xprime * (by - ay) / sqrt(sqr(bx - ax) + sqr(by - ay));
+      } // end if errors are zero
+
+   } // end if same place
+
+   if ( sig2ax == 0.  &&  sig2ay == 0. ) {
+      sig2x = 0.;
+      sig2y = 0.;
+      sig2xy = 0.;
+   }
+   else {
+      double axay_cor( sig2axay / sqrt(sig2ax) / sqrt(sig2ay) );
+      double bxby_cor( sig2bxby / sqrt(sig2bx) / sqrt(sig2by) );
+      if ( chi2sep > 20. ) {
+	 sig2x = HUGE_VAL;
+	 sig2y = HUGE_VAL;
+	 sig2xy = 0.;
+      }
+      else {
+	 sig2x = 1. / sqr(erfc(abs(chi2sep)*M_SQRT1_2)) / (1./sig2ax + 1./sig2bx);
+	 sig2y = 1. / sqr(erfc(abs(chi2sep)*M_SQRT1_2)) / (1./sig2ay + 1./sig2by);
+	 sig2xy = (axay_cor + bxby_cor) / 2. * sqrt(sig2x) * sqrt(sig2y);
+      } // end if very separated
+   }
+
+//     report( VERIFY, kFacilityString )
+//        << "    , Graphics[{Point[{" << ax << "," << ay << "}]" << endl
+//        << "		, Point[{" << bx << "," << by << "}]" << endl;
+
+//     report( VERIFY, kFacilityString )
+//        << "		, Line[{{" << x-sqrt(sig2x) << "," << y << "},{" << x+sqrt(sig2x) << "," << y << "}}]" << endl
+//        << "		, Line[{{" << x << "," << y-sqrt(sig2y) << "},{" << x << "," << y+sqrt(sig2y) << "}}]}]" << endl
+//        << "		}]" << endl
+//        << "    , AspectRatio -> 1" << endl
+//        << "    , PlotRange -> {{-1.0,1.0},{-1.0,1.0}}" << endl
+//        << "    , DisplayFunction -> $DisplayFunction" << endl
+//        << "    ];" << endl;
+}
+
+void BigNTuple2::calc_errors(
+   double x, double y, double* dx_dcirc, double* dy_dcirc,
+   KTHelix& a, KTHelix& b, double& sig2x, double& sig2y, double& sig2xy )
+{
+   double ra( 1./2./a.curvature() );
+   double xa( -(a.d0() + ra) * sin(a.phi0()) );
+   double ya( (a.d0() + ra) * cos(a.phi0()) );
+
+   double rb( 1./2./b.curvature() );
+   double xb( -(b.d0() + rb) * sin(b.phi0()) );
+   double yb( (b.d0() + rb) * cos(b.phi0()) );
+
+   // This is a Jacobian for transforming between circle variables and
+   // tracking variables
+   double dcirc_dtrack[kNumCirc][kNumTrack];
+   int i, j;
+   for ( i = 0;  i < kNumCirc;  i++ )
+      for ( j = 0;  j < kNumTrack;  j++ )
+	 dcirc_dtrack[i][j] = 0;
+   
+   dcirc_dtrack[kRa][kCurva] = -1. / 2. / sqr( a.curvature() );
+
+   dcirc_dtrack[kXa][kCurva] = -dcirc_dtrack[kRa][kCurva] * sin( a.phi0() );
+   dcirc_dtrack[kXa][kD0a] = -sin( a.phi0() );
+   dcirc_dtrack[kXa][kPhi0a] = -(ra + a.d0()) * cos( a.phi0() );
+
+   dcirc_dtrack[kYa][kCurva] = dcirc_dtrack[kRa][kCurva] * cos( a.phi0() );
+   dcirc_dtrack[kYa][kD0a] = cos( a.phi0() );
+   dcirc_dtrack[kYa][kPhi0a] = -(ra + a.d0()) * sin( a.phi0() );
+
+   dcirc_dtrack[kRb][kCurvb] = -1. / 2. / sqr( b.curvature() );
+
+   dcirc_dtrack[kXb][kCurvb] = -dcirc_dtrack[kRb][kCurvb] * sin( b.phi0() );
+   dcirc_dtrack[kXb][kD0b] = -sin( b.phi0() );
+   dcirc_dtrack[kXb][kPhi0b] = -(rb + b.d0()) * cos( b.phi0() );
+
+   dcirc_dtrack[kYb][kCurvb] = dcirc_dtrack[kRb][kCurvb] * cos( b.phi0() );
+   dcirc_dtrack[kYb][kD0b] = cos( b.phi0() );
+   dcirc_dtrack[kYb][kPhi0b] = -(rb + b.d0()) * sin( b.phi0() );
+
+//     report( DEBUG, kFacilityString ) << "jac = IdentityMatrix[6]; ";
+//     for ( i = 0;  i < kNumCirc;  i++ )
+//        for ( j = 0;  j < kNumTrack;  j++ )
+//  	 report( DEBUG, kFacilityString ) << "jac[[" << i+1 << "," << j+1 << "]] = " << dcirc_dtrack[i][j] << "; ";
+//     report( DEBUG, kFacilityString ) << endl;
+
+   // Finally--- derivatives of x and y in terms of tracking variables!
+   double dx_dtrack[kNumTrack];
+   double dy_dtrack[kNumTrack];
+   for ( j = 0;  j < kNumTrack;  j++ ) {
+      dx_dtrack[j] = 0;
+      dy_dtrack[j] = 0;
+   }
+
+   for ( i = 0;  i < kNumCirc;  i++ )
+      for ( j = 0;  j < kNumTrack;  j++ ) {
+	 dx_dtrack[j] += dx_dcirc[i] * dcirc_dtrack[i][j];
+	 dy_dtrack[j] += dy_dcirc[i] * dcirc_dtrack[i][j];
+      }
+
+//     report( DEBUG, kFacilityString ) << "dx_dcurva = " << dx_dtrack[kCurva] << ", "
+//  				    << "dx_dd0a = " << dx_dtrack[kD0a] << ", "
+//  				    << "dx_dphi0a = " << dx_dtrack[kPhi0a] << ", "
+//  				    << "dx_dcurvb = " << dx_dtrack[kCurvb] << ", "
+//  				    << "dx_dd0b = " << dx_dtrack[kD0b] << ", "
+//  				    << "dx_dphi0b = " << dx_dtrack[kPhi0b] << endl;
+//     report( DEBUG, kFacilityString ) << "dy_dcurva = " << dy_dtrack[kCurva] << ", "
+//  				    << "dy_dd0a = " << dy_dtrack[kD0a] << ", "
+//  				    << "dy_dphi0a = " << dy_dtrack[kPhi0a] << ", "
+//  				    << "dy_dcurvb = " << dy_dtrack[kCurvb] << ", "
+//  				    << "dy_dd0b = " << dy_dtrack[kD0b] << ", "
+//  				    << "dy_dphi0b = " << dy_dtrack[kPhi0b] << endl;
+
+   // Propogating errors is a similarity transform. First we need a
+   // transformation matrix.
+   double sigma[kNumTrack][kNumTrack];
+   for ( i = 0;  i < kNumTrack;  i++ )
+      for ( j = 0;  j < kNumTrack;  j++ )
+	 sigma[i][j] = 0;
+
+   sigma[kCurva][kCurva] = a.errorMatrix()(KTHelix::kCurvature, KTHelix::kCurvature);
+   sigma[kCurva][kD0a] = a.errorMatrix()(KTHelix::kCurvature, KTHelix::kD0);
+   sigma[kCurva][kPhi0a] = a.errorMatrix()(KTHelix::kCurvature, KTHelix::kPhi0);
+   sigma[kD0a][kCurva] = a.errorMatrix()(KTHelix::kD0, KTHelix::kCurvature);
+   sigma[kD0a][kD0a] = a.errorMatrix()(KTHelix::kD0, KTHelix::kD0);
+   sigma[kD0a][kPhi0a] = a.errorMatrix()(KTHelix::kD0, KTHelix::kPhi0);
+   sigma[kPhi0a][kCurva] = a.errorMatrix()(KTHelix::kPhi0, KTHelix::kCurvature);
+   sigma[kPhi0a][kD0a] = a.errorMatrix()(KTHelix::kPhi0, KTHelix::kD0);
+   sigma[kPhi0a][kPhi0a] = a.errorMatrix()(KTHelix::kPhi0, KTHelix::kPhi0);
+
+   sigma[kCurvb][kCurvb] = b.errorMatrix()(KTHelix::kCurvature, KTHelix::kCurvature);
+   sigma[kCurvb][kD0b] = b.errorMatrix()(KTHelix::kCurvature, KTHelix::kD0);
+   sigma[kCurvb][kPhi0b] = b.errorMatrix()(KTHelix::kCurvature, KTHelix::kPhi0);
+   sigma[kD0b][kCurvb] = b.errorMatrix()(KTHelix::kD0, KTHelix::kCurvature);
+   sigma[kD0b][kD0b] = b.errorMatrix()(KTHelix::kD0, KTHelix::kD0);
+   sigma[kD0b][kPhi0b] = b.errorMatrix()(KTHelix::kD0, KTHelix::kPhi0);
+   sigma[kPhi0b][kCurvb] = b.errorMatrix()(KTHelix::kPhi0, KTHelix::kCurvature);
+   sigma[kPhi0b][kD0b] = b.errorMatrix()(KTHelix::kPhi0, KTHelix::kD0);
+   sigma[kPhi0b][kPhi0b] = b.errorMatrix()(KTHelix::kPhi0, KTHelix::kPhi0);
+
+//     report( DEBUG, kFacilityString ) << "sigma = IdentityMatrix[6]; ";
+//     for ( i = 0;  i < kNumCirc;  i++ )
+//        for ( j = 0;  j < kNumTrack;  j++ )
+//  	 report( DEBUG, kFacilityString ) << "sigma[[" << i+1 << "," << j+1 << "]] = " << sigma[i][j] << "; ";
+//     report( DEBUG, kFacilityString ) << endl;
+
+   double x_std[kNumTrack];  // (sigma-transformed derivatives... errormatrix * dx_dtrack)
+   double y_std[kNumTrack];  // (sigma-transformed derivatives... errormatrix * dy_dtrack)
+   for ( j = 0;  j < kNumTrack;  j++ ) {
+      x_std[j] = 0;  // (it's better than "vd"--- vector of derivatives...)
+      y_std[j] = 0;
+   }   
+
+   for ( i = 0;  i < kNumTrack;  i++ )
+      for ( j = 0;  j < kNumTrack;  j++ ) {
+	 x_std[j] += sigma[i][j] * dx_dtrack[i];
+	 y_std[j] += sigma[i][j] * dy_dtrack[i];
+      }
+
+//     report( DEBUG, kFacilityString ) << "x_std[kCurva] = " << x_std[kCurva] << ", "
+//  				    << "x_std[kD0a] = " << x_std[kD0a] << ", "
+//  				    << "x_std[kPhi0a] = " << x_std[kPhi0a] << ", "
+//  				    << "x_std[kCurvb] = " << x_std[kCurvb] << ", "
+//  				    << "x_std[kD0b] = " << x_std[kD0b] << ", "
+//  				    << "x_std[kPhi0b] = " << x_std[kPhi0b] << endl;
+//     report( DEBUG, kFacilityString ) << "y_std[kCurva] = " << y_std[kCurva] << ", "
+//  				    << "y_std[kD0a] = " << y_std[kD0a] << ", "
+//  				    << "y_std[kPhi0a] = " << y_std[kPhi0a] << ", "
+//  				    << "y_std[kCurvb] = " << y_std[kCurvb] << ", "
+//  				    << "y_std[kD0b] = " << y_std[kD0b] << ", "
+//  				    << "y_std[kPhi0b] = " << y_std[kPhi0b] << endl;
+
+   sig2x = 0.;
+   sig2y = 0.;
+   sig2xy = 0.;
+
+   for ( i = 0;  i < kNumTrack;  i++ ) {
+      sig2x += dx_dtrack[i] * x_std[i];
+      sig2y += dy_dtrack[i] * y_std[i];
+      sig2xy += dy_dtrack[i] * x_std[i];
+   }
+
+//     report( DEBUG, kFacilityString ) << "sig2x = " << sig2x << ", sig2y = " << sig2y
+//  				    << "sig2xy = " << sig2xy << endl;
+}
+
+
+
+
+
+
+
+
+KTHelix::KTHelix( double aCurvature, double aPhi0, double aD0, double aCotTheta, double aZ0,
+		  HepSymMatrix& aErrorMatrix )
+   : m_curvature( aCurvature )
+   , m_phi0( aPhi0 )
+   , m_d0( aD0 )
+   , m_cotTheta( aCotTheta )
+   , m_z0( aZ0 )
+   , m_errMatrix( aErrorMatrix )
+{ ; }
+
+double KTHelix::curvature() { return m_curvature; }
+double KTHelix::phi0() { return m_phi0; }
+double KTHelix::d0() { return m_d0; }
+double KTHelix::cotTheta() { return m_cotTheta; }
+double KTHelix::z0() { return m_z0; }
+HepSymMatrix KTHelix::errorMatrix() { return m_errMatrix; }
+
+
+
+
+HepSymMatrix::HepSymMatrix()
+{
+   m_val[0][0] = m_val[0][1] = m_val[0][2] = m_val[0][3] = m_val[0][4] = 
+      m_val[1][0] = m_val[1][1] = m_val[1][2] = m_val[1][3] = m_val[1][4] = 
+      m_val[2][0] = m_val[2][1] = m_val[2][2] = m_val[2][3] = m_val[2][4] = 
+      m_val[3][0] = m_val[3][1] = m_val[3][2] = m_val[3][3] = m_val[3][4] = 
+      m_val[4][0] = m_val[4][1] = m_val[4][2] = m_val[4][3] = m_val[4][4] = 0.;
+}
+
+HepSymMatrix::HepSymMatrix( HepSymMatrix& other )
+{
+   setval( 1, 1, other(1,1) );
+   setval( 1, 2, other(1,2) );
+   setval( 1, 3, other(1,3) );
+   setval( 1, 4, other(1,4) );
+   setval( 1, 5, other(1,5) );
+
+   setval( 2, 1, other(2,1) );
+   setval( 2, 2, other(2,2) );
+   setval( 2, 3, other(2,3) );
+   setval( 2, 4, other(2,4) );
+   setval( 2, 5, other(2,5) );
+
+   setval( 3, 1, other(3,1) );
+   setval( 3, 2, other(3,2) );
+   setval( 3, 3, other(3,3) );
+   setval( 3, 4, other(3,4) );
+   setval( 3, 5, other(3,5) );
+	    
+   setval( 4, 1, other(4,1) );
+   setval( 4, 2, other(4,2) );
+   setval( 4, 3, other(4,3) );
+   setval( 4, 4, other(4,4) );
+   setval( 4, 5, other(4,5) );
+	    
+   setval( 5, 1, other(5,1) );
+   setval( 5, 2, other(5,2) );
+   setval( 5, 3, other(5,3) );
+   setval( 5, 4, other(5,4) );
+   setval( 5, 5, other(5,5) );
+}
+
+HepSymMatrix::~HepSymMatrix()
+{ ; }
+
+void HepSymMatrix::setval(int row, int col, double value)
+{
+   m_val[row-1][col-1] = value;
+   m_val[col-1][row-1] = value;
+}
+
+double& HepSymMatrix::operator()(int row, int col)
+{
+   return m_val[row-1][col-1];
+}
+
+
+
+
+double sqr( double x )
+{
+   return x * x;
+}
+
+double abs( double x )
+{
+   if ( x < 0. ) return -x;
+   else return x;
+}

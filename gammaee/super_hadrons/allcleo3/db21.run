@@ -1,0 +1,15 @@
+#$ -l calibration
+#$ -o /cdat/tem/mccann/db21.out
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/super_hadrons/allcleo3/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Jan24_03_P2
+
+USER_DB=21
+export USER_DB
+
+suez -f run.tcl > /cdat/tem/mccann/db$USER_DB.log
+
+perl logscan.pl < /cdat/tem/mccann/db$USER_DB.log > dafedir/db$USER_DB.log

@@ -1,0 +1,346 @@
+// -*- C++ -*-
+//
+// Package:     HitEfficiency
+// Module:      HitEfficiency
+// 
+// Description: <one line class summary>
+//
+// Implementation:
+//     <Notes on implementation>
+//
+// Author:      Jim Pivarski
+// Created:     Mon Sep 20 12:49:11 EDT 2004
+// $Id$
+//
+// Revision history
+//
+// $Log$
+//
+
+#include "Experiment/Experiment.h"
+
+// system include files
+
+// user include files
+#include "HitEfficiency/HitEfficiency.h"
+#include "Experiment/report.h"
+#include "Experiment/units.h"  // for converting to/from standard CLEO units
+
+#include "DataHandler/Record.h"
+#include "DataHandler/Frame.h"
+#include "FrameAccess/extract.h"
+#include "FrameAccess/FAItem.h"
+#include "FrameAccess/FATable.h"
+
+#include "Navigation/NavTrack.h"
+#include "TrackRoot/TRHelixFit.h"
+#include "TrackRoot/TRTrackFitQuality.h"
+#include "TrackRoot/TRSeedTrackQuality.h"
+#include "TrackDelivery/TDKinematicFit.h"
+#include "Navigation/NavTkShMatch.h"
+#include "BeamEnergy/BeamEnergy.h"
+
+#include "CleoDB/DBEventHeader.h"
+
+// STL classes
+// You may have to uncomment some of these or other stl headers 
+// depending on what other header files you include (e.g. FrameAccess etc.)!
+//#include <string>
+//#include <vector>
+//#include <set>
+//#include <map>
+//#include <algorithm>
+//#include <utility>
+
+//
+// constants, enums and typedefs
+//
+static const char* const kFacilityString = "Processor.HitEfficiency" ;
+
+// ---- cvs-based strings (Id and Tag with which file was checked out)
+static const char* const kIdString  = "$Id: processor.cc,v 1.33 2002/12/18 01:45:06 cdj Exp $";
+static const char* const kTagString = "$Name: v06_08_00 $";
+
+//
+// static data member definitions
+//
+
+
+
+//
+// constructors and destructor
+//
+HitEfficiency::HitEfficiency( void )               // anal1
+   : Processor( "HitEfficiency" )
+{
+   report( DEBUG, kFacilityString ) << "here in ctor()" << endl;
+
+   // ---- bind a method to a stream -----
+   // These lines ARE VERY IMPORTANT! If you don't bind the 
+   // code you've just written (the "action") to a stream, 
+   // your code won't get executed!
+
+   bind( &HitEfficiency::event,    Stream::kEvent );
+   //bind( &HitEfficiency::beginRun, Stream::kBeginRun );
+   //bind( &HitEfficiency::endRun,   Stream::kEndRun );
+
+   // do anything here that needs to be done at creation time
+   // (e.g. allocate resources etc.)
+
+   m_goodtracks = 0;
+   m_alltracks = 0;
+   m_run = 0;
+   for (int i = 0;  i < 30;  i++) m_tracks[i] = 0;
+}
+
+HitEfficiency::~HitEfficiency()                    // anal5
+{
+   report( DEBUG, kFacilityString ) << "here in dtor()" << endl;
+ 
+   // do anything here that needs to be done at desctruction time
+   // (e.g. close files, deallocate resources etc.)
+
+}
+
+//
+// member functions
+//
+
+// ------------ methods for beginning/end "Interactive" ------------
+// --------------------------- init method -------------------------
+void
+HitEfficiency::init( void )          // anal1 "Interactive"
+{
+   report( DEBUG, kFacilityString ) << "here in init()" << endl;
+
+   // do any initialization here based on Parameter Input by User
+   // (e.g. run expensive algorithms that are based on parameters
+   //  specified by user at run-time)
+
+   m_goodtracks = 0;
+   m_alltracks = 0;
+   m_run = 0;
+   for (int i = 0;  i < 30;  i++) m_tracks[i] = 0;
+}
+
+// -------------------- terminate method ----------------------------
+void
+HitEfficiency::terminate( void )     // anal5 "Interactive"
+{
+   report( DEBUG, kFacilityString ) << "here in terminate()" << endl;
+
+   // do anything here BEFORE New Parameter Change
+   // (e.g. write out result based on parameters from user-input)
+ 
+   report(SYSTEM, kFacilityString)
+      << "RUN " << m_run << " eff = " << m_goodtracks << " / " << m_alltracks << " trackshist";
+   for (int i = 0;  i < 30;  i++) report(SYSTEM, kFacilityString) << " " << m_tracks[i];
+   report(SYSTEM, kFacilityString) << endl;
+}
+
+
+// ---------------- standard place to book histograms ---------------
+void
+HitEfficiency::hist_book( HIHistoManager& iHistoManager )
+{
+   report( DEBUG, kFacilityString ) << "here in hist_book()" << endl;
+
+   // book your histograms here
+
+}
+
+// --------------------- methods bound to streams -------------------
+ActionBase::ActionResult
+HitEfficiency::event( Frame& iFrame )          // anal3 equiv.
+{
+   report( DEBUG, kFacilityString ) << "here in event()" << endl;
+
+   FAItem<DBEventHeader> head;
+   extract(iFrame.record(Stream::kEvent), head);
+
+   if (head->run() != m_run) {
+      if (m_run != 0) {
+	 report(SYSTEM, kFacilityString)
+	    << "RUN " << m_run << " eff = " << m_goodtracks << " / " << m_alltracks << " trackshist";
+	 for (int i = 0;  i < 30;  i++) report(SYSTEM, kFacilityString) << " " << m_tracks[i];
+	 report(SYSTEM, kFacilityString) << endl;
+      }
+      m_goodtracks = 0;
+      m_alltracks = 0;
+
+      m_run = head->run();
+   }
+
+   FAItem<BeamEnergy> ebeamandstuff;
+   extract(iFrame.record(Stream::kStartRun), ebeamandstuff);
+   double eBeam = ebeamandstuff->value();
+
+   FATable<NavTrack> tracks;
+   extract(iFrame.record(Stream::kEvent), tracks);
+
+   int number = 0;
+   FATable<NavTrack>::const_iterator track_iter = tracks.begin();
+   FATable<NavTrack>::const_iterator track_end = tracks.end();
+   for (; track_iter != track_end;  ++track_iter) {
+      FATable<NavTrack>::const_iterator trackItr = track_iter;
+
+      // Track identifier
+      const UInt32 trackID ( trackItr->identifier() ) ;
+
+      // Fit Quality
+      FAItem< TRTrackFitQuality > pionQuality( trackItr->pionQuality() );
+
+      const DABoolean trackFitOK ( pionQuality->fit()       &&
+				   !pionQuality->fitAbort()     );
+
+      const double dof         ( pionQuality->degreesOfFreedom() ) ;
+      const double reducedChi2 ( dof > 0 ? pionQuality->chiSquare()/dof : 0 ) ;
+
+      const double hitFraction ( pionQuality->numberHitsExpected() > 0 ? 
+				 pionQuality->ratioNumberHitsToExpected() : 0 );
+
+      // Particle kinematic parameters
+      FAItem< TDKinematicFit > pion ( trackItr->pionFit() ) ;
+
+      GeV          pTk ( pion->momentum().mag() ) ; // track momentum
+      const int    qTk ( pion->charge()<0 ? ceil( pion->charge() - 0.5 ) :
+			 floor( pion->charge() + 0.5 ) ) ; // electric charge
+
+      // Energy of matched shower
+      const GeV eTk ( trackItr->trackShowerMatch().valid() ?
+		      trackItr->trackShowerMatch()->matchedEnergy() : 0 ) ;
+
+      // Helix parameters
+      FAItem< TRHelixFit > helix ( trackItr->pionHelix() ) ;
+
+      const double adacd       ( fabs( helix->d0() ) ) ;
+      const double az0         ( fabs( helix->position().z() ) ) ;
+      const double phi0        ( helix->phi0() ) ;
+      const double aCotTheta   ( fabs( helix->cotTheta() ) ) ;
+      const double errCotTheta ( sqrt( fabs(
+					  helix->errorMatrix()( KTHelix::kCotTheta, KTHelix::kCotTheta ) ) ) ) ;
+      const double errz0       ( sqrt( fabs(
+					  helix->errorMatrix()( KTHelix::kZ0, KTHelix::kZ0 ) ) ) ) ;
+
+      // Apply (loose) track selection criteria
+      const DABoolean thisTrackIsGood ( trackFitOK
+					&& reducedChi2 < 100.0
+					&& hitFraction > 0.5
+					&& hitFraction < 1.2
+					&& adacd       < 0.03
+					&& az0         < 0.18
+					&& pTk         > 0.01*eBeam
+					&& pTk         < 1.500*eBeam
+					&& aCotTheta   < 3.0424 // |cosTh|<0.95
+					&& errCotTheta < 0.5
+					&& errz0       < 0.25 ) ;
+
+      if (thisTrackIsGood && track_iter->pionFit()->momentum().mag() > 0.150) number++;
+   }
+
+   if (number >= 29) m_tracks[29]++;
+   else m_tracks[number]++;
+
+   if (number == 6) {
+      track_iter = tracks.begin();
+      for (; track_iter != track_end;  ++track_iter) {
+	 FATable<NavTrack>::const_iterator trackItr = track_iter;
+
+	 // Track identifier
+	 const UInt32 trackID ( trackItr->identifier() ) ;
+
+	 // Fit Quality
+	 FAItem< TRTrackFitQuality > pionQuality( trackItr->pionQuality() );
+
+	 const DABoolean trackFitOK ( pionQuality->fit()       &&
+				      !pionQuality->fitAbort()     );
+
+	 const double dof         ( pionQuality->degreesOfFreedom() ) ;
+	 const double reducedChi2 ( dof > 0 ? pionQuality->chiSquare()/dof : 0 ) ;
+
+	 const double hitFraction ( pionQuality->numberHitsExpected() > 0 ? 
+				    pionQuality->ratioNumberHitsToExpected() : 0 );
+
+	 // Particle kinematic parameters
+	 FAItem< TDKinematicFit > pion ( trackItr->pionFit() ) ;
+
+	 GeV          pTk ( pion->momentum().mag() ) ; // track momentum
+	 const int    qTk ( pion->charge()<0 ? ceil( pion->charge() - 0.5 ) :
+			    floor( pion->charge() + 0.5 ) ) ; // electric charge
+
+	 // Energy of matched shower
+	 const GeV eTk ( trackItr->trackShowerMatch().valid() ?
+			 trackItr->trackShowerMatch()->matchedEnergy() : 0 ) ;
+
+	 // Helix parameters
+	 FAItem< TRHelixFit > helix ( trackItr->pionHelix() ) ;
+
+	 const double adacd       ( fabs( helix->d0() ) ) ;
+	 const double az0         ( fabs( helix->position().z() ) ) ;
+	 const double phi0        ( helix->phi0() ) ;
+	 const double aCotTheta   ( fabs( helix->cotTheta() ) ) ;
+	 const double errCotTheta ( sqrt( fabs(
+					     helix->errorMatrix()( KTHelix::kCotTheta, KTHelix::kCotTheta ) ) ) ) ;
+	 const double errz0       ( sqrt( fabs(
+					     helix->errorMatrix()( KTHelix::kZ0, KTHelix::kZ0 ) ) ) ) ;
+
+	 // Apply (loose) track selection criteria
+	 const DABoolean thisTrackIsGood ( trackFitOK
+					   && reducedChi2 < 100.0
+					   && hitFraction > 0.5
+					   && hitFraction < 1.2
+					   && adacd       < 0.03
+					   && az0         < 0.18
+					   && pTk         > 0.01*eBeam
+					   && pTk         < 1.500*eBeam
+					   && aCotTheta   < 3.0424 // |cosTh|<0.95
+					   && errCotTheta < 0.5
+					   && errz0       < 0.25 ) ;
+
+	 if (thisTrackIsGood && track_iter->pionFit()->momentum().mag() > 0.150) {
+	    int first = 0;
+	    for (int i = 1;  i <= 8;  i++)
+	       if (track_iter->pionQuality()->isLayerHit(TRSubdetectorLists::kDR3Axial, i))
+		  first++;
+
+	    int second = 0;
+	    for (int i = 9;  i <= 16;  i++)
+	       if (track_iter->pionQuality()->isLayerHit(TRSubdetectorLists::kDR3Axial, i))
+		  second++;
+	 
+	    if (first >= 6  &&  second >= 6) m_goodtracks++;
+	    m_alltracks++;
+	 }
+      }
+   }
+
+   return ActionBase::kPassed;
+}
+
+/*
+ActionBase::ActionResult
+HitEfficiency::beginRun( Frame& iFrame )       // anal2 equiv.
+{
+   report( DEBUG, kFacilityString ) << "here in beginRun()" << endl;
+
+   return ActionBase::kPassed;
+}
+*/
+
+/*
+ActionBase::ActionResult
+HitEfficiency::endRun( Frame& iFrame )         // anal4 equiv.
+{
+   report( DEBUG, kFacilityString ) << "here in endRun()" << endl;
+
+   return ActionBase::kPassed;
+}
+*/
+
+//
+// const member functions
+//
+
+//
+// static member functions
+//

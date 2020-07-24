@@ -1,0 +1,4407 @@
+(***********************************************************************
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used on any computer system with Mathematica 4.0,
+MathReader 4.0, or any compatible application. The data for the notebook 
+starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do one of 
+the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing the 
+word CacheID, otherwise Mathematica-compatible applications may try to 
+use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+***********************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    124449,       4347]*)
+(*NotebookOutlinePosition[    125087,       4370]*)
+(*  CellTagsIndexPosition[    125043,       4366]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+Cell[BoxData[{
+    \(Off[General::spell1]\), "\[IndentingNewLine]", 
+    \(<< Statistics`DiscreteDistributions`\), "\[IndentingNewLine]", 
+    \(<< Statistics`ContinuousDistributions`\), "\[IndentingNewLine]", 
+    \(<< Graphics`MultipleListPlot`\), "\[IndentingNewLine]", 
+    \(<< Statistics`NonlinearFit`\), "\[IndentingNewLine]", 
+    \(<< Graphics`Graphics`\), "\[IndentingNewLine]", 
+    \(<< Statistics`DescriptiveStatistics`\)}], "Input"],
+
+Cell[BoxData[{
+    \(Chi2ToFunction[func_, params_List, 
+        data_List] := \(\(Plus @@ \((\(\((\((func @@ 
+                          Prepend[
+                            params, #[\([1]\)]] - \
+#[\([2]\)])\)^2/#[\([3]\)]^2)\) &\) /@ 
+            data)\)\)\(\[IndentingNewLine]\)\)\), "\[IndentingNewLine]", 
+    \(FitToFunction[func_, params_List, start_List, 
+        data_List] := \(\(\(\(({#1, Length[data] - Length[params], 
+              params /. #2})\) &\) @@ \((FindMinimum @@ 
+            Prepend[Table[{params[\([ftfi]\)], start[\([ftfi]\)]}, {ftfi, 1, 
+                  Length[params]}], 
+              Chi2ToFunction[func, params, 
+                data]])\)\)\(\[IndentingNewLine]\)\)\), \
+"\[IndentingNewLine]", 
+    \(FitReplacements[params_List, values_List] := 
+      Table[params[\([fri]\)] \[Rule] values[\([fri]\)], {fri, 1, 
+          Length[params]}]\[IndentingNewLine]\), "\[IndentingNewLine]", 
+    \(ErrorMatrix[func_, params_List, values_List, data_List] := 
+      Inverse[Chop[\n
+          Table[ReplaceAll[
+              D[D[Chi2ToFunction[func, params, data], params[\([emi]\)]], 
+                params[\([emj]\)]], FitReplacements[params, values]], {emi, 
+              1, Length[params]}, {emj, 1, 
+              Length[params]}]]]\[IndentingNewLine]\), "\[IndentingNewLine]", \
+
+    \(FitCovariance[func_, params_List, values_List, data_List, param1_, 
+        param2_] := \(\(ErrorMatrix[func, params, values, 
+            data]\)[\([\(Position[params, param1] // Flatten\) // 
+              First]\)]\)[\([\(Position[params, param2] // Flatten\) // 
+            First]\)]\[IndentingNewLine]\), "\[IndentingNewLine]", 
+    \(FitVariance[func_, params_List, values_List, data_List, param_] := 
+      FitCovariance[func, params, values, data, param, 
+        param]\[IndentingNewLine]\), "\[IndentingNewLine]", 
+    \(FitError[func_, params_List, values_List, data_List, param_] := 
+      Sqrt[FitVariance[func, params, values, data, 
+          param]]\[IndentingNewLine]\), "\[IndentingNewLine]", 
+    \(FitValueError[func_, params_List, start_List, data_List, 
+        interestingParams_List] := \(({fveChi2, fveDOF, fveBestParams} = 
+          FitToFunction[func, params, start, data]; 
+        fveErrorMatrix = ErrorMatrix[func, params, fveBestParams, data]; \ 
+        Table[\((fvePosition = \(Position[params, 
+                    interestingParams[\([fvei]\)]] // Flatten\) // 
+                First; {fveBestParams[\([fvePosition]\)], 
+              Sqrt[\(fveErrorMatrix[\([fvePosition]\)]\)[\([fvePosition]\)]]})\
+\), {fvei, 1, 
+            Length[interestingParams]}])\)\[IndentingNewLine]\), "\
+\[IndentingNewLine]", 
+    \(FitValueError[func_, params_List, start_List, data_List, 
+        interestingParam_Symbol] := \(\(FitValueError[func, params, start, 
+          data, {interestingParam}]\)\(//\)\(First\)\(\n\)\)\), "\n", 
+    \(PlotFit[func_, values_List, data_List] := 
+      Show[MultipleListPlot[\(\(({{#[\([1]\)], #[\([2]\)]}, 
+                  ErrorBar[#[\([3]\)]]})\) &\) /@ data, 
+          DisplayFunction \[Rule] Identity], \[IndentingNewLine]Plot[
+          func @@ Prepend[values, x], {x, 
+            Min @@ \((\(\((#[\([1]\)])\) &\) /@ data)\) - 0.005, 
+            Max @@ \((\(\((#[\([1]\)])\) &\) /@ data)\) + 0.005}, 
+          DisplayFunction \[Rule] Identity], 
+        DisplayFunction \[Rule] $DisplayFunction]\[IndentingNewLine]\), "\
+\[IndentingNewLine]", 
+    \(PlotFitFrame[func_, values_List, data_List, lower_Real, upper_Real, 
+        back_Real, top_Real] := 
+      Show[MultipleListPlot[\(\(({{#[\([1]\)], #[\([2]\)]}, 
+                  ErrorBar[#[\([3]\)]]})\) &\) /@ data, 
+          PlotRange \[Rule] {{lower, upper}, {0. , top}}, Frame \[Rule] True, 
+          FrameLabel \[Rule] {"\<Energy in GeV\>", 
+              None, "\<Cross-section in nb                            \>", \ 
+              None}, Axes \[Rule] False, 
+          DisplayFunction \[Rule] 
+            Identity], \[IndentingNewLine]Plot[{func @@ Prepend[values, x], 
+            background[x, back]}, {x, lower, upper}, 
+          PlotStyle \[Rule] {Dashing[{1, 0}], Dashing[{0.03, 0.02}]}, 
+          DisplayFunction \[Rule] Identity], 
+        DisplayFunction \[Rule] $DisplayFunction]\[IndentingNewLine]\), "\n", \
+
+    \(FitAndPlot[func_, params_List, start_List, 
+        data_List] := \((fapBestFit = 
+          FitToFunction[func, params, start, data]; 
+        PlotFitFrame[func, fapBestFit[\([3]\)], data]; 
+        fapBestFit)\)\n\), "\n", 
+    \(DifferencePlot[func_, values_List, data_List] := \((\n
+        dpMin = Min @@ \((\(\((#[\([1]\)])\) &\) /@ data)\) - 0.005; \n
+        dpMax = Max @@ \((\(\((#[\([1]\)])\) &\) /@ data)\) + 0.005; \n
+        Show[ListPlot[\({#[\([1]\)], \((func @@ 
+                          Prepend[
+                            values, #[\([1]\)]] - #[\([2]\)])\)/#[\([3]\)]} &\
+\) /@ data, Axes \[Rule] True, AxesOrigin \[Rule] {dpMin, 0}, 
+            DisplayFunction \[Rule] Identity], 
+          Graphics[{Line[{{dpMin, 1. }, {dpMax, 1. }}], 
+              Line[{{dpMin, \(-1. \)}, {dpMax, \(-1. \)}}]}], 
+          DisplayFunction \[Rule] $DisplayFunction])\)\)}], "Input"],
+
+Cell[BoxData[
+    \(background[x_, back_] := 
+      back*\((5.16483)\)^2/x^2 + \n\t\tIf[
+          x > 4.87089, \(0.0265604/2.29975\)/\((x - 4.73)\), 0] + \n\t\tIf[
+          x > 5.094615, \(0.0484171/6.52742\)/\((x - 5.01163)\), 
+          0]\)], "Input"],
+
+Cell[BoxData[{
+    \(\(jacksonSharreOnly[x_, norm_, mean_, 
+          sigma_] := \((\[IndentingNewLine]t = 
+              2*\((\(1/137.0359997650\)/
+                    Pi)\)*\((Log[\((x*1000)\)^2/0.51099890221^2 - 
+                      1. ])\); \[IndentingNewLine]z = \((x - mean)\)/
+                sigma; \[IndentingNewLine]F = 
+              Gamma[1 + t]*
+                  Exp[\(-z^2\)/2]/
+                    Sqrt[2*Pi]*\[IndentingNewLine]\((0.31 - 
+                        0.73*z/
+                            Sqrt[1 + \((z/\((1 + 
+                                        1.37*t)\))\)^2]\[IndentingNewLine] + 
+                        z^2)\)^\((\(-t\)/2)\) + \[IndentingNewLine]If[z > 0, 
+                    1, 0]*t*
+                  z^t*\[IndentingNewLine]\((z^2.18/\((1 + 
+                          z^3.18)\))\)*\[IndentingNewLine]\((1 + \((1 - 
+                            t)\)*\(\((2 - t)\)/
+                            2\)/\[IndentingNewLine]\((1.5*t + 
+                              2.44 + \((z - 
+                                    46/\((z^2 + 
+                                        21)\))\)^2)\))\); \
+\[IndentingNewLine]norm*\((2*sigma/mean)\)^t*F/sigma\[IndentingNewLine])\) // 
+          Chop;\)\[IndentingNewLine]\), "\[IndentingNewLine]", 
+    \(\(jacksonSharre[x_, norm_, mean_, sigma_, 
+          back_] := \[IndentingNewLine]jacksonSharreOnly[x*2, norm*2/1000, 
+            mean*2, sigma*2/1000] + 
+          background[x, 
+            back];\)\[IndentingNewLine]\), "\[IndentingNewLine]", 
+    \(\(jsParams = {norm, mean, sigma, back};\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(kuraevFadinOnly[x_, norm_, mean_, 
+          sigma_] := \((\[IndentingNewLine]t = 
+              2*\((\(1/137.0359997650\)/
+                    Pi)\)*\((Log[\((x*1000)\)^2/0.51099890221^2 - 
+                      1. ])\); \[IndentingNewLine]z = \((x - mean)\)/
+                sigma; \[IndentingNewLine]F = \((1.0)\)*Gamma[1 + t]*
+                  Exp[\(-z^2\)/2]/
+                    Sqrt[2*Pi]*\[IndentingNewLine]\((0.31 - 
+                        0.73*z/
+                            Sqrt[1 + \((z/\((1 + 
+                                        1.37*t)\))\)^2]\[IndentingNewLine] + 
+                        z^2)\)^\((\(-t\)/
+                        2)\) + \[IndentingNewLine]\((1.052)\)*If[z > 0, 1, 0]*
+                  t*z^t*\[IndentingNewLine]\((z^2.18/\((1 + 
+                          z^3.18)\))\)*\[IndentingNewLine]\((1 + \((1 - 
+                            t)\)*\(\((2 - t)\)/
+                            2\)/\[IndentingNewLine]\((1.5*t + 
+                              2.44 + \((z - 
+                                    46/\((z^2 + 
+                                        21)\))\)^2)\))\); \
+\[IndentingNewLine]norm*\((2*sigma/mean)\)^t*F/sigma\[IndentingNewLine])\) // 
+          Chop;\)\[IndentingNewLine]\), "\[IndentingNewLine]", 
+    \(\(kuraevFadin[x_, norm_, mean_, sigma_, 
+          back_] := \[IndentingNewLine]kuraevFadinOnly[x*2, norm*2/1000, 
+            mean*2, sigma*2/1000] + 
+          background[x, 
+            back];\)\[IndentingNewLine]\), "\[IndentingNewLine]", 
+    \(\(kfParams = {norm, mean, sigma, back};\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Y3sStartFit = {38. , 5.1794, 2.3, 3. };\)\), "\n", 
+    \(Y3sCeiling = 8. ; \), "\n", 
+    \(Y3sHXCVarySize = 1; \n\), "\n", 
+    \(Y1sStartFit = {160. , 4.73, 1.7, 3. }; \), "\n", 
+    \(\(Y1sCeiling = 25. ;\)\), "\n", 
+    \(\(Y1sHXCVarySize = 3;\)\)}], "Input"],
+
+Cell[BoxData[
+    \(FitPlotStuff[{func_, params_List}, startFit_List, ceiling_Real, 
+        data_List] := \((\n{fpChiSq, fpDOF, fpBestFit} = 
+          FitToFunction[func, params, startFit, 
+            data]; \[IndentingNewLine]fpErrorMatrix = 
+          ErrorMatrix[func, params, fpBestFit, data]; \[IndentingNewLine]\n
+        Print[StringJoin["\<norm = \>", 
+            ToString[
+              fpBestFit[\([1]\)]], "\< +/- \>", \n\t\t\t\t\t\t\tToString[
+              Sqrt[\(fpErrorMatrix[\([1]\)]\)[\([1]\)]]], "\< MeV nb\n\>", \n\
+\t\t\t\t"\<mean = \>", 
+            ToString[
+              fpBestFit[\([2]\)]], "\< +/- \>", \n\t\t\t\t\t\t\tToString[
+              Sqrt[\(fpErrorMatrix[\([2]\)]\)[\([2]\)]]], "\< GeV\n\>", \n\t\t\
+\t\t"\<sigma = \>", 
+            ToString[
+              fpBestFit[\([3]\)]], "\< +/- \>", \n\t\t\t\t\t\t\tToString[
+              Sqrt[\(fpErrorMatrix[\([3]\)]\)[\([3]\)]]], "\< MeV\n\>", \n\t\t\
+\t\t"\<back = \>", 
+            ToString[
+              fpBestFit[\([4]\)]], "\< +/- \>", \n\t\t\t\t\t\t\tToString[
+              Sqrt[\(fpErrorMatrix[\([4]\)]\)[\([4]\)]]], "\< nb\n\n\>", \n\t\
+\t\t\t"\<chisq/dof = \>", ToString[fpChiSq], \ "\</\>", 
+            ToString[fpDOF], "\< = \>", \n\t\t\t\t\t\t\tToString[
+              N[fpChiSq/fpDOF]]]]; \[IndentingNewLine]\n
+        PlotFitFrame[func, fpBestFit, data, 
+          Min @@ \((\({#[\([1]\)]} &\) /@ data)\) - 0.005, 
+          Max @@ \((\({#[\([1]\)]} &\) /@ data)\) + 0.005, 
+          fpBestFit[\([4]\)], ceiling]; \n\nfpErrorMatrix\n)\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(ShowStableEnergy[data_List] := \n
+        MultipleListPlot[data, Frame \[Rule] True, Axes \[Rule] False, 
+          PlotRange \[Rule] {\({Min[#] - 3, 
+                    Max[#] + 3} &\) @@ {\(#[\([1]\)] &\) /@ 
+                    data}, \({# + 0.0004, # - 
+                      0.0004} &\) @@ {Mean[\(#[\([2]\)] &\) /@ data]}}, 
+          FrameTicks \[Rule] {\({Min[#], 
+                    Round[\((Max[#] - Min[#])\)/2 + Min[#]], 
+                    Max[#]} &\) @@ {\(#[\([1]\)] &\) /@ 
+                    data}, \({{# + 0.0002, "\<+0.2 MeV\>"}, {#, 
+                      StringJoin[ToString[#*1000], "\< MeV\>"]}, {# - 
+                        0.0002, "\<-0.2 MeV\>"}} &\) @@ {Mean[\(#[\([2]\)] \
+&\) /@ data]}, None, None}, 
+          GridLines \[Rule] {None, \({# + 0.0002, #, # - 
+                      0.0002} &\) @@ {Mean[\(#[\([2]\)] &\) /@ data]}}, 
+          FrameLabel \[Rule] {"\<Run Number\>", None, "\<Energy Stability\>", 
+              None}];\)\n\), "\n", 
+    \(\(ShowStableHXC[data_List] := \n
+        MultipleListPlot[data, Frame \[Rule] True, Axes \[Rule] False, 
+          PlotRange \[Rule] {\({Min[#] - 3, 
+                    Max[#] + 3} &\) @@ {\(\(#[\([1]\)]\)[\([1]\)] &\) /@ 
+                    data}, \({# + 2*varySize, # - 
+                      2*varySize} &\) @@ {Mean[\(\(#[\([1]\)]\)[\([2]\)] &\) /@ 
+                      data]}}, 
+          FrameTicks \[Rule] {\({Min[#], 
+                    Round[\((Max[#] - Min[#])\)/2 + Min[#]], 
+                    Max[#]} &\) @@ {\(\(#[\([1]\)]\)[\([1]\)] &\) /@ 
+                    data}, \({{# + varySize, 
+                      StringJoin["\<+\>", 
+                        ToString[varySize], "\< nb\>"]}, {#, 
+                      StringJoin[ToString[#], "\< nb\>"]}, {# - 1. , 
+                      StringJoin["\<-\>", 
+                        ToString[
+                          varySize], "\< nb\>"]}} &\) @@ {Mean[\(\(#[\([1]\)]\
+\)[\([2]\)] &\) /@ data]}, None, None}, 
+          GridLines \[Rule] {None, \({# + varySize, #, # - 
+                      varySize} &\) @@ {Mean[\(\(#[\([1]\)]\)[\([2]\)] &\) /@ 
+                      data]}}, 
+          FrameLabel \[Rule] {"\<Run Number\>", 
+              None, "\<Hadronic XC Stability\>", None}];\)\)}], "Input"],
+
+Cell["\<\
+December 25 (122580(lost beam, high particle backgrounds) removed \
+as an outlier)\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(FitPlotStuff[{jacksonSharre, jsParams}, Y3sStartFit, 
+      Y3sCeiling, \(#[\([2]\)] &\) /@ {{122536, {5.19045, 3.40, 
+              0.06}}, {122537, {5.17431, 3.59, 0.06}}, {122538, {5.18236, 
+              5.03, 0.07}}, {122539, {5.17240, 3.23, 
+              0.06}}, {122540, {5.18535, 3.68, 0.06}}, {122541, {5.18846, 
+              3.56, 0.06}}, {122542, {5.17743, 5.92, 
+              0.09}}, {122545, {5.19046, 3.40, 0.06}}, {122546, {5.17451, 
+              3.74, 0.17}}, {122548, {5.17449, 3.77, 
+              0.07}}, {122549, {5.18240, 5.04, 0.07}}, {122550, {5.17246, 
+              3.34, 0.06}}, {122551, {5.18554, 3.75, 
+              0.06}}, {122555, {5.18845, 3.56, 0.07}}, {122556, {5.17739, 
+              6.14, 0.10}}, {122557, {5.19046, 3.49, 
+              0.07}}, {122559, {5.17432, 3.57, 0.06}}, {122560, {5.18237, 
+              5.04, 0.08}}, {122562, {5.18548, 3.67, 
+              0.07}}, {122563, {5.18843, 3.41, 0.06}}, {122564, {5.17742, 
+              5.99, 0.08}}, {122567, {5.19968, 3.41, 
+              0.27}}, {122568, {5.19968, 3.27, 0.06}}, {122569, {5.19965, 
+              3.04, 0.06}}, {122570, {5.19968, 3.31, 
+              0.05}}, {122571, {5.19968, 3.34, 0.05}}, {122572, {5.19967, 
+              3.31, 0.05}}, {122573, {5.19968, 3.39, 
+              0.05}}, {122574, {5.19974, 3.27, 0.06}}, {122575, {5.19975, 
+              3.34, 0.06}}, {122585, {5.16514, 3.28, 
+              0.05}}, {122586, {5.16517, 3.16, 0.05}}, {122587, {5.16517, 
+              3.23, 0.05}}, {122590, {5.16519, 3.16, 
+              0.05}}, {122593, {5.16519, 3.24, 0.08}}, {122594, {5.16516, 
+              3.16, 0.07}}, {122595, {5.16516, 3.26, 
+              0.15}}, {122596, {5.16518, 3.23, 0.06}}, {122599, {5.16519, 
+              3.10, 0.10}}, {122600, {5.16518, 3.54, 
+              0.21}}, {122602, {5.16518, 3.14, 0.05}}, {122603, {5.16519, 
+              3.17, 0.05}}, {122604, {5.16524, 3.29, 
+              0.05}}, {122605, {5.16531, 3.19, 0.05}}, {122606, {5.16528, 
+              3.31, 0.09}}, {122576, {5.17934, 7.04, 
+              0.17}}, {122577, {5.17936, 7.00, 0.09}}, {122578, {5.17952, 
+              7.02, 0.32}}, {122579, {5.17939, 7.09, 
+              0.16}}, {122608, {5.17937, 6.95, 0.08}}, {122610, {5.17940, 
+              6.83, 0.07}}, {122613, {5.17939, 7.10, 
+              0.13}}, {122614, {5.17942, 6.93, 0.07}}, {122615, {5.17942, 
+              6.95, 0.07}}, {122616, {5.17942, 7.07, 
+              0.07}}, {122617, {5.17938, 7.03, 0.08}}, {122618, {5.17942, 
+              6.93, 0.07}}, {122619, {5.17942, 7.01, 
+              0.07}}, {122620, {5.17942, 7.01, 0.07}}, {122622, {5.17944, 
+              6.61, 0.22}}, {122623, {5.17945, 6.89, 
+              0.10}}, {122625, {5.17945, 7.01, 0.08}}, {122626, {5.17942, 
+              7.00, 0.07}}, {122627, {5.17942, 7.15, 
+              0.27}}, {122628, {5.17942, 6.95, 0.14}}, {122629, {5.17942, 
+              7.00, 0.07}}, {122630, {5.17943, 6.97, 
+              0.07}}, {122631, {5.17939, 6.82, 0.14}}, {122632, {5.17949, 
+              7.09, 0.13}}, {122634, {5.17952, 7.10, 
+              0.11}}, {122640, {5.17949, 6.88, 0.09}}, {122641, {5.17952, 
+              6.89, 0.07}}, {122642, {5.17952, 6.98, 
+              0.07}}, {122643, {5.17949, 6.90, 0.07}}, {122646, {5.17949, 
+              7.03, 0.10}}, {122647, {5.17952, 6.94, 
+              0.11}}, {122648, {5.17949, 6.95, 0.10}}, {122649, {5.17952, 
+              6.97, 0.07}}, {122650, {5.17955, 6.92, 
+              0.07}}, {122653, {5.17954, 6.99, 0.07}}, {122654, {5.17952, 
+              6.83, 0.07}}, {122657, {5.17954, 7.00, 
+              0.09}}, {122658, {5.17952, 6.81, 0.11}}, {122661, {5.17952, 
+              6.99, 0.12}}, {122665, {5.17954, 6.93, 
+              0.08}}, {122667, {5.17952, 6.90, 0.10}}, {122668, {5.17955, 
+              6.56, 0.28}}, {122669, {5.17954, 6.81, 
+              0.24}}, {122672, {5.17954, 6.83, 0.07}}, {122673, {5.17957, 
+              6.91, 0.07}}}]\)], "Input"],
+
+Cell[BoxData[
+    \(TraditionalForm\`"norm = 41.5332 +/- 0.363963 MeV nb\nmean = 5.17902 \
++/- 0.0000247658 GeV\nsigma = 2.34663 +/- 0.0202358 MeV\nback = 3.14935 +/- \
+0.00785344 nb\n\nchisq/dof = 92.912/86 = 1.08037"\)], "Print"],
+
+Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: .61803 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+-115.672 22.4165 0 0.0772542 [
+[.22103 -0.0125 -12 -9 ]
+[.22103 -0.0125 12 0 ]
+[.44519 -0.0125 -12 -9 ]
+[.44519 -0.0125 12 0 ]
+[.66936 -0.0125 -12 -9 ]
+[.66936 -0.0125 12 0 ]
+[.89352 -0.0125 -9 -9 ]
+[.89352 -0.0125 9 0 ]
+[ 0 0 -0.125 0 ]
+[.5 -0.0125 -41 -19.125 ]
+[.5 -0.0125 41 -9 ]
+[-0.0125 .07725 -6 -4.5 ]
+[-0.0125 .07725 0 4.5 ]
+[-0.0125 .15451 -6 -4.5 ]
+[-0.0125 .15451 0 4.5 ]
+[-0.0125 .23176 -6 -4.5 ]
+[-0.0125 .23176 0 4.5 ]
+[-0.0125 .30902 -6 -4.5 ]
+[-0.0125 .30902 0 4.5 ]
+[-0.0125 .38627 -6 -4.5 ]
+[-0.0125 .38627 0 4.5 ]
+[-0.0125 .46353 -6 -4.5 ]
+[-0.0125 .46353 0 4.5 ]
+[-0.0125 .54078 -6 -4.5 ]
+[-0.0125 .54078 0 4.5 ]
+[-0.0125 .61803 -6 -4.5 ]
+[-0.0125 .61803 0 4.5 ]
+[ 0 0 -0.125 0 ]
+[ 0 .61803 .125 0 ]
+[.5 .63053 -143 0 ]
+[.5 .63053 143 10.125 ]
+[ 1 0 .125 0 ]
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+.22103 0 m
+.22103 .00625 L
+s
+[(5.17)] .22103 -0.0125 0 1 Mshowa
+.44519 0 m
+.44519 .00625 L
+s
+[(5.18)] .44519 -0.0125 0 1 Mshowa
+.66936 0 m
+.66936 .00625 L
+s
+[(5.19)] .66936 -0.0125 0 1 Mshowa
+.89352 0 m
+.89352 .00625 L
+s
+[(5.2)] .89352 -0.0125 0 1 Mshowa
+.125 Mabswid
+.04169 0 m
+.04169 .00375 L
+s
+.08653 0 m
+.08653 .00375 L
+s
+.13136 0 m
+.13136 .00375 L
+s
+.17619 0 m
+.17619 .00375 L
+s
+.26586 0 m
+.26586 .00375 L
+s
+.31069 0 m
+.31069 .00375 L
+s
+.35553 0 m
+.35553 .00375 L
+s
+.40036 0 m
+.40036 .00375 L
+s
+.49002 0 m
+.49002 .00375 L
+s
+.53486 0 m
+.53486 .00375 L
+s
+.57969 0 m
+.57969 .00375 L
+s
+.62452 0 m
+.62452 .00375 L
+s
+.71419 0 m
+.71419 .00375 L
+s
+.75902 0 m
+.75902 .00375 L
+s
+.80386 0 m
+.80386 .00375 L
+s
+.84869 0 m
+.84869 .00375 L
+s
+.93835 0 m
+.93835 .00375 L
+s
+.98319 0 m
+.98319 .00375 L
+s
+.25 Mabswid
+0 0 m
+1 0 L
+s
+gsave
+.5 -0.0125 -102 -23.125 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.125 translate 1 -1 scale
+63.000 11.563 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(Energy) show
+105.000 11.563 moveto
+(in) show
+123.000 11.563 moveto
+(GeV) show
+141.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 .07725 m
+.00625 .07725 L
+s
+[(1)] -0.0125 .07725 1 0 Mshowa
+0 .15451 m
+.00625 .15451 L
+s
+[(2)] -0.0125 .15451 1 0 Mshowa
+0 .23176 m
+.00625 .23176 L
+s
+[(3)] -0.0125 .23176 1 0 Mshowa
+0 .30902 m
+.00625 .30902 L
+s
+[(4)] -0.0125 .30902 1 0 Mshowa
+0 .38627 m
+.00625 .38627 L
+s
+[(5)] -0.0125 .38627 1 0 Mshowa
+0 .46353 m
+.00625 .46353 L
+s
+[(6)] -0.0125 .46353 1 0 Mshowa
+0 .54078 m
+.00625 .54078 L
+s
+[(7)] -0.0125 .54078 1 0 Mshowa
+0 .61803 m
+.00625 .61803 L
+s
+[(8)] -0.0125 .61803 1 0 Mshowa
+.125 Mabswid
+0 .01545 m
+.00375 .01545 L
+s
+0 .0309 m
+.00375 .0309 L
+s
+0 .04635 m
+.00375 .04635 L
+s
+0 .0618 m
+.00375 .0618 L
+s
+0 .09271 m
+.00375 .09271 L
+s
+0 .10816 m
+.00375 .10816 L
+s
+0 .12361 m
+.00375 .12361 L
+s
+0 .13906 m
+.00375 .13906 L
+s
+0 .16996 m
+.00375 .16996 L
+s
+0 .18541 m
+.00375 .18541 L
+s
+0 .20086 m
+.00375 .20086 L
+s
+0 .21631 m
+.00375 .21631 L
+s
+0 .24721 m
+.00375 .24721 L
+s
+0 .26266 m
+.00375 .26266 L
+s
+0 .27812 m
+.00375 .27812 L
+s
+0 .29357 m
+.00375 .29357 L
+s
+0 .32447 m
+.00375 .32447 L
+s
+0 .33992 m
+.00375 .33992 L
+s
+0 .35537 m
+.00375 .35537 L
+s
+0 .37082 m
+.00375 .37082 L
+s
+0 .40172 m
+.00375 .40172 L
+s
+0 .41717 m
+.00375 .41717 L
+s
+0 .43262 m
+.00375 .43262 L
+s
+0 .44807 m
+.00375 .44807 L
+s
+0 .47898 m
+.00375 .47898 L
+s
+0 .49443 m
+.00375 .49443 L
+s
+0 .50988 m
+.00375 .50988 L
+s
+0 .52533 m
+.00375 .52533 L
+s
+0 .55623 m
+.00375 .55623 L
+s
+0 .57168 m
+.00375 .57168 L
+s
+0 .58713 m
+.00375 .58713 L
+s
+0 .60258 m
+.00375 .60258 L
+s
+.25 Mabswid
+0 0 m
+0 .61803 L
+s
+.22103 .61178 m
+.22103 .61803 L
+s
+.44519 .61178 m
+.44519 .61803 L
+s
+.66936 .61178 m
+.66936 .61803 L
+s
+.89352 .61178 m
+.89352 .61803 L
+s
+.125 Mabswid
+.04169 .61428 m
+.04169 .61803 L
+s
+.08653 .61428 m
+.08653 .61803 L
+s
+.13136 .61428 m
+.13136 .61803 L
+s
+.17619 .61428 m
+.17619 .61803 L
+s
+.26586 .61428 m
+.26586 .61803 L
+s
+.31069 .61428 m
+.31069 .61803 L
+s
+.35553 .61428 m
+.35553 .61803 L
+s
+.40036 .61428 m
+.40036 .61803 L
+s
+.49002 .61428 m
+.49002 .61803 L
+s
+.53486 .61428 m
+.53486 .61803 L
+s
+.57969 .61428 m
+.57969 .61803 L
+s
+.62452 .61428 m
+.62452 .61803 L
+s
+.71419 .61428 m
+.71419 .61803 L
+s
+.75902 .61428 m
+.75902 .61803 L
+s
+.80386 .61428 m
+.80386 .61803 L
+s
+.84869 .61428 m
+.84869 .61803 L
+s
+.93835 .61428 m
+.93835 .61803 L
+s
+.98319 .61428 m
+.98319 .61803 L
+s
+.25 Mabswid
+0 .61803 m
+1 .61803 L
+s
+gsave
+.5 .63053 -204 -4 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.125 translate 1 -1 scale
+63.000 11.563 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(Cross) show
+93.000 11.563 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+99.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(section) show
+147.000 11.563 moveto
+(in) show
+165.000 11.563 moveto
+(nb) show
+345.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.99375 0 m
+1 0 L
+s
+.99375 .07725 m
+1 .07725 L
+s
+.99375 .15451 m
+1 .15451 L
+s
+.99375 .23176 m
+1 .23176 L
+s
+.99375 .30902 m
+1 .30902 L
+s
+.99375 .38627 m
+1 .38627 L
+s
+.99375 .46353 m
+1 .46353 L
+s
+.99375 .54078 m
+1 .54078 L
+s
+.125 Mabswid
+.99625 .01545 m
+1 .01545 L
+s
+.99625 .0309 m
+1 .0309 L
+s
+.99625 .04635 m
+1 .04635 L
+s
+.99625 .0618 m
+1 .0618 L
+s
+.99625 .09271 m
+1 .09271 L
+s
+.99625 .10816 m
+1 .10816 L
+s
+.99625 .12361 m
+1 .12361 L
+s
+.99625 .13906 m
+1 .13906 L
+s
+.99625 .16996 m
+1 .16996 L
+s
+.99625 .18541 m
+1 .18541 L
+s
+.99625 .20086 m
+1 .20086 L
+s
+.99625 .21631 m
+1 .21631 L
+s
+.99625 .24721 m
+1 .24721 L
+s
+.99625 .26266 m
+1 .26266 L
+s
+.99625 .27812 m
+1 .27812 L
+s
+.99625 .29357 m
+1 .29357 L
+s
+.99625 .32447 m
+1 .32447 L
+s
+.99625 .33992 m
+1 .33992 L
+s
+.99625 .35537 m
+1 .35537 L
+s
+.99625 .37082 m
+1 .37082 L
+s
+.99625 .40172 m
+1 .40172 L
+s
+.99625 .41717 m
+1 .41717 L
+s
+.99625 .43262 m
+1 .43262 L
+s
+.99625 .44807 m
+1 .44807 L
+s
+.99625 .47898 m
+1 .47898 L
+s
+.99625 .49443 m
+1 .49443 L
+s
+.99625 .50988 m
+1 .50988 L
+s
+.99625 .52533 m
+1 .52533 L
+s
+.99625 .55623 m
+1 .55623 L
+s
+.99625 .57168 m
+1 .57168 L
+s
+.99625 .58713 m
+1 .58713 L
+s
+.99625 .60258 m
+1 .60258 L
+s
+.25 Mabswid
+1 0 m
+1 .61803 L
+s
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+.001 w
+.67944 .2673 m
+.67944 .25803 L
+s
+.67944 .2673 1.5 0 Mabsadd m
+.67944 .2673 -1.5 0 Mabsadd L s
+.67944 .25803 1.5 0 Mabsadd m
+.67944 .25803 -1.5 0 Mabsadd L s
+.31764 .28198 m
+.31764 .27271 L
+s
+.31764 .28198 1.5 0 Mabsadd m
+.31764 .28198 -1.5 0 Mabsadd L s
+.31764 .27271 1.5 0 Mabsadd m
+.31764 .27271 -1.5 0 Mabsadd L s
+.49809 .394 m
+.49809 .38318 L
+s
+.49809 .394 1.5 0 Mabsadd m
+.49809 .394 -1.5 0 Mabsadd L s
+.49809 .38318 1.5 0 Mabsadd m
+.49809 .38318 -1.5 0 Mabsadd L s
+.27483 .25417 m
+.27483 .2449 L
+s
+.27483 .25417 1.5 0 Mabsadd m
+.27483 .25417 -1.5 0 Mabsadd L s
+.27483 .2449 1.5 0 Mabsadd m
+.27483 .2449 -1.5 0 Mabsadd L s
+.56512 .28893 m
+.56512 .27966 L
+s
+.56512 .28893 1.5 0 Mabsadd m
+.56512 .28893 -1.5 0 Mabsadd L s
+.56512 .27966 1.5 0 Mabsadd m
+.56512 .27966 -1.5 0 Mabsadd L s
+.63484 .27966 m
+.63484 .27039 L
+s
+.63484 .27966 1.5 0 Mabsadd m
+.63484 .27966 -1.5 0 Mabsadd L s
+.63484 .27039 1.5 0 Mabsadd m
+.63484 .27039 -1.5 0 Mabsadd L s
+.38758 .4643 m
+.38758 .45039 L
+s
+.38758 .4643 1.5 0 Mabsadd m
+.38758 .4643 -1.5 0 Mabsadd L s
+.38758 .45039 1.5 0 Mabsadd m
+.38758 .45039 -1.5 0 Mabsadd L s
+.67967 .2673 m
+.67967 .25803 L
+s
+.67967 .2673 1.5 0 Mabsadd m
+.67967 .2673 -1.5 0 Mabsadd L s
+.67967 .25803 1.5 0 Mabsadd m
+.67967 .25803 -1.5 0 Mabsadd L s
+.32213 .30206 m
+.32213 .2758 L
+s
+.32213 .30206 1.5 0 Mabsadd m
+.32213 .30206 -1.5 0 Mabsadd L s
+.32213 .2758 1.5 0 Mabsadd m
+.32213 .2758 -1.5 0 Mabsadd L s
+.32168 .29666 m
+.32168 .28584 L
+s
+.32168 .29666 1.5 0 Mabsadd m
+.32168 .29666 -1.5 0 Mabsadd L s
+.32168 .28584 1.5 0 Mabsadd m
+.32168 .28584 -1.5 0 Mabsadd L s
+.49899 .39477 m
+.49899 .38395 L
+s
+.49899 .39477 1.5 0 Mabsadd m
+.49899 .39477 -1.5 0 Mabsadd L s
+.49899 .38395 1.5 0 Mabsadd m
+.49899 .38395 -1.5 0 Mabsadd L s
+.27617 .26266 m
+.27617 .25339 L
+s
+.27617 .26266 1.5 0 Mabsadd m
+.27617 .26266 -1.5 0 Mabsadd L s
+.27617 .25339 1.5 0 Mabsadd m
+.27617 .25339 -1.5 0 Mabsadd L s
+.56938 .29434 m
+.56938 .28507 L
+s
+.56938 .29434 1.5 0 Mabsadd m
+.56938 .29434 -1.5 0 Mabsadd L s
+.56938 .28507 1.5 0 Mabsadd m
+.56938 .28507 -1.5 0 Mabsadd L s
+.63461 .28043 m
+.63461 .26962 L
+s
+.63461 .28043 1.5 0 Mabsadd m
+.63461 .28043 -1.5 0 Mabsadd L s
+.63461 .26962 1.5 0 Mabsadd m
+.63461 .26962 -1.5 0 Mabsadd L s
+.38668 .48207 m
+.38668 .46662 L
+s
+.38668 .48207 1.5 0 Mabsadd m
+.38668 .48207 -1.5 0 Mabsadd L s
+.38668 .46662 1.5 0 Mabsadd m
+.38668 .46662 -1.5 0 Mabsadd L s
+.67967 .27503 m
+.67967 .26421 L
+s
+.67967 .27503 1.5 0 Mabsadd m
+.67967 .27503 -1.5 0 Mabsadd L s
+.67967 .26421 1.5 0 Mabsadd m
+.67967 .26421 -1.5 0 Mabsadd L s
+.31787 .28043 m
+.31787 .27116 L
+s
+.31787 .28043 1.5 0 Mabsadd m
+.31787 .28043 -1.5 0 Mabsadd L s
+.31787 .27116 1.5 0 Mabsadd m
+.31787 .27116 -1.5 0 Mabsadd L s
+.49832 .39554 m
+.49832 .38318 L
+s
+.49832 .39554 1.5 0 Mabsadd m
+.49832 .39554 -1.5 0 Mabsadd L s
+.49832 .38318 1.5 0 Mabsadd m
+.49832 .38318 -1.5 0 Mabsadd L s
+.56803 .28893 m
+.56803 .27812 L
+s
+.56803 .28893 1.5 0 Mabsadd m
+.56803 .28893 -1.5 0 Mabsadd L s
+.56803 .27812 1.5 0 Mabsadd m
+.56803 .27812 -1.5 0 Mabsadd L s
+.63416 .26807 m
+.63416 .2588 L
+s
+.63416 .26807 1.5 0 Mabsadd m
+.63416 .26807 -1.5 0 Mabsadd L s
+.63416 .2588 1.5 0 Mabsadd m
+.63416 .2588 -1.5 0 Mabsadd L s
+.38736 .46893 m
+.38736 .45657 L
+s
+.38736 .46893 1.5 0 Mabsadd m
+.38736 .46893 -1.5 0 Mabsadd L s
+.38736 .45657 1.5 0 Mabsadd m
+.38736 .45657 -1.5 0 Mabsadd L s
+.88635 .2843 m
+.88635 .24258 L
+s
+.88635 .2843 1.5 0 Mabsadd m
+.88635 .2843 -1.5 0 Mabsadd L s
+.88635 .24258 1.5 0 Mabsadd m
+.88635 .24258 -1.5 0 Mabsadd L s
+.88635 .25726 m
+.88635 .24799 L
+s
+.88635 .25726 1.5 0 Mabsadd m
+.88635 .25726 -1.5 0 Mabsadd L s
+.88635 .24799 1.5 0 Mabsadd m
+.88635 .24799 -1.5 0 Mabsadd L s
+.88568 .23949 m
+.88568 .23022 L
+s
+.88568 .23949 1.5 0 Mabsadd m
+.88568 .23949 -1.5 0 Mabsadd L s
+.88568 .23022 1.5 0 Mabsadd m
+.88568 .23022 -1.5 0 Mabsadd L s
+.88635 .25957 m
+.88635 .25185 L
+s
+.88635 .25957 1.5 0 Mabsadd m
+.88635 .25957 -1.5 0 Mabsadd L s
+.88635 .25185 1.5 0 Mabsadd m
+.88635 .25185 -1.5 0 Mabsadd L s
+.88635 .26189 m
+.88635 .25417 L
+s
+.88635 .26189 1.5 0 Mabsadd m
+.88635 .26189 -1.5 0 Mabsadd L s
+.88635 .25417 1.5 0 Mabsadd m
+.88635 .25417 -1.5 0 Mabsadd L s
+.88612 .25957 m
+.88612 .25185 L
+s
+.88612 .25957 1.5 0 Mabsadd m
+.88612 .25957 -1.5 0 Mabsadd L s
+.88612 .25185 1.5 0 Mabsadd m
+.88612 .25185 -1.5 0 Mabsadd L s
+.88635 .26575 m
+.88635 .25803 L
+s
+.88635 .26575 1.5 0 Mabsadd m
+.88635 .26575 -1.5 0 Mabsadd L s
+.88635 .25803 1.5 0 Mabsadd m
+.88635 .25803 -1.5 0 Mabsadd L s
+.88769 .25726 m
+.88769 .24799 L
+s
+.88769 .25726 1.5 0 Mabsadd m
+.88769 .25726 -1.5 0 Mabsadd L s
+.88769 .24799 1.5 0 Mabsadd m
+.88769 .24799 -1.5 0 Mabsadd L s
+.88792 .26266 m
+.88792 .25339 L
+s
+.88792 .26266 1.5 0 Mabsadd m
+.88792 .26266 -1.5 0 Mabsadd L s
+.88792 .25339 1.5 0 Mabsadd m
+.88792 .25339 -1.5 0 Mabsadd L s
+.11208 .25726 m
+.11208 .24953 L
+s
+.11208 .25726 1.5 0 Mabsadd m
+.11208 .25726 -1.5 0 Mabsadd L s
+.11208 .24953 1.5 0 Mabsadd m
+.11208 .24953 -1.5 0 Mabsadd L s
+.11275 .24799 m
+.11275 .24026 L
+s
+.11275 .24799 1.5 0 Mabsadd m
+.11275 .24799 -1.5 0 Mabsadd L s
+.11275 .24026 1.5 0 Mabsadd m
+.11275 .24026 -1.5 0 Mabsadd L s
+.11275 .25339 m
+.11275 .24567 L
+s
+.11275 .25339 1.5 0 Mabsadd m
+.11275 .25339 -1.5 0 Mabsadd L s
+.11275 .24567 1.5 0 Mabsadd m
+.11275 .24567 -1.5 0 Mabsadd L s
+.1132 .24799 m
+.1132 .24026 L
+s
+.1132 .24799 1.5 0 Mabsadd m
+.1132 .24799 -1.5 0 Mabsadd L s
+.1132 .24026 1.5 0 Mabsadd m
+.1132 .24026 -1.5 0 Mabsadd L s
+.1132 .25648 m
+.1132 .24412 L
+s
+.1132 .25648 1.5 0 Mabsadd m
+.1132 .25648 -1.5 0 Mabsadd L s
+.1132 .24412 1.5 0 Mabsadd m
+.1132 .24412 -1.5 0 Mabsadd L s
+.11253 .24953 m
+.11253 .23872 L
+s
+.11253 .24953 1.5 0 Mabsadd m
+.11253 .24953 -1.5 0 Mabsadd L s
+.11253 .23872 1.5 0 Mabsadd m
+.11253 .23872 -1.5 0 Mabsadd L s
+.11253 .26344 m
+.11253 .24026 L
+s
+.11253 .26344 1.5 0 Mabsadd m
+.11253 .26344 -1.5 0 Mabsadd L s
+.11253 .24026 1.5 0 Mabsadd m
+.11253 .24026 -1.5 0 Mabsadd L s
+.11298 .25417 m
+.11298 .2449 L
+s
+.11298 .25417 1.5 0 Mabsadd m
+.11298 .25417 -1.5 0 Mabsadd L s
+.11298 .2449 1.5 0 Mabsadd m
+.11298 .2449 -1.5 0 Mabsadd L s
+.1132 .24721 m
+.1132 .23176 L
+s
+.1132 .24721 1.5 0 Mabsadd m
+.1132 .24721 -1.5 0 Mabsadd L s
+.1132 .23176 1.5 0 Mabsadd m
+.1132 .23176 -1.5 0 Mabsadd L s
+.11298 .2897 m
+.11298 .25726 L
+s
+.11298 .2897 1.5 0 Mabsadd m
+.11298 .2897 -1.5 0 Mabsadd L s
+.11298 .25726 1.5 0 Mabsadd m
+.11298 .25726 -1.5 0 Mabsadd L s
+.11298 .24644 m
+.11298 .23872 L
+s
+.11298 .24644 1.5 0 Mabsadd m
+.11298 .24644 -1.5 0 Mabsadd L s
+.11298 .23872 1.5 0 Mabsadd m
+.11298 .23872 -1.5 0 Mabsadd L s
+.1132 .24876 m
+.1132 .24103 L
+s
+.1132 .24876 1.5 0 Mabsadd m
+.1132 .24876 -1.5 0 Mabsadd L s
+.1132 .24103 1.5 0 Mabsadd m
+.1132 .24103 -1.5 0 Mabsadd L s
+.11432 .25803 m
+.11432 .2503 L
+s
+.11432 .25803 1.5 0 Mabsadd m
+.11432 .25803 -1.5 0 Mabsadd L s
+.11432 .2503 1.5 0 Mabsadd m
+.11432 .2503 -1.5 0 Mabsadd L s
+.11589 .2503 m
+.11589 .24258 L
+s
+.11589 .2503 1.5 0 Mabsadd m
+.11589 .2503 -1.5 0 Mabsadd L s
+.11589 .24258 1.5 0 Mabsadd m
+.11589 .24258 -1.5 0 Mabsadd L s
+.11522 .26266 m
+.11522 .24876 L
+s
+.11522 .26266 1.5 0 Mabsadd m
+.11522 .26266 -1.5 0 Mabsadd L s
+.11522 .24876 1.5 0 Mabsadd m
+.11522 .24876 -1.5 0 Mabsadd L s
+.4304 .557 m
+.4304 .53074 L
+s
+.4304 .557 1.5 0 Mabsadd m
+.4304 .557 -1.5 0 Mabsadd L s
+.4304 .53074 1.5 0 Mabsadd m
+.4304 .53074 -1.5 0 Mabsadd L s
+.43085 .54773 m
+.43085 .53383 L
+s
+.43085 .54773 1.5 0 Mabsadd m
+.43085 .54773 -1.5 0 Mabsadd L s
+.43085 .53383 1.5 0 Mabsadd m
+.43085 .53383 -1.5 0 Mabsadd L s
+.43443 .56705 m
+.43443 .5176 L
+s
+.43443 .56705 1.5 0 Mabsadd m
+.43443 .56705 -1.5 0 Mabsadd L s
+.43443 .5176 1.5 0 Mabsadd m
+.43443 .5176 -1.5 0 Mabsadd L s
+.43152 .56009 m
+.43152 .53537 L
+s
+.43152 .56009 1.5 0 Mabsadd m
+.43152 .56009 -1.5 0 Mabsadd L s
+.43152 .53537 1.5 0 Mabsadd m
+.43152 .53537 -1.5 0 Mabsadd L s
+.43107 .5431 m
+.43107 .53074 L
+s
+.43107 .5431 1.5 0 Mabsadd m
+.43107 .5431 -1.5 0 Mabsadd L s
+.43107 .53074 1.5 0 Mabsadd m
+.43107 .53074 -1.5 0 Mabsadd L s
+.43174 .53305 m
+.43174 .52224 L
+s
+.43174 .53305 1.5 0 Mabsadd m
+.43174 .53305 -1.5 0 Mabsadd L s
+.43174 .52224 1.5 0 Mabsadd m
+.43174 .52224 -1.5 0 Mabsadd L s
+.43152 .55855 m
+.43152 .53846 L
+s
+.43152 .55855 1.5 0 Mabsadd m
+.43152 .55855 -1.5 0 Mabsadd L s
+.43152 .53846 1.5 0 Mabsadd m
+.43152 .53846 -1.5 0 Mabsadd L s
+.43219 .54078 m
+.43219 .52996 L
+s
+.43219 .54078 1.5 0 Mabsadd m
+.43219 .54078 -1.5 0 Mabsadd L s
+.43219 .52996 1.5 0 Mabsadd m
+.43219 .52996 -1.5 0 Mabsadd L s
+.43219 .54232 m
+.43219 .53151 L
+s
+.43219 .54232 1.5 0 Mabsadd m
+.43219 .54232 -1.5 0 Mabsadd L s
+.43219 .53151 1.5 0 Mabsadd m
+.43219 .53151 -1.5 0 Mabsadd L s
+.43219 .5516 m
+.43219 .54078 L
+s
+.43219 .5516 1.5 0 Mabsadd m
+.43219 .5516 -1.5 0 Mabsadd L s
+.43219 .54078 1.5 0 Mabsadd m
+.43219 .54078 -1.5 0 Mabsadd L s
+.43129 .54928 m
+.43129 .53692 L
+s
+.43129 .54928 1.5 0 Mabsadd m
+.43129 .54928 -1.5 0 Mabsadd L s
+.43129 .53692 1.5 0 Mabsadd m
+.43129 .53692 -1.5 0 Mabsadd L s
+.43219 .54078 m
+.43219 .52996 L
+s
+.43219 .54078 1.5 0 Mabsadd m
+.43219 .54078 -1.5 0 Mabsadd L s
+.43219 .52996 1.5 0 Mabsadd m
+.43219 .52996 -1.5 0 Mabsadd L s
+.43219 .54696 m
+.43219 .53614 L
+s
+.43219 .54696 1.5 0 Mabsadd m
+.43219 .54696 -1.5 0 Mabsadd L s
+.43219 .53614 1.5 0 Mabsadd m
+.43219 .53614 -1.5 0 Mabsadd L s
+.43219 .54696 m
+.43219 .53614 L
+s
+.43219 .54696 1.5 0 Mabsadd m
+.43219 .54696 -1.5 0 Mabsadd L s
+.43219 .53614 1.5 0 Mabsadd m
+.43219 .53614 -1.5 0 Mabsadd L s
+.43264 .52765 m
+.43264 .49365 L
+s
+.43264 .52765 1.5 0 Mabsadd m
+.43264 .52765 -1.5 0 Mabsadd L s
+.43264 .49365 1.5 0 Mabsadd m
+.43264 .49365 -1.5 0 Mabsadd L s
+.43286 .54001 m
+.43286 .52456 L
+s
+.43286 .54001 1.5 0 Mabsadd m
+.43286 .54001 -1.5 0 Mabsadd L s
+.43286 .52456 1.5 0 Mabsadd m
+.43286 .52456 -1.5 0 Mabsadd L s
+.43286 .54773 m
+.43286 .53537 L
+s
+.43286 .54773 1.5 0 Mabsadd m
+.43286 .54773 -1.5 0 Mabsadd L s
+.43286 .53537 1.5 0 Mabsadd m
+.43286 .53537 -1.5 0 Mabsadd L s
+.43219 .54619 m
+.43219 .53537 L
+s
+.43219 .54619 1.5 0 Mabsadd m
+.43219 .54619 -1.5 0 Mabsadd L s
+.43219 .53537 1.5 0 Mabsadd m
+.43219 .53537 -1.5 0 Mabsadd L s
+.43219 .57323 m
+.43219 .53151 L
+s
+.43219 .57323 1.5 0 Mabsadd m
+.43219 .57323 -1.5 0 Mabsadd L s
+.43219 .53151 1.5 0 Mabsadd m
+.43219 .53151 -1.5 0 Mabsadd L s
+.43219 .54773 m
+.43219 .5261 L
+s
+.43219 .54773 1.5 0 Mabsadd m
+.43219 .54773 -1.5 0 Mabsadd L s
+.43219 .5261 1.5 0 Mabsadd m
+.43219 .5261 -1.5 0 Mabsadd L s
+.43219 .54619 m
+.43219 .53537 L
+s
+.43219 .54619 1.5 0 Mabsadd m
+.43219 .54619 -1.5 0 Mabsadd L s
+.43219 .53537 1.5 0 Mabsadd m
+.43219 .53537 -1.5 0 Mabsadd L s
+.43241 .54387 m
+.43241 .53305 L
+s
+.43241 .54387 1.5 0 Mabsadd m
+.43241 .54387 -1.5 0 Mabsadd L s
+.43241 .53305 1.5 0 Mabsadd m
+.43241 .53305 -1.5 0 Mabsadd L s
+.43152 .53769 m
+.43152 .51606 L
+s
+.43152 .53769 1.5 0 Mabsadd m
+.43152 .53769 -1.5 0 Mabsadd L s
+.43152 .51606 1.5 0 Mabsadd m
+.43152 .51606 -1.5 0 Mabsadd L s
+.43376 .55778 m
+.43376 .53769 L
+s
+.43376 .55778 1.5 0 Mabsadd m
+.43376 .55778 -1.5 0 Mabsadd L s
+.43376 .53769 1.5 0 Mabsadd m
+.43376 .53769 -1.5 0 Mabsadd L s
+.43443 .557 m
+.43443 .54001 L
+s
+.43443 .557 1.5 0 Mabsadd m
+.43443 .557 -1.5 0 Mabsadd L s
+.43443 .54001 1.5 0 Mabsadd m
+.43443 .54001 -1.5 0 Mabsadd L s
+.43376 .53846 m
+.43376 .52456 L
+s
+.43376 .53846 1.5 0 Mabsadd m
+.43376 .53846 -1.5 0 Mabsadd L s
+.43376 .52456 1.5 0 Mabsadd m
+.43376 .52456 -1.5 0 Mabsadd L s
+.43443 .53769 m
+.43443 .52687 L
+s
+.43443 .53769 1.5 0 Mabsadd m
+.43443 .53769 -1.5 0 Mabsadd L s
+.43443 .52687 1.5 0 Mabsadd m
+.43443 .52687 -1.5 0 Mabsadd L s
+.43443 .54464 m
+.43443 .53383 L
+s
+.43443 .54464 1.5 0 Mabsadd m
+.43443 .54464 -1.5 0 Mabsadd L s
+.43443 .53383 1.5 0 Mabsadd m
+.43443 .53383 -1.5 0 Mabsadd L s
+.43376 .53846 m
+.43376 .52765 L
+s
+.43376 .53846 1.5 0 Mabsadd m
+.43376 .53846 -1.5 0 Mabsadd L s
+.43376 .52765 1.5 0 Mabsadd m
+.43376 .52765 -1.5 0 Mabsadd L s
+.43376 .55082 m
+.43376 .53537 L
+s
+.43376 .55082 1.5 0 Mabsadd m
+.43376 .55082 -1.5 0 Mabsadd L s
+.43376 .53537 1.5 0 Mabsadd m
+.43376 .53537 -1.5 0 Mabsadd L s
+.43443 .54464 m
+.43443 .52765 L
+s
+.43443 .54464 1.5 0 Mabsadd m
+.43443 .54464 -1.5 0 Mabsadd L s
+.43443 .52765 1.5 0 Mabsadd m
+.43443 .52765 -1.5 0 Mabsadd L s
+.43376 .54464 m
+.43376 .52919 L
+s
+.43376 .54464 1.5 0 Mabsadd m
+.43376 .54464 -1.5 0 Mabsadd L s
+.43376 .52919 1.5 0 Mabsadd m
+.43376 .52919 -1.5 0 Mabsadd L s
+.43443 .54387 m
+.43443 .53305 L
+s
+.43443 .54387 1.5 0 Mabsadd m
+.43443 .54387 -1.5 0 Mabsadd L s
+.43443 .53305 1.5 0 Mabsadd m
+.43443 .53305 -1.5 0 Mabsadd L s
+.4351 .54001 m
+.4351 .52919 L
+s
+.4351 .54001 1.5 0 Mabsadd m
+.4351 .54001 -1.5 0 Mabsadd L s
+.4351 .52919 1.5 0 Mabsadd m
+.4351 .52919 -1.5 0 Mabsadd L s
+.43488 .54541 m
+.43488 .5346 L
+s
+.43488 .54541 1.5 0 Mabsadd m
+.43488 .54541 -1.5 0 Mabsadd L s
+.43488 .5346 1.5 0 Mabsadd m
+.43488 .5346 -1.5 0 Mabsadd L s
+.43443 .53305 m
+.43443 .52224 L
+s
+.43443 .53305 1.5 0 Mabsadd m
+.43443 .53305 -1.5 0 Mabsadd L s
+.43443 .52224 1.5 0 Mabsadd m
+.43443 .52224 -1.5 0 Mabsadd L s
+.43488 .54773 m
+.43488 .53383 L
+s
+.43488 .54773 1.5 0 Mabsadd m
+.43488 .54773 -1.5 0 Mabsadd L s
+.43488 .53383 1.5 0 Mabsadd m
+.43488 .53383 -1.5 0 Mabsadd L s
+.43443 .5346 m
+.43443 .5176 L
+s
+.43443 .5346 1.5 0 Mabsadd m
+.43443 .5346 -1.5 0 Mabsadd L s
+.43443 .5176 1.5 0 Mabsadd m
+.43443 .5176 -1.5 0 Mabsadd L s
+.43443 .54928 m
+.43443 .53074 L
+s
+.43443 .54928 1.5 0 Mabsadd m
+.43443 .54928 -1.5 0 Mabsadd L s
+.43443 .53074 1.5 0 Mabsadd m
+.43443 .53074 -1.5 0 Mabsadd L s
+.43488 .54155 m
+.43488 .52919 L
+s
+.43488 .54155 1.5 0 Mabsadd m
+.43488 .54155 -1.5 0 Mabsadd L s
+.43488 .52919 1.5 0 Mabsadd m
+.43488 .52919 -1.5 0 Mabsadd L s
+.43443 .54078 m
+.43443 .52533 L
+s
+.43443 .54078 1.5 0 Mabsadd m
+.43443 .54078 -1.5 0 Mabsadd L s
+.43443 .52533 1.5 0 Mabsadd m
+.43443 .52533 -1.5 0 Mabsadd L s
+.4351 .52842 m
+.4351 .48516 L
+s
+.4351 .52842 1.5 0 Mabsadd m
+.4351 .52842 -1.5 0 Mabsadd L s
+.4351 .48516 1.5 0 Mabsadd m
+.4351 .48516 -1.5 0 Mabsadd L s
+.43488 .54464 m
+.43488 .50756 L
+s
+.43488 .54464 1.5 0 Mabsadd m
+.43488 .54464 -1.5 0 Mabsadd L s
+.43488 .50756 1.5 0 Mabsadd m
+.43488 .50756 -1.5 0 Mabsadd L s
+.43488 .53305 m
+.43488 .52224 L
+s
+.43488 .53305 1.5 0 Mabsadd m
+.43488 .53305 -1.5 0 Mabsadd L s
+.43488 .52224 1.5 0 Mabsadd m
+.43488 .52224 -1.5 0 Mabsadd L s
+.43555 .53923 m
+.43555 .52842 L
+s
+.43555 .53923 1.5 0 Mabsadd m
+.43555 .53923 -1.5 0 Mabsadd L s
+.43555 .52842 1.5 0 Mabsadd m
+.43555 .52842 -1.5 0 Mabsadd L s
+.0001 w
+.67944 .26266 -1.875 0 Mabsadd m
+.67944 .26266 0 2.5 Mabsadd L
+.67944 .26266 1.875 0 Mabsadd L
+.67944 .26266 0 -2.5 Mabsadd L
+.67944 .26266 -1.875 0 Mabsadd L closepath F
+.31764 .27734 -1.875 0 Mabsadd m
+.31764 .27734 0 2.5 Mabsadd L
+.31764 .27734 1.875 0 Mabsadd L
+.31764 .27734 0 -2.5 Mabsadd L
+.31764 .27734 -1.875 0 Mabsadd L closepath F
+.49809 .38859 -1.875 0 Mabsadd m
+.49809 .38859 0 2.5 Mabsadd L
+.49809 .38859 1.875 0 Mabsadd L
+.49809 .38859 0 -2.5 Mabsadd L
+.49809 .38859 -1.875 0 Mabsadd L closepath F
+.27483 .24953 -1.875 0 Mabsadd m
+.27483 .24953 0 2.5 Mabsadd L
+.27483 .24953 1.875 0 Mabsadd L
+.27483 .24953 0 -2.5 Mabsadd L
+.27483 .24953 -1.875 0 Mabsadd L closepath F
+.56512 .2843 -1.875 0 Mabsadd m
+.56512 .2843 0 2.5 Mabsadd L
+.56512 .2843 1.875 0 Mabsadd L
+.56512 .2843 0 -2.5 Mabsadd L
+.56512 .2843 -1.875 0 Mabsadd L closepath F
+.63484 .27503 -1.875 0 Mabsadd m
+.63484 .27503 0 2.5 Mabsadd L
+.63484 .27503 1.875 0 Mabsadd L
+.63484 .27503 0 -2.5 Mabsadd L
+.63484 .27503 -1.875 0 Mabsadd L closepath F
+.38758 .45735 -1.875 0 Mabsadd m
+.38758 .45735 0 2.5 Mabsadd L
+.38758 .45735 1.875 0 Mabsadd L
+.38758 .45735 0 -2.5 Mabsadd L
+.38758 .45735 -1.875 0 Mabsadd L closepath F
+.67967 .26266 -1.875 0 Mabsadd m
+.67967 .26266 0 2.5 Mabsadd L
+.67967 .26266 1.875 0 Mabsadd L
+.67967 .26266 0 -2.5 Mabsadd L
+.67967 .26266 -1.875 0 Mabsadd L closepath F
+.32213 .28893 -1.875 0 Mabsadd m
+.32213 .28893 0 2.5 Mabsadd L
+.32213 .28893 1.875 0 Mabsadd L
+.32213 .28893 0 -2.5 Mabsadd L
+.32213 .28893 -1.875 0 Mabsadd L closepath F
+.32168 .29125 -1.875 0 Mabsadd m
+.32168 .29125 0 2.5 Mabsadd L
+.32168 .29125 1.875 0 Mabsadd L
+.32168 .29125 0 -2.5 Mabsadd L
+.32168 .29125 -1.875 0 Mabsadd L closepath F
+.49899 .38936 -1.875 0 Mabsadd m
+.49899 .38936 0 2.5 Mabsadd L
+.49899 .38936 1.875 0 Mabsadd L
+.49899 .38936 0 -2.5 Mabsadd L
+.49899 .38936 -1.875 0 Mabsadd L closepath F
+.27617 .25803 -1.875 0 Mabsadd m
+.27617 .25803 0 2.5 Mabsadd L
+.27617 .25803 1.875 0 Mabsadd L
+.27617 .25803 0 -2.5 Mabsadd L
+.27617 .25803 -1.875 0 Mabsadd L closepath F
+.56938 .2897 -1.875 0 Mabsadd m
+.56938 .2897 0 2.5 Mabsadd L
+.56938 .2897 1.875 0 Mabsadd L
+.56938 .2897 0 -2.5 Mabsadd L
+.56938 .2897 -1.875 0 Mabsadd L closepath F
+.63461 .27503 -1.875 0 Mabsadd m
+.63461 .27503 0 2.5 Mabsadd L
+.63461 .27503 1.875 0 Mabsadd L
+.63461 .27503 0 -2.5 Mabsadd L
+.63461 .27503 -1.875 0 Mabsadd L closepath F
+.38668 .47434 -1.875 0 Mabsadd m
+.38668 .47434 0 2.5 Mabsadd L
+.38668 .47434 1.875 0 Mabsadd L
+.38668 .47434 0 -2.5 Mabsadd L
+.38668 .47434 -1.875 0 Mabsadd L closepath F
+.67967 .26962 -1.875 0 Mabsadd m
+.67967 .26962 0 2.5 Mabsadd L
+.67967 .26962 1.875 0 Mabsadd L
+.67967 .26962 0 -2.5 Mabsadd L
+.67967 .26962 -1.875 0 Mabsadd L closepath F
+.31787 .2758 -1.875 0 Mabsadd m
+.31787 .2758 0 2.5 Mabsadd L
+.31787 .2758 1.875 0 Mabsadd L
+.31787 .2758 0 -2.5 Mabsadd L
+.31787 .2758 -1.875 0 Mabsadd L closepath F
+.49832 .38936 -1.875 0 Mabsadd m
+.49832 .38936 0 2.5 Mabsadd L
+.49832 .38936 1.875 0 Mabsadd L
+.49832 .38936 0 -2.5 Mabsadd L
+.49832 .38936 -1.875 0 Mabsadd L closepath F
+.56803 .28352 -1.875 0 Mabsadd m
+.56803 .28352 0 2.5 Mabsadd L
+.56803 .28352 1.875 0 Mabsadd L
+.56803 .28352 0 -2.5 Mabsadd L
+.56803 .28352 -1.875 0 Mabsadd L closepath F
+.63416 .26344 -1.875 0 Mabsadd m
+.63416 .26344 0 2.5 Mabsadd L
+.63416 .26344 1.875 0 Mabsadd L
+.63416 .26344 0 -2.5 Mabsadd L
+.63416 .26344 -1.875 0 Mabsadd L closepath F
+.38736 .46275 -1.875 0 Mabsadd m
+.38736 .46275 0 2.5 Mabsadd L
+.38736 .46275 1.875 0 Mabsadd L
+.38736 .46275 0 -2.5 Mabsadd L
+.38736 .46275 -1.875 0 Mabsadd L closepath F
+.88635 .26344 -1.875 0 Mabsadd m
+.88635 .26344 0 2.5 Mabsadd L
+.88635 .26344 1.875 0 Mabsadd L
+.88635 .26344 0 -2.5 Mabsadd L
+.88635 .26344 -1.875 0 Mabsadd L closepath F
+.88635 .25262 -1.875 0 Mabsadd m
+.88635 .25262 0 2.5 Mabsadd L
+.88635 .25262 1.875 0 Mabsadd L
+.88635 .25262 0 -2.5 Mabsadd L
+.88635 .25262 -1.875 0 Mabsadd L closepath F
+.88568 .23485 -1.875 0 Mabsadd m
+.88568 .23485 0 2.5 Mabsadd L
+.88568 .23485 1.875 0 Mabsadd L
+.88568 .23485 0 -2.5 Mabsadd L
+.88568 .23485 -1.875 0 Mabsadd L closepath F
+.88635 .25571 -1.875 0 Mabsadd m
+.88635 .25571 0 2.5 Mabsadd L
+.88635 .25571 1.875 0 Mabsadd L
+.88635 .25571 0 -2.5 Mabsadd L
+.88635 .25571 -1.875 0 Mabsadd L closepath F
+.88635 .25803 -1.875 0 Mabsadd m
+.88635 .25803 0 2.5 Mabsadd L
+.88635 .25803 1.875 0 Mabsadd L
+.88635 .25803 0 -2.5 Mabsadd L
+.88635 .25803 -1.875 0 Mabsadd L closepath F
+.88612 .25571 -1.875 0 Mabsadd m
+.88612 .25571 0 2.5 Mabsadd L
+.88612 .25571 1.875 0 Mabsadd L
+.88612 .25571 0 -2.5 Mabsadd L
+.88612 .25571 -1.875 0 Mabsadd L closepath F
+.88635 .26189 -1.875 0 Mabsadd m
+.88635 .26189 0 2.5 Mabsadd L
+.88635 .26189 1.875 0 Mabsadd L
+.88635 .26189 0 -2.5 Mabsadd L
+.88635 .26189 -1.875 0 Mabsadd L closepath F
+.88769 .25262 -1.875 0 Mabsadd m
+.88769 .25262 0 2.5 Mabsadd L
+.88769 .25262 1.875 0 Mabsadd L
+.88769 .25262 0 -2.5 Mabsadd L
+.88769 .25262 -1.875 0 Mabsadd L closepath F
+.88792 .25803 -1.875 0 Mabsadd m
+.88792 .25803 0 2.5 Mabsadd L
+.88792 .25803 1.875 0 Mabsadd L
+.88792 .25803 0 -2.5 Mabsadd L
+.88792 .25803 -1.875 0 Mabsadd L closepath F
+.11208 .25339 -1.875 0 Mabsadd m
+.11208 .25339 0 2.5 Mabsadd L
+.11208 .25339 1.875 0 Mabsadd L
+.11208 .25339 0 -2.5 Mabsadd L
+.11208 .25339 -1.875 0 Mabsadd L closepath F
+.11275 .24412 -1.875 0 Mabsadd m
+.11275 .24412 0 2.5 Mabsadd L
+.11275 .24412 1.875 0 Mabsadd L
+.11275 .24412 0 -2.5 Mabsadd L
+.11275 .24412 -1.875 0 Mabsadd L closepath F
+.11275 .24953 -1.875 0 Mabsadd m
+.11275 .24953 0 2.5 Mabsadd L
+.11275 .24953 1.875 0 Mabsadd L
+.11275 .24953 0 -2.5 Mabsadd L
+.11275 .24953 -1.875 0 Mabsadd L closepath F
+.1132 .24412 -1.875 0 Mabsadd m
+.1132 .24412 0 2.5 Mabsadd L
+.1132 .24412 1.875 0 Mabsadd L
+.1132 .24412 0 -2.5 Mabsadd L
+.1132 .24412 -1.875 0 Mabsadd L closepath F
+.1132 .2503 -1.875 0 Mabsadd m
+.1132 .2503 0 2.5 Mabsadd L
+.1132 .2503 1.875 0 Mabsadd L
+.1132 .2503 0 -2.5 Mabsadd L
+.1132 .2503 -1.875 0 Mabsadd L closepath F
+.11253 .24412 -1.875 0 Mabsadd m
+.11253 .24412 0 2.5 Mabsadd L
+.11253 .24412 1.875 0 Mabsadd L
+.11253 .24412 0 -2.5 Mabsadd L
+.11253 .24412 -1.875 0 Mabsadd L closepath F
+.11253 .25185 -1.875 0 Mabsadd m
+.11253 .25185 0 2.5 Mabsadd L
+.11253 .25185 1.875 0 Mabsadd L
+.11253 .25185 0 -2.5 Mabsadd L
+.11253 .25185 -1.875 0 Mabsadd L closepath F
+.11298 .24953 -1.875 0 Mabsadd m
+.11298 .24953 0 2.5 Mabsadd L
+.11298 .24953 1.875 0 Mabsadd L
+.11298 .24953 0 -2.5 Mabsadd L
+.11298 .24953 -1.875 0 Mabsadd L closepath F
+.1132 .23949 -1.875 0 Mabsadd m
+.1132 .23949 0 2.5 Mabsadd L
+.1132 .23949 1.875 0 Mabsadd L
+.1132 .23949 0 -2.5 Mabsadd L
+.1132 .23949 -1.875 0 Mabsadd L closepath F
+.11298 .27348 -1.875 0 Mabsadd m
+.11298 .27348 0 2.5 Mabsadd L
+.11298 .27348 1.875 0 Mabsadd L
+.11298 .27348 0 -2.5 Mabsadd L
+.11298 .27348 -1.875 0 Mabsadd L closepath F
+.11298 .24258 -1.875 0 Mabsadd m
+.11298 .24258 0 2.5 Mabsadd L
+.11298 .24258 1.875 0 Mabsadd L
+.11298 .24258 0 -2.5 Mabsadd L
+.11298 .24258 -1.875 0 Mabsadd L closepath F
+.1132 .2449 -1.875 0 Mabsadd m
+.1132 .2449 0 2.5 Mabsadd L
+.1132 .2449 1.875 0 Mabsadd L
+.1132 .2449 0 -2.5 Mabsadd L
+.1132 .2449 -1.875 0 Mabsadd L closepath F
+.11432 .25417 -1.875 0 Mabsadd m
+.11432 .25417 0 2.5 Mabsadd L
+.11432 .25417 1.875 0 Mabsadd L
+.11432 .25417 0 -2.5 Mabsadd L
+.11432 .25417 -1.875 0 Mabsadd L closepath F
+.11589 .24644 -1.875 0 Mabsadd m
+.11589 .24644 0 2.5 Mabsadd L
+.11589 .24644 1.875 0 Mabsadd L
+.11589 .24644 0 -2.5 Mabsadd L
+.11589 .24644 -1.875 0 Mabsadd L closepath F
+.11522 .25571 -1.875 0 Mabsadd m
+.11522 .25571 0 2.5 Mabsadd L
+.11522 .25571 1.875 0 Mabsadd L
+.11522 .25571 0 -2.5 Mabsadd L
+.11522 .25571 -1.875 0 Mabsadd L closepath F
+.4304 .54387 -1.875 0 Mabsadd m
+.4304 .54387 0 2.5 Mabsadd L
+.4304 .54387 1.875 0 Mabsadd L
+.4304 .54387 0 -2.5 Mabsadd L
+.4304 .54387 -1.875 0 Mabsadd L closepath F
+.43085 .54078 -1.875 0 Mabsadd m
+.43085 .54078 0 2.5 Mabsadd L
+.43085 .54078 1.875 0 Mabsadd L
+.43085 .54078 0 -2.5 Mabsadd L
+.43085 .54078 -1.875 0 Mabsadd L closepath F
+.43443 .54232 -1.875 0 Mabsadd m
+.43443 .54232 0 2.5 Mabsadd L
+.43443 .54232 1.875 0 Mabsadd L
+.43443 .54232 0 -2.5 Mabsadd L
+.43443 .54232 -1.875 0 Mabsadd L closepath F
+.43152 .54773 -1.875 0 Mabsadd m
+.43152 .54773 0 2.5 Mabsadd L
+.43152 .54773 1.875 0 Mabsadd L
+.43152 .54773 0 -2.5 Mabsadd L
+.43152 .54773 -1.875 0 Mabsadd L closepath F
+.43107 .53692 -1.875 0 Mabsadd m
+.43107 .53692 0 2.5 Mabsadd L
+.43107 .53692 1.875 0 Mabsadd L
+.43107 .53692 0 -2.5 Mabsadd L
+.43107 .53692 -1.875 0 Mabsadd L closepath F
+.43174 .52765 -1.875 0 Mabsadd m
+.43174 .52765 0 2.5 Mabsadd L
+.43174 .52765 1.875 0 Mabsadd L
+.43174 .52765 0 -2.5 Mabsadd L
+.43174 .52765 -1.875 0 Mabsadd L closepath F
+.43152 .54851 -1.875 0 Mabsadd m
+.43152 .54851 0 2.5 Mabsadd L
+.43152 .54851 1.875 0 Mabsadd L
+.43152 .54851 0 -2.5 Mabsadd L
+.43152 .54851 -1.875 0 Mabsadd L closepath F
+.43219 .53537 -1.875 0 Mabsadd m
+.43219 .53537 0 2.5 Mabsadd L
+.43219 .53537 1.875 0 Mabsadd L
+.43219 .53537 0 -2.5 Mabsadd L
+.43219 .53537 -1.875 0 Mabsadd L closepath F
+.43219 .53692 -1.875 0 Mabsadd m
+.43219 .53692 0 2.5 Mabsadd L
+.43219 .53692 1.875 0 Mabsadd L
+.43219 .53692 0 -2.5 Mabsadd L
+.43219 .53692 -1.875 0 Mabsadd L closepath F
+.43219 .54619 -1.875 0 Mabsadd m
+.43219 .54619 0 2.5 Mabsadd L
+.43219 .54619 1.875 0 Mabsadd L
+.43219 .54619 0 -2.5 Mabsadd L
+.43219 .54619 -1.875 0 Mabsadd L closepath F
+.43129 .5431 -1.875 0 Mabsadd m
+.43129 .5431 0 2.5 Mabsadd L
+.43129 .5431 1.875 0 Mabsadd L
+.43129 .5431 0 -2.5 Mabsadd L
+.43129 .5431 -1.875 0 Mabsadd L closepath F
+.43219 .53537 -1.875 0 Mabsadd m
+.43219 .53537 0 2.5 Mabsadd L
+.43219 .53537 1.875 0 Mabsadd L
+.43219 .53537 0 -2.5 Mabsadd L
+.43219 .53537 -1.875 0 Mabsadd L closepath F
+.43219 .54155 -1.875 0 Mabsadd m
+.43219 .54155 0 2.5 Mabsadd L
+.43219 .54155 1.875 0 Mabsadd L
+.43219 .54155 0 -2.5 Mabsadd L
+.43219 .54155 -1.875 0 Mabsadd L closepath F
+.43219 .54155 -1.875 0 Mabsadd m
+.43219 .54155 0 2.5 Mabsadd L
+.43219 .54155 1.875 0 Mabsadd L
+.43219 .54155 0 -2.5 Mabsadd L
+.43219 .54155 -1.875 0 Mabsadd L closepath F
+.43264 .51065 -1.875 0 Mabsadd m
+.43264 .51065 0 2.5 Mabsadd L
+.43264 .51065 1.875 0 Mabsadd L
+.43264 .51065 0 -2.5 Mabsadd L
+.43264 .51065 -1.875 0 Mabsadd L closepath F
+.43286 .53228 -1.875 0 Mabsadd m
+.43286 .53228 0 2.5 Mabsadd L
+.43286 .53228 1.875 0 Mabsadd L
+.43286 .53228 0 -2.5 Mabsadd L
+.43286 .53228 -1.875 0 Mabsadd L closepath F
+.43286 .54155 -1.875 0 Mabsadd m
+.43286 .54155 0 2.5 Mabsadd L
+.43286 .54155 1.875 0 Mabsadd L
+.43286 .54155 0 -2.5 Mabsadd L
+.43286 .54155 -1.875 0 Mabsadd L closepath F
+.43219 .54078 -1.875 0 Mabsadd m
+.43219 .54078 0 2.5 Mabsadd L
+.43219 .54078 1.875 0 Mabsadd L
+.43219 .54078 0 -2.5 Mabsadd L
+.43219 .54078 -1.875 0 Mabsadd L closepath F
+.43219 .55237 -1.875 0 Mabsadd m
+.43219 .55237 0 2.5 Mabsadd L
+.43219 .55237 1.875 0 Mabsadd L
+.43219 .55237 0 -2.5 Mabsadd L
+.43219 .55237 -1.875 0 Mabsadd L closepath F
+.43219 .53692 -1.875 0 Mabsadd m
+.43219 .53692 0 2.5 Mabsadd L
+.43219 .53692 1.875 0 Mabsadd L
+.43219 .53692 0 -2.5 Mabsadd L
+.43219 .53692 -1.875 0 Mabsadd L closepath F
+.43219 .54078 -1.875 0 Mabsadd m
+.43219 .54078 0 2.5 Mabsadd L
+.43219 .54078 1.875 0 Mabsadd L
+.43219 .54078 0 -2.5 Mabsadd L
+.43219 .54078 -1.875 0 Mabsadd L closepath F
+.43241 .53846 -1.875 0 Mabsadd m
+.43241 .53846 0 2.5 Mabsadd L
+.43241 .53846 1.875 0 Mabsadd L
+.43241 .53846 0 -2.5 Mabsadd L
+.43241 .53846 -1.875 0 Mabsadd L closepath F
+.43152 .52687 -1.875 0 Mabsadd m
+.43152 .52687 0 2.5 Mabsadd L
+.43152 .52687 1.875 0 Mabsadd L
+.43152 .52687 0 -2.5 Mabsadd L
+.43152 .52687 -1.875 0 Mabsadd L closepath F
+.43376 .54773 -1.875 0 Mabsadd m
+.43376 .54773 0 2.5 Mabsadd L
+.43376 .54773 1.875 0 Mabsadd L
+.43376 .54773 0 -2.5 Mabsadd L
+.43376 .54773 -1.875 0 Mabsadd L closepath F
+.43443 .54851 -1.875 0 Mabsadd m
+.43443 .54851 0 2.5 Mabsadd L
+.43443 .54851 1.875 0 Mabsadd L
+.43443 .54851 0 -2.5 Mabsadd L
+.43443 .54851 -1.875 0 Mabsadd L closepath F
+.43376 .53151 -1.875 0 Mabsadd m
+.43376 .53151 0 2.5 Mabsadd L
+.43376 .53151 1.875 0 Mabsadd L
+.43376 .53151 0 -2.5 Mabsadd L
+.43376 .53151 -1.875 0 Mabsadd L closepath F
+.43443 .53228 -1.875 0 Mabsadd m
+.43443 .53228 0 2.5 Mabsadd L
+.43443 .53228 1.875 0 Mabsadd L
+.43443 .53228 0 -2.5 Mabsadd L
+.43443 .53228 -1.875 0 Mabsadd L closepath F
+.43443 .53923 -1.875 0 Mabsadd m
+.43443 .53923 0 2.5 Mabsadd L
+.43443 .53923 1.875 0 Mabsadd L
+.43443 .53923 0 -2.5 Mabsadd L
+.43443 .53923 -1.875 0 Mabsadd L closepath F
+.43376 .53305 -1.875 0 Mabsadd m
+.43376 .53305 0 2.5 Mabsadd L
+.43376 .53305 1.875 0 Mabsadd L
+.43376 .53305 0 -2.5 Mabsadd L
+.43376 .53305 -1.875 0 Mabsadd L closepath F
+.43376 .5431 -1.875 0 Mabsadd m
+.43376 .5431 0 2.5 Mabsadd L
+.43376 .5431 1.875 0 Mabsadd L
+.43376 .5431 0 -2.5 Mabsadd L
+.43376 .5431 -1.875 0 Mabsadd L closepath F
+.43443 .53614 -1.875 0 Mabsadd m
+.43443 .53614 0 2.5 Mabsadd L
+.43443 .53614 1.875 0 Mabsadd L
+.43443 .53614 0 -2.5 Mabsadd L
+.43443 .53614 -1.875 0 Mabsadd L closepath F
+.43376 .53692 -1.875 0 Mabsadd m
+.43376 .53692 0 2.5 Mabsadd L
+.43376 .53692 1.875 0 Mabsadd L
+.43376 .53692 0 -2.5 Mabsadd L
+.43376 .53692 -1.875 0 Mabsadd L closepath F
+.43443 .53846 -1.875 0 Mabsadd m
+.43443 .53846 0 2.5 Mabsadd L
+.43443 .53846 1.875 0 Mabsadd L
+.43443 .53846 0 -2.5 Mabsadd L
+.43443 .53846 -1.875 0 Mabsadd L closepath F
+.4351 .5346 -1.875 0 Mabsadd m
+.4351 .5346 0 2.5 Mabsadd L
+.4351 .5346 1.875 0 Mabsadd L
+.4351 .5346 0 -2.5 Mabsadd L
+.4351 .5346 -1.875 0 Mabsadd L closepath F
+.43488 .54001 -1.875 0 Mabsadd m
+.43488 .54001 0 2.5 Mabsadd L
+.43488 .54001 1.875 0 Mabsadd L
+.43488 .54001 0 -2.5 Mabsadd L
+.43488 .54001 -1.875 0 Mabsadd L closepath F
+.43443 .52765 -1.875 0 Mabsadd m
+.43443 .52765 0 2.5 Mabsadd L
+.43443 .52765 1.875 0 Mabsadd L
+.43443 .52765 0 -2.5 Mabsadd L
+.43443 .52765 -1.875 0 Mabsadd L closepath F
+.43488 .54078 -1.875 0 Mabsadd m
+.43488 .54078 0 2.5 Mabsadd L
+.43488 .54078 1.875 0 Mabsadd L
+.43488 .54078 0 -2.5 Mabsadd L
+.43488 .54078 -1.875 0 Mabsadd L closepath F
+.43443 .5261 -1.875 0 Mabsadd m
+.43443 .5261 0 2.5 Mabsadd L
+.43443 .5261 1.875 0 Mabsadd L
+.43443 .5261 0 -2.5 Mabsadd L
+.43443 .5261 -1.875 0 Mabsadd L closepath F
+.43443 .54001 -1.875 0 Mabsadd m
+.43443 .54001 0 2.5 Mabsadd L
+.43443 .54001 1.875 0 Mabsadd L
+.43443 .54001 0 -2.5 Mabsadd L
+.43443 .54001 -1.875 0 Mabsadd L closepath F
+.43488 .53537 -1.875 0 Mabsadd m
+.43488 .53537 0 2.5 Mabsadd L
+.43488 .53537 1.875 0 Mabsadd L
+.43488 .53537 0 -2.5 Mabsadd L
+.43488 .53537 -1.875 0 Mabsadd L closepath F
+.43443 .53305 -1.875 0 Mabsadd m
+.43443 .53305 0 2.5 Mabsadd L
+.43443 .53305 1.875 0 Mabsadd L
+.43443 .53305 0 -2.5 Mabsadd L
+.43443 .53305 -1.875 0 Mabsadd L closepath F
+.4351 .50679 -1.875 0 Mabsadd m
+.4351 .50679 0 2.5 Mabsadd L
+.4351 .50679 1.875 0 Mabsadd L
+.4351 .50679 0 -2.5 Mabsadd L
+.4351 .50679 -1.875 0 Mabsadd L closepath F
+.43488 .5261 -1.875 0 Mabsadd m
+.43488 .5261 0 2.5 Mabsadd L
+.43488 .5261 1.875 0 Mabsadd L
+.43488 .5261 0 -2.5 Mabsadd L
+.43488 .5261 -1.875 0 Mabsadd L closepath F
+.43488 .52765 -1.875 0 Mabsadd m
+.43488 .52765 0 2.5 Mabsadd L
+.43488 .52765 1.875 0 Mabsadd L
+.43488 .52765 0 -2.5 Mabsadd L
+.43488 .52765 -1.875 0 Mabsadd L closepath F
+.43555 .53383 -1.875 0 Mabsadd m
+.43555 .53383 0 2.5 Mabsadd L
+.43555 .53383 1.875 0 Mabsadd L
+.43555 .53383 0 -2.5 Mabsadd L
+.43555 .53383 -1.875 0 Mabsadd L closepath F
+.5 Mabswid
+[ 1 0 ] 0 setdash
+0 .24968 m
+.04057 .24945 L
+.08481 .24921 L
+.12636 .24898 L
+.16632 .24876 L
+.17777 .2487 L
+.18859 .24865 L
+.19831 .24861 L
+.20097 .2486 L
+.20379 .24859 L
+.2062 .24859 L
+.20757 .24859 L
+.20885 .24859 L
+.21016 .24859 L
+.21138 .24859 L
+.21271 .24859 L
+.21346 .24859 L
+.21413 .24859 L
+.21537 .24859 L
+.21672 .24859 L
+.21799 .2486 L
+.21915 .2486 L
+.22134 .24861 L
+.22374 .24863 L
+.22624 .24865 L
+.22858 .24868 L
+.23133 .24872 L
+.23393 .24877 L
+.23882 .24889 L
+.24155 .24898 L
+.24408 .24908 L
+.2498 .24937 L
+.25466 .24973 L
+.2599 .25024 L
+.26485 .25088 L
+.26939 .25164 L
+.27443 .25271 L
+.27993 .25423 L
+.28568 .25628 L
+.29102 .25872 L
+.29633 .26173 L
+.30207 .26577 L
+.3125 .27563 L
+.32266 .28895 L
+.33202 .30502 L
+.35172 .35141 L
+.3734 .41789 L
+.38475 .45437 L
+.39553 .48621 L
+.40602 .51174 L
+Mistroke
+.41113 .52147 L
+.41575 .52846 L
+.41809 .53128 L
+.42062 .53374 L
+.42178 .53466 L
+.42301 .53548 L
+.4252 .53659 L
+.4264 .53702 L
+.42768 .53736 L
+.42889 .53755 L
+.43 .53762 L
+.43129 .53757 L
+.43202 .53747 L
+.4327 .53733 L
+.43394 .53697 L
+.43526 .53642 L
+.43657 .53571 L
+.43777 .53489 L
+.44048 .53251 L
+.44286 .52978 L
+.44537 .52632 L
+.45652 .50526 L
+.47729 .45089 L
+.49659 .39463 L
+.5163 .34631 L
+.52741 .32546 L
+.53764 .31027 L
+.54855 .29782 L
+.56009 .28816 L
+.57018 .28204 L
+.58127 .27716 L
+.59196 .27375 L
+.60173 .2714 L
+.61299 .2693 L
+.62368 .26771 L
+.64456 .26531 L
+.66389 .26358 L
+.70509 .26079 L
+.74469 .2588 L
+.78687 .25713 L
+.82746 .25582 L
+.87062 .25465 L
+.91219 .25368 L
+.95217 .25286 L
+.99473 .25209 L
+1 .252 L
+Mfstroke
+[ .03 .02 ] 0 setdash
+0 .24968 m
+.04057 .24945 L
+.08481 .24921 L
+.12636 .24898 L
+.16632 .24876 L
+.20885 .24853 L
+.2498 .24831 L
+.29331 .24807 L
+.33524 .24785 L
+.37557 .24763 L
+.41848 .2474 L
+.4598 .24719 L
+.49953 .24698 L
+.54183 .24676 L
+.58254 .24655 L
+.62583 .24632 L
+.66752 .24611 L
+.70762 .2459 L
+.7503 .24569 L
+.79139 .24548 L
+.83505 .24526 L
+.87712 .24504 L
+.9176 .24484 L
+.96065 .24463 L
+1 .24443 L
+s
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+  ImageSize->{288, 177.937},
+  ImageMargins->{{43, 0}, {0, 0}},
+  ImageRegion->{{0, 1}, {0, 1}},
+  ImageCache->GraphicsData["Bitmap", "\<\
+CF5dJ6E]HGAYHf4PAg9QL6QYHg<PAVmbKF5d0`40004P0000/@P10`4000010?ooo`000063aP00002h
+Z2iLF0EkL:Cek/c<c6IVIXR8R?GemLZZTD]RM^[Mdg=QDZbANl30`61PH4iJJJ:ecH20P000ogmoO`00
+Rooo003o0000P8:2PZJVYU=CDnWYjG5aJG5aFG5YJG5Y@FUY>6UQFFUQ@FUQ:6UIHFUIDFUI>6UA@FUA
+86U9HFU9FFU9BF5QJF59:6596651>651064`FEUQ@EUIFEUAJEUABEUA>5U9<5U9:5U945U1FEU1BEU1
+05ThDETh@ETh<5Th85Th655A454h254X854X654PDE4PBDUADDUABDU9:4U1HDU1FDU1>4U104Th<4Th
+04TXDDTX<4TX24TP84TH64T84451BD51644hBD4h844h644`HD4`FD4PBD4P644H>44@844@23QA83Q1
+@CQ1>3Q183Q103PhDCPh<3Ph03P`83PX@CPX<3PX63PX03PH<3PH63PH23P883P823P0430h@C0`HC0P
+830H82Q182Ph<2Ph42Ph02P`@BP`82PXDBPPBBPP62PH62P@<2P@02P8:2P0420X<20X820X220@8200
+21P`<1P`01P@<1P@21P881P0410X:10P610P210H810@610020P@40P@00P8:0006?GN/m:dS4PmReE[
+;om50?nPNP3ook34gXO>n^kMPYSkV7ooe?o0bjo^kT3Pd03>dGK^aVK=ZTF;M8O>jjDZ:P3^002;003=
+0;00001T0000cOl002:;8S;=<VUYJM?Cd`3oOd?=P2j;EjgHi^3oooooh?nf`OGeg?nU0?l0onj2kY=`
+f`00O`1o001oO`1oogl007l0Ogl0ogmo07moogoo07ooOgooool0Oomo0?moOomoooooOlBbShMjH^OW
+ifm_Kj>SXiT0I_ooc80003<cIVIVc9VIob8R8X200020P4:JY`0g?0200?mV<omVc<c<oooo_mCDok^k
+^h20oe5A^/bIIYUVVC?oV@2IoaYOI`00kUDJRh^;R`00<ol08@0008400`420081V00008@000D10000
+0@2G0000J0050@0500410@000P4200<10P040@<00`4300812@080@03004100P00P4400<10`000`40
+001[0000J@001040004200040@000@8000<1000010000`40000200040@000@8000@100012P001@40
+0001008000<100001P001040004200030@0000<000<10040K00006T000<100000`001040004200<1
+10000`40000200040@000@8000@100012P001@400001008000<100001P0010400@4200<10`000`40
+0@1/0000J@030@<000@100010P001040004300030@00008000@100010P001040004:00050@000040
+0P000`40000600030@0000<000@100010P000`400@1/0000J@001`4000400@000P4400810`000`40
+0@020@800P401@010@4000812@020@8000@100412@001040004300810P001@40000106/0001X00D1
+>@020@P00P400`010@1[0000U@000`4000280000o`0Q0000o`0Q0000A0030@@000<100000P040@<0
+00<100007@030@@000<100000P040@<00P4O00<110000`40000200@10P030B400`4400030@000080
+104_0000A`000`40000800030@00008000<1000080000`40000800050@0000400P000`40000O0003
+0@0000P000<1000010000`40000Q00030@0000H000<10000<00004L000<1000020000`4000030003
+0@0001l000<1000020001@400001008000<100007`000`40000800030@0000@000<100008@000`40
+000700030@0002l0001400<12`000`40000300030@0001`00`4;00030@0000800P4O00<12`000`40
+000200<180030@/000<10000;P0004@000<100002`000`40000400030@0001/000<100002`001@40
+0001008000<1000070000`40000;00050@0000400P000`40000N00030@0000`000<10000;@0004@0
+00<100002@030@<000@100017@000`40000900<10`001040004N00030@0000T00`4300040@000B00
+00<100002@001040004_0000A0040@X000@10000104M00@12P000`40000200817`040@X000<10000
+0P020B4010490081<0000?l08@000?l08@000?l08@0001`0i`4M000070000`40000`00030@000300
+00<10000<@000`40000`00030@0001H000<100006`0001`000<10000h`000`40000K000070020N<0
+0P4M000070000`40003S00030@0001/0000L00030@000><000<100006`0001`000<10000h`000`40
+000K000070020N<00P4M000070000`40003S00030@0001/0000L00030@000><000<100006`0001`0
+0P7S00817@0001`000<10000h`000`40000K000070000`40003S00030@0001/0000L00030@000><0
+00<100006`0001`00P7S00817@0001@0104400030@000><000<100006`0001H000<100000`000`40
+003S00030@0001/0000F00030@0000<00`7Q00<17@0001H000<100000`000`40003S00030@0001/0
+000F00030@0000<000<10000h`000`40000K000050030@D000<10000h`000`40000K00005P000`40
+00030081h`020Ad0000L00030@000><000<100006`0001`000<10000h`000`40000K000070020N<0
+0P4M000070000`40003S00030@0001/0000L00030@000><000<100006`0001`000<10000h`000`40
+000K000070020N<00P4M000070000`40003S00030@0001/0000L00030@000><000<100006`0001`0
+0P7S00817@0001`000<10000h`000`40000K000050040@@000<10000h`000`40000K000050000`40
+000500030@000><000<100006`0001D000<1000010030N400`4M00005P000`40000300030@000><0
+00<100006`0001L000<100000P000`40003S00030@0001/0000D00040@000@@000<10000h`000`40
+000K00005@020@D00P7S00817@0001`000<10000h`000`40000K000070000`40003S00030@0001/0
+000L0081h`020Ad0000L00030@000><000<100006`0001`000<10000h`000`40000K000070000`40
+003S00030@0001/0000L0081h`020Ad0000L00030@000><000<100006`0001`000<10000h`000`40
+000K000070020N<00P4M000070000`40003S00030@0001/0000E00811@000`40003S00030@0001/0
+000D00040@000@@000<10000a`040AP000<100006`0001L000<100000P030AH0106]00<15`030Ad0
+000E00811@000`40000F00@1[P020AT000<100006`0001L000<100000P000`40000E00D18P000`40
+002800@160000`40000K000050001040004400815P050B40104?00L110080@<0204400P10`080@@0
+204300P110080@<0204400P10`080@04004000P10`080@<00P4M00005@020@D0@@4400P1O@050A40
+1`4M000070000`40000E00D18@050ET000<100006`0V0@H000<100006`0001`000<100005@050B40
+0`4200030@0004X0104701l140050AL000<100006`0001`00P4G00@18@040@8000<10000B@0?0B/0
+1@4F00817@0001`000<100005P020BX00P4200030@000400204600D1:`040AP000<100006`0001`0
+00<100005@040B/01@4k00D110040@L00`4^00030@0001L000<100006`0001`00P4G00<1:`060C@0
+1P4900@11`040Bd000<100005P020Ad0000L00030@0001L000<10000:`040C@01@4;00@1>0000`40
+000G00030@0001/0000L00030@0001L000<10000;0040C<01@5500@160000`40000K000070000`40
+000F00@1:`040C@01@5Q00030@0001/0000L0081A`030C<01P5P00817@0001`000<10000AP040C40
+00<100000P000`40001P00030@0001/0000F00030@0000<000<10000AP040C0000<10000IP000`40
+000K00005P000`40000300030@0004T000<10000;P000`40001V00030@0001/0000C00D110030DX0
+00<10000;0000`40001U00<17@0001<000@100011@000`40001:00030@0002/000<10000J0000`40
+000K000050000`400@0500030@0004/000<10000:@000`40001Y00030@0001/0000E00811@020D`0
+00<10000:0000`40001Y00817@0001H000<100000`000`40001<00030@0002L000<10000JP000`40
+000K000070000`40001<00030@0002H000<10000J`000`40000K000070000`40001=00030@0002D0
+00<10000J`000`40000K000070020Dh000<1000090000`40001[00817@0001`000<10000CP000`40
+000S00030@0006`000<100006`0001`000<10000CP000`40000S00030@0006`000<100006`0001`0
+0P5?00030@00028000<10000K0020Ad0000L00030@0004l000<100008@000`40001]00030@0001/0
+000L00030@0004l000<1000080000`40001^00030@0001/0000L00030@0004l000<1000080000`40
+001^00030@0001/0000L0081D0000`40000O00030@0006h00P4M000050030@D000<10000D0000`40
+000N00030@0006l000<100006`0001L000<100000P000`40001@00030@0001d000<10000L0000`40
+000K00005`000`40000200<1D0000`40000K00@1K`030Ad0000D00<11@000`40001A00030@0001X0
+105a00030@0001/0000D00030@0000D000<10000D@000`40000J00@1L@000`40000K000050000`40
+000500030@00054000<100006`000`40001a00030@0001/0000D00@110020E<000<100006@000`40
+001a00817@0001`000<10000DP000`40000I00030@00078000<100006`0001`000<10000DP000`40
+000I00030@00078000<100006`0001`00P5D00030@0001L000<10000LP020Ad0000L00030@0005<0
+00<100005`000`40001c00030@0001/0000L00030@0005<000<100005`000`40001c00030@0001/0
+000L00030@0005@000<100005P000`40001c00030@0001/0000L0081E@000`40000E00030@0007<0
+0P4M000070000`40001E00030@0001@000<10000M0000`40000K000070000`40001E00030@0001@0
+00<10000M0000`40000K000070020EH000<100004`000`40001d00817@0001`000<10000E@040A80
+00<10000M@000`40000K00005@020@D000<10000E@040A8000<10000M@000`40000K000050001040
+004400030@0005@0104B00030@0007H000<100006`0001@000@1000110030E@01@4A00030@0007@0
+0`4M000050030@D000<10000E0050A0000<10000M`000`40000K000050000`40000500030@0005@0
+104A00030@0007L000<100006`0001@000<100001@000`40001E00<14@000`40001g00030@0001/0
+000E00<110020ED01@4?00030@0007L00P4M000070000`40001H00030@0000D0104400030@0007P0
+00<100006`0001`000<10000F0000`40000600030@0000@000<10000N0000`40000K000070020EX0
+00<100000`040@@000<10000N0020Ad0000L00030@0005T000<100001@000`40000300030@0007T0
+00<100006`0001`000<10000F@000`40000400<10`000`40001j00030@0001/0000L00030@0005X0
+00<100000P050@8000<10000NP000`40000K000070020E/000<100000P030@<000<10000NP020Ad0
+000L00030@0005/000@10000104200030@0007/000<100006`0001`000<10000G000104000020@80
+00<10000O0000`40000K000070020Eh000<10040105n00817@0001`000<10000G@070Gl000<10000
+6`0001D000<1000010000`40001M00L1O`000`40000K00005@000`40000400030@0005h01P5o0003
+0@0001/0000F00030@0000<00`5N00H1O@030Ad0000F00030@0000<000<10000GP060Gl000<10000
+6`0001L000<100000P000`40001N00D1P0000`40000K00005000104000440081H0040Gl00P4M0000
+50040@@000<10000G`040H0000<100006`0001`000<10000H0020H4000<100006`0001`000<10000
+G`040H0000<100006`0001`00P5P00@1O`020Ad0000L00030@000><000<100006`0001`000<10000
+h`000`40000K000070020N<00P4M000070000`40003S00030@0001/0000L00030@000><000<10000
+6`0001`000<10000h`000`40000K000070020N<00P4M000070000`40003S00030@0001/0000E0081
+1@000`40000`00030@00030000<10000<@000`40000`00030@0001H000<100006`0001@000@10001
+10000`40000700030@0000L000<100001`000`40000800030@0000L000<100001`000`4000080003
+0@0000L000<100001`000`40000700030@0000P000<100001`000`40000700030@0000P000<10000
+1`000`40000700030@0000L000<1000020000`40000700030@0000L000<1000020000`4000070005
+0@0000407@0001@000@10001103W0Ad0000E0081o`0:000050001040007o00T0000D00040@000Ol0
+2@0001D00P7o00X0003o0240000400810`040@<00P4300<10`030@T00`4400<10`020@D00P4200D1
+0P020@800`400`010@0700P100<00@401P030@03004100@1[P0000<000@100010`000`4000020004
+0@000@D000<100000`000`40000900040@000@D000@100010`001040004300050@0000400P001040
+004200030@0000P000D100000@0200030@0000H000@100010P001040006]00000`000`4000040003
+0@00008000@100010`020@@00P4300@10`020@<00`4300030@0000@000<1000010001@4000010080
+00@100010P000`40000800050@0000400P000`40000600040@000@8000@10001[@0000<000<10000
+10000`40000200040@000@8000<100000`000`40000900030@0000<000@100010P00104000430003
+0@0000@000D100000@0200040@000@8000<1000020001@400001008000<100001P00104000420004
+0@000Jd0000300040@000@8000<100400P42008110030@<00`4900<10`020@@00P4300@10`020@@0
+0P4200040@010@X00P4200040@010@P000@100410`030Jh000040081=0000`40000b00030@000:h0
+000j00030@0000@000<100005@000`40000B0081/0000001\
+\>"],
+  ImageRangeCache->{{{0, 287}, {176.937, 0}} -> {5.15456, -1.23973, \
+0.000194233, 0.0563598}}],
+
+Cell[BoxData[
+    FormBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"0.13246933862995075`", \(-8.796429925875759`*^-7\), 
+              "0.0068619325654322265`", \(-0.0017100014692248452`\)},
+            {\(-8.796429925876319`*^-7\), 
+              "6.133453190561528`*^-10", \(-2.192445569671952`*^-8\), 
+              "7.385775491387406`*^-9"},
+            {"0.006861932565432225`", \(-2.1924455696716827`*^-8\), 
+              "0.0004094884191777025`", \(-0.0000651398123286495`\)},
+            {\(-0.0017100014692248435`\), 
+              "7.385775491387412`*^-9", \(-0.00006513981232864946`\), 
+              "0.00006167657861601114`"}
+            },
+          ColumnAlignments->{Decimal}], "\[NoBreak]", ")"}], 
+      TraditionalForm]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(FitPlotStuff[{kuraevFadin, kfParams}, Y3sStartFit, 
+      Y3sCeiling, \(#[\([2]\)] &\) /@ {{122536, {5.19045, 3.40, 
+              0.06}}, {122537, {5.17431, 3.59, 0.06}}, {122538, {5.18236, 
+              5.03, 0.07}}, {122539, {5.17240, 3.23, 
+              0.06}}, {122540, {5.18535, 3.68, 0.06}}, {122541, {5.18846, 
+              3.56, 0.06}}, {122542, {5.17743, 5.92, 
+              0.09}}, {122545, {5.19046, 3.40, 0.06}}, {122546, {5.17451, 
+              3.74, 0.17}}, {122548, {5.17449, 3.77, 
+              0.07}}, {122549, {5.18240, 5.04, 0.07}}, {122550, {5.17246, 
+              3.34, 0.06}}, {122551, {5.18554, 3.75, 
+              0.06}}, {122555, {5.18845, 3.56, 0.07}}, {122556, {5.17739, 
+              6.14, 0.10}}, {122557, {5.19046, 3.49, 
+              0.07}}, {122559, {5.17432, 3.57, 0.06}}, {122560, {5.18237, 
+              5.04, 0.08}}, {122562, {5.18548, 3.67, 
+              0.07}}, {122563, {5.18843, 3.41, 0.06}}, {122564, {5.17742, 
+              5.99, 0.08}}, {122567, {5.19968, 3.41, 
+              0.27}}, {122568, {5.19968, 3.27, 0.06}}, {122569, {5.19965, 
+              3.04, 0.06}}, {122570, {5.19968, 3.31, 
+              0.05}}, {122571, {5.19968, 3.34, 0.05}}, {122572, {5.19967, 
+              3.31, 0.05}}, {122573, {5.19968, 3.39, 
+              0.05}}, {122574, {5.19974, 3.27, 0.06}}, {122575, {5.19975, 
+              3.34, 0.06}}, {122585, {5.16514, 3.28, 
+              0.05}}, {122586, {5.16517, 3.16, 0.05}}, {122587, {5.16517, 
+              3.23, 0.05}}, {122590, {5.16519, 3.16, 
+              0.05}}, {122593, {5.16519, 3.24, 0.08}}, {122594, {5.16516, 
+              3.16, 0.07}}, {122595, {5.16516, 3.26, 
+              0.15}}, {122596, {5.16518, 3.23, 0.06}}, {122599, {5.16519, 
+              3.10, 0.10}}, {122600, {5.16518, 3.54, 
+              0.21}}, {122602, {5.16518, 3.14, 0.05}}, {122603, {5.16519, 
+              3.17, 0.05}}, {122604, {5.16524, 3.29, 
+              0.05}}, {122605, {5.16531, 3.19, 0.05}}, {122606, {5.16528, 
+              3.31, 0.09}}, {122576, {5.17934, 7.04, 
+              0.17}}, {122577, {5.17936, 7.00, 0.09}}, {122578, {5.17952, 
+              7.02, 0.32}}, {122579, {5.17939, 7.09, 
+              0.16}}, {122608, {5.17937, 6.95, 0.08}}, {122610, {5.17940, 
+              6.83, 0.07}}, {122613, {5.17939, 7.10, 
+              0.13}}, {122614, {5.17942, 6.93, 0.07}}, {122615, {5.17942, 
+              6.95, 0.07}}, {122616, {5.17942, 7.07, 
+              0.07}}, {122617, {5.17938, 7.03, 0.08}}, {122618, {5.17942, 
+              6.93, 0.07}}, {122619, {5.17942, 7.01, 
+              0.07}}, {122620, {5.17942, 7.01, 0.07}}, {122622, {5.17944, 
+              6.61, 0.22}}, {122623, {5.17945, 6.89, 
+              0.10}}, {122625, {5.17945, 7.01, 0.08}}, {122626, {5.17942, 
+              7.00, 0.07}}, {122627, {5.17942, 7.15, 
+              0.27}}, {122628, {5.17942, 6.95, 0.14}}, {122629, {5.17942, 
+              7.00, 0.07}}, {122630, {5.17943, 6.97, 
+              0.07}}, {122631, {5.17939, 6.82, 0.14}}, {122632, {5.17949, 
+              7.09, 0.13}}, {122634, {5.17952, 7.10, 
+              0.11}}, {122640, {5.17949, 6.88, 0.09}}, {122641, {5.17952, 
+              6.89, 0.07}}, {122642, {5.17952, 6.98, 
+              0.07}}, {122643, {5.17949, 6.90, 0.07}}, {122646, {5.17949, 
+              7.03, 0.10}}, {122647, {5.17952, 6.94, 
+              0.11}}, {122648, {5.17949, 6.95, 0.10}}, {122649, {5.17952, 
+              6.97, 0.07}}, {122650, {5.17955, 6.92, 
+              0.07}}, {122653, {5.17954, 6.99, 0.07}}, {122654, {5.17952, 
+              6.83, 0.07}}, {122657, {5.17954, 7.00, 
+              0.09}}, {122658, {5.17952, 6.81, 0.11}}, {122661, {5.17952, 
+              6.99, 0.12}}, {122665, {5.17954, 6.93, 
+              0.08}}, {122667, {5.17952, 6.90, 0.10}}, {122668, {5.17955, 
+              6.56, 0.28}}, {122669, {5.17954, 6.81, 
+              0.24}}, {122672, {5.17954, 6.83, 0.07}}, {122673, {5.17957, 
+              6.91, 0.07}}}]\)], "Input"],
+
+Cell[BoxData[
+    \(TraditionalForm\`"norm = 41.3392 +/- 0.363067 MeV nb\nmean = 5.179 +/- \
+0.0000247265 GeV\nsigma = 2.33207 +/- 0.0201658 MeV\nback = 3.14595 +/- \
+0.0078685 nb\n\nchisq/dof = 90.7148/86 = 1.05482"\)], "Print"],
+
+Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: .61803 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+-115.672 22.4165 0 0.0772542 [
+[.22103 -0.0125 -12 -9 ]
+[.22103 -0.0125 12 0 ]
+[.44519 -0.0125 -12 -9 ]
+[.44519 -0.0125 12 0 ]
+[.66936 -0.0125 -12 -9 ]
+[.66936 -0.0125 12 0 ]
+[.89352 -0.0125 -9 -9 ]
+[.89352 -0.0125 9 0 ]
+[ 0 0 -0.125 0 ]
+[.5 -0.0125 -41 -19.125 ]
+[.5 -0.0125 41 -9 ]
+[-0.0125 .07725 -6 -4.5 ]
+[-0.0125 .07725 0 4.5 ]
+[-0.0125 .15451 -6 -4.5 ]
+[-0.0125 .15451 0 4.5 ]
+[-0.0125 .23176 -6 -4.5 ]
+[-0.0125 .23176 0 4.5 ]
+[-0.0125 .30902 -6 -4.5 ]
+[-0.0125 .30902 0 4.5 ]
+[-0.0125 .38627 -6 -4.5 ]
+[-0.0125 .38627 0 4.5 ]
+[-0.0125 .46353 -6 -4.5 ]
+[-0.0125 .46353 0 4.5 ]
+[-0.0125 .54078 -6 -4.5 ]
+[-0.0125 .54078 0 4.5 ]
+[-0.0125 .61803 -6 -4.5 ]
+[-0.0125 .61803 0 4.5 ]
+[ 0 0 -0.125 0 ]
+[ 0 .61803 .125 0 ]
+[.5 .63053 -143 0 ]
+[.5 .63053 143 10.125 ]
+[ 1 0 .125 0 ]
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+.22103 0 m
+.22103 .00625 L
+s
+[(5.17)] .22103 -0.0125 0 1 Mshowa
+.44519 0 m
+.44519 .00625 L
+s
+[(5.18)] .44519 -0.0125 0 1 Mshowa
+.66936 0 m
+.66936 .00625 L
+s
+[(5.19)] .66936 -0.0125 0 1 Mshowa
+.89352 0 m
+.89352 .00625 L
+s
+[(5.2)] .89352 -0.0125 0 1 Mshowa
+.125 Mabswid
+.04169 0 m
+.04169 .00375 L
+s
+.08653 0 m
+.08653 .00375 L
+s
+.13136 0 m
+.13136 .00375 L
+s
+.17619 0 m
+.17619 .00375 L
+s
+.26586 0 m
+.26586 .00375 L
+s
+.31069 0 m
+.31069 .00375 L
+s
+.35553 0 m
+.35553 .00375 L
+s
+.40036 0 m
+.40036 .00375 L
+s
+.49002 0 m
+.49002 .00375 L
+s
+.53486 0 m
+.53486 .00375 L
+s
+.57969 0 m
+.57969 .00375 L
+s
+.62452 0 m
+.62452 .00375 L
+s
+.71419 0 m
+.71419 .00375 L
+s
+.75902 0 m
+.75902 .00375 L
+s
+.80386 0 m
+.80386 .00375 L
+s
+.84869 0 m
+.84869 .00375 L
+s
+.93835 0 m
+.93835 .00375 L
+s
+.98319 0 m
+.98319 .00375 L
+s
+.25 Mabswid
+0 0 m
+1 0 L
+s
+gsave
+.5 -0.0125 -102 -23.125 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.125 translate 1 -1 scale
+63.000 11.563 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(Energy) show
+105.000 11.563 moveto
+(in) show
+123.000 11.563 moveto
+(GeV) show
+141.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 .07725 m
+.00625 .07725 L
+s
+[(1)] -0.0125 .07725 1 0 Mshowa
+0 .15451 m
+.00625 .15451 L
+s
+[(2)] -0.0125 .15451 1 0 Mshowa
+0 .23176 m
+.00625 .23176 L
+s
+[(3)] -0.0125 .23176 1 0 Mshowa
+0 .30902 m
+.00625 .30902 L
+s
+[(4)] -0.0125 .30902 1 0 Mshowa
+0 .38627 m
+.00625 .38627 L
+s
+[(5)] -0.0125 .38627 1 0 Mshowa
+0 .46353 m
+.00625 .46353 L
+s
+[(6)] -0.0125 .46353 1 0 Mshowa
+0 .54078 m
+.00625 .54078 L
+s
+[(7)] -0.0125 .54078 1 0 Mshowa
+0 .61803 m
+.00625 .61803 L
+s
+[(8)] -0.0125 .61803 1 0 Mshowa
+.125 Mabswid
+0 .01545 m
+.00375 .01545 L
+s
+0 .0309 m
+.00375 .0309 L
+s
+0 .04635 m
+.00375 .04635 L
+s
+0 .0618 m
+.00375 .0618 L
+s
+0 .09271 m
+.00375 .09271 L
+s
+0 .10816 m
+.00375 .10816 L
+s
+0 .12361 m
+.00375 .12361 L
+s
+0 .13906 m
+.00375 .13906 L
+s
+0 .16996 m
+.00375 .16996 L
+s
+0 .18541 m
+.00375 .18541 L
+s
+0 .20086 m
+.00375 .20086 L
+s
+0 .21631 m
+.00375 .21631 L
+s
+0 .24721 m
+.00375 .24721 L
+s
+0 .26266 m
+.00375 .26266 L
+s
+0 .27812 m
+.00375 .27812 L
+s
+0 .29357 m
+.00375 .29357 L
+s
+0 .32447 m
+.00375 .32447 L
+s
+0 .33992 m
+.00375 .33992 L
+s
+0 .35537 m
+.00375 .35537 L
+s
+0 .37082 m
+.00375 .37082 L
+s
+0 .40172 m
+.00375 .40172 L
+s
+0 .41717 m
+.00375 .41717 L
+s
+0 .43262 m
+.00375 .43262 L
+s
+0 .44807 m
+.00375 .44807 L
+s
+0 .47898 m
+.00375 .47898 L
+s
+0 .49443 m
+.00375 .49443 L
+s
+0 .50988 m
+.00375 .50988 L
+s
+0 .52533 m
+.00375 .52533 L
+s
+0 .55623 m
+.00375 .55623 L
+s
+0 .57168 m
+.00375 .57168 L
+s
+0 .58713 m
+.00375 .58713 L
+s
+0 .60258 m
+.00375 .60258 L
+s
+.25 Mabswid
+0 0 m
+0 .61803 L
+s
+.22103 .61178 m
+.22103 .61803 L
+s
+.44519 .61178 m
+.44519 .61803 L
+s
+.66936 .61178 m
+.66936 .61803 L
+s
+.89352 .61178 m
+.89352 .61803 L
+s
+.125 Mabswid
+.04169 .61428 m
+.04169 .61803 L
+s
+.08653 .61428 m
+.08653 .61803 L
+s
+.13136 .61428 m
+.13136 .61803 L
+s
+.17619 .61428 m
+.17619 .61803 L
+s
+.26586 .61428 m
+.26586 .61803 L
+s
+.31069 .61428 m
+.31069 .61803 L
+s
+.35553 .61428 m
+.35553 .61803 L
+s
+.40036 .61428 m
+.40036 .61803 L
+s
+.49002 .61428 m
+.49002 .61803 L
+s
+.53486 .61428 m
+.53486 .61803 L
+s
+.57969 .61428 m
+.57969 .61803 L
+s
+.62452 .61428 m
+.62452 .61803 L
+s
+.71419 .61428 m
+.71419 .61803 L
+s
+.75902 .61428 m
+.75902 .61803 L
+s
+.80386 .61428 m
+.80386 .61803 L
+s
+.84869 .61428 m
+.84869 .61803 L
+s
+.93835 .61428 m
+.93835 .61803 L
+s
+.98319 .61428 m
+.98319 .61803 L
+s
+.25 Mabswid
+0 .61803 m
+1 .61803 L
+s
+gsave
+.5 .63053 -204 -4 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.125 translate 1 -1 scale
+63.000 11.563 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(Cross) show
+93.000 11.563 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+99.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(section) show
+147.000 11.563 moveto
+(in) show
+165.000 11.563 moveto
+(nb) show
+345.000 11.563 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.99375 0 m
+1 0 L
+s
+.99375 .07725 m
+1 .07725 L
+s
+.99375 .15451 m
+1 .15451 L
+s
+.99375 .23176 m
+1 .23176 L
+s
+.99375 .30902 m
+1 .30902 L
+s
+.99375 .38627 m
+1 .38627 L
+s
+.99375 .46353 m
+1 .46353 L
+s
+.99375 .54078 m
+1 .54078 L
+s
+.125 Mabswid
+.99625 .01545 m
+1 .01545 L
+s
+.99625 .0309 m
+1 .0309 L
+s
+.99625 .04635 m
+1 .04635 L
+s
+.99625 .0618 m
+1 .0618 L
+s
+.99625 .09271 m
+1 .09271 L
+s
+.99625 .10816 m
+1 .10816 L
+s
+.99625 .12361 m
+1 .12361 L
+s
+.99625 .13906 m
+1 .13906 L
+s
+.99625 .16996 m
+1 .16996 L
+s
+.99625 .18541 m
+1 .18541 L
+s
+.99625 .20086 m
+1 .20086 L
+s
+.99625 .21631 m
+1 .21631 L
+s
+.99625 .24721 m
+1 .24721 L
+s
+.99625 .26266 m
+1 .26266 L
+s
+.99625 .27812 m
+1 .27812 L
+s
+.99625 .29357 m
+1 .29357 L
+s
+.99625 .32447 m
+1 .32447 L
+s
+.99625 .33992 m
+1 .33992 L
+s
+.99625 .35537 m
+1 .35537 L
+s
+.99625 .37082 m
+1 .37082 L
+s
+.99625 .40172 m
+1 .40172 L
+s
+.99625 .41717 m
+1 .41717 L
+s
+.99625 .43262 m
+1 .43262 L
+s
+.99625 .44807 m
+1 .44807 L
+s
+.99625 .47898 m
+1 .47898 L
+s
+.99625 .49443 m
+1 .49443 L
+s
+.99625 .50988 m
+1 .50988 L
+s
+.99625 .52533 m
+1 .52533 L
+s
+.99625 .55623 m
+1 .55623 L
+s
+.99625 .57168 m
+1 .57168 L
+s
+.99625 .58713 m
+1 .58713 L
+s
+.99625 .60258 m
+1 .60258 L
+s
+.25 Mabswid
+1 0 m
+1 .61803 L
+s
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+.001 w
+.67944 .2673 m
+.67944 .25803 L
+s
+.67944 .2673 1.5 0 Mabsadd m
+.67944 .2673 -1.5 0 Mabsadd L s
+.67944 .25803 1.5 0 Mabsadd m
+.67944 .25803 -1.5 0 Mabsadd L s
+.31764 .28198 m
+.31764 .27271 L
+s
+.31764 .28198 1.5 0 Mabsadd m
+.31764 .28198 -1.5 0 Mabsadd L s
+.31764 .27271 1.5 0 Mabsadd m
+.31764 .27271 -1.5 0 Mabsadd L s
+.49809 .394 m
+.49809 .38318 L
+s
+.49809 .394 1.5 0 Mabsadd m
+.49809 .394 -1.5 0 Mabsadd L s
+.49809 .38318 1.5 0 Mabsadd m
+.49809 .38318 -1.5 0 Mabsadd L s
+.27483 .25417 m
+.27483 .2449 L
+s
+.27483 .25417 1.5 0 Mabsadd m
+.27483 .25417 -1.5 0 Mabsadd L s
+.27483 .2449 1.5 0 Mabsadd m
+.27483 .2449 -1.5 0 Mabsadd L s
+.56512 .28893 m
+.56512 .27966 L
+s
+.56512 .28893 1.5 0 Mabsadd m
+.56512 .28893 -1.5 0 Mabsadd L s
+.56512 .27966 1.5 0 Mabsadd m
+.56512 .27966 -1.5 0 Mabsadd L s
+.63484 .27966 m
+.63484 .27039 L
+s
+.63484 .27966 1.5 0 Mabsadd m
+.63484 .27966 -1.5 0 Mabsadd L s
+.63484 .27039 1.5 0 Mabsadd m
+.63484 .27039 -1.5 0 Mabsadd L s
+.38758 .4643 m
+.38758 .45039 L
+s
+.38758 .4643 1.5 0 Mabsadd m
+.38758 .4643 -1.5 0 Mabsadd L s
+.38758 .45039 1.5 0 Mabsadd m
+.38758 .45039 -1.5 0 Mabsadd L s
+.67967 .2673 m
+.67967 .25803 L
+s
+.67967 .2673 1.5 0 Mabsadd m
+.67967 .2673 -1.5 0 Mabsadd L s
+.67967 .25803 1.5 0 Mabsadd m
+.67967 .25803 -1.5 0 Mabsadd L s
+.32213 .30206 m
+.32213 .2758 L
+s
+.32213 .30206 1.5 0 Mabsadd m
+.32213 .30206 -1.5 0 Mabsadd L s
+.32213 .2758 1.5 0 Mabsadd m
+.32213 .2758 -1.5 0 Mabsadd L s
+.32168 .29666 m
+.32168 .28584 L
+s
+.32168 .29666 1.5 0 Mabsadd m
+.32168 .29666 -1.5 0 Mabsadd L s
+.32168 .28584 1.5 0 Mabsadd m
+.32168 .28584 -1.5 0 Mabsadd L s
+.49899 .39477 m
+.49899 .38395 L
+s
+.49899 .39477 1.5 0 Mabsadd m
+.49899 .39477 -1.5 0 Mabsadd L s
+.49899 .38395 1.5 0 Mabsadd m
+.49899 .38395 -1.5 0 Mabsadd L s
+.27617 .26266 m
+.27617 .25339 L
+s
+.27617 .26266 1.5 0 Mabsadd m
+.27617 .26266 -1.5 0 Mabsadd L s
+.27617 .25339 1.5 0 Mabsadd m
+.27617 .25339 -1.5 0 Mabsadd L s
+.56938 .29434 m
+.56938 .28507 L
+s
+.56938 .29434 1.5 0 Mabsadd m
+.56938 .29434 -1.5 0 Mabsadd L s
+.56938 .28507 1.5 0 Mabsadd m
+.56938 .28507 -1.5 0 Mabsadd L s
+.63461 .28043 m
+.63461 .26962 L
+s
+.63461 .28043 1.5 0 Mabsadd m
+.63461 .28043 -1.5 0 Mabsadd L s
+.63461 .26962 1.5 0 Mabsadd m
+.63461 .26962 -1.5 0 Mabsadd L s
+.38668 .48207 m
+.38668 .46662 L
+s
+.38668 .48207 1.5 0 Mabsadd m
+.38668 .48207 -1.5 0 Mabsadd L s
+.38668 .46662 1.5 0 Mabsadd m
+.38668 .46662 -1.5 0 Mabsadd L s
+.67967 .27503 m
+.67967 .26421 L
+s
+.67967 .27503 1.5 0 Mabsadd m
+.67967 .27503 -1.5 0 Mabsadd L s
+.67967 .26421 1.5 0 Mabsadd m
+.67967 .26421 -1.5 0 Mabsadd L s
+.31787 .28043 m
+.31787 .27116 L
+s
+.31787 .28043 1.5 0 Mabsadd m
+.31787 .28043 -1.5 0 Mabsadd L s
+.31787 .27116 1.5 0 Mabsadd m
+.31787 .27116 -1.5 0 Mabsadd L s
+.49832 .39554 m
+.49832 .38318 L
+s
+.49832 .39554 1.5 0 Mabsadd m
+.49832 .39554 -1.5 0 Mabsadd L s
+.49832 .38318 1.5 0 Mabsadd m
+.49832 .38318 -1.5 0 Mabsadd L s
+.56803 .28893 m
+.56803 .27812 L
+s
+.56803 .28893 1.5 0 Mabsadd m
+.56803 .28893 -1.5 0 Mabsadd L s
+.56803 .27812 1.5 0 Mabsadd m
+.56803 .27812 -1.5 0 Mabsadd L s
+.63416 .26807 m
+.63416 .2588 L
+s
+.63416 .26807 1.5 0 Mabsadd m
+.63416 .26807 -1.5 0 Mabsadd L s
+.63416 .2588 1.5 0 Mabsadd m
+.63416 .2588 -1.5 0 Mabsadd L s
+.38736 .46893 m
+.38736 .45657 L
+s
+.38736 .46893 1.5 0 Mabsadd m
+.38736 .46893 -1.5 0 Mabsadd L s
+.38736 .45657 1.5 0 Mabsadd m
+.38736 .45657 -1.5 0 Mabsadd L s
+.88635 .2843 m
+.88635 .24258 L
+s
+.88635 .2843 1.5 0 Mabsadd m
+.88635 .2843 -1.5 0 Mabsadd L s
+.88635 .24258 1.5 0 Mabsadd m
+.88635 .24258 -1.5 0 Mabsadd L s
+.88635 .25726 m
+.88635 .24799 L
+s
+.88635 .25726 1.5 0 Mabsadd m
+.88635 .25726 -1.5 0 Mabsadd L s
+.88635 .24799 1.5 0 Mabsadd m
+.88635 .24799 -1.5 0 Mabsadd L s
+.88568 .23949 m
+.88568 .23022 L
+s
+.88568 .23949 1.5 0 Mabsadd m
+.88568 .23949 -1.5 0 Mabsadd L s
+.88568 .23022 1.5 0 Mabsadd m
+.88568 .23022 -1.5 0 Mabsadd L s
+.88635 .25957 m
+.88635 .25185 L
+s
+.88635 .25957 1.5 0 Mabsadd m
+.88635 .25957 -1.5 0 Mabsadd L s
+.88635 .25185 1.5 0 Mabsadd m
+.88635 .25185 -1.5 0 Mabsadd L s
+.88635 .26189 m
+.88635 .25417 L
+s
+.88635 .26189 1.5 0 Mabsadd m
+.88635 .26189 -1.5 0 Mabsadd L s
+.88635 .25417 1.5 0 Mabsadd m
+.88635 .25417 -1.5 0 Mabsadd L s
+.88612 .25957 m
+.88612 .25185 L
+s
+.88612 .25957 1.5 0 Mabsadd m
+.88612 .25957 -1.5 0 Mabsadd L s
+.88612 .25185 1.5 0 Mabsadd m
+.88612 .25185 -1.5 0 Mabsadd L s
+.88635 .26575 m
+.88635 .25803 L
+s
+.88635 .26575 1.5 0 Mabsadd m
+.88635 .26575 -1.5 0 Mabsadd L s
+.88635 .25803 1.5 0 Mabsadd m
+.88635 .25803 -1.5 0 Mabsadd L s
+.88769 .25726 m
+.88769 .24799 L
+s
+.88769 .25726 1.5 0 Mabsadd m
+.88769 .25726 -1.5 0 Mabsadd L s
+.88769 .24799 1.5 0 Mabsadd m
+.88769 .24799 -1.5 0 Mabsadd L s
+.88792 .26266 m
+.88792 .25339 L
+s
+.88792 .26266 1.5 0 Mabsadd m
+.88792 .26266 -1.5 0 Mabsadd L s
+.88792 .25339 1.5 0 Mabsadd m
+.88792 .25339 -1.5 0 Mabsadd L s
+.11208 .25726 m
+.11208 .24953 L
+s
+.11208 .25726 1.5 0 Mabsadd m
+.11208 .25726 -1.5 0 Mabsadd L s
+.11208 .24953 1.5 0 Mabsadd m
+.11208 .24953 -1.5 0 Mabsadd L s
+.11275 .24799 m
+.11275 .24026 L
+s
+.11275 .24799 1.5 0 Mabsadd m
+.11275 .24799 -1.5 0 Mabsadd L s
+.11275 .24026 1.5 0 Mabsadd m
+.11275 .24026 -1.5 0 Mabsadd L s
+.11275 .25339 m
+.11275 .24567 L
+s
+.11275 .25339 1.5 0 Mabsadd m
+.11275 .25339 -1.5 0 Mabsadd L s
+.11275 .24567 1.5 0 Mabsadd m
+.11275 .24567 -1.5 0 Mabsadd L s
+.1132 .24799 m
+.1132 .24026 L
+s
+.1132 .24799 1.5 0 Mabsadd m
+.1132 .24799 -1.5 0 Mabsadd L s
+.1132 .24026 1.5 0 Mabsadd m
+.1132 .24026 -1.5 0 Mabsadd L s
+.1132 .25648 m
+.1132 .24412 L
+s
+.1132 .25648 1.5 0 Mabsadd m
+.1132 .25648 -1.5 0 Mabsadd L s
+.1132 .24412 1.5 0 Mabsadd m
+.1132 .24412 -1.5 0 Mabsadd L s
+.11253 .24953 m
+.11253 .23872 L
+s
+.11253 .24953 1.5 0 Mabsadd m
+.11253 .24953 -1.5 0 Mabsadd L s
+.11253 .23872 1.5 0 Mabsadd m
+.11253 .23872 -1.5 0 Mabsadd L s
+.11253 .26344 m
+.11253 .24026 L
+s
+.11253 .26344 1.5 0 Mabsadd m
+.11253 .26344 -1.5 0 Mabsadd L s
+.11253 .24026 1.5 0 Mabsadd m
+.11253 .24026 -1.5 0 Mabsadd L s
+.11298 .25417 m
+.11298 .2449 L
+s
+.11298 .25417 1.5 0 Mabsadd m
+.11298 .25417 -1.5 0 Mabsadd L s
+.11298 .2449 1.5 0 Mabsadd m
+.11298 .2449 -1.5 0 Mabsadd L s
+.1132 .24721 m
+.1132 .23176 L
+s
+.1132 .24721 1.5 0 Mabsadd m
+.1132 .24721 -1.5 0 Mabsadd L s
+.1132 .23176 1.5 0 Mabsadd m
+.1132 .23176 -1.5 0 Mabsadd L s
+.11298 .2897 m
+.11298 .25726 L
+s
+.11298 .2897 1.5 0 Mabsadd m
+.11298 .2897 -1.5 0 Mabsadd L s
+.11298 .25726 1.5 0 Mabsadd m
+.11298 .25726 -1.5 0 Mabsadd L s
+.11298 .24644 m
+.11298 .23872 L
+s
+.11298 .24644 1.5 0 Mabsadd m
+.11298 .24644 -1.5 0 Mabsadd L s
+.11298 .23872 1.5 0 Mabsadd m
+.11298 .23872 -1.5 0 Mabsadd L s
+.1132 .24876 m
+.1132 .24103 L
+s
+.1132 .24876 1.5 0 Mabsadd m
+.1132 .24876 -1.5 0 Mabsadd L s
+.1132 .24103 1.5 0 Mabsadd m
+.1132 .24103 -1.5 0 Mabsadd L s
+.11432 .25803 m
+.11432 .2503 L
+s
+.11432 .25803 1.5 0 Mabsadd m
+.11432 .25803 -1.5 0 Mabsadd L s
+.11432 .2503 1.5 0 Mabsadd m
+.11432 .2503 -1.5 0 Mabsadd L s
+.11589 .2503 m
+.11589 .24258 L
+s
+.11589 .2503 1.5 0 Mabsadd m
+.11589 .2503 -1.5 0 Mabsadd L s
+.11589 .24258 1.5 0 Mabsadd m
+.11589 .24258 -1.5 0 Mabsadd L s
+.11522 .26266 m
+.11522 .24876 L
+s
+.11522 .26266 1.5 0 Mabsadd m
+.11522 .26266 -1.5 0 Mabsadd L s
+.11522 .24876 1.5 0 Mabsadd m
+.11522 .24876 -1.5 0 Mabsadd L s
+.4304 .557 m
+.4304 .53074 L
+s
+.4304 .557 1.5 0 Mabsadd m
+.4304 .557 -1.5 0 Mabsadd L s
+.4304 .53074 1.5 0 Mabsadd m
+.4304 .53074 -1.5 0 Mabsadd L s
+.43085 .54773 m
+.43085 .53383 L
+s
+.43085 .54773 1.5 0 Mabsadd m
+.43085 .54773 -1.5 0 Mabsadd L s
+.43085 .53383 1.5 0 Mabsadd m
+.43085 .53383 -1.5 0 Mabsadd L s
+.43443 .56705 m
+.43443 .5176 L
+s
+.43443 .56705 1.5 0 Mabsadd m
+.43443 .56705 -1.5 0 Mabsadd L s
+.43443 .5176 1.5 0 Mabsadd m
+.43443 .5176 -1.5 0 Mabsadd L s
+.43152 .56009 m
+.43152 .53537 L
+s
+.43152 .56009 1.5 0 Mabsadd m
+.43152 .56009 -1.5 0 Mabsadd L s
+.43152 .53537 1.5 0 Mabsadd m
+.43152 .53537 -1.5 0 Mabsadd L s
+.43107 .5431 m
+.43107 .53074 L
+s
+.43107 .5431 1.5 0 Mabsadd m
+.43107 .5431 -1.5 0 Mabsadd L s
+.43107 .53074 1.5 0 Mabsadd m
+.43107 .53074 -1.5 0 Mabsadd L s
+.43174 .53305 m
+.43174 .52224 L
+s
+.43174 .53305 1.5 0 Mabsadd m
+.43174 .53305 -1.5 0 Mabsadd L s
+.43174 .52224 1.5 0 Mabsadd m
+.43174 .52224 -1.5 0 Mabsadd L s
+.43152 .55855 m
+.43152 .53846 L
+s
+.43152 .55855 1.5 0 Mabsadd m
+.43152 .55855 -1.5 0 Mabsadd L s
+.43152 .53846 1.5 0 Mabsadd m
+.43152 .53846 -1.5 0 Mabsadd L s
+.43219 .54078 m
+.43219 .52996 L
+s
+.43219 .54078 1.5 0 Mabsadd m
+.43219 .54078 -1.5 0 Mabsadd L s
+.43219 .52996 1.5 0 Mabsadd m
+.43219 .52996 -1.5 0 Mabsadd L s
+.43219 .54232 m
+.43219 .53151 L
+s
+.43219 .54232 1.5 0 Mabsadd m
+.43219 .54232 -1.5 0 Mabsadd L s
+.43219 .53151 1.5 0 Mabsadd m
+.43219 .53151 -1.5 0 Mabsadd L s
+.43219 .5516 m
+.43219 .54078 L
+s
+.43219 .5516 1.5 0 Mabsadd m
+.43219 .5516 -1.5 0 Mabsadd L s
+.43219 .54078 1.5 0 Mabsadd m
+.43219 .54078 -1.5 0 Mabsadd L s
+.43129 .54928 m
+.43129 .53692 L
+s
+.43129 .54928 1.5 0 Mabsadd m
+.43129 .54928 -1.5 0 Mabsadd L s
+.43129 .53692 1.5 0 Mabsadd m
+.43129 .53692 -1.5 0 Mabsadd L s
+.43219 .54078 m
+.43219 .52996 L
+s
+.43219 .54078 1.5 0 Mabsadd m
+.43219 .54078 -1.5 0 Mabsadd L s
+.43219 .52996 1.5 0 Mabsadd m
+.43219 .52996 -1.5 0 Mabsadd L s
+.43219 .54696 m
+.43219 .53614 L
+s
+.43219 .54696 1.5 0 Mabsadd m
+.43219 .54696 -1.5 0 Mabsadd L s
+.43219 .53614 1.5 0 Mabsadd m
+.43219 .53614 -1.5 0 Mabsadd L s
+.43219 .54696 m
+.43219 .53614 L
+s
+.43219 .54696 1.5 0 Mabsadd m
+.43219 .54696 -1.5 0 Mabsadd L s
+.43219 .53614 1.5 0 Mabsadd m
+.43219 .53614 -1.5 0 Mabsadd L s
+.43264 .52765 m
+.43264 .49365 L
+s
+.43264 .52765 1.5 0 Mabsadd m
+.43264 .52765 -1.5 0 Mabsadd L s
+.43264 .49365 1.5 0 Mabsadd m
+.43264 .49365 -1.5 0 Mabsadd L s
+.43286 .54001 m
+.43286 .52456 L
+s
+.43286 .54001 1.5 0 Mabsadd m
+.43286 .54001 -1.5 0 Mabsadd L s
+.43286 .52456 1.5 0 Mabsadd m
+.43286 .52456 -1.5 0 Mabsadd L s
+.43286 .54773 m
+.43286 .53537 L
+s
+.43286 .54773 1.5 0 Mabsadd m
+.43286 .54773 -1.5 0 Mabsadd L s
+.43286 .53537 1.5 0 Mabsadd m
+.43286 .53537 -1.5 0 Mabsadd L s
+.43219 .54619 m
+.43219 .53537 L
+s
+.43219 .54619 1.5 0 Mabsadd m
+.43219 .54619 -1.5 0 Mabsadd L s
+.43219 .53537 1.5 0 Mabsadd m
+.43219 .53537 -1.5 0 Mabsadd L s
+.43219 .57323 m
+.43219 .53151 L
+s
+.43219 .57323 1.5 0 Mabsadd m
+.43219 .57323 -1.5 0 Mabsadd L s
+.43219 .53151 1.5 0 Mabsadd m
+.43219 .53151 -1.5 0 Mabsadd L s
+.43219 .54773 m
+.43219 .5261 L
+s
+.43219 .54773 1.5 0 Mabsadd m
+.43219 .54773 -1.5 0 Mabsadd L s
+.43219 .5261 1.5 0 Mabsadd m
+.43219 .5261 -1.5 0 Mabsadd L s
+.43219 .54619 m
+.43219 .53537 L
+s
+.43219 .54619 1.5 0 Mabsadd m
+.43219 .54619 -1.5 0 Mabsadd L s
+.43219 .53537 1.5 0 Mabsadd m
+.43219 .53537 -1.5 0 Mabsadd L s
+.43241 .54387 m
+.43241 .53305 L
+s
+.43241 .54387 1.5 0 Mabsadd m
+.43241 .54387 -1.5 0 Mabsadd L s
+.43241 .53305 1.5 0 Mabsadd m
+.43241 .53305 -1.5 0 Mabsadd L s
+.43152 .53769 m
+.43152 .51606 L
+s
+.43152 .53769 1.5 0 Mabsadd m
+.43152 .53769 -1.5 0 Mabsadd L s
+.43152 .51606 1.5 0 Mabsadd m
+.43152 .51606 -1.5 0 Mabsadd L s
+.43376 .55778 m
+.43376 .53769 L
+s
+.43376 .55778 1.5 0 Mabsadd m
+.43376 .55778 -1.5 0 Mabsadd L s
+.43376 .53769 1.5 0 Mabsadd m
+.43376 .53769 -1.5 0 Mabsadd L s
+.43443 .557 m
+.43443 .54001 L
+s
+.43443 .557 1.5 0 Mabsadd m
+.43443 .557 -1.5 0 Mabsadd L s
+.43443 .54001 1.5 0 Mabsadd m
+.43443 .54001 -1.5 0 Mabsadd L s
+.43376 .53846 m
+.43376 .52456 L
+s
+.43376 .53846 1.5 0 Mabsadd m
+.43376 .53846 -1.5 0 Mabsadd L s
+.43376 .52456 1.5 0 Mabsadd m
+.43376 .52456 -1.5 0 Mabsadd L s
+.43443 .53769 m
+.43443 .52687 L
+s
+.43443 .53769 1.5 0 Mabsadd m
+.43443 .53769 -1.5 0 Mabsadd L s
+.43443 .52687 1.5 0 Mabsadd m
+.43443 .52687 -1.5 0 Mabsadd L s
+.43443 .54464 m
+.43443 .53383 L
+s
+.43443 .54464 1.5 0 Mabsadd m
+.43443 .54464 -1.5 0 Mabsadd L s
+.43443 .53383 1.5 0 Mabsadd m
+.43443 .53383 -1.5 0 Mabsadd L s
+.43376 .53846 m
+.43376 .52765 L
+s
+.43376 .53846 1.5 0 Mabsadd m
+.43376 .53846 -1.5 0 Mabsadd L s
+.43376 .52765 1.5 0 Mabsadd m
+.43376 .52765 -1.5 0 Mabsadd L s
+.43376 .55082 m
+.43376 .53537 L
+s
+.43376 .55082 1.5 0 Mabsadd m
+.43376 .55082 -1.5 0 Mabsadd L s
+.43376 .53537 1.5 0 Mabsadd m
+.43376 .53537 -1.5 0 Mabsadd L s
+.43443 .54464 m
+.43443 .52765 L
+s
+.43443 .54464 1.5 0 Mabsadd m
+.43443 .54464 -1.5 0 Mabsadd L s
+.43443 .52765 1.5 0 Mabsadd m
+.43443 .52765 -1.5 0 Mabsadd L s
+.43376 .54464 m
+.43376 .52919 L
+s
+.43376 .54464 1.5 0 Mabsadd m
+.43376 .54464 -1.5 0 Mabsadd L s
+.43376 .52919 1.5 0 Mabsadd m
+.43376 .52919 -1.5 0 Mabsadd L s
+.43443 .54387 m
+.43443 .53305 L
+s
+.43443 .54387 1.5 0 Mabsadd m
+.43443 .54387 -1.5 0 Mabsadd L s
+.43443 .53305 1.5 0 Mabsadd m
+.43443 .53305 -1.5 0 Mabsadd L s
+.4351 .54001 m
+.4351 .52919 L
+s
+.4351 .54001 1.5 0 Mabsadd m
+.4351 .54001 -1.5 0 Mabsadd L s
+.4351 .52919 1.5 0 Mabsadd m
+.4351 .52919 -1.5 0 Mabsadd L s
+.43488 .54541 m
+.43488 .5346 L
+s
+.43488 .54541 1.5 0 Mabsadd m
+.43488 .54541 -1.5 0 Mabsadd L s
+.43488 .5346 1.5 0 Mabsadd m
+.43488 .5346 -1.5 0 Mabsadd L s
+.43443 .53305 m
+.43443 .52224 L
+s
+.43443 .53305 1.5 0 Mabsadd m
+.43443 .53305 -1.5 0 Mabsadd L s
+.43443 .52224 1.5 0 Mabsadd m
+.43443 .52224 -1.5 0 Mabsadd L s
+.43488 .54773 m
+.43488 .53383 L
+s
+.43488 .54773 1.5 0 Mabsadd m
+.43488 .54773 -1.5 0 Mabsadd L s
+.43488 .53383 1.5 0 Mabsadd m
+.43488 .53383 -1.5 0 Mabsadd L s
+.43443 .5346 m
+.43443 .5176 L
+s
+.43443 .5346 1.5 0 Mabsadd m
+.43443 .5346 -1.5 0 Mabsadd L s
+.43443 .5176 1.5 0 Mabsadd m
+.43443 .5176 -1.5 0 Mabsadd L s
+.43443 .54928 m
+.43443 .53074 L
+s
+.43443 .54928 1.5 0 Mabsadd m
+.43443 .54928 -1.5 0 Mabsadd L s
+.43443 .53074 1.5 0 Mabsadd m
+.43443 .53074 -1.5 0 Mabsadd L s
+.43488 .54155 m
+.43488 .52919 L
+s
+.43488 .54155 1.5 0 Mabsadd m
+.43488 .54155 -1.5 0 Mabsadd L s
+.43488 .52919 1.5 0 Mabsadd m
+.43488 .52919 -1.5 0 Mabsadd L s
+.43443 .54078 m
+.43443 .52533 L
+s
+.43443 .54078 1.5 0 Mabsadd m
+.43443 .54078 -1.5 0 Mabsadd L s
+.43443 .52533 1.5 0 Mabsadd m
+.43443 .52533 -1.5 0 Mabsadd L s
+.4351 .52842 m
+.4351 .48516 L
+s
+.4351 .52842 1.5 0 Mabsadd m
+.4351 .52842 -1.5 0 Mabsadd L s
+.4351 .48516 1.5 0 Mabsadd m
+.4351 .48516 -1.5 0 Mabsadd L s
+.43488 .54464 m
+.43488 .50756 L
+s
+.43488 .54464 1.5 0 Mabsadd m
+.43488 .54464 -1.5 0 Mabsadd L s
+.43488 .50756 1.5 0 Mabsadd m
+.43488 .50756 -1.5 0 Mabsadd L s
+.43488 .53305 m
+.43488 .52224 L
+s
+.43488 .53305 1.5 0 Mabsadd m
+.43488 .53305 -1.5 0 Mabsadd L s
+.43488 .52224 1.5 0 Mabsadd m
+.43488 .52224 -1.5 0 Mabsadd L s
+.43555 .53923 m
+.43555 .52842 L
+s
+.43555 .53923 1.5 0 Mabsadd m
+.43555 .53923 -1.5 0 Mabsadd L s
+.43555 .52842 1.5 0 Mabsadd m
+.43555 .52842 -1.5 0 Mabsadd L s
+.0001 w
+.67944 .26266 -1.875 0 Mabsadd m
+.67944 .26266 0 2.5 Mabsadd L
+.67944 .26266 1.875 0 Mabsadd L
+.67944 .26266 0 -2.5 Mabsadd L
+.67944 .26266 -1.875 0 Mabsadd L closepath F
+.31764 .27734 -1.875 0 Mabsadd m
+.31764 .27734 0 2.5 Mabsadd L
+.31764 .27734 1.875 0 Mabsadd L
+.31764 .27734 0 -2.5 Mabsadd L
+.31764 .27734 -1.875 0 Mabsadd L closepath F
+.49809 .38859 -1.875 0 Mabsadd m
+.49809 .38859 0 2.5 Mabsadd L
+.49809 .38859 1.875 0 Mabsadd L
+.49809 .38859 0 -2.5 Mabsadd L
+.49809 .38859 -1.875 0 Mabsadd L closepath F
+.27483 .24953 -1.875 0 Mabsadd m
+.27483 .24953 0 2.5 Mabsadd L
+.27483 .24953 1.875 0 Mabsadd L
+.27483 .24953 0 -2.5 Mabsadd L
+.27483 .24953 -1.875 0 Mabsadd L closepath F
+.56512 .2843 -1.875 0 Mabsadd m
+.56512 .2843 0 2.5 Mabsadd L
+.56512 .2843 1.875 0 Mabsadd L
+.56512 .2843 0 -2.5 Mabsadd L
+.56512 .2843 -1.875 0 Mabsadd L closepath F
+.63484 .27503 -1.875 0 Mabsadd m
+.63484 .27503 0 2.5 Mabsadd L
+.63484 .27503 1.875 0 Mabsadd L
+.63484 .27503 0 -2.5 Mabsadd L
+.63484 .27503 -1.875 0 Mabsadd L closepath F
+.38758 .45735 -1.875 0 Mabsadd m
+.38758 .45735 0 2.5 Mabsadd L
+.38758 .45735 1.875 0 Mabsadd L
+.38758 .45735 0 -2.5 Mabsadd L
+.38758 .45735 -1.875 0 Mabsadd L closepath F
+.67967 .26266 -1.875 0 Mabsadd m
+.67967 .26266 0 2.5 Mabsadd L
+.67967 .26266 1.875 0 Mabsadd L
+.67967 .26266 0 -2.5 Mabsadd L
+.67967 .26266 -1.875 0 Mabsadd L closepath F
+.32213 .28893 -1.875 0 Mabsadd m
+.32213 .28893 0 2.5 Mabsadd L
+.32213 .28893 1.875 0 Mabsadd L
+.32213 .28893 0 -2.5 Mabsadd L
+.32213 .28893 -1.875 0 Mabsadd L closepath F
+.32168 .29125 -1.875 0 Mabsadd m
+.32168 .29125 0 2.5 Mabsadd L
+.32168 .29125 1.875 0 Mabsadd L
+.32168 .29125 0 -2.5 Mabsadd L
+.32168 .29125 -1.875 0 Mabsadd L closepath F
+.49899 .38936 -1.875 0 Mabsadd m
+.49899 .38936 0 2.5 Mabsadd L
+.49899 .38936 1.875 0 Mabsadd L
+.49899 .38936 0 -2.5 Mabsadd L
+.49899 .38936 -1.875 0 Mabsadd L closepath F
+.27617 .25803 -1.875 0 Mabsadd m
+.27617 .25803 0 2.5 Mabsadd L
+.27617 .25803 1.875 0 Mabsadd L
+.27617 .25803 0 -2.5 Mabsadd L
+.27617 .25803 -1.875 0 Mabsadd L closepath F
+.56938 .2897 -1.875 0 Mabsadd m
+.56938 .2897 0 2.5 Mabsadd L
+.56938 .2897 1.875 0 Mabsadd L
+.56938 .2897 0 -2.5 Mabsadd L
+.56938 .2897 -1.875 0 Mabsadd L closepath F
+.63461 .27503 -1.875 0 Mabsadd m
+.63461 .27503 0 2.5 Mabsadd L
+.63461 .27503 1.875 0 Mabsadd L
+.63461 .27503 0 -2.5 Mabsadd L
+.63461 .27503 -1.875 0 Mabsadd L closepath F
+.38668 .47434 -1.875 0 Mabsadd m
+.38668 .47434 0 2.5 Mabsadd L
+.38668 .47434 1.875 0 Mabsadd L
+.38668 .47434 0 -2.5 Mabsadd L
+.38668 .47434 -1.875 0 Mabsadd L closepath F
+.67967 .26962 -1.875 0 Mabsadd m
+.67967 .26962 0 2.5 Mabsadd L
+.67967 .26962 1.875 0 Mabsadd L
+.67967 .26962 0 -2.5 Mabsadd L
+.67967 .26962 -1.875 0 Mabsadd L closepath F
+.31787 .2758 -1.875 0 Mabsadd m
+.31787 .2758 0 2.5 Mabsadd L
+.31787 .2758 1.875 0 Mabsadd L
+.31787 .2758 0 -2.5 Mabsadd L
+.31787 .2758 -1.875 0 Mabsadd L closepath F
+.49832 .38936 -1.875 0 Mabsadd m
+.49832 .38936 0 2.5 Mabsadd L
+.49832 .38936 1.875 0 Mabsadd L
+.49832 .38936 0 -2.5 Mabsadd L
+.49832 .38936 -1.875 0 Mabsadd L closepath F
+.56803 .28352 -1.875 0 Mabsadd m
+.56803 .28352 0 2.5 Mabsadd L
+.56803 .28352 1.875 0 Mabsadd L
+.56803 .28352 0 -2.5 Mabsadd L
+.56803 .28352 -1.875 0 Mabsadd L closepath F
+.63416 .26344 -1.875 0 Mabsadd m
+.63416 .26344 0 2.5 Mabsadd L
+.63416 .26344 1.875 0 Mabsadd L
+.63416 .26344 0 -2.5 Mabsadd L
+.63416 .26344 -1.875 0 Mabsadd L closepath F
+.38736 .46275 -1.875 0 Mabsadd m
+.38736 .46275 0 2.5 Mabsadd L
+.38736 .46275 1.875 0 Mabsadd L
+.38736 .46275 0 -2.5 Mabsadd L
+.38736 .46275 -1.875 0 Mabsadd L closepath F
+.88635 .26344 -1.875 0 Mabsadd m
+.88635 .26344 0 2.5 Mabsadd L
+.88635 .26344 1.875 0 Mabsadd L
+.88635 .26344 0 -2.5 Mabsadd L
+.88635 .26344 -1.875 0 Mabsadd L closepath F
+.88635 .25262 -1.875 0 Mabsadd m
+.88635 .25262 0 2.5 Mabsadd L
+.88635 .25262 1.875 0 Mabsadd L
+.88635 .25262 0 -2.5 Mabsadd L
+.88635 .25262 -1.875 0 Mabsadd L closepath F
+.88568 .23485 -1.875 0 Mabsadd m
+.88568 .23485 0 2.5 Mabsadd L
+.88568 .23485 1.875 0 Mabsadd L
+.88568 .23485 0 -2.5 Mabsadd L
+.88568 .23485 -1.875 0 Mabsadd L closepath F
+.88635 .25571 -1.875 0 Mabsadd m
+.88635 .25571 0 2.5 Mabsadd L
+.88635 .25571 1.875 0 Mabsadd L
+.88635 .25571 0 -2.5 Mabsadd L
+.88635 .25571 -1.875 0 Mabsadd L closepath F
+.88635 .25803 -1.875 0 Mabsadd m
+.88635 .25803 0 2.5 Mabsadd L
+.88635 .25803 1.875 0 Mabsadd L
+.88635 .25803 0 -2.5 Mabsadd L
+.88635 .25803 -1.875 0 Mabsadd L closepath F
+.88612 .25571 -1.875 0 Mabsadd m
+.88612 .25571 0 2.5 Mabsadd L
+.88612 .25571 1.875 0 Mabsadd L
+.88612 .25571 0 -2.5 Mabsadd L
+.88612 .25571 -1.875 0 Mabsadd L closepath F
+.88635 .26189 -1.875 0 Mabsadd m
+.88635 .26189 0 2.5 Mabsadd L
+.88635 .26189 1.875 0 Mabsadd L
+.88635 .26189 0 -2.5 Mabsadd L
+.88635 .26189 -1.875 0 Mabsadd L closepath F
+.88769 .25262 -1.875 0 Mabsadd m
+.88769 .25262 0 2.5 Mabsadd L
+.88769 .25262 1.875 0 Mabsadd L
+.88769 .25262 0 -2.5 Mabsadd L
+.88769 .25262 -1.875 0 Mabsadd L closepath F
+.88792 .25803 -1.875 0 Mabsadd m
+.88792 .25803 0 2.5 Mabsadd L
+.88792 .25803 1.875 0 Mabsadd L
+.88792 .25803 0 -2.5 Mabsadd L
+.88792 .25803 -1.875 0 Mabsadd L closepath F
+.11208 .25339 -1.875 0 Mabsadd m
+.11208 .25339 0 2.5 Mabsadd L
+.11208 .25339 1.875 0 Mabsadd L
+.11208 .25339 0 -2.5 Mabsadd L
+.11208 .25339 -1.875 0 Mabsadd L closepath F
+.11275 .24412 -1.875 0 Mabsadd m
+.11275 .24412 0 2.5 Mabsadd L
+.11275 .24412 1.875 0 Mabsadd L
+.11275 .24412 0 -2.5 Mabsadd L
+.11275 .24412 -1.875 0 Mabsadd L closepath F
+.11275 .24953 -1.875 0 Mabsadd m
+.11275 .24953 0 2.5 Mabsadd L
+.11275 .24953 1.875 0 Mabsadd L
+.11275 .24953 0 -2.5 Mabsadd L
+.11275 .24953 -1.875 0 Mabsadd L closepath F
+.1132 .24412 -1.875 0 Mabsadd m
+.1132 .24412 0 2.5 Mabsadd L
+.1132 .24412 1.875 0 Mabsadd L
+.1132 .24412 0 -2.5 Mabsadd L
+.1132 .24412 -1.875 0 Mabsadd L closepath F
+.1132 .2503 -1.875 0 Mabsadd m
+.1132 .2503 0 2.5 Mabsadd L
+.1132 .2503 1.875 0 Mabsadd L
+.1132 .2503 0 -2.5 Mabsadd L
+.1132 .2503 -1.875 0 Mabsadd L closepath F
+.11253 .24412 -1.875 0 Mabsadd m
+.11253 .24412 0 2.5 Mabsadd L
+.11253 .24412 1.875 0 Mabsadd L
+.11253 .24412 0 -2.5 Mabsadd L
+.11253 .24412 -1.875 0 Mabsadd L closepath F
+.11253 .25185 -1.875 0 Mabsadd m
+.11253 .25185 0 2.5 Mabsadd L
+.11253 .25185 1.875 0 Mabsadd L
+.11253 .25185 0 -2.5 Mabsadd L
+.11253 .25185 -1.875 0 Mabsadd L closepath F
+.11298 .24953 -1.875 0 Mabsadd m
+.11298 .24953 0 2.5 Mabsadd L
+.11298 .24953 1.875 0 Mabsadd L
+.11298 .24953 0 -2.5 Mabsadd L
+.11298 .24953 -1.875 0 Mabsadd L closepath F
+.1132 .23949 -1.875 0 Mabsadd m
+.1132 .23949 0 2.5 Mabsadd L
+.1132 .23949 1.875 0 Mabsadd L
+.1132 .23949 0 -2.5 Mabsadd L
+.1132 .23949 -1.875 0 Mabsadd L closepath F
+.11298 .27348 -1.875 0 Mabsadd m
+.11298 .27348 0 2.5 Mabsadd L
+.11298 .27348 1.875 0 Mabsadd L
+.11298 .27348 0 -2.5 Mabsadd L
+.11298 .27348 -1.875 0 Mabsadd L closepath F
+.11298 .24258 -1.875 0 Mabsadd m
+.11298 .24258 0 2.5 Mabsadd L
+.11298 .24258 1.875 0 Mabsadd L
+.11298 .24258 0 -2.5 Mabsadd L
+.11298 .24258 -1.875 0 Mabsadd L closepath F
+.1132 .2449 -1.875 0 Mabsadd m
+.1132 .2449 0 2.5 Mabsadd L
+.1132 .2449 1.875 0 Mabsadd L
+.1132 .2449 0 -2.5 Mabsadd L
+.1132 .2449 -1.875 0 Mabsadd L closepath F
+.11432 .25417 -1.875 0 Mabsadd m
+.11432 .25417 0 2.5 Mabsadd L
+.11432 .25417 1.875 0 Mabsadd L
+.11432 .25417 0 -2.5 Mabsadd L
+.11432 .25417 -1.875 0 Mabsadd L closepath F
+.11589 .24644 -1.875 0 Mabsadd m
+.11589 .24644 0 2.5 Mabsadd L
+.11589 .24644 1.875 0 Mabsadd L
+.11589 .24644 0 -2.5 Mabsadd L
+.11589 .24644 -1.875 0 Mabsadd L closepath F
+.11522 .25571 -1.875 0 Mabsadd m
+.11522 .25571 0 2.5 Mabsadd L
+.11522 .25571 1.875 0 Mabsadd L
+.11522 .25571 0 -2.5 Mabsadd L
+.11522 .25571 -1.875 0 Mabsadd L closepath F
+.4304 .54387 -1.875 0 Mabsadd m
+.4304 .54387 0 2.5 Mabsadd L
+.4304 .54387 1.875 0 Mabsadd L
+.4304 .54387 0 -2.5 Mabsadd L
+.4304 .54387 -1.875 0 Mabsadd L closepath F
+.43085 .54078 -1.875 0 Mabsadd m
+.43085 .54078 0 2.5 Mabsadd L
+.43085 .54078 1.875 0 Mabsadd L
+.43085 .54078 0 -2.5 Mabsadd L
+.43085 .54078 -1.875 0 Mabsadd L closepath F
+.43443 .54232 -1.875 0 Mabsadd m
+.43443 .54232 0 2.5 Mabsadd L
+.43443 .54232 1.875 0 Mabsadd L
+.43443 .54232 0 -2.5 Mabsadd L
+.43443 .54232 -1.875 0 Mabsadd L closepath F
+.43152 .54773 -1.875 0 Mabsadd m
+.43152 .54773 0 2.5 Mabsadd L
+.43152 .54773 1.875 0 Mabsadd L
+.43152 .54773 0 -2.5 Mabsadd L
+.43152 .54773 -1.875 0 Mabsadd L closepath F
+.43107 .53692 -1.875 0 Mabsadd m
+.43107 .53692 0 2.5 Mabsadd L
+.43107 .53692 1.875 0 Mabsadd L
+.43107 .53692 0 -2.5 Mabsadd L
+.43107 .53692 -1.875 0 Mabsadd L closepath F
+.43174 .52765 -1.875 0 Mabsadd m
+.43174 .52765 0 2.5 Mabsadd L
+.43174 .52765 1.875 0 Mabsadd L
+.43174 .52765 0 -2.5 Mabsadd L
+.43174 .52765 -1.875 0 Mabsadd L closepath F
+.43152 .54851 -1.875 0 Mabsadd m
+.43152 .54851 0 2.5 Mabsadd L
+.43152 .54851 1.875 0 Mabsadd L
+.43152 .54851 0 -2.5 Mabsadd L
+.43152 .54851 -1.875 0 Mabsadd L closepath F
+.43219 .53537 -1.875 0 Mabsadd m
+.43219 .53537 0 2.5 Mabsadd L
+.43219 .53537 1.875 0 Mabsadd L
+.43219 .53537 0 -2.5 Mabsadd L
+.43219 .53537 -1.875 0 Mabsadd L closepath F
+.43219 .53692 -1.875 0 Mabsadd m
+.43219 .53692 0 2.5 Mabsadd L
+.43219 .53692 1.875 0 Mabsadd L
+.43219 .53692 0 -2.5 Mabsadd L
+.43219 .53692 -1.875 0 Mabsadd L closepath F
+.43219 .54619 -1.875 0 Mabsadd m
+.43219 .54619 0 2.5 Mabsadd L
+.43219 .54619 1.875 0 Mabsadd L
+.43219 .54619 0 -2.5 Mabsadd L
+.43219 .54619 -1.875 0 Mabsadd L closepath F
+.43129 .5431 -1.875 0 Mabsadd m
+.43129 .5431 0 2.5 Mabsadd L
+.43129 .5431 1.875 0 Mabsadd L
+.43129 .5431 0 -2.5 Mabsadd L
+.43129 .5431 -1.875 0 Mabsadd L closepath F
+.43219 .53537 -1.875 0 Mabsadd m
+.43219 .53537 0 2.5 Mabsadd L
+.43219 .53537 1.875 0 Mabsadd L
+.43219 .53537 0 -2.5 Mabsadd L
+.43219 .53537 -1.875 0 Mabsadd L closepath F
+.43219 .54155 -1.875 0 Mabsadd m
+.43219 .54155 0 2.5 Mabsadd L
+.43219 .54155 1.875 0 Mabsadd L
+.43219 .54155 0 -2.5 Mabsadd L
+.43219 .54155 -1.875 0 Mabsadd L closepath F
+.43219 .54155 -1.875 0 Mabsadd m
+.43219 .54155 0 2.5 Mabsadd L
+.43219 .54155 1.875 0 Mabsadd L
+.43219 .54155 0 -2.5 Mabsadd L
+.43219 .54155 -1.875 0 Mabsadd L closepath F
+.43264 .51065 -1.875 0 Mabsadd m
+.43264 .51065 0 2.5 Mabsadd L
+.43264 .51065 1.875 0 Mabsadd L
+.43264 .51065 0 -2.5 Mabsadd L
+.43264 .51065 -1.875 0 Mabsadd L closepath F
+.43286 .53228 -1.875 0 Mabsadd m
+.43286 .53228 0 2.5 Mabsadd L
+.43286 .53228 1.875 0 Mabsadd L
+.43286 .53228 0 -2.5 Mabsadd L
+.43286 .53228 -1.875 0 Mabsadd L closepath F
+.43286 .54155 -1.875 0 Mabsadd m
+.43286 .54155 0 2.5 Mabsadd L
+.43286 .54155 1.875 0 Mabsadd L
+.43286 .54155 0 -2.5 Mabsadd L
+.43286 .54155 -1.875 0 Mabsadd L closepath F
+.43219 .54078 -1.875 0 Mabsadd m
+.43219 .54078 0 2.5 Mabsadd L
+.43219 .54078 1.875 0 Mabsadd L
+.43219 .54078 0 -2.5 Mabsadd L
+.43219 .54078 -1.875 0 Mabsadd L closepath F
+.43219 .55237 -1.875 0 Mabsadd m
+.43219 .55237 0 2.5 Mabsadd L
+.43219 .55237 1.875 0 Mabsadd L
+.43219 .55237 0 -2.5 Mabsadd L
+.43219 .55237 -1.875 0 Mabsadd L closepath F
+.43219 .53692 -1.875 0 Mabsadd m
+.43219 .53692 0 2.5 Mabsadd L
+.43219 .53692 1.875 0 Mabsadd L
+.43219 .53692 0 -2.5 Mabsadd L
+.43219 .53692 -1.875 0 Mabsadd L closepath F
+.43219 .54078 -1.875 0 Mabsadd m
+.43219 .54078 0 2.5 Mabsadd L
+.43219 .54078 1.875 0 Mabsadd L
+.43219 .54078 0 -2.5 Mabsadd L
+.43219 .54078 -1.875 0 Mabsadd L closepath F
+.43241 .53846 -1.875 0 Mabsadd m
+.43241 .53846 0 2.5 Mabsadd L
+.43241 .53846 1.875 0 Mabsadd L
+.43241 .53846 0 -2.5 Mabsadd L
+.43241 .53846 -1.875 0 Mabsadd L closepath F
+.43152 .52687 -1.875 0 Mabsadd m
+.43152 .52687 0 2.5 Mabsadd L
+.43152 .52687 1.875 0 Mabsadd L
+.43152 .52687 0 -2.5 Mabsadd L
+.43152 .52687 -1.875 0 Mabsadd L closepath F
+.43376 .54773 -1.875 0 Mabsadd m
+.43376 .54773 0 2.5 Mabsadd L
+.43376 .54773 1.875 0 Mabsadd L
+.43376 .54773 0 -2.5 Mabsadd L
+.43376 .54773 -1.875 0 Mabsadd L closepath F
+.43443 .54851 -1.875 0 Mabsadd m
+.43443 .54851 0 2.5 Mabsadd L
+.43443 .54851 1.875 0 Mabsadd L
+.43443 .54851 0 -2.5 Mabsadd L
+.43443 .54851 -1.875 0 Mabsadd L closepath F
+.43376 .53151 -1.875 0 Mabsadd m
+.43376 .53151 0 2.5 Mabsadd L
+.43376 .53151 1.875 0 Mabsadd L
+.43376 .53151 0 -2.5 Mabsadd L
+.43376 .53151 -1.875 0 Mabsadd L closepath F
+.43443 .53228 -1.875 0 Mabsadd m
+.43443 .53228 0 2.5 Mabsadd L
+.43443 .53228 1.875 0 Mabsadd L
+.43443 .53228 0 -2.5 Mabsadd L
+.43443 .53228 -1.875 0 Mabsadd L closepath F
+.43443 .53923 -1.875 0 Mabsadd m
+.43443 .53923 0 2.5 Mabsadd L
+.43443 .53923 1.875 0 Mabsadd L
+.43443 .53923 0 -2.5 Mabsadd L
+.43443 .53923 -1.875 0 Mabsadd L closepath F
+.43376 .53305 -1.875 0 Mabsadd m
+.43376 .53305 0 2.5 Mabsadd L
+.43376 .53305 1.875 0 Mabsadd L
+.43376 .53305 0 -2.5 Mabsadd L
+.43376 .53305 -1.875 0 Mabsadd L closepath F
+.43376 .5431 -1.875 0 Mabsadd m
+.43376 .5431 0 2.5 Mabsadd L
+.43376 .5431 1.875 0 Mabsadd L
+.43376 .5431 0 -2.5 Mabsadd L
+.43376 .5431 -1.875 0 Mabsadd L closepath F
+.43443 .53614 -1.875 0 Mabsadd m
+.43443 .53614 0 2.5 Mabsadd L
+.43443 .53614 1.875 0 Mabsadd L
+.43443 .53614 0 -2.5 Mabsadd L
+.43443 .53614 -1.875 0 Mabsadd L closepath F
+.43376 .53692 -1.875 0 Mabsadd m
+.43376 .53692 0 2.5 Mabsadd L
+.43376 .53692 1.875 0 Mabsadd L
+.43376 .53692 0 -2.5 Mabsadd L
+.43376 .53692 -1.875 0 Mabsadd L closepath F
+.43443 .53846 -1.875 0 Mabsadd m
+.43443 .53846 0 2.5 Mabsadd L
+.43443 .53846 1.875 0 Mabsadd L
+.43443 .53846 0 -2.5 Mabsadd L
+.43443 .53846 -1.875 0 Mabsadd L closepath F
+.4351 .5346 -1.875 0 Mabsadd m
+.4351 .5346 0 2.5 Mabsadd L
+.4351 .5346 1.875 0 Mabsadd L
+.4351 .5346 0 -2.5 Mabsadd L
+.4351 .5346 -1.875 0 Mabsadd L closepath F
+.43488 .54001 -1.875 0 Mabsadd m
+.43488 .54001 0 2.5 Mabsadd L
+.43488 .54001 1.875 0 Mabsadd L
+.43488 .54001 0 -2.5 Mabsadd L
+.43488 .54001 -1.875 0 Mabsadd L closepath F
+.43443 .52765 -1.875 0 Mabsadd m
+.43443 .52765 0 2.5 Mabsadd L
+.43443 .52765 1.875 0 Mabsadd L
+.43443 .52765 0 -2.5 Mabsadd L
+.43443 .52765 -1.875 0 Mabsadd L closepath F
+.43488 .54078 -1.875 0 Mabsadd m
+.43488 .54078 0 2.5 Mabsadd L
+.43488 .54078 1.875 0 Mabsadd L
+.43488 .54078 0 -2.5 Mabsadd L
+.43488 .54078 -1.875 0 Mabsadd L closepath F
+.43443 .5261 -1.875 0 Mabsadd m
+.43443 .5261 0 2.5 Mabsadd L
+.43443 .5261 1.875 0 Mabsadd L
+.43443 .5261 0 -2.5 Mabsadd L
+.43443 .5261 -1.875 0 Mabsadd L closepath F
+.43443 .54001 -1.875 0 Mabsadd m
+.43443 .54001 0 2.5 Mabsadd L
+.43443 .54001 1.875 0 Mabsadd L
+.43443 .54001 0 -2.5 Mabsadd L
+.43443 .54001 -1.875 0 Mabsadd L closepath F
+.43488 .53537 -1.875 0 Mabsadd m
+.43488 .53537 0 2.5 Mabsadd L
+.43488 .53537 1.875 0 Mabsadd L
+.43488 .53537 0 -2.5 Mabsadd L
+.43488 .53537 -1.875 0 Mabsadd L closepath F
+.43443 .53305 -1.875 0 Mabsadd m
+.43443 .53305 0 2.5 Mabsadd L
+.43443 .53305 1.875 0 Mabsadd L
+.43443 .53305 0 -2.5 Mabsadd L
+.43443 .53305 -1.875 0 Mabsadd L closepath F
+.4351 .50679 -1.875 0 Mabsadd m
+.4351 .50679 0 2.5 Mabsadd L
+.4351 .50679 1.875 0 Mabsadd L
+.4351 .50679 0 -2.5 Mabsadd L
+.4351 .50679 -1.875 0 Mabsadd L closepath F
+.43488 .5261 -1.875 0 Mabsadd m
+.43488 .5261 0 2.5 Mabsadd L
+.43488 .5261 1.875 0 Mabsadd L
+.43488 .5261 0 -2.5 Mabsadd L
+.43488 .5261 -1.875 0 Mabsadd L closepath F
+.43488 .52765 -1.875 0 Mabsadd m
+.43488 .52765 0 2.5 Mabsadd L
+.43488 .52765 1.875 0 Mabsadd L
+.43488 .52765 0 -2.5 Mabsadd L
+.43488 .52765 -1.875 0 Mabsadd L closepath F
+.43555 .53383 -1.875 0 Mabsadd m
+.43555 .53383 0 2.5 Mabsadd L
+.43555 .53383 1.875 0 Mabsadd L
+.43555 .53383 0 -2.5 Mabsadd L
+.43555 .53383 -1.875 0 Mabsadd L closepath F
+.5 Mabswid
+[ 1 0 ] 0 setdash
+0 .24941 m
+.04057 .24919 L
+.08481 .24894 L
+.12636 .24871 L
+.16632 .2485 L
+.17777 .24844 L
+.18859 .24838 L
+.19831 .24835 L
+.20097 .24834 L
+.20379 .24833 L
+.2062 .24832 L
+.20757 .24832 L
+.20885 .24832 L
+.21016 .24832 L
+.21138 .24832 L
+.21271 .24832 L
+.21346 .24832 L
+.21413 .24832 L
+.21537 .24832 L
+.21672 .24832 L
+.21799 .24833 L
+.21915 .24833 L
+.22134 .24834 L
+.22374 .24836 L
+.22624 .24838 L
+.22858 .2484 L
+.23133 .24844 L
+.23393 .24849 L
+.23882 .2486 L
+.24155 .24869 L
+.24408 .24878 L
+.2498 .24907 L
+.25466 .24941 L
+.2599 .24991 L
+.26485 .25054 L
+.26939 .25128 L
+.27443 .25233 L
+.27993 .25383 L
+.28568 .25586 L
+.29102 .25827 L
+.29633 .26125 L
+.30207 .26528 L
+.3125 .27511 L
+.32266 .28844 L
+.33202 .30456 L
+.35172 .35122 L
+.3734 .41821 L
+.38475 .45493 L
+.39553 .4869 L
+.4052 .5107 L
+Mistroke
+.41074 .52143 L
+.41575 .52898 L
+.41829 .53194 L
+.41962 .53325 L
+.42103 .53444 L
+.42227 .53531 L
+.42362 .53608 L
+.42484 .53665 L
+.426 .53707 L
+.42668 .53727 L
+.42742 .53744 L
+.42872 .53763 L
+.42946 .53768 L
+.43024 .53768 L
+.43091 .53763 L
+.43164 .53754 L
+.43295 .53725 L
+.43369 .53701 L
+.43436 .53675 L
+.43559 .53616 L
+.43691 .53536 L
+.43927 .53346 L
+.44147 .53119 L
+.44647 .52431 L
+.45652 .50502 L
+.47897 .4458 L
+.50015 .38481 L
+.51038 .35933 L
+.5212 .33667 L
+.53134 .31947 L
+.54059 .30694 L
+.55052 .29644 L
+.56118 .28801 L
+.57106 .28226 L
+.58043 .27817 L
+.59055 .27485 L
+.60131 .27219 L
+.62064 .26878 L
+.63046 .26746 L
+.64106 .26625 L
+.66024 .2644 L
+.70341 .2613 L
+.74498 .25912 L
+.78496 .25747 L
+.82751 .25604 L
+.86848 .25489 L
+.91201 .25383 L
+.95396 .25295 L
+.99432 .25219 L
+1 .25209 L
+Mistroke
+Mfstroke
+[ .03 .02 ] 0 setdash
+0 .24941 m
+.04057 .24919 L
+.08481 .24894 L
+.12636 .24871 L
+.16632 .2485 L
+.20885 .24826 L
+.2498 .24804 L
+.29331 .24781 L
+.33524 .24758 L
+.37557 .24737 L
+.41848 .24714 L
+.4598 .24693 L
+.49953 .24672 L
+.54183 .2465 L
+.58254 .24629 L
+.62583 .24606 L
+.66752 .24585 L
+.70762 .24564 L
+.7503 .24543 L
+.79139 .24522 L
+.83505 .245 L
+.87712 .24478 L
+.9176 .24458 L
+.96065 .24437 L
+1 .24417 L
+s
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+  ImageSize->{288, 177.937},
+  ImageMargins->{{43, 0}, {0, 0}},
+  ImageRegion->{{0, 1}, {0, 1}},
+  ImageCache->GraphicsData["Bitmap", "\<\
+CF5dJ6E]HGAYHf4PAg9QL6QYHg<PAVmbKF5d0`40004P0000/@P10`4000010?ooo`000063aP00002h
+Z2iLF0EkL:Cek/c<c6IVIXR8R?GemLZZTD]RM^[Mdg=QDZbANl30`61PH4iJJJ:ecH20P000ogmoO`00
+Rooo003o0000P8:2PZJVYU=CDnWYjG5aJG5aFG5YJG5Y@FUY>6UQFFUQ@FUQ:6UIHFUIDFUI>6UA@FUA
+86U9HFU9FFU9BF5QJF59:6596651>651064`FEUQ@EUIFEUAJEUABEUA>5U9<5U9:5U945U1FEU1BEU1
+05ThDETh@ETh<5Th85Th655A454h254X854X654PDE4PBDUADDUABDU9:4U1HDU1FDU1>4U104Th<4Th
+04TXDDTX<4TX24TP84TH64T84451BD51644hBD4h844h644`HD4`FD4PBD4P644H>44@844@23QA83Q1
+@CQ1>3Q183Q103PhDCPh<3Ph03P`83PX@CPX<3PX63PX03PH<3PH63PH23P883P823P0430h@C0`HC0P
+830H82Q182Ph<2Ph42Ph02P`@BP`82PXDBPPBBPP62PH62P@<2P@02P8:2P0420X<20X820X220@8200
+21P`<1P`01P@<1P@21P881P0410X:10P610P210H810@610020P@40P@00P8:0006?GN/m:dS4PmReE[
+;om50?nPNP3ook34gXO>n^kMPYSkV7ooe?o0bjo^kT3Pd03>dGK^aVK=ZTF;M8O>jjDZ:P3^002;003=
+0;00001T0000cOl002:;8S;=<VUYJM?Cd`3oOd?=P2j;EjgHi^3oooooh?nf`OGeg?nU0?l0onj2kY=`
+f`00O`1o001oO`1oogl007l0Ogl0ogmo07moogoo07ooOgooool0Oomo0?moOomoooooOlBbShMjH^OW
+ifm_Kj>SXiT0I_ooc80003<cIVIVc9VIob8R8X200020P4:JY`0g?0200?mV<omVc<c<oooo_mCDok^k
+^h20oe5A^/bIIYUVVC?oV@2IoaYOI`00kUDJRh^;R`00<ol08@0008400`420081V00008@000D10000
+0@2G0000J0050@0500410@000P4200<10P040@<00`4300812@080@03004100P00P4400<10`000`40
+001[0000J@001040004200040@000@8000<1000010000`40000200040@000@8000@100012P001@40
+0001008000<100001P001040004200030@0000<000<10040K00006T000<100000`001040004200<1
+10000`40000200040@000@8000@100012P001@400001008000<100001P0010400@4200<10`000`40
+0@1/0000J@030@<000@100010P001040004300030@00008000@100010P001040004:00050@000040
+0P000`40000600030@0000<000@100010P000`400@1/0000J@001`4000400@000P4400810`000`40
+0@020@800P401@010@4000812@020@8000@100412@001040004300810P001@40000106/0001X00D1
+>@020@P00P400`010@1[0000U@000`4000280000o`0Q0000o`0Q0000A0030@@000<100000P040@<0
+00<100007@030@@000<100000P040@<00P4O00<110000`40000200@10P030B400`4400030@000080
+104_0000A`000`40000800030@00008000<1000080000`40000800050@0000400P000`40000O0003
+0@0000P000<1000010000`40000Q00030@0000H000<10000<00004L000<1000020000`4000030003
+0@0001l000<1000020001@400001008000<100007`000`40000800030@0000@000<100008@000`40
+000700030@0002l0001400<12`000`40000300030@0001`00`4;00030@0000800P4O00<12`000`40
+000200<180030@/000<10000;P0004@000<100002`000`40000400030@0001/000<100002`001@40
+0001008000<1000070000`40000;00050@0000400P000`40000N00030@0000`000<10000;@0004@0
+00<100002@030@<000@100017@000`40000900<10`001040004N00030@0000T00`4300040@000B00
+00<100002@001040004_0000A0040@X000@10000104M00@12P000`40000200817`040@X000<10000
+0P020B4010490081<0000?l08@000?l08@000?l08@0001`0i`4M000070000`40000`00030@000300
+00<10000<@000`40000`00030@0001H000<100006`0001`000<10000h`000`40000K000070020N<0
+0P4M000070000`40003S00030@0001/0000L00030@000><000<100006`0001`000<10000h`000`40
+000K000070020N<00P4M000070000`40003S00030@0001/0000L00030@000><000<100006`0001`0
+0P7S00817@0001`000<10000h`000`40000K000070000`40003S00030@0001/0000L00030@000><0
+00<100006`0001`00P7S00817@0001@0104400030@000><000<100006`0001H000<100000`000`40
+003S00030@0001/0000F00030@0000<00`7Q00<17@0001H000<100000`000`40003S00030@0001/0
+000F00030@0000<000<10000h`000`40000K000050030@D000<10000h`000`40000K00005P000`40
+00030081h`020Ad0000L00030@000><000<100006`0001`000<10000h`000`40000K000070020N<0
+0P4M000070000`40003S00030@0001/0000L00030@000><000<100006`0001`000<10000h`000`40
+000K000070020N<00P4M000070000`40003S00030@0001/0000L00030@000><000<100006`0001`0
+0P7S00817@0001`000<10000h`000`40000K000050040@@000<10000h`000`40000K000050000`40
+000500030@000><000<100006`0001D000<1000010030N400`4M00005P000`40000300030@000><0
+00<100006`0001L000<100000P000`40003S00030@0001/0000D00040@000@@000<10000h`000`40
+000K00005@020@D00P7S00817@0001`000<10000h`000`40000K000070000`40003S00030@0001/0
+000L0081h`020Ad0000L00030@000><000<100006`0001`000<10000h`000`40000K000070000`40
+003S00030@0001/0000L0081h`020Ad0000L00030@000><000<100006`0001`000<10000h`000`40
+000K000070020N<00P4M000070000`40003S00030@0001/0000E00811@000`40003S00030@0001/0
+000D00040@000@@000<10000a`040AP000<100006`0001L000<100000P030AH0106]00<15`030Ad0
+000E00811@000`40000F00@1[P020AT000<100006`0001L000<100000P000`40000E00D18P000`40
+002800@160000`40000K000050001040004400815P050B40104300P110070@@0204300P110080@<0
+204400P10`080@@0204300P110080@<02040100100080@<0204300817@0001D00P450441R@050A40
+1`4M000070000`40000E00D18@050ET000<100006P0W0@H000<100006`0001`000<100005@050B40
+0`4200030@0004X0104700@1200B0A401@4G00030@0001/0000L00815`040B40104200<1B@040@80
+4@4S00D15P020Ad0000L00030@0001H00P4/00030@0104<02@4400D1:`040AP000<100006`0001`0
+00<100005@040B/01@4m00@10`040@L00`4^00030@0001L000<100006`0001`00P4G00<1:`060C@0
+204700@11`040Bd000<100005P020Ad0000L00030@0001L000<10000:`040C@01@4;00@1>0000`40
+000G00030@0001/0000L00030@0001L000<10000;0040C<01@5500@160000`40000K000070000`40
+000F00@1:`040C@01@5Q00030@0001/0000L0081A`030C@01@5P00817@0001`000<10000AP040C80
+00D100000@1R00030@0001/0000F00030@0000<000<10000AP040C000P5W00030@0001/0000F0003
+0@0000<000<10000B@000`40000]00030@0006L000<100006`0001<01@4400<1BP000`40000[0003
+0@0006H00`4M00004`001040004500030@0004X000<10000:`000`40001X00030@0001/0000D0003
+0@0100D000<10000B`000`40000Y00030@0006T000<100006`0001D00P450081C0000`40000Y0003
+0@0006P00P4M00005P000`40000300030@0004`000<100009`000`40001Z00030@0001/0000L0003
+0@0004`000<100009`000`40001Z00030@0001/0000L00030@0004d000<100009@000`40001[0003
+0@0001/0000L0081CP000`40000T00030@0006/00P4M000070000`40001>00030@0002<000<10000
+K0000`40000K000070000`40001>00030@00028000<10000K@000`40000K000070020Dl000<10000
+8P000`40001/00817@0001`000<10000CP000`40000Q00030@0006h000<100006`0001`000<10000
+C`000`40000P00030@0006h000<100006`0001`000<10000C`000`40000O00030@0006l000<10000
+6`0001`00P5@00030@0001l000<10000KP020Ad0000D00<11@000`40001?00030@0001l000<10000
+K`000`40000K00005`000`40000200030@00050000<100007@000`40001`00030@0001/0000G0003
+0@0000800`5@00030@0001/0105_00<17@0001@00`4500030@00050000<100006`040G4000<10000
+6`0001@000<100001@000`40001A00030@0001X0105a00030@0001/0000D00030@0000D000<10000
+D@000`40000K00030@00074000<100006`0001@010440081D`000`40000J00030@0007000P4M0000
+70000`40001B00030@0001T000<10000LP000`40000K000070000`40001B00030@0001T000<10000
+LP000`40000K000070020E@000<1000060000`40001a00817@0001`000<10000D`000`40000G0003
+0@0007<000<100006`0001`000<10000D`000`40000G00030@0007<000<100006`0001`000<10000
+E0000`40000E00030@0007@000<100006`0001`00P5E00030@0001D000<10000L`020Ad0000L0003
+0@0005D000<1000050000`40001d00030@0001/0000L00030@0005D000<100004`000`40001e0003
+0@0001/0000L0081EP000`40000C00030@0007@00P4M000070000`40001E00@14P000`40001e0003
+0@0001/0000E00811@000`40001E00@14@000`40001f00030@0001/0000D00040@000@@000<10000
+E0040A8000<10000MP000`40000K000050001040004400<1E0050A4000<10000M0030Ad0000D00<1
+1@000`40001D00D140000`40001g00030@0001/0000D00030@0000D000<10000E0040A4000<10000
+M`000`40000K000050000`40000500030@0005D00`4A00030@0007L000<100006`0001D00`440081
+E@050@l000<10000M`020Ad0000L00030@0005P000<100001@040@@000<10000N0000`40000K0000
+70000`40001H00030@0000H000<100000`000`40001i00030@0001/0000L0081FP000`40000300@1
+10000`40001h00817@0001`000<10000F@000`40000500030@0000<000<10000N@000`40000K0000
+70000`40001I00030@0000@00`4300030@0007X000<100006`0001`000<10000FP000`40000200D1
+0P000`40001j00030@0001/0000L0081F`000`40000200<110000`40001i00817@0001`000<10000
+F`00104000040@8000<10000N`000`40000K000070000`40001L00040@0000810`000`40001k0003
+0@0001/0000L0081GP000`400@050Gd00P4M000070000`40001M00P1OP000`40000K00005@000`40
+000400030@0005d01`5o00030@0001/0000E00030@0000@000<10000GP060Gl000<100006`0001H0
+00<100000`030Eh01P5m00<17@0001H000<100000`000`40001N00H1O`000`40000K00005`000`40
+000200030@0005h01@6000030@0001/0000D00040@000@@00P5P00@1O`020Ad0000D00@110000`40
+001O00@1P0000`40000K000070000`40001P0081P@000`40000K000070000`40001O00@1P0000`40
+000K000070020F00105o00817@0001`000<10000h`000`40000K000070000`40003S00030@0001/0
+000L0081h`020Ad0000L00030@000><000<100006`0001`000<10000h`000`40000K000070000`40
+003S00030@0001/0000L0081h`020Ad0000L00030@000><000<100006`0001D00P4500030@000300
+00<10000<0000`40000a00030@00030000<100005P000`40000K000050001040004400030@0000L0
+00<100001`000`40000700030@0000P000<100001`000`40000700030@0000P000<100001`000`40
+000700030@0000L000<1000020000`40000700030@0000L000<1000020000`40000700030@0000L0
+00<100001`000`40000800030@0000L000<100001`000`40000800030@0000L000D100000@0M0000
+5000104000440>L17@0001D00P7o00X0000D00040@000Ol02@0001@000@10001o`0900005@020Ol0
+2P000?l08@0000@00P4300@10`020@<00`4300<12@030@@00`4300811@020@801@4200810P030@03
+004100L020400`010@0600<100<00@40106^00000`001040004300030@00008000@100011@000`40
+000300030@0000T000@100011@001040004300040@000@<000D100000@0200040@000@8000<10000
+20001@400001008000<100001P001040004200040@000Jd0000300030@0000@000<100000P001040
+0043008110020@<0104300810`030@<000<1000010000`40000400050@0000400P00104000420003
+0@0000P000D100000@0200030@0000H000@100010P001040006]00000`000`40000400030@000080
+00@100010P000`40000300030@0000T000<100000`001040004200040@000@<000<1000010001@40
+0001008000@100010P000`40000800050@0000400P000`40000600040@000@8000@10001[@0000<0
+00@100010P000`400@020@800P4400<10`030@T00`43008110020@<01043008110020@8000@10041
+2P020@8000@10041200010400@4300<1[P0000@00P4d00030@00038000<10000[P0003X000<10000
+10000`40000E00030@0001800P6`0000\
+\>"],
+  ImageRangeCache->{{{0, 287}, {176.937, 0}} -> {5.15456, -1.23973, \
+0.000194233, 0.0563598}}],
+
+Cell[BoxData[
+    FormBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {"0.13181772430848632`", \(-9.560530994118124`*^-7\), 
+              "0.006820900296020979`", \(-0.0017132804100438337`\)},
+            {\(-9.560530994118304`*^-7\), 
+              "6.114020017572175`*^-10", \(-2.3512828972721815`*^-8\), 
+              "7.96576204581994`*^-9"},
+            {"0.00682090029602098`", \(-2.3512828972722702`*^-8\), 
+              "0.0004066584586405394`", \(-0.00006532883079216816`\)},
+            {\(-0.001713280410043834`\), 
+              "7.965762045820105`*^-9", \(-0.00006532883079216817`\), 
+              "0.00006191325669946044`"}
+            },
+          ColumnAlignments->{Decimal}], "\[NoBreak]", ")"}], 
+      TraditionalForm]], "Output"]
+}, Open  ]]
+},
+FrontEndVersion->"4.0 for X",
+ScreenRectangle->{{0, 1024}, {0, 768}},
+WindowSize->{728, 686},
+WindowMargins->{{6, Automatic}, {12, Automatic}}
+]
+
+
+(***********************************************************************
+Cached data follows.  If you edit this Notebook file directly, not using
+Mathematica, you must remove the line containing CacheID at the top of 
+the file.  The cache data will then be recreated when you save this file 
+from within Mathematica.
+***********************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+Cell[1717, 49, 446, 7, 123, "Input"],
+Cell[2166, 58, 5174, 91, 1003, "Input"],
+Cell[7343, 151, 256, 5, 59, "Input"],
+Cell[7602, 158, 1579, 29, 283, "Input"],
+Cell[9184, 189, 1584, 28, 283, "Input"],
+Cell[10771, 219, 287, 6, 123, "Input"],
+Cell[11061, 227, 1551, 28, 331, "Input"],
+Cell[12615, 257, 2282, 40, 363, "Input"],
+Cell[14900, 299, 106, 3, 32, "Text"],
+
+Cell[CellGroupData[{
+Cell[15031, 306, 3996, 62, 747, "Input"],
+Cell[19030, 370, 231, 3, 114, "Print"],
+Cell[19264, 375, 49653, 1928, 186, 40128, 1806, "GraphicsData", "PostScript", \
+"Graphics"],
+Cell[68920, 2305, 767, 15, 89, "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[69724, 2325, 3994, 62, 747, "Input"],
+Cell[73721, 2389, 229, 3, 114, "Print"],
+Cell[73953, 2394, 49712, 1933, 186, 40203, 1811, "GraphicsData", \
+"PostScript", "Graphics"],
+Cell[123668, 4329, 765, 15, 89, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+
+
+
+(***********************************************************************
+End of Mathematica Notebook file.
+***********************************************************************)
+

@@ -1,0 +1,33 @@
+*** Begin of history file: Tue Jul 29 13:19:08 2003
+exec /tmp/pawtmp-1004.kumac
+h/cr/1d 5501 'peak l5tracks raw' 21 -0.5 20.5
+h/cr/1d 5502 'cont l5tracks raw' 21 -0.5 20.5
+h/cr/1d 5503 'Number of Tracks' 21 -0.5 20.5
+h/cr/1d 5552 'mc y1s l5tracks' 21 -0.5 20.5
+h/cr/1d 5572 'mc emu l5tracks' 21 -0.5 20.5
+h/cr/1d 5551 'mc y1s l5tracks raw' 21 -0.5 20.5
+h/cr/1d 5571 'mc emu l5tracks raw' 21 -0.5 20.5
+nt/plot //mc/efficiency/1.l5tracks $5&&l4dec>0&&(l5visen>0.2*2*l5ebeam)&&((l5ccen>0.15*2*l5ebeam)&&((l5ccen<0.75*2*l5ebeam).or.(l5bigges<0.75*l5ebeam))) ! ! ! 'N' 5551
+nt/plot //mc/efficiency/1.l5tracks     l4dec>0&&(l5visen>0.2*2*l5ebeam)&&((l5ccen>0.15*2*l5ebeam)&&((l5ccen<0.75*2*l5ebeam).or.(l5bigges<0.75*l5ebeam))) ! ! ! 'N' 5571
+add 5551 5551 5552 $SIGMA((7.930-4.028)/4013061) 0. 'e'
+add 5571 5571 5572 $SIGMA((7.930-4.028)/4013061) 0. 'e'
+sub 5501 5502 5503 $SIGMA(7.930/62502) $SIGMA(4.028/41704) 'e'
+nt/plot //lun53/efficiency/1.l5tracks l4dec>0&&(l5visen>0.2*2*l5ebeam)&&((l5ccen>0.15*2*l5ebeam)&&((l5ccen<0.75*2*l5ebeam).or.(l5bigges<0.75*l5ebeam))) ! ! ! 'N' 5501
+nt/plot //lun51/efficiency/1.l5tracks l4dec>0&&(l5visen>0.2*2*l5ebeam)&&((l5ccen>0.15*2*l5ebeam)&&((l5ccen<0.75*2*l5ebeam).or.(l5bigges<0.75*l5ebeam))) ! ! ! 'N' 5502
+exec /tmp/pawtmp-9486.kumac
+sub 5501 5502 5503 $SIGMA(7.930/62502) $SIGMA(4.028/41704) 'e'
+exec /tmp/pawtmp-7822.kumac
+exec /tmp/pawtmp-3401.kumac
+exec /tmp/pawtmp-1708.kumac
+exec /tmp/pawtmp-2139.kumac
+exec /tmp/pawtmp-1593.kumac
+exec /tmp/pawtmp-2018.kumac
+exec /tmp/pawtmp-1322.kumac
+exec /tmp/pawtmp-2665.kumac
+exec /tmp/pawtmp-8196.kumac
+exec /tmp/pawtmp-4618.kumac
+exec /tmp/pawtmp-3522.kumac
+exec /tmp/pawtmp-5580.kumac
+exec /tmp/pawtmp-5946.kumac
+exit
+*** End   of history file: Tue Jul 29 15:36:18 2003

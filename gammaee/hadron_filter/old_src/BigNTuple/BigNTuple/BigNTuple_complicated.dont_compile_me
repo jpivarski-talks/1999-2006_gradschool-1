@@ -1,0 +1,200 @@
+// -*- C++ -*-
+#if !defined(BIGNTUPLE_BIGNTUPLE_H)
+#define BIGNTUPLE_BIGNTUPLE_H
+//
+// Package:     <BigNTuple>
+// Module:      BigNTuple
+//
+/**\class BigNTuple BigNTuple.h BigNTuple/BigNTuple.h
+ 
+ Description: <one line class summary>
+
+ Usage:
+    <usage>
+
+*/
+//
+// Author:      Jim McCann
+// Created:     Thu May 30 15:00:06 EDT 2002
+// $Id$
+//
+// Revision history
+//
+// $Log$
+//
+
+// system include files
+
+// user include files
+#include "Processor/Processor.h"
+#include "HistogramInterface/HistogramPackage.h"
+#include "HbookHistogram/HbookNtuple.h"
+#include "Navigation/NavTrack.h"
+#include "CLHEP/Vector/ThreeVector.h"
+#include "CommandPattern/Parameter.h"
+
+// forward declarations
+
+class BigNTuple : public Processor
+{
+      // ------------ friend classses and functions --------------
+
+   public:
+      // ------------ constants, enums and typedefs --------------
+      enum {
+	 kWeightedZ0,
+	 kWeightedD0,
+	 kCharge,
+	 kChargedMomX,
+	 kChargedMomY,
+	 kChargedMomZ,
+	 kNeutralMomX,
+	 kNeutralMomY,
+	 kNeutralMomZ,
+	 kNumShowers,
+	 kNumUnmatched,
+	 kNumTracks,
+	 kTotalShowerEnergy,
+	 kMaxShowerEnergy,
+	 kTotalUnmatchedEnergy,
+	 kMaxUnmatchedEnergy,
+	 kTotalTrackMomentum,
+	 kMaxTrackMomentum,
+	 kTotalTrackEnergy,
+	 kMaxTrackEnergy,
+	 kBunchWeightBest,
+	 kBunchWeightNext,
+	 kVertexX,
+	 kVertexY,
+	 kVertexZ,
+	 kVertexChi2,
+	 kVertexChi2perTrack,
+
+	 kEntries
+      };
+
+      // ------------ Constructors and destructor ----------------
+      BigNTuple( void );                      // anal1 
+      virtual ~BigNTuple();                   // anal5 
+
+      // ------------ member functions ---------------------------
+
+      // methods for beginning/end "Interactive"
+      virtual void init( void );             // anal1 "Interactive"
+      virtual void terminate( void );        // anal5 "Interactive"
+
+      // standard place for booking histograms
+      virtual void hist_book( HIHistoManager& );                  
+
+      // methods for binding to streams (anal2-4 etc.)
+      virtual ActionBase::ActionResult event( Frame& iFrame );
+      //virtual ActionBase::ActionResult beginRun( Frame& iFrame);
+      //virtual ActionBase::ActionResult endRun( Frame& iFrame);
+      //virtual ActionBase::ActionResult geometry( Frame& iFrame);
+      //virtual ActionBase::ActionResult hardware( Frame& iFrame);
+      //virtual ActionBase::ActionResult user( Frame& iFrame);
+
+      // ------------ const member functions ---------------------
+
+      // ------------ static member functions --------------------
+
+   protected:
+      // ------------ protected member functions -----------------
+
+      // ------------ protected const member functions -----------
+
+   private:
+      // ------------ Constructors and destructor ----------------
+      BigNTuple( const BigNTuple& );
+
+      // ------------ assignment operator(s) ---------------------
+      const BigNTuple& operator=( const BigNTuple& );
+
+      // ------------ private member functions -------------------
+      void bind( 
+         ActionBase::ActionResult (BigNTuple::*iMethod)( Frame& ),
+	      const Stream::Type& iStream );
+
+      // ------------ private const member functions -------------
+
+      double dysol2dcurvb( double curva, double d0a, double phi0a,
+			   double curvb, double d0b, double phi0b );
+      double dysol2dcurva( double curva, double d0a, double phi0a,
+			   double curvb, double d0b, double phi0b );
+      double dysol2dphi0b( double curva, double d0a, double phi0a,
+			   double curvb, double d0b, double phi0b );
+      double dysol2dphi0a( double curva, double d0a, double phi0a,
+			   double curvb, double d0b, double phi0b );
+      double dysol2dd0b( double curva, double d0a, double phi0a,
+			 double curvb, double d0b, double phi0b );
+      double dysol2dd0a( double curva, double d0a, double phi0a,
+			 double curvb, double d0b, double phi0b );
+      double dysol1dcurvb( double curva, double d0a, double phi0a,
+			   double curvb, double d0b, double phi0b );
+      double dysol1dcurva( double curva, double d0a, double phi0a,
+			   double curvb, double d0b, double phi0b );
+      double dysol1dphi0b( double curva, double d0a, double phi0a,
+			   double curvb, double d0b, double phi0b );
+      double dysol1dphi0a( double curva, double d0a, double phi0a,
+			   double curvb, double d0b, double phi0b );
+      double dysol1dd0b( double curva, double d0a, double phi0a,
+			 double curvb, double d0b, double phi0b );
+      double dysol1dd0a( double curva, double d0a, double phi0a,
+			 double curvb, double d0b, double phi0b );
+      double dxsol2dcurvb( double curva, double d0a, double phi0a,
+			   double curvb, double d0b, double phi0b );
+      double dxsol2dcurva( double curva, double d0a, double phi0a,
+			   double curvb, double d0b, double phi0b );
+      double dxsol2dphi0b( double curva, double d0a, double phi0a,
+			   double curvb, double d0b, double phi0b );
+      double dxsol2dphi0a( double curva, double d0a, double phi0a,
+			   double curvb, double d0b, double phi0b );
+      double dxsol2dd0b( double curva, double d0a, double phi0a,
+			 double curvb, double d0b, double phi0b );
+      double dxsol2dd0a( double curva, double d0a, double phi0a,
+			 double curvb, double d0b, double phi0b );
+      double dxsol1dcurvb( double curva, double d0a, double phi0a,
+			   double curvb, double d0b, double phi0b );
+      double dxsol1dcurva( double curva, double d0a, double phi0a,
+			   double curvb, double d0b, double phi0b );
+      double dxsol1dphi0b( double curva, double d0a, double phi0a,
+			   double curvb, double d0b, double phi0b );
+      double dxsol1dphi0a( double curva, double d0a, double phi0a,
+			   double curvb, double d0b, double phi0b );
+      double dxsol1dd0b( double curva, double d0a, double phi0a,
+			 double curvb, double d0b, double phi0b );
+      double dxsol1dd0a( double curva, double d0a, double phi0a,
+			 double curvb, double d0b, double phi0b );
+      double ysol2( double curva, double d0a, double phi0a,
+		    double curvb, double d0b, double phi0b );
+      double ysol1( double curva, double d0a, double phi0a,
+		    double curvb, double d0b, double phi0b );
+      double xsol2( double curva, double d0a, double phi0a,
+		    double curvb, double d0b, double phi0b );
+      double xsol1( double curva, double d0a, double phi0a,
+		    double curvb, double d0b, double phi0b );
+
+      // ------------ data members -------------------------------
+
+      Parameter< DABoolean > m_lookForCosmics;
+      Parameter< DABoolean > m_getBunchData;
+
+      HINtuple* m_cosmic;
+      HINtuple* m_other;
+
+      HIHist1D* m_cosmic_energy;
+      HIHist1D* m_cosmic_phi0diff;
+      HIHist1D* m_cosmic_d0sum;
+      HIHist1D* m_cosmic_z0diff;
+      HIHist1D* m_cosmic_cotThetadiff;
+
+      HIHist1D* m_cosmic_un_cosTh;
+      HIHist1D* m_other_un_cosTh;
+
+      // ------------ static data members ------------------------
+
+};
+
+// inline function definitions
+
+#endif /* BIGNTUPLE_BIGNTUPLE_H */

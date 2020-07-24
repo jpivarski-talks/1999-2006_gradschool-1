@@ -1,0 +1,446 @@
+
+Module : MCInfo
+
+Date   : Wed Jul  7 10:45:59 1999
+User   : lkg
+Old Tag: 
+New Tag: v01_00_00
+Message: first release
+
+Module : MCInfo
+
+Date   : Thu Jul 22 10:25:16 1999
+User   : lkg
+Old Tag: v01_00_00
+New Tag: v01_00_01
+Message: blank line protection in decay.dec parsing, FAItem instantiation for decay tree
+
+Module : MCInfo
+
+Date   : Thu Jul 22 16:57:04 1999
+User   : lkg
+Old Tag: v01_00_01
+New Tag: v01_00_02
+Message: add special undefined-helicity value for roar
+
+Module : MCInfo
+
+Date   : Tue Oct 19 21:13:15 1999
+User   : lkg
+Old Tag: v01_00_02
+New Tag: v01_01_00
+Message: 
+- compatibility changes for adding information from GEANT
+  * ability to add children MCParticle's singly to an MCVertex
+  * don't use enum type "interaction" for arguments or return value for
+    member fcn's
+  * non-const versions of getParticle, getVertex, etc. fcns in MCDecayTree
+- new commands for decay.dec parser
+  * GEANT command
+  * MIXING command: PRELIMINARY, only flags whether a particle can mix
+- cleanup, usability
+  * get rid of clutter from many DEBUG reports
+  * improve << operator output for MCParticle, MCVertex
+  * add dumpHeader() to get column headers for output
+  * isBaryon, isDeterministic, etc. fcn's -> baryon(), deterministic()
+    to follow the CLEO convention
+  * implemented mixable(), lepton() and neutrino() fcn's in MCParticleProperty
+- dealing with reality of QQ via a kluge routine
+  * force psi->l+l- modes to become
+- bug fixes
+  * MCParticle constructor will assign helicity undefined, rather than 0
+  * MCDecayTree copy constructor will do deep copy of tree it holds
+  * in MCDecayMode's subclass ModeCheckId, don't make the member item
+    of QQ_id a reference (big problems if call to fcn uses QQId() fcn of
+    a property directly)
+Module : MCInfo
+Date   : Sat Oct 30 08:29:46 1999
+User   : cleo3
+Old Tag: v01_01_00
+New Tag: v01_02_00
+Message: updated to work with cxx 6.2
+
+Module : MCInfo
+Date   : Sun Oct 31 09:37:44 1999
+User   : lkg
+Old Tag: v01_02_00
+New Tag: v01_02_01
+Message: 
+- mod's to allow daughters in a decay to have mixed "behind the scenes"
+- geantIdToQQId conversion added to property store.
+
+Module : MCInfo
+Date   : Tue Nov  2 18:37:44 1999
+User   : lkg
+Old Tag: v01_02_01
+New Tag: v01_02_02
+Message: bug fix in MCVertex isType mem. fcn. for conjugate modes
+
+Module : MCInfo
+Date   : Thu Jan 13 17:15:10 2000
+User   : lkg
+Old Tag: v01_02_02
+New Tag: v01_02_03
+Message: decay.dec version 19991109; Makefile auto-installs decay.dec updates into C3_DATA
+
+Module : MCInfo
+Date   : Tue Jan 18 17:25:05 2000
+User   : lkg
+Old Tag: v01_02_03
+New Tag: v01_02_04
+Message: fix missing initialization of m_mixing in MCParticle copy constructor
+
+Module : MCInfo
+Date   : Wed Jan 26 11:52:13 2000
+User   : lkg
+Old Tag: v01_02_04
+New Tag: v01_02_05
+Message: added nonfatal interaction kiRadiativePairProduction
+
+Module : MCInfo
+Date   : Fri Jan 28 12:52:04 2000
+User   : lkg
+Old Tag: v01_02_05
+New Tag: v01_02_06
+Message: added documentation web page to Doc area
+
+Module : MCInfo
+Date   : Mon Jan 31 12:12:15 2000
+User   : lkg
+Old Tag: v01_02_06
+New Tag: v01_02_07
+Message: update html doc file to conform to C3 soft. web format
+
+Module : MCInfo
+Date   : Tue Mar 28 21:44:54 2000
+User   : lkg
+Old Tag: v01_02_07
+New Tag: v01_02_08
+Message: comment out improved version of << operator for CLHEP vector classes
+
+Module : MCInfo
+Date   : Mon May  1 18:52:51 2000
+User   : lkg
+Old Tag: v01_02_08
+New Tag: v01_03_00
+Message: StorageHelper changes and routines implemented
+
+Module : MCInfo
+Date   : Thu May  4 13:55:21 2000
+User   : cdj
+Old Tag: v01_03_00
+New Tag: v01_03_01
+Message: Storage classes now compile under OSF
+
+Module : MCInfo
+Date   : Fri May  5 16:02:52 2000
+User   : cdj
+Old Tag: v01_03_01
+New Tag: v01_03_02
+Message: manual instantiations now use correct 'const'ness of parameter
+
+Module : MCInfo
+Date   : Thu Jul  6 21:52:54 2000
+User   : lkg
+Old Tag: v01_03_02
+New Tag: v01_03_03
+Message: Bug fix in storage helper for handling particles w/ multiple vertices
+
+Module : MCInfo
+Date   : Fri Jul  7 11:03:13 2000
+User   : lkg
+Old Tag: v01_03_03
+New Tag: v01_03_04
+Message: add various include <stack> to fix OSF compilation
+
+Module : MCInfo
+Date   : Fri Jul  7 14:02:01 2000
+User   : cdj
+Old Tag: v01_03_04
+New Tag: v01_04_00
+Message: added instantiation of deque<MCParticle*> needed for OSF
+
+Module : MCInfo
+Date   : Wed Jul 19 11:52:44 2000
+User   : lkg
+Old Tag: v01_04_00
+New Tag: v01_05_00
+Message: vertex search functions based on parent only, vsf's w/ user-specified start
+
+Module : MCInfo
+Date   : Wed Oct  4 17:23:22 2000
+User   : bkh
+Old Tag: v01_05_00
+New Tag: v01_05_01
+Message: 
+Add MCParticle default constructor and assignment operator
+and MCParticleProperty static unknown instance function
+for use in MCParticle's default constructor
+Module : MCInfo
+Date   : Fri Oct  6 14:26:07 2000
+User   : bkh
+Old Tag: v01_05_01
+New Tag: v01_05_02
+Message: 
+Add MCParticle constructor with MCParticleProperty and KTKinematicData
+Module : MCInfo
+Date   : Mon Oct  9 19:34:40 2000
+User   : wsun
+Old Tag: v01_05_02
+New Tag: v01_06_00
+Message: Added MCParticleProperty::charmed().  Other flavors to come.
+
+Module : MCInfo
+Date   : Mon Dec 18 17:49:49 2000
+User   : pappas
+Old Tag: v01_06_00
+New Tag: v01_06_01
+Message: Update to get D. Jaffe's fix for K1 spin assignment
+
+Module : MCInfo
+Date   : Mon Jan 15 23:22:58 2001
+User   : lkg
+Old Tag: v01_06_01
+New Tag: v01_06_02
+Message: remove template instantiation which now appears in StorageManagement (from MCVertexStorageHelper.cc)
+
+Module : MCInfo
+Date   : Tue Feb 13 21:37:52 2001
+User   : lkg
+Old Tag: v01_06_02
+New Tag: v01_06_03
+Message: Add use of unknown deecay modes for better handling of garbage in QQ common blocks
+
+Module : MCInfo
+Date   : Sun Feb 18 21:36:44 2001
+User   : cleo3
+Old Tag: v01_06_03
+New Tag: v01_07_00
+Message: minor modifications needed to compile on linux
+
+Module : MCInfo
+Date   : Tue Mar 20 11:50:21 2001
+User   : pappas
+Old Tag: v01_07_00
+New Tag: v01_07_01
+Message: 
+A bug existed in the CLHEP constructor for HepLorentzVector;
+Fixing CLHEP broke MCVertex.cc; this patch fixes MCVertex.cc.
+<Please type your Tag Message>
+Module : MCInfo
+Date   : Fri May 11 15:00:00 2001
+User   : lkg
+Old Tag: v01_07_01
+New Tag: v01_07_02
+Message: bug fix for inifinitely-lived particles in stable particle iterator (MCStablePartItr)
+
+Module : MCInfo
+Date   : Sat May 12 13:47:00 2001
+User   : lkg
+Old Tag: v01_07_02
+New Tag: v01_08_00
+Message: add dereferencing iterator for particle property store
+
+Module : MCInfo
+Date   : Sun May 13 15:18:29 2001
+User   : lyon
+Old Tag: v01_08_00
+New Tag: v01_09_00
+Message: Added Identifier typedef for MCTreeNode.h -- lattice needs it
+
+Module : MCInfo
+Date   : Mon May 14 10:50:06 2001
+User   : lkg
+Old Tag: v01_09_00
+New Tag: v01_09_01
+Message: add instantiation for MCPPStoreItr
+
+Module : MCInfo
+Date   : Mon Sep 10 16:11:06 2001
+User   : cleo3
+Old Tag: v01_09_01
+New Tag: v01_10_00
+Message: upgraded to compile under Solaris 8
+
+Module : MCInfo
+Date   : Tue Sep 11 13:50:05 2001
+User   : cdj
+Old Tag: v01_10_00
+New Tag: v01_10_01
+Message: fixed compilation problems
+
+Module : MCInfo
+Date   : Thu Sep 27 12:10:52 2001
+User   : tom
+Old Tag: v01_10_01
+New Tag: v01_10_02
+Message: New interaction type
+
+Module : MCInfo
+Date   : Sun Oct 14 14:59:28 2001
+User   : cdj
+Old Tag: v01_10_02
+New Tag: v01_10_03
+Message: fixed bug which could crash program when a MCParticleProperty instance is initialized at file scope
+
+Module : MCInfo
+Date   : Mon Oct 22 15:15:08 2001
+User   : lkg
+Old Tag: v01_10_03
+New Tag: v01_10_04
+Message: loosen default conservation tolerance for E,p in MCVertex
+
+Module : MCInfo
+Date   : Thu Oct 25 15:03:23 2001
+User   : lkg
+Old Tag: v01_10_04
+New Tag: v01_10_05
+Message: REDEFINE command added to decay.dec parsing
+
+Module : MCInfo
+Date   : Thu Nov  1 16:31:05 2001
+User   : lkg
+Old Tag: v01_10_05
+New Tag: v01_10_06
+Message: zero branching fraction protection
+
+Module : MCInfo
+Date   : Wed Dec 19 22:00:21 2001
+User   : lkg
+Old Tag: v01_10_06
+New Tag: v02_00_00
+Message: property storage helpers. improved dec parsing. radiative decay support. minor qq-in-suez tweaks
+
+Module : MCInfo
+Date   : Fri Dec 21 15:32:11 2001
+User   : lkg
+Old Tag: v02_00_00
+New Tag: v02_00_01
+Message: fixed property storage helper instantiations + added new find_if instantiation
+
+Module : MCInfo
+Date   : Sun Jan 20 14:44:02 2002
+User   : lkg
+Old Tag: v02_00_01
+New Tag: v02_00_02
+Message: mainly tweaks/fixes for smooth operation of qq in suez, begin migration from assert to exception
+
+Module : MCInfo
+Date   : Sun Jan 20 15:15:18 2002
+User   : lkg
+Old Tag: v02_00_02
+New Tag: v02_00_03
+Message: bug fix for decay mode consistency check in MCVertex
+
+Module : MCInfo
+Date   : Mon Feb  4 22:48:09 2002
+User   : lkg
+Old Tag: v02_00_03
+New Tag: v02_00_04
+Message: fix particle, property storage helper bugs, implement constant access particle/vertex lookup by id, replacing linear time
+
+Module : MCInfo
+Date   : Wed Feb  6 15:00:07 2002
+User   : lkg
+Old Tag: v02_00_04
+New Tag: v02_00_05
+Message: add the interaction type kiNonQQDecay which will not enforce consistancy btw decay.dec and abserved modes
+
+Module : MCInfo
+Date   : Tue Mar 12 11:11:47 2002
+User   : zaza
+Old Tag: v02_00_05
+New Tag: v03_00_00
+Message: New semileptonic decays for D0,D0B,D+,D- from R.Patterson
+
+Module : MCInfo
+Date   : Fri May  3 15:48:56 2002
+User   : lkg
+Old Tag: v03_00_00
+New Tag: v03_01_00
+Message: speed up name-based MCDecayTree search requests, add coord. translation to MCParticle,MCVertex
+
+Module : MCInfo
+Date   : Mon Jun  3 16:31:47 2002
+User   : cleo3
+Old Tag: v03_01_00
+New Tag: v03_02_00
+Message: replaced cpp switch NO_GETLINE_WITH_STRING_BUG to NO_GETLINE_ISTREAM_STRING_BUG
+
+Module : MCInfo
+Date   : Tue Jun  4 15:00:58 2002
+User   : lkg
+Old Tag: v03_02_00
+New Tag: v03_02_01
+Message: replaced SUNCC flag with specific bug flag
+
+Module : MCInfo
+Date   : Wed Jun  5 21:29:04 2002
+User   : lkg
+Old Tag: v03_02_01
+New Tag: v03_02_02
+Message: eliminate extraneous code in MCDecayModeStorageHelper that was formerly not used due to bad SUNCC1 flag
+
+Module : MCInfo
+Date   : Fri Aug 16 11:18:20 2002
+User   : cleo3
+Old Tag: v03_02_02
+New Tag: v03_03_00
+Message: replaced iostream.h with C++/iostream.h
+
+Module : MCInfo
+Date   : Fri Sep 20 13:48:14 2002
+User   : bkh
+Old Tag: v03_03_00
+New Tag: v03_03_01
+Message: 
+attempt to fix memory leak?
+Module : MCInfo
+Date   : Fri Sep 20 13:52:45 2002
+User   : bkh
+Old Tag: v03_03_01
+New Tag: v03_03_02
+Message: 
+Undo previous change--unnecessary
+Module : MCInfo
+Date   : Thu Nov 21 16:12:46 2002
+User   : cleo3
+Old Tag: v03_03_02
+New Tag: v03_04_00
+Message: changed fstream.h to C++Std/fstream.h
+
+Module : MCInfo
+Date   : Fri Dec  6 11:54:10 2002
+User   : cleo3
+Old Tag: v03_04_00
+New Tag: v03_05_00
+Message: Made changes necessary for Linux.  Dealt with strstream/stringstream change.
+
+Module : MCInfo
+Date   : Sun Jan 12 14:22:56 2003
+User   : cdj
+Old Tag: v03_05_00
+New Tag: v03_06_00
+Message: missed some strstream changes
+
+Module : MCInfo
+Date   : Thu Jan 16 16:08:29 2003
+User   : cdj
+Old Tag: v03_06_00
+New Tag: v03_07_00
+Message: use stringstream if available
+
+Module : MCInfo
+Date   : Wed Jan 29 14:16:09 2003
+User   : cdj
+Old Tag: v03_07_00
+New Tag: v03_08_00
+Message: get iomanip header from C++Std package
+
+Module : MCInfo
+Date   : Mon Feb  3 15:25:48 2003
+User   : bkh
+Old Tag: v03_08_00
+New Tag: v03_09_00
+Message: 
+Add new unwinding function to MCParticle

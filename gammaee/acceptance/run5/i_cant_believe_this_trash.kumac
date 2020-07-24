@@ -1,0 +1,561 @@
+* Beamgas cuts: general, electrons, positrons
+nt/cut $20 abs(d0close)<0.02&&0.075<abs(wz)<0.4&&-0.9<trperp1<0.9
+nt/cut $21 wpz<-1
+nt/cut $22 wpz>1
+* The cosmic region
+* You also implicitly cut on 0<=accen/2/ebeam<=0.2 !!!
+nt/cut $30 0.04<abs(d0close)<0.1&&abs(trperp1)>0.999
+
+* Determine ptobge, ptobgp, ctobge, ctobgp
+h/cr/1d 100 'Z momentum of peak data, cut for beamgas' 50 -5. 5.
+h/cr/1d 101 'Z momentum of peak data, cut for beamgas' 50 -5. 5.
+h/cr/1d 102 'Z momentum of peak data, cut for beamgas' 50 -5. 5.
+h/cr/1d 110 'Z momentum of peak data, cut for beamgas' 50 -5. 5.
+h/cr/1d 120 'Z momentum of peak data, cut for beamgas' 50 -5. 5.
+h/cr/1d 111 'Z momentum of peak data, cut for beamgas' 50 -5. 5.
+h/cr/1d 122 'Z momentum of peak data, cut for beamgas' 50 -5. 5.
+nt/plot //peak/cuts/1.wpz $20 ! ! ! 'N' 100
+nt/plot //bge/cuts/1.wpz $20 ! ! ! 'N' 101
+nt/plot //bgp/cuts/1.wpz $20 ! ! ! 'N' 102
+nt/plot //peak/cuts/1.wpz $20&&$21 ! ! ! 'N' 110
+nt/plot //peak/cuts/1.wpz $20&&$22 ! ! ! 'N' 120
+nt/plot //bge/cuts/1.wpz $20&&$21 ! ! ! 'N' 111
+nt/plot //bgp/cuts/1.wpz $20&&$22 ! ! ! 'N' 122
+sigma ptobge = $HINFO(110,'ENTRIES')/$HINFO(111,'ENTRIES')
+sigma ptobgp = $HINFO(120,'ENTRIES')/$HINFO(122,'ENTRIES')
+h/delete 131
+h/delete 132
+h/delete 141
+sub 101 101 131 $SIGMA(ptobge) 0. 'e'
+sub 102 102 132 $SIGMA(ptobgp) 0. 'e'
+add 131 132 141 1. 1. 'e'
+
+zone 1 2
+set dmod 1
+h/copy 100 900 'Z momentum of events far from the interaction region' 
+h/plot 900 'e'
+set dmod 2
+h/plot 131 'shist'
+set dmod 3
+h/plot 141 'shist'
+pict/print /cdat/daf9/mccann/thesis/plots/acceptance/beamgas_scaling.eps
+
+* Now really determine them
+nt/cut $20 abs(d0close)<0.02&&0.075<abs(wz)<0.4&&-0.9<trperp1<0.9
+nt/cut $21 wpz<-1
+nt/cut $22 wpz>1
+nt/cut $30 0.04<abs(d0close)<0.1&&abs(trperp1)>0.999
+zone 1 2
+h/cr/1d 100 'Z momentum of peak data, cut for beamgas' 50 -5. 5.
+h/cr/1d 101 'Z momentum of peak data, cut for beamgas' 50 -5. 5.
+h/cr/1d 102 'Z momentum of peak data, cut for beamgas' 50 -5. 5.
+h/cr/1d 110 'Z momentum of peak data, cut for beamgas' 50 -5. 5.
+h/cr/1d 120 'Z momentum of peak data, cut for beamgas' 50 -5. 5.
+h/cr/1d 111 'Z momentum of peak data, cut for beamgas' 50 -5. 5.
+h/cr/1d 122 'Z momentum of peak data, cut for beamgas' 50 -5. 5.
+nt/plot //peak/cuts/1.wpz $20 ! ! ! 'N' 100
+nt/plot //bge/cuts/1.wpz $20 ! ! ! 'N' 101
+nt/plot //bgp/cuts/1.wpz $20 ! ! ! 'N' 102
+nt/plot //peak/cuts/1.wpz $20&&$21 ! ! ! 'N' 110
+nt/plot //peak/cuts/1.wpz $20&&$22 ! ! ! 'N' 120
+nt/plot //bge/cuts/1.wpz $20&&$21 ! ! ! 'N' 111
+nt/plot //bgp/cuts/1.wpz $20&&$22 ! ! ! 'N' 122
+sigma ptobge = $HINFO(110,'ENTRIES')/$HINFO(111,'ENTRIES')
+sigma ptobgp = $HINFO(120,'ENTRIES')/$HINFO(122,'ENTRIES')
+h/delete 131
+h/delete 132
+h/delete 141
+sub 101 101 131 $SIGMA(ptobge) 0. 'e'
+sub 102 102 132 $SIGMA(ptobgp) 0. 'e'
+add 131 132 141 1. 1. 'e'
+set dmod 1
+set hcol 1
+h/plot 100
+h/plot 100 'se'
+set hcol 2
+h/plot 141 's'
+set dmod 3
+h/plot 131 's'
+set dmod 1
+set hcol 4
+h/plot 132 's'
+set hcol 1
+set ltyp 3
+dline 1 1 0 $GRAFINFO('WNYMAX')
+dline -1 -1 0 $GRAFINFO('WNYMAX')
+h/cr/1d 200 'Z momentum of cont data, cut for beamgas' 50 -5. 5.
+h/cr/1d 201 'Z momentum of cont data, cut for beamgas' 50 -5. 5.
+h/cr/1d 202 'Z momentum of cont data, cut for beamgas' 50 -5. 5.
+h/cr/1d 210 'Z momentum of cont data, cut for beamgas' 50 -5. 5.
+h/cr/1d 220 'Z momentum of cont data, cut for beamgas' 50 -5. 5.
+h/cr/1d 211 'Z momentum of cont data, cut for beamgas' 50 -5. 5.
+h/cr/1d 222 'Z momentum of cont data, cut for beamgas' 50 -5. 5.
+nt/plot //cont/cuts/1.wpz $20 ! ! ! 'N' 200
+nt/plot //bge/cuts/1.wpz $20 ! ! ! 'N' 201
+nt/plot //bgp/cuts/1.wpz $20 ! ! ! 'N' 202
+nt/plot //cont/cuts/1.wpz $20&&$21 ! ! ! 'N' 210
+nt/plot //cont/cuts/1.wpz $20&&$22 ! ! ! 'N' 220
+nt/plot //bge/cuts/1.wpz $20&&$21 ! ! ! 'N' 211
+nt/plot //bgp/cuts/1.wpz $20&&$22 ! ! ! 'N' 222
+sigma ctobge = $HINFO(210,'ENTRIES')/$HINFO(211,'ENTRIES')
+sigma ctobgp = $HINFO(220,'ENTRIES')/$HINFO(222,'ENTRIES')
+h/delete 231
+h/delete 232
+h/delete 241
+sub 201 201 231 $SIGMA(ctobge) 0. 'e'
+sub 202 202 232 $SIGMA(ctobgp) 0. 'e'
+add 231 232 241 1. 1. 'e'
+set dmod 1
+set hcol 1
+h/plot 200
+h/plot 200 'se'
+set hcol 2
+h/plot 241 's'
+set dmod 3
+h/plot 231 's'
+set dmod 1
+set hcol 4
+h/plot 232 's'
+set hcol 1
+set ltyp 3
+dline 1 1 0 $GRAFINFO('WNYMAX')
+dline -1 -1 0 $GRAFINFO('WNYMAX')
+message sigma ptobge = $sigma(ptobge)
+message sigma ptobgp = $sigma(ptobgp)
+message sigma ctobge = $sigma(ctobge)
+message sigma ctobgp = $sigma(ctobgp)
+* whew!
+
+* now determine pa, ca, pb, cb
+h/cr/1d 301 'peak through analysis' 10 -1. 1.
+h/cr/1d 302 'cont through analysis' 10 -1. 1.
+h/cr/1d 351 'cos(theta) of bhabha-like resonance events' 10 -1. 1.
+h/cr/1d 352 'cos(theta) of bhabha-like resonance events' 10 -1. 1.
+h/cr/1d 399 'cos(theta) of bhabha-like resonance events' 10 -1. 1.
+nt/plot //peak/cuts/1.cotthp/sqrt(cotthp**2+1) $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 301
+nt/plot //cont/cuts/1.cotthp/sqrt(cotthp**2+1) $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 302
+nt/plot //peak/cuts/1.cotthp/sqrt(cotthp**2+1) $1&&$15 ! ! ! 'N' 351
+nt/plot //cont/cuts/1.cotthp/sqrt(cotthp**2+1) $1&&$15 ! ! ! 'N' 352
+sigma pa  = $HINFO(301,'ENTRIES')
+sigma ca  = $HINFO(302,'ENTRIES')
+sigma pb  = $HINFO(351,'ENTRIES')
+sigma cb  = $HINFO(352,'ENTRIES')
+message sigma pa = $SIGMA(pa)
+message sigma ca = $SIGMA(ca)
+message sigma pb = $SIGMA(pb)
+message sigma cb = $SIGMA(cb)
+
+
+h/cr/1d 101 'Number of tracks' 29 -0.5 28.5
+h/cr/1d 102 'Number of tracks' 29 -0.5 28.5
+h/cr/1d 103 'Number of tracks' 29 -0.5 28.5
+h/cr/1d 104 'Number of tracks' 29 -0.5 28.5
+h/cr/1d 105 'Number of tracks' 29 -0.5 28.5
+h/cr/1d 106 'Number of tracks' 29 -0.5 28.5
+h/cr/1d 107 'Number of tracks' 29 -0.5 28.5
+h/cr/1d 108 'Number of tracks' 29 -0.5 28.5
+h/cr/1d 109 'Number of tracks' 29 -0.5 28.5
+nt/plot //mcggg/cuts/1.tracks $10&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 101
+nt/plot //mcgam/cuts/1.tracks $10&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 102
+nt/plot //mcqq/cuts/1.tracks $10&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 103
+nt/plot //mc/cuts/1.tracks $10&&$11&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 104
+nt/plot //mc/cuts/1.tracks $10&&$12&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 105
+nt/plot //mc/cuts/1.tracks $10&&$13&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 106
+if $SIGMA(which).ne.1 then
+  nt/plot //mccas/cuts/1.tracks $10&&$21&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 107
+  nt/plot //mccas/cuts/1.tracks $10&&$22&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 108
+  nt/plot //mccas/cuts/1.tracks $10&&$23&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 109
+endif
+h/delete 111
+h/delete 112
+h/delete 113
+h/delete 114
+h/delete 115
+h/delete 116
+h/delete 117
+h/delete 118
+h/delete 119
+add 101 101 111 $SIGMA(smcggg) 0. 'e'
+add 102 102 112 $SIGMA(smcgam) 0. 'e'
+add 103 103 113 $SIGMA(smcqq)  0. 'e'
+add 104 104 114 $SIGMA(smcee)  0. 'e'
+add 105 105 115 $SIGMA(smcmm)  0. 'e'
+add 106 106 116 $SIGMA(smctt)  0. 'e'
+if $SIGMA(which).ne.1 then
+  add 107 107 117 $SIGMA(smccee) 0. 'e'
+  add 108 108 118 $SIGMA(smccmm) 0. 'e'
+  add 109 109 119 $SIGMA(smccas) 0. 'e'
+endif
+h/delete 121
+h/delete 122
+h/delete 123
+h/delete 124
+h/delete 125
+h/delete 126
+h/delete 127
+h/delete 128
+h/delete 129
+add 111 112 122 1. 1. 'e'
+add 122 113 123 1. 1. 'e'
+add 123 114 124 1. 1. 'e'
+add 124 115 125 1. 1. 'e'
+add 125 116 126 1. 1. 'e'
+if $SIGMA(which).eq.1 then
+  h/copy 126 129
+endif
+if $SIGMA(which).ne.1 then
+  add 126 117 127 1. 1. 'e'
+  add 127 118 128 1. 1. 'e'
+  add 128 119 129 1. 1. 'e'
+endif
+h/cr/1d 201 'Number of tracks' 29 -0.5 28.5
+h/cr/1d 202 'Number of tracks' 29 -0.5 28.5
+h/cr/1d 203 'Number of tracks' 29 -0.5 28.5
+h/cr/1d 204 'Number of tracks' 29 -0.5 28.5
+h/cr/1d 205 'Number of tracks' 29 -0.5 28.5
+h/cr/1d 206 'Number of tracks' 29 -0.5 28.5
+h/cr/1d 207 'Number of tracks' 29 -0.5 28.5
+h/cr/1d 208 'Number of tracks' 29 -0.5 28.5
+h/cr/1d 209 'Number of tracks' 29 -0.5 28.5
+nt/plot //mcggg/cuts/1.tracks $10&&$1&&$15 ! ! ! 'N' 201
+nt/plot //mcgam/cuts/1.tracks $10&&$1&&$15 ! ! ! 'N' 202
+nt/plot //mcqq/cuts/1.tracks $10&&$1&&$15 ! ! ! 'N' 203
+nt/plot //mc/cuts/1.tracks $10&&$11&&$1&&$15 ! ! ! 'N' 204
+nt/plot //mc/cuts/1.tracks $10&&$12&&$1&&$15 ! ! ! 'N' 205
+nt/plot //mc/cuts/1.tracks $10&&$13&&$1&&$15 ! ! ! 'N' 206
+if $SIGMA(which).ne.1 then
+  nt/plot //mccas/cuts/1.tracks $10&&$21&&$1&&$15 ! ! ! 'N' 207
+  nt/plot //mccas/cuts/1.tracks $10&&$22&&$1&&$15 ! ! ! 'N' 208
+  nt/plot //mccas/cuts/1.tracks $10&&$23&&$1&&$15 ! ! ! 'N' 209
+endif
+h/delete 211
+h/delete 212
+h/delete 213
+h/delete 214
+h/delete 215
+h/delete 216
+h/delete 217
+h/delete 218
+h/delete 219
+add 201 201 211 $SIGMA(smcggg) 0. 'e'
+add 202 202 212 $SIGMA(smcgam) 0. 'e'
+add 203 203 213 $SIGMA(smcqq)  0. 'e'
+add 204 204 214 $SIGMA(smcee)  0. 'e'
+add 205 205 215 $SIGMA(smcmm)  0. 'e'
+add 206 206 216 $SIGMA(smctt)  0. 'e'
+if $SIGMA(which).ne.1 then
+  add 207 207 217 $SIGMA(smccee) 0. 'e'
+  add 208 208 218 $SIGMA(smccmm) 0. 'e'
+  add 209 209 219 $SIGMA(smccas) 0. 'e'
+endif
+h/delete 221
+h/delete 222
+h/delete 223
+h/delete 224
+h/delete 225
+h/delete 226
+h/delete 227
+h/delete 228
+h/delete 229
+add 211 212 222 1. 1. 'e'
+add 222 213 223 1. 1. 'e'
+add 223 214 224 1. 1. 'e'
+add 224 215 225 1. 1. 'e'
+add 225 216 226 1. 1. 'e'
+if $SIGMA(which).eq.1 then
+  h/copy 226 229
+endif
+if $SIGMA(which).ne.1 then
+  add 226 217 227 1. 1. 'e'
+  add 227 218 228 1. 1. 'e'
+  add 228 219 229 1. 1. 'e'
+endif
+message ma = $HINFO(129,'SUM')
+message mb = $HINFO(229,'SUM')
+ve/cr vma(29)
+ve/cr vmb(29)
+h/get_vect/errors 129 vma
+h/get_vect/errors 229 vmb
+sigma ema2 = 0.
+sigma emb2 = 0.
+do i = 1, 29
+  sigma ema2 = ema2 + vma([i])**2
+  sigma emb2 = emb2 + vmb([i])**2
+enddo
+message sigma ema = $SIGMA(sqrt(ema2))
+message sigma emb = $SIGMA(sqrt(emb2))
+
+zone 2 2
+opt sta
+nt/plot //tpeak/triggeronlyproc/1.stereo $1
+message tpeak $HINFO(1000000,'ENTRIES')
+nt/plot //peak/cuts/1.tracks $1
+message peak $HINFO(1000000,'ENTRIES')
+nt/plot //tcont/triggeronlyproc/1.stereo $1
+message tcont $HINFO(1000000,'ENTRIES')
+nt/plot //cont/cuts/1.tracks $1
+message cont $HINFO(1000000,'ENTRIES')
+
+all the trigger ntuples are a-okay (same number as in main ntuples,
+up to about +- 10 (out of > 100000)
+
+nt/cut $30 0.04<abs(d0close)<0.1&&abs(trperp1)>0.999
+h/cr/1d 400 'cosmic accen' 100 0. 0.2
+h/cr/1d 401 'cosmic accen' 100 0. 0.2
+h/cr/1d 402 'cosmic accen' 100 0. 0.2
+h/cr/1d 403 'cosmic accen' 100 0. 0.2
+h/cr/1d 404 'cosmic accen' 100 0. 0.2
+nt/plot //peak/cuts/1.accen/2/ebeam $1&&$30 ! ! ! 'N' 400
+nt/plot //cont/cuts/1.accen/2/ebeam $1&&$30 ! ! ! 'N' 401
+nt/plot //bge/cuts/1.accen/2/ebeam $1&&$30 ! ! ! 'N' 402
+nt/plot //bgp/cuts/1.accen/2/ebeam $1&&$30 ! ! ! 'N' 403
+nt/plot //cos/cuts/1.accen/2/ebeam $1&&$30 ! ! ! 'N' 404
+exec i_cant_believe_scales 0 0 0 0 0
+ve/cr ptocy(3)
+ve/inp ptocy $SIGMA(ptoc) $SIGMA(ptoc) $SIGMA(ptoc)
+ve/cr cosy(3)
+do i = 1, 3
+  h/delete $SIGMA(410+[i])
+  h/delete $SIGMA(420+[i])
+  h/delete $SIGMA(430+[i])
+  h/delete $SIGMA(440+[i])
+  sub 400 401 $SIGMA(410+[i]) 1. $SIGMA(ptocy([i])) 'e'
+  sub $SIGMA(410+[i]) 402 $SIGMA(420+[i]) 1. $SIGMA(ptobge-ptocy([i])*ctobge) 'e'
+  sub $SIGMA(420+[i]) 403 $SIGMA(430+[i]) 1. $SIGMA(ptobgp-ptocy([i])*ctobgp) 'e'
+  sigma scos = $HINFO($SIGMA(430+[i]),'SUM')/$HINFO(404,'SUM')
+  ve/inp cosy([i]) $SIGMA(scos)
+  sub 404 404 $SIGMA(440+[i]) $SIGMA(scos) 0. 'e'
+  sigma top = max($HINFO($SIGMA(430+[i]),'MAX'),$HINFO($SIGMA(440+[i]),'MAX'))
+  sigma bot = min($HINFO($SIGMA(430+[i]),'MIN'),$HINFO($SIGMA(440+[i]),'MIN'))
+  max $SIGMA(430+[i]) $SIGMA(top)
+  min $SIGMA(430+[i]) $SIGMA(1.2*bot)
+  set hcol 1
+  h/plot $SIGMA(430+[i])
+  set hcol 1505
+  h/plot $SIGMA(440+[i]) 'shist'
+  set hcol 1
+  h/plot $SIGMA(430+[i]) 's'
+enddo
+ve/print cosy
+
+zone 1 2
+set hcol 1
+set dmod 1
+h/copy 431 999 'CC energy (small showers removed) for cosmic rays'
+h/plot 999
+set dmod 3
+h/plot 441 'shist'
+pict/print 'cosmics_scaling.eps'
+
+* %%BoundingBox: 0 0 567 567
+
+
+nt/cut $30 0.04<abs(d0close)<0.1&&abs(trperp1)>0.999
+h/cr/1d 400 'cosmic accen' 100 0. 2.0
+h/cr/1d 401 'cosmic accen' 100 0. 2.0
+h/cr/1d 402 'cosmic accen' 100 0. 2.0
+h/cr/1d 403 'cosmic accen' 100 0. 2.0
+h/cr/1d 404 'cosmic accen' 100 0. 2.0
+nt/plot //peak/cuts/1.accen $1&&$30 ! ! ! 'N' 400
+nt/plot //cont/cuts/1.accen $1&&$30 ! ! ! 'N' 401
+nt/plot //bge/cuts/1.accen $1&&$30 ! ! ! 'N' 402
+nt/plot //bgp/cuts/1.accen $1&&$30 ! ! ! 'N' 403
+nt/plot //cos/cuts/1.accen $1&&$30 ! ! ! 'N' 404
+do a = -1, 1
+  do b = -1, 1
+    do c = -1, 1
+      sigma d = 100*([a]+1) + 10*([b]+1) + ([c]+1)
+      exec i_cant_believe_scales 0 0 0 0 0 [a] [b] [c]
+      ve/cr ptocy(3)
+      ve/inp ptocy $SIGMA(ptoc) $SIGMA(ptoc) $SIGMA(ptoc)
+      ve/cr cosy(3)
+      do i = 1, 3
+	h/delete $SIGMA(410+[i])
+	h/delete $SIGMA(420+[i])
+	h/delete $SIGMA(430+[i])
+	h/delete $SIGMA(440+[i])
+	sub 400 401 $SIGMA(410+[i]) 1. $SIGMA(ptocy([i])) 'e'
+	sub $SIGMA(410+[i]) 402 $SIGMA(420+[i]) 1. $SIGMA(dtobge) 'e'
+	sub $SIGMA(420+[i]) 403 $SIGMA(430+[i]) 1. $SIGMA(dtobgp) 'e'
+	sigma scos = $HINFO($SIGMA(430+[i]),'SUM')/$HINFO(404,'SUM')
+	ve/inp cosy([i]) $SIGMA(scos)
+	sub 404 404 $SIGMA(440+[i]) $SIGMA(scos) 0. 'e'
+	sigma top = max($HINFO($SIGMA(430+[i]),'MAX'),$HINFO($SIGMA(440+[i]),'MAX'))
+	sigma bot = min($HINFO($SIGMA(430+[i]),'MIN'),$HINFO($SIGMA(440+[i]),'MIN'))
+	max $SIGMA(430+[i]) $SIGMA(top)
+	min $SIGMA(430+[i]) $SIGMA(1.2*bot)
+	set hcol 1
+	h/plot $SIGMA(430+[i])
+	set hcol 1505
+	h/plot $SIGMA(440+[i]) 'shist'
+	set hcol 1
+	h/plot $SIGMA(430+[i]) 's'
+      enddo
+      message if SIGMA(d).eq.$SIGMA(d) then
+      message sigma dtocos = $SIGMA(cosy(1))
+      message endif
+    enddo
+  enddo
+enddo
+sigma d = 100*([6]+1) + 10*([7]+1) + ([8]+1)
+
+* a more robust way to get just one scos
+nt/cut $30 0.04<abs(d0close)<0.1&&abs(trperp1)>0.999
+h/cr/1d 400 'cosmic accen' 100 0. 2.0
+h/cr/1d 401 'cosmic accen' 100 0. 2.0
+h/cr/1d 402 'cosmic accen' 100 0. 2.0
+h/cr/1d 403 'cosmic accen' 100 0. 2.0
+h/cr/1d 404 'cosmic accen' 100 0. 2.0
+nt/plot //peak/cuts/1.accen $1&&$30 ! ! ! 'N' 400
+nt/plot //cont/cuts/1.accen $1&&$30 ! ! ! 'N' 401
+nt/plot //bge/cuts/1.accen $1&&$30 ! ! ! 'N' 402
+nt/plot //bgp/cuts/1.accen $1&&$30 ! ! ! 'N' 403
+nt/plot //cos/cuts/1.accen $1&&$30 ! ! ! 'N' 404
+sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+sigma dtobge = ptobge - ptoc*ctobge
+sigma dtobgp = ptobgp - ptoc*ctobgp
+h/delete $SIGMA(410+1)
+h/delete $SIGMA(420+1)
+h/delete $SIGMA(430+1)
+h/delete $SIGMA(440+1)
+sub 400 401 $SIGMA(410+1) 1. $SIGMA(ptoc) 'e'
+sub $SIGMA(410+1) 402 $SIGMA(420+1) 1. $SIGMA(dtobge) 'e'
+sub $SIGMA(420+1) 403 $SIGMA(430+1) 1. $SIGMA(dtobgp) 'e'
+sigma scos = $HINFO($SIGMA(430+1),'SUM')/$HINFO(404,'SUM')
+message $SIGMA(scos)
+
+
+
+nt/cut $30 0.04<abs(d0close)<0.1&&abs(trperp1)>0.999
+h/cr/1d 400 'cosmic accen' 100 0. 2.0
+h/cr/1d 401 'cosmic accen' 100 0. 2.0
+h/cr/1d 402 'cosmic accen' 100 0. 2.0
+h/cr/1d 403 'cosmic accen' 100 0. 2.0
+h/cr/1d 404 'cosmic accen' 100 0. 2.0
+nt/plot //peak/cuts/1.accen $1&&$30 ! ! ! 'N' 400
+nt/plot //cont/cuts/1.accen $1&&$30 ! ! ! 'N' 401
+nt/plot //bge/cuts/1.accen $1&&$30 ! ! ! 'N' 402
+nt/plot //bgp/cuts/1.accen $1&&$30 ! ! ! 'N' 403
+nt/plot //cos/cuts/1.accen $1&&$30 ! ! ! 'N' 404
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0
+
+sigma numer = $HINFO(400,'SUM') - ptoc * $HINFO(401,'SUM') - dtobge * $HINFO(402,'SUM') - dtobgp * $HINFO(403,'SUM')
+sigma denom = $HINFO(404,'SUM')
+sigma signm = sqrt($HINFO(400,'SUM') + ptoc**2 * $HINFO(401,'SUM') + dtobge**2 * $HINFO(402,'SUM') + dtobgp**2 * $HINFO(403,'SUM'))
+sigma sigdm = sqrt($HINFO(404,'SUM'))
+message $SIGMA(numer/denom) $SIGMA(numer/denom*sqrt(signm**2/numer**2+sigdm**2/denom**2))
+* 1s  -0.22676 -0.00648779
+* 2s   0.192389 0.0137488
+* 3s  -1.16972 -0.0162621
+
+
+
+
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0
+zone 2 2
+set hcol 0
+exec i_cant_believe_weight 1
+exec i_cant_believe_oh_plot_it_anyway 1
+set ltyp 2
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 2.5 2.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec i_cant_believe_weight 2
+exec i_cant_believe_oh_plot_it_anyway 2
+set ltyp 2
+dline 1.5 1.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec i_cant_believe_weight 3
+exec i_cant_believe_oh_plot_it_anyway 3
+set ltyp 2
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 1.5 1.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec i_cant_believe_weight 4
+exec i_cant_believe_oh_plot_it_anyway 4
+set ltyp 2
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 -1
+zone 2 2 1 s
+set hcol 2
+exec i_cant_believe_weight 1
+exec i_cant_believe_oh_plot_it_anyway 1
+set ltyp 2
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 2.5 2.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec i_cant_believe_weight 2
+exec i_cant_believe_oh_plot_it_anyway 2
+set ltyp 2
+dline 1.5 1.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec i_cant_believe_weight 3
+exec i_cant_believe_oh_plot_it_anyway 3
+set ltyp 2
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 1.5 1.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec i_cant_believe_weight 4
+exec i_cant_believe_oh_plot_it_anyway 4
+set ltyp 2
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+
+
+ve/cr tmp(1)
+ve/cr err(1)
+exec i_cant_believe_mconly 1 'ccstudy' 1 0.5 1.5 1 $2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&visen-neue>0.35
+h/get_vect/contents 154 tmp
+h/get_vect/errors   154 err
+message $SIGMA(tmp(1)) +/- $SIGMA(err(1))
+* MC before (notaus) 67950.8 +/- 323.227
+exec i_cant_believe_mconly 2 'ccstudy' 1 0.5 1.5 1 $2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&visen-neue>0.35&&$1
+h/get_vect/contents 254 tmp
+h/get_vect/errors   254 err
+message $SIGMA(tmp(1)) +/- $SIGMA(err(1))
+* MC after (notaus) 67945.4 +/- 323.217
+
+exec i_cant_believe_mconly 3 'ccstudy' 1 0.5 1.5 1 $2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&visen-neue>0.35
+h/get_vect/contents 357 tmp
+h/get_vect/errors   357 err
+message $SIGMA(tmp(1)) +/- $SIGMA(err(1))
+* MC before (+taus) 68962.1 +/- 324.353
+exec i_cant_believe_mconly 4 'ccstudy' 1 0.5 1.5 1 $2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&visen-neue>0.35&&$1
+h/get_vect/contents 457 tmp
+h/get_vect/errors   457 err
+message $SIGMA(tmp(1)) +/- $SIGMA(err(1))
+* MC after (+taus) 68873 +/- 324.25
+
+
+
+
+ve/cr tmp(1)
+exec i_cant_believe_mconly 3 'ccstudy' 1 0.5 1.5 1 $2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&visen-neue>0.35
+h/get_vect/contents 357 tmp
+message $SIGMA(tmp(1))
+exec i_cant_believe_mconly 4 'ccstudy' 1 0.5 1.5 1 $2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&visen-neue>0.35&&$1
+h/get_vect/contents 457 tmp
+message $SIGMA(tmp(1))
+
+* with this in i_cant_believe_weight.kumac
+add [1]54 [1]14 [1]55 1. 1. 'e'
+add [1]55 [1]15 [1]56 1. 1. 'e'
+add [1]56 [1]16 [1]57 1. 1. 'e'
+
+
+
+
+nt/plot //mcggg/cuts/1.mctype $10 ! ! ! 'N' 1000000
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mcggg/cuts/1.mctype $10&&visen<0.2 ! ! ! 'N' 1000000
+message $HINFO(1000000,'ENTRIES')
+message $SIGMA(2/43411*100)
+
+nt/plot //mcgam/cuts/1.mctype $10 ! ! ! 'N' 1000000
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mcgam/cuts/1.mctype $10&&visen<0.2 ! ! ! 'N' 1000000
+message $HINFO(1000000,'ENTRIES')
+message $SIGMA(32/13634*100)
+
+nt/plot //mcqq/cuts/1.mctype $10 ! ! ! 'N' 1000000
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mcqq/cuts/1.mctype $10&&visen<0.2 ! ! ! 'N' 1000000
+message $HINFO(1000000,'ENTRIES')
+message $SIGMA(12/14388*100)
+
+

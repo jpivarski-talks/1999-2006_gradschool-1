@@ -1,0 +1,64 @@
+#include "RandomModule/RandomGenerator.h"
+#include <vector>
+void BigNTuple2::shakedown(
+   double&x, double& y, double& sig2x, double& sig2y, KTHelix& a, KTHelix& b )
+{
+   const int numtries = 100;
+   vector< double > curva( numtries, 0. );
+   vector< double > d0a( numtries, 0. );
+   vector< double > phi0a( numtries, 0. );
+   vector< double > curvb( numtries, 0. );
+   vector< double > d0b( numtries, 0. );
+   vector< double > phi0b( numtries, 0. );
+
+   vector< double >::const_iterator curva_begin = curva.begin();
+   vector< double >::const_iterator d0a_begin = d0a.begin();
+   vector< double >::const_iterator phi0a_begin = phi0a.begin();
+   vector< double >::const_iterator curvb_begin = curvb.begin();
+   vector< double >::const_iterator d0b_begin = d0b.begin();
+   vector< double >::const_iterator phi0b_begin = phi0b.begin();
+
+   vector< double >::const_iterator curva_end = curva.end();
+   vector< double >::const_iterator d0a_end = d0a.end();
+   vector< double >::const_iterator phi0a_end = phi0a.end();
+   vector< double >::const_iterator curvb_end = curvb.end();
+   vector< double >::const_iterator d0b_end = d0b.end();
+   vector< double >::const_iterator phi0b_end = phi0b.end();
+
+   vector< double >::const_iterator curva_iter;
+   vector< double >::const_iterator d0a_iter;
+   vector< double >::const_iterator phi0a_iter;
+   vector< double >::const_iterator curvb_iter;
+   vector< double >::const_iterator d0b_iter;
+   vector< double >::const_iterator phi0b_iter;
+
+   RandomGenerator& ran( RandomGenerator::instance() );
+   ran.gauss( curva_begin, curva_end );
+   ran.gauss( d0a_begin,   d0a_end );
+   ran.gauss( phi0a_begin, phi0a_end );
+   ran.gauss( curvb_begin, curvb_end );
+   ran.gauss( d0b_begin,   d0b_end );
+   ran.gauss( phi0b_begin, phi0b_end );
+
+   vector< double > xstore;
+   vector< double > ystore;
+   double xnumer(0.), xdenom(0.), ynumer(0.), ydenom(0.);
+
+
+
+
+   for ( curva_iter = curva_begin, d0a_iter = d0a_begin, phi0a_iter = phi0a_begin,
+	    curvb_iter = curvb_begin, d0b_iter = d0b_begin, phi0b_iter = phi0b_begin;
+	 curva_iter != curva_end  &&  d0a_iter != d0a_end  &&  phi0a_iter != phi0a_end  &&  
+	    curvb_iter != curvb_end  &&  d0b_iter != d0b_end  &&  phi0b_iter != phi0b_end;
+	 curva_iter++, d0a_iter++, phi0a_iter++, curvb_iter++, d0b_iter++, phi0b_iter++ ) {
+      
+      double curva_jiggle( *curva_iter * 
+
+
+
+
+   } // end loop over random numbers
+
+}
+

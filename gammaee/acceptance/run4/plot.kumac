@@ -1,0 +1,130 @@
+h/delete $SIGMA(pre+10)
+h/delete $SIGMA(pre+11)
+h/delete $SIGMA(pre+12)
+h/delete $SIGMA(pre+20)
+h/delete $SIGMA(pre+90)
+h/delete $SIGMA(pre+21)
+h/delete $SIGMA(pre+22)
+h/delete $SIGMA(pre+23)
+h/delete $SIGMA(pre+24)
+h/delete $SIGMA(pre+25)
+h/delete $SIGMA(pre+26)
+h/delete $SIGMA(pre+27)
+h/delete $SIGMA(pre+28)
+h/delete $SIGMA(pre+29)
+h/delete $SIGMA(pre+31)
+h/delete $SIGMA(pre+32)
+h/delete $SIGMA(pre+33)
+h/delete $SIGMA(pre+34)
+h/delete $SIGMA(pre+35)
+h/delete $SIGMA(pre+36)
+h/delete $SIGMA(pre+37)
+h/delete $SIGMA(pre+38)
+h/delete $SIGMA(pre+39)
+h/delete $SIGMA(pre+41)
+h/delete $SIGMA(pre+42)
+h/delete $SIGMA(pre+43)
+h/delete $SIGMA(pre+44)
+h/delete $SIGMA(pre+45)
+h/delete $SIGMA(pre+46)
+h/delete $SIGMA(pre+47)
+h/delete $SIGMA(pre+48)
+h/delete $SIGMA(pre+49)
+h/delete $SIGMA(pre+51)
+h/delete $SIGMA(pre+52)
+h/delete $SIGMA(pre+53)
+h/delete $SIGMA(pre+54)
+h/delete $SIGMA(pre+55)
+h/delete $SIGMA(pre+56)
+h/delete $SIGMA(pre+57)
+h/delete $SIGMA(pre+58)
+h/delete $SIGMA(pre+59)
+sub $SIGMA(pre+03) $SIGMA(pre+04) $SIGMA(pre+10) 1. $SIGMA(ptoc) 'e'
+sub $SIGMA(pre+03) $SIGMA(pre+04) $SIGMA(pre+11) 1. $SIGMA(ptocup) 'e'
+sub $SIGMA(pre+03) $SIGMA(pre+04) $SIGMA(pre+12) 1. $SIGMA(ptocdo) 'e'
+sub $SIGMA(pre+02) $SIGMA(pre+02) $SIGMA(pre+20) $SIGMA(ptomc) 0. 'e'
+sub $SIGMA(pre+09) $SIGMA(pre+09) $SIGMA(pre+90) $SIGMA(ptomc) 0. 'e'
+do i = 1, 9
+  sub $SIGMA(pre+01) $SIGMA(pre+01) $SIGMA(pre+20+[i]) $SIGMA(ptomcy([i])) 0. 'e'
+  add $SIGMA(pre+20+[i]) $SIGMA(pre+05) $SIGMA(pre+30+[i]) 1. $SIGMA(ptobge-ptocy([i])*ctobge) 'e'
+  add $SIGMA(pre+30+[i]) $SIGMA(pre+06) $SIGMA(pre+40+[i]) 1. $SIGMA(ptobgp-ptocy([i])*ctobgp) 'e'
+  add $SIGMA(pre+40+[i]) $SIGMA(pre+07) $SIGMA(pre+50+[i]) 1. $SIGMA(cosy([i])) 'e'
+enddo
+if $SIGMA(top).eq.$SIGMA(bot) then
+  sigma top1 = max(max($HINFO($SIGMA(pre+51),'MAX'), $HINFO($SIGMA(pre+52),'MAX')), $HINFO($SIGMA(pre+53),'MAX'))
+  sigma top2 = max(max($HINFO($SIGMA(pre+54),'MAX'), $HINFO($SIGMA(pre+55),'MAX')), $HINFO($SIGMA(pre+56),'MAX'))
+  sigma top3 = max(max($HINFO($SIGMA(pre+57),'MAX'), $HINFO($SIGMA(pre+58),'MAX')), $HINFO($SIGMA(pre+59),'MAX'))
+  sigma top = max(max(max(max(top1, top2), top3), $HINFO($SIGMA(pre+21),'MAX')), $HINFO($SIGMA(pre+10),'MAX'))
+
+  sigma bot1 = min(min($HINFO($SIGMA(pre+51),'MIN'), $HINFO($SIGMA(pre+52),'MIN')), $HINFO($SIGMA(pre+53),'MIN'))
+  sigma bot2 = min(min($HINFO($SIGMA(pre+54),'MIN'), $HINFO($SIGMA(pre+55),'MIN')), $HINFO($SIGMA(pre+56),'MIN'))
+  sigma bot3 = min(min($HINFO($SIGMA(pre+57),'MIN'), $HINFO($SIGMA(pre+58),'MIN')), $HINFO($SIGMA(pre+59),'MIN'))
+  sigma bot = min(min(min(min(bot1, bot2), bot3), $HINFO($SIGMA(pre+21),'MIN')), $HINFO($SIGMA(pre+10),'MIN'))
+
+  if $SIGMA(bot).gt.0 then
+    min $SIGMA(pre+51) $SIGMA(bot)
+    max $SIGMA(pre+51) $SIGMA(1.2*top)
+  else
+    min $SIGMA(pre+51) $SIGMA((top+bot)/2-1.2*(top-bot)/2)
+    max $SIGMA(pre+51) $SIGMA((top+bot)/2+1.2*(top-bot)/2)
+  endif
+else
+  min $SIGMA(pre+51) $SIGMA(bot)
+  max $SIGMA(pre+51) $SIGMA(top)
+endif
+set dmod 3
+set hcol 5
+if $SIGMA(left).eq.$SIGMA(right) then
+  h/plot $SIGMA(pre+51) 'hist'
+else
+  h/plot $SIGMA(pre+51)($SIGMA(left):$SIGMA(right)) 'hist'
+endif
+set dmod 1
+h/plot $SIGMA(pre+52) 'shist'
+h/plot $SIGMA(pre+53) 'shist'
+h/plot $SIGMA(pre+54) 'shist'
+h/plot $SIGMA(pre+55) 'shist'
+h/plot $SIGMA(pre+56) 'shist'
+h/plot $SIGMA(pre+57) 'shist'
+h/plot $SIGMA(pre+58) 'shist'
+h/plot $SIGMA(pre+59) 'shist'
+set hcol 1407
+h/plot $SIGMA(pre+25) 'shist'
+set hcol 1412
+h/plot $SIGMA(pre+90) 'shist'
+set hcol 1400
+h/plot $SIGMA(pre+20) 'shist'
+set hcol 1
+set dmod 3
+h/plot $SIGMA(pre+12) 'se2'
+h/plot $SIGMA(pre+11) 'se2'
+set dmod 1
+set hcol 1
+h/plot $SIGMA(pre+10) 'se0'
+
+set dmod 3
+set hcol 5
+h/plot $SIGMA(pre+51) 'shist'
+h/plot $SIGMA(pre+59) 'shist'
+set dmod 1
+set hcol 5
+h/plot $SIGMA(pre+52) 'shist'
+h/plot $SIGMA(pre+58) 'shist'
+set hcol 14
+h/plot $SIGMA(pre+53) 'shist'
+h/plot $SIGMA(pre+57) 'shist'
+set hcol 15
+h/plot $SIGMA(pre+54) 'shist'
+h/plot $SIGMA(pre+56) 'shist'
+set hcol 2
+h/plot $SIGMA(pre+55) 'shist'
+
+set hcol 4
+h/plot $SIGMA(pre+25) 'shist'
+h/plot $SIGMA(pre+90) 'shist'
+h/plot $SIGMA(pre+20) 'shist'
+set hcol 1
+h/plot $SIGMA(pre+10) 'se0'
+h/plot $SIGMA(pre+08) 's'
+set ltyp 1
+box $GRAFINFO('WNXMIN') $GRAFINFO('WNXMAX') $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')

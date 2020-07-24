@@ -1,0 +1,351 @@
+***************************************************************
+*
+* "t1had", "t1rad", "t1el", "t1tt",
+* "tracks", "visen", "ccen",
+* "p2", "e1",
+* "ci", "wz", "d0close", "z0close",
+* "run", "ebeam", "neue", "q",
+* "axial", "stereo", "cblo", "cbmd",
+* "rawtk", "pmiss", "tr1", "tr2", "trperp1", "trperp2", "e2",
+* "shperp", "shdot",
+* "l4dec", "l4tracks",
+* "mctype",
+* "wpz", "cotthp"
+*
+***************************************************************
+
+sigma mc16ld = 0
+sigma which = 2
+if $SIGMA(which).eq.1 then
+  exec load_all1.kumac
+  sigma ptobge = 0.775	 
+  sigma ptobgp = 0.807666
+  sigma ctobge = 0.578646
+  sigma ctobgp = 0.642509
+  sigma ma = 140209
+  sigma pa = 105060
+  sigma ca = 23000 
+  sigma mb = 2525  
+  sigma pb = 81188 
+  sigma cb = 65674 
+  sigma ptomc  = (pa - pb*ca/cb)/(ma - mb*ca/cb)
+  sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  sigma ptocup = (pa*1.5*mb/ma - pb)/(ca*1.5*mb/ma - cb)
+  sigma ptocdo = (pa*0.5*mb/ma - pb)/(ca*0.5*mb/ma - cb)
+  ve/cr ptocy(3)
+  ve/inp ptocy $SIGMA(ptocup) $SIGMA(ptoc) $SIGMA(ptocdo)
+  ve/cr ptomcy(3)
+  ve/inp ptomcy 0.551738 0.549987 0.548247
+  ve/cr cosy(3)
+  ve/inp cosy -0.230925 -0.22559 -0.220286
+endif
+if $SIGMA(which).eq.2 then
+  exec load_all2.kumac
+  sigma ptobge = 2.96563
+  sigma ptobgp = 8.58676
+  sigma ctobge = 2.39375
+  sigma ctobgp = 8.95192
+  sigma ma = 168282
+  sigma pa = 228821
+  sigma ca = 92612 
+  sigma mb = 2654	 
+  sigma pb = 306556
+  sigma cb = 252568
+  sigma ptomc  = (pa - pb*ca/cb)/(ma - mb*ca/cb)
+  sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  sigma ptocup = (pa*1.5*mb/ma - pb)/(ca*1.5*mb/ma - cb)
+  sigma ptocdo = (pa*0.5*mb/ma - pb)/(ca*0.5*mb/ma - cb)
+  ve/cr ptocy(3)
+  ve/inp ptocy $SIGMA(ptocup) $SIGMA(ptoc) $SIGMA(ptocdo)
+  ve/cr ptomcy(3)
+  ve/inp ptomcy 0.697823 0.695797 0.693778
+  ve/cr cosy(3)
+  ve/inp cosy 0.189363 0.203774 0.218146
+endif
+if $SIGMA(which).eq.3 then
+  exec load_all3.kumac
+  sigma ptobge = 6.67031
+  sigma ptobgp = 10.3596
+  sigma ctobge = 5.41458
+  sigma ctobgp = 8.87526
+  sigma ma = 94296
+  sigma pa = 265640
+  sigma ca = 141741
+  sigma mb = 1464
+  sigma pb = 383254
+  sigma cb = 324028
+  sigma ptomc  = (pa - pb*ca/cb)/(ma - mb*ca/cb)
+  sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  sigma ptocup = (pa*1.5*mb/ma - pb)/(ca*1.5*mb/ma - cb)
+  sigma ptocdo = (pa*0.5*mb/ma - pb)/(ca*0.5*mb/ma - cb)
+  ve/cr ptocy(3)
+  ve/inp ptocy $SIGMA(ptocup) $SIGMA(ptoc) $SIGMA(ptocdo)
+  ve/cr ptomcy(3)
+  ve/inp ptomcy 1.04988 1.0463 1.04274
+  ve/cr cosy(3)
+  ve/inp cosy -1.16454 -1.1469 -1.12934
+endif
+nt/chain bge /home/mccann/acceptance/rzn5/bgneg.rzn
+nt/chain bgp /home/mccann/acceptance/rzn5/bgpos.rzn
+nt/chain cos /home/mccann/acceptance/rzn5/cosmic.rzn
+
+* Analysis cuts
+nt/cuts $1 (t1had>0).or.(t1rad>0).or.(t1el>0)
+nt/cuts $2 abs(d0close)<0.005
+nt/cuts $3 e1<0.85
+nt/cuts $4 p2<0.85
+nt/cuts $5 (wz>800&&abs(z0close)<0.075).or.(wz<800&&abs(wz)<0.075)
+nt/cuts $6 visen>0.35
+nt/cuts $7 ccen<0.85
+nt/cuts $8 tracks>1
+nt/cuts $9 l4dec>0
+
+set ncol 16
+palette 0
+
+* Biggest shower
+fortran/file 65 superplots_all[1]_e1.eps
+graphics/metafile 65 -111
+igset mtype 1
+sigma pre = 1500
+h/cr/1d $SIGMA(pre+01) 'Biggest shower energy / beam energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+02) 'Biggest shower energy / beam energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+03) 'Biggest shower energy / beam energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+04) 'Biggest shower energy / beam energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+05) 'Biggest shower energy / beam energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+06) 'Biggest shower energy / beam energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+07) 'Biggest shower energy / beam energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+08) 'Biggest shower energy / beam energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+09) 'Biggest shower energy / beam energy' 50 0. 1.25
+nt/plot //mc/cuts/1.e1 $1&&$2 ! ! ! 'N' $SIGMA(pre+01)
+nt/plot //mc/cuts/1.e1 mctype>0&&$1&&$2 ! ! ! 'N' $SIGMA(pre+02)
+nt/plot //mc/cuts/1.e1 (mctype>0.or.-35<mctype<-29)&&$1&&$2 ! ! ! 'N' $SIGMA(pre+09)
+nt/plot //peak/cuts/1.e1 $1&&$2 ! ! ! 'N' $SIGMA(pre+03)
+nt/plot //cont/cuts/1.e1 $1&&$2 ! ! ! 'N' $SIGMA(pre+04)
+nt/plot //bge/cuts/1.e1 $1&&$2 ! ! ! 'N' $SIGMA(pre+05)
+nt/plot //bgp/cuts/1.e1 $1&&$2 ! ! ! 'N' $SIGMA(pre+06)
+nt/plot //cos/cuts/1.e1 $1&&$2 ! ! ! 'N' $SIGMA(pre+07)
+sigma top = 0
+sigma bot = 0
+sigma left = 0
+sigma right = 0
+exec plot.kumac 50
+set ltyp 3
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+close 65
+
+* Second-biggest track
+fortran/file 65 superplots_all[1]_p2.eps
+graphics/metafile 65 -111
+igset mtype 1
+sigma pre = 1600
+h/cr/1d $SIGMA(pre+01) 'Second-biggest track momentum / beam energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+02) 'Second-biggest track momentum / beam energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+03) 'Second-biggest track momentum / beam energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+04) 'Second-biggest track momentum / beam energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+05) 'Second-biggest track momentum / beam energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+06) 'Second-biggest track momentum / beam energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+07) 'Second-biggest track momentum / beam energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+08) 'Second-biggest track momentum / beam energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+09) 'Second-biggest track momentum / beam energy' 50 0. 1.25
+nt/plot //mc/cuts/1.p2 $1&&$2&&$3 ! ! ! 'N' $SIGMA(pre+01)
+nt/plot //mc/cuts/1.p2 mctype>0&&$1&&$2&&$3 ! ! ! 'N' $SIGMA(pre+02)
+nt/plot //mc/cuts/1.p2 (mctype>0.or.-35<mctype<-29)&&$1&&$2&&$3 ! ! ! 'N' $SIGMA(pre+09)
+nt/plot //peak/cuts/1.p2 $1&&$2&&$3 ! ! ! 'N' $SIGMA(pre+03)
+nt/plot //cont/cuts/1.p2 $1&&$2&&$3 ! ! ! 'N' $SIGMA(pre+04)
+nt/plot //bge/cuts/1.p2 $1&&$2&&$3 ! ! ! 'N' $SIGMA(pre+05)
+nt/plot //bgp/cuts/1.p2 $1&&$2&&$3 ! ! ! 'N' $SIGMA(pre+06)
+nt/plot //cos/cuts/1.p2 $1&&$2&&$3 ! ! ! 'N' $SIGMA(pre+07)
+sigma top = 0
+sigma bot = 0
+sigma left = 0
+sigma right = 0
+exec plot.kumac 50
+set ltyp 3
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+close 65
+
+* Visible energy
+fortran/file 65 superplots_all[1]_visen.eps
+graphics/metafile 65 -111
+igset mtype 1
+sigma pre = 1800
+h/cr/1d $SIGMA(pre+01) 'Visible energy / center-of-mass energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+02) 'Visible energy / center-of-mass energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+03) 'Visible energy / center-of-mass energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+04) 'Visible energy / center-of-mass energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+05) 'Visible energy / center-of-mass energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+06) 'Visible energy / center-of-mass energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+07) 'Visible energy / center-of-mass energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+08) 'Visible energy / center-of-mass energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+09) 'Visible energy / center-of-mass energy' 50 0. 1.25
+nt/plot //mc/cuts/1.visen $1&&$2&&$3&&$4&&$5 ! ! ! 'N' $SIGMA(pre+01)
+nt/plot //mc/cuts/1.visen mctype>0&&$1&&$2&&$3&&$4&&$5 ! ! ! 'N' $SIGMA(pre+02)
+nt/plot //mc/cuts/1.visen (mctype>0.or.-35<mctype<-29)&&$1&&$2&&$3&&$4&&$5 ! ! ! 'N' $SIGMA(pre+09)
+nt/plot //peak/cuts/1.visen $1&&$2&&$3&&$4&&$5 ! ! ! 'N' $SIGMA(pre+03)
+nt/plot //cont/cuts/1.visen $1&&$2&&$3&&$4&&$5 ! ! ! 'N' $SIGMA(pre+04)
+nt/plot //bge/cuts/1.visen $1&&$2&&$3&&$4&&$5 ! ! ! 'N' $SIGMA(pre+05)
+nt/plot //bgp/cuts/1.visen $1&&$2&&$3&&$4&&$5 ! ! ! 'N' $SIGMA(pre+06)
+nt/plot //cos/cuts/1.visen $1&&$2&&$3&&$4&&$5 ! ! ! 'N' $SIGMA(pre+07)
+sigma top = 0
+sigma bot = 0
+sigma left = 0
+sigma right = 0
+exec plot.kumac 50
+set ltyp 3
+dline 0.35 0.35 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+close 65
+
+
+
+* message $SIGMA(ptocdo) $SIGMA(ptoc) $SIGMA(ptocup)
+* * 1.21011 1.20644 1.20276
+
+* sigma ptoc = 1.20644
+* sigma top = 0
+* sigma bot = 0
+* sigma left = 0
+* sigma right = 0
+* exec plot.kumac 50
+
+* ve/cr con(50)
+* ve/cr err(50)
+* h/get_vect/contents $SIGMA(pre+10) con
+* h/get_vect/errors $SIGMA(pre+10) err
+* ve/print con(5)
+* ve/print err(5)
+* ve/inp con(5) 0
+* h/put_vect/contents $SIGMA(pre+10) con
+* h/plot $SIGMA(pre+10)
+
+
+* sigma pre = 1800
+* sigma mcll = $HINFO($SIGMA(pre+01),'ENTRIES') - $HINFO($SIGMA(pre+09),'ENTRIES')
+* sigma mctau = $HINFO($SIGMA(pre+09),'ENTRIES') - $HINFO($SIGMA(pre+02),'ENTRIES')
+* sigma mcoth = $HINFO($SIGMA(pre+02),'ENTRIES')
+* sigma inpeak = $HINFO($SIGMA(pre+03),'ENTRIES')
+* sigma incont = $HINFO($SIGMA(pre+04),'ENTRIES')
+* sigma indata = $HINFO($SIGMA(pre+10),'SUM') + $HINFO($SIGMA(pre+10),'OVERFLOW') + $HINFO($SIGMA(pre+10),'UNDERFLOW')
+* sigma inbge = $HINFO($SIGMA(pre+05),'ENTRIES')
+* sigma inbgp = $HINFO($SIGMA(pre+06),'ENTRIES')
+* sigma incos = $HINFO($SIGMA(pre+07),'ENTRIES')
+
+* sigma denom = indata-(ptobge-ptoc*ctobge)*inbge-(ptobgp-ptoc*ctobgp)*inbgp-cosy(2)*incos-ptomc*mctau
+
+* sigma pre = 9800
+* h/cr/1d $SIGMA(pre+01) 'Visible energy / center-of-mass energy' 50 0. 1.25
+* h/cr/1d $SIGMA(pre+02) 'Visible energy / center-of-mass energy' 50 0. 1.25
+* h/cr/1d $SIGMA(pre+03) 'Visible energy / center-of-mass energy' 50 0. 1.25
+* h/cr/1d $SIGMA(pre+04) 'Visible energy / center-of-mass energy' 50 0. 1.25
+* h/cr/1d $SIGMA(pre+05) 'Visible energy / center-of-mass energy' 50 0. 1.25
+* h/cr/1d $SIGMA(pre+06) 'Visible energy / center-of-mass energy' 50 0. 1.25
+* h/cr/1d $SIGMA(pre+07) 'Visible energy / center-of-mass energy' 50 0. 1.25
+* h/cr/1d $SIGMA(pre+08) 'Visible energy / center-of-mass energy' 50 0. 1.25
+* h/cr/1d $SIGMA(pre+09) 'Visible energy / center-of-mass energy' 50 0. 1.25
+* nt/plot //mc/cuts/1.visen $1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' $SIGMA(pre+01)
+* nt/plot //mc/cuts/1.visen mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' $SIGMA(pre+02)
+* nt/plot //mc/cuts/1.visen (mctype>0.or.-35<mctype<-29)&&$1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' $SIGMA(pre+09)
+* nt/plot //peak/cuts/1.visen $1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' $SIGMA(pre+03)
+* nt/plot //cont/cuts/1.visen $1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' $SIGMA(pre+04)
+* nt/plot //bge/cuts/1.visen $1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' $SIGMA(pre+05)
+* nt/plot //bgp/cuts/1.visen $1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' $SIGMA(pre+06)
+* nt/plot //cos/cuts/1.visen $1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' $SIGMA(pre+07)
+* sigma top = 0
+* sigma bot = 0
+* sigma left = 0
+* sigma right = 0
+* exec plot.kumac 50
+
+* ve/cr con(50)
+* ve/cr err(50)
+* h/get_vect/contents $SIGMA(pre+10) con
+* h/get_vect/errors $SIGMA(pre+10) err
+* ve/print con(5)
+* ve/print err(5)
+* ve/inp con(5) 0
+* h/put_vect/contents $SIGMA(pre+10) con
+* h/plot $SIGMA(pre+10)
+
+* sigma pre = 9800
+* sigma mcll = $HINFO($SIGMA(pre+01),'ENTRIES') - $HINFO($SIGMA(pre+09),'ENTRIES')
+* sigma mctau = $HINFO($SIGMA(pre+09),'ENTRIES') - $HINFO($SIGMA(pre+02),'ENTRIES')
+* sigma mcoth = $HINFO($SIGMA(pre+02),'ENTRIES')
+* sigma inpeak = $HINFO($SIGMA(pre+03),'ENTRIES')
+* sigma incont = $HINFO($SIGMA(pre+04),'ENTRIES')
+* sigma indata = $HINFO($SIGMA(pre+10),'SUM') + $HINFO($SIGMA(pre+10),'OVERFLOW') + $HINFO($SIGMA(pre+10),'UNDERFLOW')
+* sigma inbge = $HINFO($SIGMA(pre+05),'ENTRIES')
+* sigma inbgp = $HINFO($SIGMA(pre+06),'ENTRIES')
+* sigma incos = $HINFO($SIGMA(pre+07),'ENTRIES')
+
+* sigma numer = inpeak-ptoc*incont-(ptobge-ptoc*ctobge)*inbge-(ptobgp-ptoc*ctobgp)*inbgp-cosy(2)*incos-ptomc*mctau
+
+* message $SIGMA(numer/denom)
+
+
+
+
+
+
+
+
+
+
+* opt sta
+* h/plot $SIGMA(pre+03)
+* h/plot $SIGMA(pre+04)
+* message $HINFO(1803,'MEAN') $HINFO(1804,'MEAN')
+
+
+* h/cr/1d $SIGMA(pre+59) 'Visible energy / center-of-mass energy' 50 0. 1.25
+* sub $SIGMA(pre+04) $SIGMA(pre+04) $SIGMA(pre+59) $SIGMA(ptoc) 0. 'e'
+
+* h/plot $SIGMA(pre+03)
+* h/plot $SIGMA(pre+59) 's'
+
+
+
+
+
+* h/cr/1d $SIGMA(pre+59) 'Visible energy / center-of-mass energy' 50 0. 1.25
+* sub $SIGMA(pre+10) $SIGMA(pre+52) $SIGMA(pre+59) 1. 1. 'e'
+* h/plot $SIGMA(pre+59)
+
+* ve/cr con(50)
+* ve/cr err(50)
+* h/get_vect/contents $SIGMA(pre+59) con
+* h/get_vect/errors $SIGMA(pre+59) err
+* ve/print con(1:14)
+* ve/print err(1:14)
+
+
+* CC total energy (with L3/L4)
+fortran/file 65 superplots_all[1]_ccen.eps
+graphics/metafile 65 -111
+igset mtype 1
+zone 1 1
+sigma pre = 1900
+h/cr/1d $SIGMA(pre+01) 'CC total energy / center-of-mass energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+02) 'CC total energy / center-of-mass energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+03) 'CC total energy / center-of-mass energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+04) 'CC total energy / center-of-mass energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+05) 'CC total energy / center-of-mass energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+06) 'CC total energy / center-of-mass energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+07) 'CC total energy / center-of-mass energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+08) 'CC total energy / center-of-mass energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+09) 'CC total energy / center-of-mass energy' 50 0. 1.25
+nt/plot //mc/cuts/1.ccen $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' $SIGMA(pre+01)
+nt/plot //mc/cuts/1.ccen mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' $SIGMA(pre+02)
+nt/plot //mc/cuts/1.ccen (mctype>0.or.-35<mctype<-29)&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' $SIGMA(pre+09)
+nt/plot //peak/cuts/1.ccen $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' $SIGMA(pre+03)
+nt/plot //cont/cuts/1.ccen $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' $SIGMA(pre+04)
+nt/plot //bge/cuts/1.ccen $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' $SIGMA(pre+05)
+nt/plot //bgp/cuts/1.ccen $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' $SIGMA(pre+06)
+nt/plot //cos/cuts/1.ccen $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' $SIGMA(pre+07)
+sigma top = 0
+sigma bot = 0
+sigma left = 0
+sigma right = 0
+exec plot.kumac 50
+set ltyp 3
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+close 65

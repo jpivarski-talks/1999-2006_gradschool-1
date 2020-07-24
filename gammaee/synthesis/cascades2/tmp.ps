@@ -1,0 +1,902 @@
+%!PS-Adobe-1.0
+/$a2psdict 100 dict def
+$a2psdict begin
+% Initialize page description variables.
+/inch {72 mul} bind def
+/landscape false def
+/twinpage false def
+/sheetheight 11 inch def
+/sheetwidth 8.5 inch def
+/margin 1.2 inch def
+/noborder true def
+/noheader true def
+/headersize 0.0 def
+/bodyfontsize 9 def
+/lines 77 def
+/columns 96 def
+/date (May 25 2005 12:23:45) def
+%!  PostScript Source Code
+%
+%  File: imag:/users/local/a2ps/header.ps
+%  Created: Tue Nov 29 12:14:02 1988 by miguel@imag (Miguel Santana)
+%  Version: 2.0
+%  Description: PostScript prolog for a2ps ascii to PostScript program.
+% 
+%  Edit History:
+%  - Original version by evan@csli (Evan Kirshenbaum).
+%  - Modified by miguel@imag to:
+%    1) Correct an overflow bug when printing page number 10 (operator
+%	cvs).
+%    2) Define two other variables (sheetwidth, sheetheight) describing
+%	the physical page (by default A4 format).
+%    3) Minor changes (reorganization, comments, etc).
+%  - Modified by tullemans@apolloway.prl.philips.nl
+%    1) Correct stack overflows with regard to operators cvs and copy.
+%       The resulting substrings where in some cases not popped off 
+%       the stack, what can result in a stack overflow.
+%    2) Replaced copypage and erasepage by showpage. Page througput
+%       degrades severely (see red book page 140) on our ps-printer
+%       after printing sheet 16 (i.e. page 8) of a file which was 
+%       actually bigger. For this purpose the definitions of startdoc
+%       and startpage are changed.
+%  - Modified by Tim Clark <T.Clark@uk.ac.warwick> to:
+%    1) Print one page per sheet (portrait) as an option.
+%    2) Reduce size of file name heading, if it's too big.
+%    3) Save and restore PostScript state at begining/end. It now uses
+%	conventional %%Page %%Trailer markers.
+%    4) Print one wide page per sheet in landscape mode as an option.
+%  - Modified by miguel@imag.fr to
+%    1) Add new option to print n copies of a file.
+%    2) Add new option to suppress heading printing.
+%    3) Add new option to suppress page surrounding border printing.
+%    4) Add new option to change font size. Number of lines and columns
+%	are now automatically adjusted, depending on font size and
+%	printing mode used.
+%    5) Minor changes (best layout, usage message, etc).
+%
+
+% Copyright (c) 1988, Miguel Santana, miguel@imag.imag.fr
+%
+% Permission is granted to copy and distribute this file in modified
+% or unmodified form, for noncommercial use, provided (a) this copyright
+% notice is preserved, (b) no attempt is made to restrict redistribution
+% of this file, and (c) this file is not distributed as part of any
+% collection whose redistribution is restricted by a compilation copyright.
+%
+
+
+% General macros.
+/xdef {exch def} bind def
+/getfont {exch findfont exch scalefont} bind def
+
+% Page description variables and inch function are defined by a2ps program.
+
+% Character size for differents fonts.
+   landscape
+   { /filenamefontsize 12 def }
+   { /filenamefontsize 16 def }
+ifelse
+/datefontsize filenamefontsize 0.8 mul def
+/headermargin filenamefontsize 0.25 mul def
+/bodymargin bodyfontsize 0.7 mul def
+
+% Font assignment to differents kinds of "objects"
+/filenamefontname /Helvetica-Bold def
+/stdfilenamefont filenamefontname filenamefontsize getfont def
+/datefont /Helvetica datefontsize getfont def
+/bodyfont /Courier bodyfontsize getfont def
+
+% Logical page attributs (a half of a real page or sheet).
+/pagewidth
+   bodyfont setfont (0) stringwidth pop columns mul bodymargin dup add add
+   def
+/pageheight
+   bodyfontsize lines mul bodymargin dup add add headersize add
+   def
+
+% Coordinates for upper corner of a logical page and for sheet number.
+% Coordinates depend on format mode used.
+% In twinpage mode, coordinate x of upper corner is not the same for left
+% and right pages: upperx is an array of two elements, indexed by sheetside.
+/rightmargin margin 3 div def
+/leftmargin margin 2 mul 3 div def
+/topmargin margin twinpage {3} {2} ifelse div def
+landscape
+{  % Landscape format
+   /uppery rightmargin pageheight add bodymargin add def
+   /sheetnumbery sheetwidth leftmargin pageheight add datefontsize add sub def
+   twinpage
+   {  % Two logical pages
+      /upperx [ topmargin			% upperx for left page
+		dup 2 mul pagewidth add		% upperx for right page
+	      ] def
+      /sheetnumberx sheetheight topmargin sub def
+   }
+   {  /upperx [ topmargin dup ] def
+      /sheetnumberx sheetheight topmargin sub datefontsize sub def
+   }
+   ifelse
+}
+{  % Portrait format
+   /uppery topmargin pageheight add def
+   /upperx [ leftmargin dup ] def
+   /sheetnumberx sheetwidth rightmargin sub datefontsize sub def
+   /sheetnumbery
+	 sheetheight 
+	 topmargin pageheight add datefontsize add headermargin add
+      sub
+      def
+
+}
+ifelse
+
+% Strings used to make easy printing numbers
+/pnum 12 string def
+/empty 12 string def
+
+% Other initializations.
+/datewidth date stringwidth pop def
+/filenameroom
+         pagewidth
+	 filenamefontsize 4 mul datewidth add (Page 999) stringwidth pop add
+      sub
+   def
+
+
+% Function startdoc: initializes printer and global variables.
+/startdoc
+    { /sheetside 0 def			% sheet side that contains current page
+      /sheet 1 def			% sheet number
+   } bind def
+
+% Function newfile: init file name and reset page number for each new file.
+/newfile
+    { cleanup
+      /filename xdef
+      /filenamewidth filename stringwidth pop def
+      /filenamefont
+	 filenamewidth filenameroom gt
+	 {
+	       filenamefontname
+	       filenamefontsize filenameroom mul filenamewidth div
+	    getfont
+	 }
+	 {  stdfilenamefont }
+	 ifelse
+	 def
+      /pagenum 1 def
+    } bind def
+
+% Function printpage: Print a physical page.
+/printpage
+    { /sheetside 0 def
+      twinpage
+      {  noborder not
+	    { sheetnumber }
+	 if
+      }
+      {  noheader noborder not and
+	    { sheetnumber }
+	 if
+      }
+      ifelse
+      showpage 
+%      pagesave restore
+      /sheet sheet 1 add def
+    } bind def
+
+% Function cleanup: terminates printing, flushing last page if necessary.
+/cleanup
+    { twinpage sheetside 1 eq and
+         { printpage }
+      if
+    } bind def
+
+%
+% Function startpage: prints page header and page border and initializes
+% printing of the file lines.
+/startpage
+    { sheetside 0 eq
+	{ % /pagesave save def
+	  landscape
+	    { sheetwidth 0 inch translate	% new coordinates system origin
+	      90 rotate				% landscape format
+	    } if
+	} if
+      noborder not { printborder } if
+      noheader not { printheader } if
+	 upperx sheetside get  bodymargin  add
+	    uppery
+	    bodymargin bodyfontsize add  noheader {0} {headersize} ifelse  add
+	 sub
+      moveto
+      bodyfont setfont
+    } bind def
+
+% Function printheader: prints page header.
+/printheader
+    { upperx sheetside get  uppery headersize sub 1 add  moveto
+      datefont setfont
+      gsave
+        datefontsize headermargin rmoveto
+	date show					% date/hour
+      grestore
+      gsave
+	pagenum pnum cvs pop
+	   pagewidth (Page 999) stringwidth pop sub
+	   headermargin
+	rmoveto
+        (Page ) show pnum show				% page number
+      grestore
+      empty pnum copy pop
+      gsave
+        filenamefont setfont
+	      filenameroom filename stringwidth pop sub 2 div datewidth add
+	      bodymargin 2 mul 
+	   add 
+	   headermargin
+	rmoveto
+        filename show						% file name
+      grestore
+    } bind def
+
+% Function printborder: prints border page.
+/printborder 
+    { upperx sheetside get uppery moveto
+      gsave					% print the four sides
+        pagewidth 0 rlineto			% of the square
+        0 pageheight neg rlineto
+        pagewidth neg 0 rlineto
+        closepath stroke
+      grestore
+      noheader not
+         { 0 headersize neg rmoveto pagewidth 0 rlineto stroke }
+      if
+    } bind def
+
+%
+% Function endpage: adds a sheet number to the page (footnote) and prints
+% the formatted page (physical impression). Activated at the end of each
+% source page (lines reached or FF character).
+/endpage
+   { /pagenum pagenum 1 add def
+     twinpage  sheetside 0 eq  and
+        { /sheetside 1 def }
+        { printpage }
+     ifelse
+   } bind def
+
+% Function sheetnumber: prints the sheet number.
+/sheetnumber
+    { sheetnumberx sheetnumbery moveto
+      datefont setfont
+      sheet pnum cvs
+	 dup stringwidth pop (0) stringwidth pop sub neg 0 rmoveto show
+      empty pnum copy pop
+    } bind def
+
+% Function s: print a source line
+/s  { gsave
+        show
+      grestore
+      0 bodyfontsize neg rmoveto
+    } bind def
+%%EndProlog
+
+/docsave save def
+startdoc
+(cascades.log) newfile
+/sheet 1 def
+%%Page: 1 1
+startpage
+(  ******************************************************) s
+(  *                                                    *) s
+(  *            W E L C O M E    to   P A W             *) s
+(  *                                                    *) s
+(  *       Version 2.09/18      19 March 1998           *) s
+(  *                                                    *) s
+(  ******************************************************) s
+(  Workstation type \(?=HELP\) <CR>=1 :  Version 1.23/09 of HIGZ started) s
+(  *** Using default PAWLOGON file "/home/mccann/.pawlogon.kumac") s
+( ) s
+(  Macro search order is Command) s
+( PAW > exec cascades.kumac) s
+(  REFITTING DATA with \(1.eq.1\)) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(   MINUIT RELEASE 96.03  INITIALIZED.   DIMENSIONS 100/ 50  EPSMAC=  0.89E-15) s
+(  **********) s
+(  **    1 **SET EPS  0.1000E-06) s
+(  **********) s
+(  FLOATING-POINT NUMBERS ASSUMED ACCURATE TO   0.100E-06) s
+(  **********) s
+(  **    2 **SET ERR   1.000    ) s
+(  **********) s
+( 1) s
+( ) s
+(      **********************************************) s
+(      *                                            *) s
+(      * Function minimization by SUBROUTINE HFITH  *) s
+(      * Variable-metric method                     *) s
+(      * ID =        100  CHOPT = E                 *) s
+(      *                                            *) s
+(      **********************************************) s
+(  Convergence when estimated distance to minimum \(EDM\) .LT.  0.10E+01) s
+( ) s
+(  FCN=   31.28693     FROM MINOS     STATUS=SUCCESSFUL    67 CALLS      173 TOTAL) s
+(                      EDM=  0.67E-05    STRATEGY= 1      ERROR MATRIX ACCURATE ) s
+( ) s
+(   EXT PARAMETER                  PARABOLIC         MINOS ERRORS        ) s
+(   NO.   NAME        VALUE          ERROR      NEGATIVE      POSITIVE   ) s
+(    1      P1        386.53        3.0384       -3.0377        3.0381    ) s
+(    2      P2       -4293.7        205.83       -205.93        205.94    ) s
+(    3      P3       -28218.        33135.       -33180.        33094.    ) s
+( ) s
+(  CHISQUARE = 0.8022E+00  NPFIT =    42) s
+( ) s
+(  REFITTING DATA2 with \(1.eq.1\)) s
+(  *** WARNING in HBOOK1 : Already existing histogram replaced : ID=     100 ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+( 1) s
+( ) s
+(      **********************************************) s
+(      *                                            *) s
+(      * Function minimization by SUBROUTINE HFITH  *) s
+(      * Variable-metric method                     *) s
+(      * ID =        100  CHOPT = E                 *) s
+(      *                                            *) s
+(      **********************************************) s
+(  Convergence when estimated distance to minimum \(EDM\) .LT.  0.10E+01) s
+( ) s
+(  FCN=   58.65147     FROM MINOS     STATUS=SUCCESSFUL   329 CALLS      415 TOTAL) s
+(                      EDM=  0.12E+00    STRATEGY= 1      ERROR MATRIX ACCURATE ) s
+( ) s
+(   EXT PARAMETER                  PARABOLIC         MINOS ERRORS        ) s
+(   NO.   NAME        VALUE          ERROR      NEGATIVE      POSITIVE   ) s
+(    1      P1        5196.4        11.136       -11.201        11.140    ) s
+(    2      P2       -70927.        749.42       -760.35        749.73    ) s
+(    3      P3        19.170       0.12104E+06  -0.10841E+06   0.13522E+06) s
+( ) s
+endpage
+%%Page: 2 2
+startpage
+(  CHISQUARE = 0.1504E+01  NPFIT =    42) s
+( ) s
+(  REFITTING MC with \(1.eq.1\)) s
+(  *** WARNING in HBOOK1 : Already existing histogram replaced : ID=     100 ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+( 1) s
+( ) s
+(      **********************************************) s
+(      *                                            *) s
+(      * Function minimization by SUBROUTINE HFITH  *) s
+(      * Variable-metric method                     *) s
+(      * ID =        100  CHOPT = E                 *) s
+(      *                                            *) s
+(      **********************************************) s
+(  Convergence when estimated distance to minimum \(EDM\) .LT.  0.10E+01) s
+( ) s
+(  FCN=   59.99618     FROM MINOS     STATUS=SUCCESSFUL    52 CALLS      135 TOTAL) s
+(                      EDM=  0.35E-06    STRATEGY= 1      ERROR MATRIX ACCURATE ) s
+( ) s
+(   EXT PARAMETER                  PARABOLIC         MINOS ERRORS        ) s
+(   NO.   NAME        VALUE          ERROR      NEGATIVE      POSITIVE   ) s
+(    1      P1        36.120       0.92945      -0.92948       0.92946    ) s
+(    2      P2       -481.04        61.975       -61.986        61.985    ) s
+(    3      P3       -15928.        10280.       -10279.        10281.    ) s
+( ) s
+(  CHISQUARE = 0.1538E+01  NPFIT =    42) s
+( ) s
+(  "*********************************") s
+(  minimal and maximal triggers in MC) s
+(  DOING MC with \($4\) in \(1.eq.1\)) s
+(  nominal     4417.5 +/- 84.5005, 55 +/- 7.4162, 98.7703% +/- 0.165419%) s
+(  shiftconst  4418.12 +/- 84.4941, 55 +/- 7.4162, 98.7704% +/- 0.165395%) s
+(  shiftlinear 4406.1 +/- 84.6184, 55 +/- 7.4162, 98.7671% +/- 0.165849%) s
+(  shiftquad   4490.55 +/- 83.7623, 55 +/- 7.4162, 98.79% +/- 0.162714%) s
+(  REFITTING MC with \(\(sqrt\(p1x**2+p1y**2\)<0.200\)&&\(sqrt\(p2x**2+p2y**2\)<0.200\)\)) s
+(  *** WARNING in HBOOK1 : Already existing histogram replaced : ID=     100 ) s
+(  *** VECTOR/CREATE MP\(3\): existing vector MP\(3\) replaced) s
+(  *** VECTOR/CREATE ME\(3\): existing vector ME\(3\) replaced) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+( 1) s
+( ) s
+(      **********************************************) s
+(      *                                            *) s
+(      * Function minimization by SUBROUTINE HFITH  *) s
+(      * Variable-metric method                     *) s
+(      * ID =        100  CHOPT = E                 *) s
+(      *                                            *) s
+(      **********************************************) s
+(  Convergence when estimated distance to minimum \(EDM\) .LT.  0.10E+01) s
+( ) s
+(  FCN=   60.90151     FROM MINOS     STATUS=SUCCESSFUL    55 CALLS      133 TOTAL) s
+(                      EDM=  0.12E-05    STRATEGY= 1      ERROR MATRIX ACCURATE ) s
+( ) s
+(   EXT PARAMETER                  PARABOLIC         MINOS ERRORS        ) s
+(   NO.   NAME        VALUE          ERROR      NEGATIVE      POSITIVE   ) s
+(    1      P1        5.2218       0.35418      -0.35430       0.35378    ) s
+(    2      P2        34.207        24.543       -24.544        24.540    ) s
+(    3      P3       -6319.7        4042.1       -4042.1        4041.7    ) s
+( ) s
+(  CHISQUARE = 0.1562E+01  NPFIT =    42) s
+( ) s
+(  DOING MC with \($5\) in \(\(thad==1\)&&\(sqrt\(p1x**2+p1y**2\)<0.200\)&&\(sqrt\(p2x**2+p2y**2\)<0.200\)\)) s
+(  nominal     787.859 +/- 37.8111, 8 +/- 2.82843, 98.9948% +/- 0.355047%) s
+(  shiftconst  791.769 +/- 37.7011, 8 +/- 2.82843, 98.9997% +/- 0.353279%) s
+(  shiftlinear 782.434 +/- 37.9656, 8 +/- 2.82843, 98.9879% +/- 0.357531%) s
+(  shiftquad   822.402 +/- 36.877, 8 +/- 2.82843, 99.0366% +/- 0.34003%) s
+(  REFITTING MC with \(1.eq.1\)) s
+endpage
+%%Page: 3 3
+startpage
+(  *** WARNING in HBOOK1 : Already existing histogram replaced : ID=     100 ) s
+(  *** VECTOR/CREATE MP\(3\): existing vector MP\(3\) replaced) s
+(  *** VECTOR/CREATE ME\(3\): existing vector ME\(3\) replaced) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+( 1) s
+( ) s
+(      **********************************************) s
+(      *                                            *) s
+(      * Function minimization by SUBROUTINE HFITH  *) s
+(      * Variable-metric method                     *) s
+(      * ID =        100  CHOPT = E                 *) s
+(      *                                            *) s
+(      **********************************************) s
+(  Convergence when estimated distance to minimum \(EDM\) .LT.  0.10E+01) s
+( ) s
+(  FCN=   59.99618     FROM MINOS     STATUS=SUCCESSFUL    52 CALLS      135 TOTAL) s
+(                      EDM=  0.35E-06    STRATEGY= 1      ERROR MATRIX ACCURATE ) s
+( ) s
+(   EXT PARAMETER                  PARABOLIC         MINOS ERRORS        ) s
+(   NO.   NAME        VALUE          ERROR      NEGATIVE      POSITIVE   ) s
+(    1      P1        36.120       0.92945      -0.92948       0.92946    ) s
+(    2      P2       -481.04        61.975       -61.986        61.985    ) s
+(    3      P3       -15928.        10280.       -10279.        10281.    ) s
+( ) s
+(  CHISQUARE = 0.1538E+01  NPFIT =    42) s
+( ) s
+(  "*********************************") s
+(  non-cumulative cuts) s
+(  DOING MC with \(abs\(d0close\)<0.005\) in \(1.eq.1\)) s
+(  nominal     4446.5 +/- 84.6719, 26 +/- 5.09902, 99.4187% +/- 0.113879%) s
+(  shiftconst  4447.12 +/- 84.6655, 26 +/- 5.09902, 99.4187% +/- 0.113863%) s
+(  shiftlinear 4435.1 +/- 84.7896, 26 +/- 5.09902, 99.4172% +/- 0.114172%) s
+(  shiftquad   4519.55 +/- 83.9352, 26 +/- 5.09902, 99.428% +/- 0.112033%) s
+(  DOING MC with \(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\) in \(1.eq.1\)) s
+(  nominal     4426.5 +/- 84.5537, 46 +/- 6.78233, 98.9715% +/- 0.15134%) s
+(  shiftconst  4427.12 +/- 84.5473, 46 +/- 6.78233, 98.9716% +/- 0.151319%) s
+(  shiftlinear 4415.1 +/- 84.6716, 46 +/- 6.78233, 98.9689% +/- 0.151732%) s
+(  shiftquad   4499.55 +/- 83.816, 46 +/- 6.78233, 98.988% +/- 0.148872%) s
+(  DOING MC with \(p1<0.8\) in \(1.eq.1\)) s
+(  nominal     4185.24 +/- 83.0952, 287.256 +/- 17.0447, 93.5773% +/- 0.376057%) s
+(  shiftconst  4185.86 +/- 83.0887, 287.257 +/- 17.0446, 93.5782% +/- 0.375999%) s
+(  shiftlinear 4173.86 +/- 83.215, 287.242 +/- 17.0454, 93.5612% +/- 0.377124%) s
+(  shiftquad   4258.21 +/- 82.3453, 287.344 +/- 17.0403, 93.6786% +/- 0.369381%) s
+(  DOING MC with \(chen+cneue>0.4\) in \(1.eq.1\)) s
+(  nominal     4357.58 +/- 83.9996, 114.92 +/- 11.807, 97.4305% +/- 0.261697%) s
+(  shiftconst  4358.19 +/- 83.9932, 114.926 +/- 11.8066, 97.4308% +/- 0.261651%) s
+(  shiftlinear 4346.29 +/- 84.1171, 114.817 +/- 11.8146, 97.4263% +/- 0.262544%) s
+(  shiftquad   4429.97 +/- 83.2637, 115.577 +/- 11.7596, 97.4574% +/- 0.256394%) s
+(  "*********************************") s
+(  with minimal trigger) s
+(  changing cut 3 to \(1.eq.1\)) s
+(  DOING MC with \(abs\(d0close\)<0.005\) in \($3&&$4\)) s
+(  nominal     4413.5 +/- 84.4768, 4 +/- 2, 99.9094% +/- 0.0452667%) s
+(  shiftconst  4414.12 +/- 84.4704, 4 +/- 2, 99.9095% +/- 0.0452603%) s
+(  shiftlinear 4402.1 +/- 84.5948, 4 +/- 2, 99.9092% +/- 0.0453838%) s
+(  shiftquad   4486.55 +/- 83.7384, 4 +/- 2, 99.9109% +/- 0.0445293%) s
+(  changing cut 3 to \(abs\(d0close\)<0.005\)) s
+( /NTUPLE/CUTS: Replacing cut $3) s
+(  DOING MC with \(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\) in \($3&&$4\)) s
+(  nominal     4393.5 +/- 84.3584, 20 +/- 4.47214, 99.5468% +/- 0.101241%) s
+(  shiftconst  4394.12 +/- 84.3519, 20 +/- 4.47214, 99.5469% +/- 0.101226%) s
+(  shiftlinear 4382.1 +/- 84.4765, 20 +/- 4.47214, 99.5457% +/- 0.101504%) s
+(  shiftquad   4466.55 +/- 83.6189, 20 +/- 4.47214, 99.5542% +/- 0.0995816%) s
+(  changing cut 3 to \(abs\(d0close\)<0.005\)&&\(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\)) s
+( /NTUPLE/CUTS: Replacing cut $3) s
+(  DOING MC with \(p1<0.8\) in \($3&&$4\)) s
+(  nominal     4134.24 +/- 82.7878, 259.256 +/- 16.2025, 94.0991% +/- 0.364401%) s
+(  shiftconst  4134.86 +/- 82.7812, 259.257 +/- 16.2025, 94.0999% +/- 0.364344%) s
+(  shiftlinear 4122.86 +/- 82.908, 259.242 +/- 16.2032, 94.0841% +/- 0.365447%) s
+(  shiftquad   4207.21 +/- 82.0351, 259.344 +/- 16.1979, 94.1936% +/- 0.357852%) s
+(  changing cut 3 to \(abs\(d0close\)<0.005\)&&\(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\)&&\(p1<) s
+( /NTUPLE/CUTS: Replacing cut $3) s
+endpage
+%%Page: 4 4
+startpage
+(  DOING MC with \(chen+cneue>0.4\) in \($3&&$4\)) s
+(  nominal     4051.32 +/- 82.1365, 82.9199 +/- 10.3637, 97.9943% +/- 0.248862%) s
+(  shiftconst  4051.94 +/- 82.13, 82.9255 +/- 10.3632, 97.9945% +/- 0.248813%) s
+(  shiftlinear 4040.05 +/- 82.2566, 82.8175 +/- 10.3723, 97.9913% +/- 0.249764%) s
+(  shiftquad   4123.63 +/- 81.3847, 83.5769 +/- 10.3097, 98.0135% +/- 0.243234%) s
+(  DOING MC with \($4&&\(abs\(d0close\)<0.005\)&&\(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\)&&\(p1) s
+(  nominal     4051.32 +/- 82.1365, 421.176 +/- 21.1879, 90.583% +/- 0.462664%) s
+(  shiftconst  4051.94 +/- 82.13, 421.182 +/- 21.1876, 90.5841% +/- 0.462586%) s
+(  shiftlinear 4040.05 +/- 82.2566, 421.06 +/- 21.1927, 90.5615% +/- 0.464084%) s
+(  shiftquad   4123.63 +/- 81.3847, 421.92 +/- 21.158, 90.7179% +/- 0.453787%) s
+(  "*********************************") s
+(  with maximal trigger) s
+(  REFITTING MC with \(\(sqrt\(p1x**2+p1y**2\)<0.200\)&&\(sqrt\(p2x**2+p2y**2\)<0.200\)\)) s
+(  *** WARNING in HBOOK1 : Already existing histogram replaced : ID=     100 ) s
+(  *** VECTOR/CREATE MP\(3\): existing vector MP\(3\) replaced) s
+(  *** VECTOR/CREATE ME\(3\): existing vector ME\(3\) replaced) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+( 1) s
+( ) s
+(      **********************************************) s
+(      *                                            *) s
+(      * Function minimization by SUBROUTINE HFITH  *) s
+(      * Variable-metric method                     *) s
+(      * ID =        100  CHOPT = E                 *) s
+(      *                                            *) s
+(      **********************************************) s
+(  Convergence when estimated distance to minimum \(EDM\) .LT.  0.10E+01) s
+( ) s
+(  FCN=   60.90151     FROM MINOS     STATUS=SUCCESSFUL    55 CALLS      133 TOTAL) s
+(                      EDM=  0.12E-05    STRATEGY= 1      ERROR MATRIX ACCURATE ) s
+( ) s
+(   EXT PARAMETER                  PARABOLIC         MINOS ERRORS        ) s
+(   NO.   NAME        VALUE          ERROR      NEGATIVE      POSITIVE   ) s
+(    1      P1        5.2218       0.35418      -0.35430       0.35378    ) s
+(    2      P2        34.207        24.543       -24.544        24.540    ) s
+(    3      P3       -6319.7        4042.1       -4042.1        4041.7    ) s
+( ) s
+(  CHISQUARE = 0.1562E+01  NPFIT =    42) s
+( ) s
+(  changing cut 3 to \(1.eq.1\)) s
+( /NTUPLE/CUTS: Replacing cut $3) s
+(  DOING MC with \(abs\(d0close\)<0.005\) in \($3&&$5\)) s
+(  nominal     786.859 +/- 37.7979, 1 +/- 1, 99.8731% +/- 0.126911%) s
+(  shiftconst  790.769 +/- 37.6878, 1 +/- 1, 99.8737% +/- 0.126283%) s
+(  shiftlinear 781.434 +/- 37.9524, 1 +/- 1, 99.8722% +/- 0.127793%) s
+(  shiftquad   821.402 +/- 36.8634, 1 +/- 1, 99.8784% +/- 0.121569%) s
+(  changing cut 3 to \(abs\(d0close\)<0.005\)) s
+( /NTUPLE/CUTS: Replacing cut $3) s
+(  DOING MC with \(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\) in \($3&&$5\)) s
+(  nominal     784.859 +/- 37.7714, 2 +/- 1.41421, 99.7458% +/- 0.179687%) s
+(  shiftconst  788.769 +/- 37.6613, 2 +/- 1.41421, 99.7471% +/- 0.178794%) s
+(  shiftlinear 779.434 +/- 37.9261, 2 +/- 1.41421, 99.7441% +/- 0.18094%) s
+(  shiftquad   819.402 +/- 36.8363, 2 +/- 1.41421, 99.7565% +/- 0.172098%) s
+(  changing cut 3 to \(abs\(d0close\)<0.005\)&&\(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\)) s
+( /NTUPLE/CUTS: Replacing cut $3) s
+(  DOING MC with \(p1<0.8\) in \($3&&$5\)) s
+(  nominal     728.859 +/- 37.0227, 56 +/- 7.48331, 92.865% +/- 0.94724%) s
+(  shiftconst  732.769 +/- 36.9103, 56 +/- 7.48331, 92.9003% +/- 0.941913%) s
+(  shiftlinear 723.434 +/- 37.1805, 56 +/- 7.48331, 92.8153% +/- 0.95475%) s
+(  shiftquad   763.402 +/- 36.0682, 56 +/- 7.48331, 93.1657% +/- 0.902466%) s
+(  changing cut 3 to \(abs\(d0close\)<0.005\)&&\(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\)&&\(p1<) s
+( /NTUPLE/CUTS: Replacing cut $3) s
+(  DOING MC with \(chen+cneue>0.4\) in \($3&&$5\)) s
+(  nominal     715.068 +/- 36.7457, 13.7916 +/- 4.52009, 98.1078% +/- 0.615857%) s
+(  shiftconst  718.937 +/- 36.6337, 13.8321 +/- 4.51057, 98.1124% +/- 0.61126%) s
+(  shiftlinear 709.698 +/- 36.903, 13.7355 +/- 4.53346, 98.1013% +/- 0.622343%) s
+(  shiftquad   749.253 +/- 35.7939, 14.149 +/- 4.43953, 98.1466% +/- 0.577345%) s
+(  DOING MC with \($5&&\(abs\(d0close\)<0.005\)&&\(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\)&&\(p1) s
+(  nominal     715.068 +/- 36.7457, 3428.09 +/- 80.5263, 17.259% +/- 0.806866%) s
+(  shiftconst  718.937 +/- 36.6337, 3446.71 +/- 80.2802, 17.2587% +/- 0.800062%) s
+(  shiftlinear 709.698 +/- 36.903, 3402.25 +/- 80.8717, 17.2594% +/- 0.816471%) s
+(  shiftquad   749.253 +/- 35.7939, 3592.58 +/- 78.4362, 17.2566% +/- 0.749993%) s
+endpage
+%%Page: 5 5
+startpage
+(  "*********************************") s
+(  minimal and maximal triggers in data) s
+( /NTUPLE/CUTS: Replacing cut $4) s
+( /NTUPLE/CUTS: Replacing cut $5) s
+(  DOING DATA with \($4\) in \(1.eq.1\)) s
+(  nominal     6060.33 +/- 155.091, -149.333 +/- 86.8025, 102.526% +/- 1.50705%) s
+(  shiftconst  6057.26 +/- 155.108, -150.646 +/- 86.815, 102.55% +/- 1.50877%) s
+(  shiftlinear 6034.96 +/- 155.226, -160.168 +/- 86.9055, 102.726% +/- 1.52133%) s
+(  shiftquad   6218.22 +/- 154.257, -81.9085 +/- 86.1651, 101.335% +/- 1.42332%) s
+(  REFITTING DATA2 with \(\(sqrt\(p1x**2+p1y**2\)<0.200\)&&\(sqrt\(p2x**2+p2y**2\)<0.200\)\)) s
+(  *** WARNING in HBOOK1 : Already existing histogram replaced : ID=     100 ) s
+(  *** VECTOR/CREATE D2P\(3\): existing vector D2P\(3\) replaced) s
+(  *** VECTOR/CREATE D2E\(3\): existing vector D2E\(3\) replaced) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+( 1) s
+( ) s
+(      **********************************************) s
+(      *                                            *) s
+(      * Function minimization by SUBROUTINE HFITH  *) s
+(      * Variable-metric method                     *) s
+(      * ID =        100  CHOPT = E                 *) s
+(      *                                            *) s
+(      **********************************************) s
+(  Convergence when estimated distance to minimum \(EDM\) .LT.  0.10E+01) s
+( ) s
+(  FUNCTION MUST BE MINIMIZED BEFORE CALLING MINOs   ) s
+( ) s
+(  FCN=   58.46294     FROM MINOS     STATUS=SUCCESSFUL   126 CALLS      264 TOTAL) s
+(                      EDM=  0.16E-05    STRATEGY= 1      ERROR MATRIX ACCURATE ) s
+( ) s
+(   EXT PARAMETER                  PARABOLIC         MINOS ERRORS        ) s
+(   NO.   NAME        VALUE          ERROR      NEGATIVE      POSITIVE   ) s
+(    1      P1        888.65        4.6004       -4.6054        4.6055    ) s
+(    2      P2        4150.9        327.46       -327.65        327.69    ) s
+(    3      P3       -25294.        24136.       -48922.        48869.    ) s
+( ) s
+(  CHISQUARE = 0.1499E+01  NPFIT =    42) s
+( ) s
+(  DOING DATA2 with \($5\) in \(\(thad==1\)&&\(sqrt\(p1x**2+p1y**2\)<0.200\)&&\(sqrt\(p2x**2+p2y**2\)<0.200\)\)) s
+(  nominal     20988.3 +/- 291.773, 93.9636 +/- 25.1345, 99.5543% +/- 0.11885%) s
+(  shiftconst  20993 +/- 291.759, 94.0023 +/- 25.1332, 99.5542% +/- 0.118817%) s
+(  shiftlinear 20931.5 +/- 291.945, 93.4868 +/- 25.1512, 99.5554% +/- 0.119254%) s
+(  shiftquad   21316.6 +/- 290.786, 96.7154 +/- 25.0384, 99.5483% +/- 0.116563%) s
+(  REFITTING DATA2 with \(1.eq.1\)) s
+(  *** WARNING in HBOOK1 : Already existing histogram replaced : ID=     100 ) s
+(  *** VECTOR/CREATE D2P\(3\): existing vector D2P\(3\) replaced) s
+(  *** VECTOR/CREATE D2E\(3\): existing vector D2E\(3\) replaced) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+( 1) s
+( ) s
+(      **********************************************) s
+(      *                                            *) s
+(      * Function minimization by SUBROUTINE HFITH  *) s
+(      * Variable-metric method                     *) s
+(      * ID =        100  CHOPT = E                 *) s
+(      *                                            *) s
+(      **********************************************) s
+(  Convergence when estimated distance to minimum \(EDM\) .LT.  0.10E+01) s
+( ) s
+(  FCN=   58.65147     FROM MINOS     STATUS=SUCCESSFUL   329 CALLS      415 TOTAL) s
+(                      EDM=  0.12E+00    STRATEGY= 1      ERROR MATRIX ACCURATE ) s
+( ) s
+(   EXT PARAMETER                  PARABOLIC         MINOS ERRORS        ) s
+(   NO.   NAME        VALUE          ERROR      NEGATIVE      POSITIVE   ) s
+(    1      P1        5196.4        11.136       -11.201        11.140    ) s
+(    2      P2       -70927.        749.42       -760.35        749.73    ) s
+(    3      P3        19.170       0.12104E+06  -0.10841E+06   0.13522E+06) s
+endpage
+%%Page: 6 6
+startpage
+( ) s
+(  CHISQUARE = 0.1504E+01  NPFIT =    42) s
+( ) s
+(  "*********************************") s
+(  non-cumulative cuts) s
+(  DOING DATA with \(abs\(d0close\)<0.005\) in \(1.eq.1\)) s
+(  nominal     6098.2 +/- 157.507, -187.204 +/- 82.3388, 103.167% +/- 1.43957%) s
+(  shiftconst  6095.01 +/- 157.523, -188.395 +/- 82.3507, 103.19% +/- 1.44119%) s
+(  shiftlinear 6071.82 +/- 157.645, -197.028 +/- 82.4372, 103.354% +/- 1.45309%) s
+(  shiftquad   6262.38 +/- 156.652, -126.072 +/- 81.7295, 102.055% +/- 1.36028%) s
+(  DOING DATA with \(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\) in \(1.eq.1\)) s
+(  nominal     6034.98 +/- 156.318, -123.983 +/- 84.573, 102.097% +/- 1.46184%) s
+(  shiftconst  6031.84 +/- 156.335, -125.227 +/- 84.5852, 102.12% +/- 1.46348%) s
+(  shiftlinear 6009.04 +/- 156.455, -134.244 +/- 84.6731, 102.285% +/- 1.47549%) s
+(  shiftquad   6196.44 +/- 155.472, -60.1335 +/- 83.9535, 100.98% +/- 1.38177%) s
+(  DOING DATA with \(p1<0.8\) in \(1.eq.1\)) s
+(  nominal     5485.08 +/- 176.409, 425.923 +/- 21.6338, 92.7944% +/- 0.401977%) s
+(  shiftconst  5480.7 +/- 176.429, 425.916 +/- 21.634, 92.7892% +/- 0.40236%) s
+(  shiftlinear 5448.93 +/- 176.578, 425.864 +/- 21.636, 92.751% +/- 0.405161%) s
+(  shiftquad   5710.01 +/- 175.363, 426.293 +/- 21.6198, 93.0529% +/- 0.383276%) s
+(  DOING DATA with \(chen+cneue>0.4\) in \(1.eq.1\)) s
+(  nominal     6032.68 +/- 152.79, -121.682 +/- 90.7931, 102.059% +/- 1.56852%) s
+(  shiftconst  6029.72 +/- 152.805, -123.112 +/- 90.8061, 102.084% +/- 1.57033%) s
+(  shiftlinear 6008.27 +/- 152.921, -133.478 +/- 90.9002, 102.272% +/- 1.58355%) s
+(  shiftquad   6184.59 +/- 151.974, -48.2816 +/- 90.1297, 100.787% +/- 1.48048%) s
+(  "*********************************") s
+(  with minimal trigger) s
+(  changing cut 3 to \(1.eq.1\)) s
+( /NTUPLE/CUTS: Replacing cut $3) s
+(  DOING DATA2 with \(abs\(d0close\)<0.005\) in \($3&&$4\)) s
+(  nominal     118073 +/- 670.904, 68.8435 +/- 18.8141, 99.9417% +/- 0.0159192%) s
+(  shiftconst  118047 +/- 670.936, 68.8206 +/- 18.8151, 99.9417% +/- 0.0159236%) s
+(  shiftlinear 117941 +/- 671.062, 68.7296 +/- 18.819, 99.9418% +/- 0.0159412%) s
+(  shiftquad   118901 +/- 669.915, 69.5543 +/- 18.7839, 99.9415% +/- 0.0157829%) s
+(  changing cut 3 to \(abs\(d0close\)<0.005\)) s
+( /NTUPLE/CUTS: Replacing cut $3) s
+(  DOING DATA2 with \(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\) in \($3&&$4\)) s
+(  nominal     117035 +/- 668.872, 1038.31 +/- 52.1688, 99.1206% +/- 0.0440774%) s
+(  shiftconst  117008 +/- 668.904, 1038.18 +/- 52.1709, 99.1205% +/- 0.0440891%) s
+(  shiftlinear 116903 +/- 669.031, 1037.64 +/- 52.1792, 99.1202% +/- 0.0441358%) s
+(  shiftquad   117858 +/- 667.885, 1042.51 +/- 52.1044, 99.1232% +/- 0.0437158%) s
+(  changing cut 3 to \(abs\(d0close\)<0.005\)&&\(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\)) s
+( /NTUPLE/CUTS: Replacing cut $3) s
+(  DOING DATA2 with \(p1<0.8\) in \($3&&$4\)) s
+(  nominal     110741 +/- 663.59, 6293.54 +/- 83.8983, 94.6225% +/- 0.0743694%) s
+(  shiftconst  110715 +/- 663.622, 6293.49 +/- 83.8989, 94.6213% +/- 0.0743892%) s
+(  shiftlinear 110610 +/- 663.749, 6293.25 +/- 83.9012, 94.6167% +/- 0.0744682%) s
+(  shiftquad   111563 +/- 662.597, 6295.4 +/- 83.8806, 94.6585% +/- 0.073759%) s
+(  changing cut 3 to \(abs\(d0close\)<0.005\)&&\(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\)&&\(p1<) s
+( /NTUPLE/CUTS: Replacing cut $3) s
+(  DOING DATA2 with \(chen+cneue>0.4\) in \($3&&$4\)) s
+(  nominal     109371 +/- 653.638, 1370.09 +/- 114.491, 98.7628% +/- 0.102367%) s
+(  shiftconst  109346 +/- 653.67, 1369.15 +/- 114.497, 98.7634% +/- 0.102398%) s
+(  shiftlinear 109244 +/- 653.794, 1365.4 +/- 114.524, 98.7656% +/- 0.10252%) s
+(  shiftquad   110164 +/- 652.667, 1399.35 +/- 114.286, 98.7457% +/- 0.101422%) s
+(  all cuts \(including minimal trigger\)) s
+(  DOING DATA with \($4&&\(abs\(d0close\)<0.005\)&&\(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\)&&\() s
+(  nominal     5579.14 +/- 150.915, 331.857 +/- 93.8759, 94.3858% +/- 1.50583%) s
+(  shiftconst  5576.2 +/- 150.931, 330.407 +/- 93.8886, 94.4061% +/- 1.50743%) s
+(  shiftlinear 5554.9 +/- 151.048, 319.898 +/- 93.981, 94.5547% +/- 1.51909%) s
+(  shiftquad   5730.03 +/- 150.095, 406.273 +/- 93.2255, 93.3792% +/- 1.42787%) s
+(  all cuts \(given minimal trigger\)) s
+(  DOING DATA2 with \($4&&\(abs\(d0close\)<0.005\)&&\(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\)&&) s
+(  nominal     109371 +/- 653.638, 8770.79 +/- 152.39, 92.576% +/- 0.126279%) s
+(  shiftconst  109346 +/- 653.67, 8769.63 +/- 152.396, 92.5754% +/- 0.126313%) s
+(  shiftlinear 109244 +/- 653.794, 8765.02 +/- 152.42, 92.5726% +/- 0.126449%) s
+(  shiftquad   110164 +/- 652.667, 8806.82 +/- 152.2, 92.5975% +/- 0.125228%) s
+(  changing cut 3 to \(abs\(d0close\)<0.005\)&&\(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\)&&\(p1<) s
+( /NTUPLE/CUTS: Replacing cut $3) s
+(  number of tracks cuts) s
+(  DOING DATA2 with \(tracks>2\) in \($3&&$4\)) s
+(  nominal     106853 +/- 649.981, 2518.41 +/- 69.0478, 97.6974% +/- 0.0631777%) s
+(  shiftconst  106827 +/- 650.012, 2518.23 +/- 69.0499, 97.697% +/- 0.0631947%) s
+(  shiftlinear 106727 +/- 650.137, 2517.51 +/- 69.0582, 97.6955% +/- 0.0632622%) s
+(  shiftquad   107640 +/- 649.011, 2524.02 +/- 68.9827, 97.7088% +/- 0.062655%) s
+(  DOING DATA2 with \(tracks>4\) in \($3&&$4\)) s
+(  nominal     96072 +/- 625.591, 13299.1 +/- 189.418, 87.8404% +/- 0.167275%) s
+endpage
+%%Page: 7 7
+startpage
+(  shiftconst  96048.4 +/- 625.621, 13297.3 +/- 189.426, 87.8392% +/- 0.167322%) s
+(  shiftlinear 95954.1 +/- 625.742, 13290.1 +/- 189.456, 87.8345% +/- 0.167509%) s
+(  shiftquad   96808.1 +/- 624.648, 13355.4 +/- 189.18, 87.8767% +/- 0.165827%) s
+(  "*********************************") s
+(  with maximal trigger) s
+(  REFITTING DATA with \(\(sqrt\(p1x**2+p1y**2\)<0.200\)&&\(sqrt\(p2x**2+p2y**2\)<0.200\)\)) s
+(  *** WARNING in HBOOK1 : Already existing histogram replaced : ID=     100 ) s
+(  *** VECTOR/CREATE DP\(3\): existing vector DP\(3\) replaced) s
+(  *** VECTOR/CREATE DE\(3\): existing vector DE\(3\) replaced) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+( 1) s
+( ) s
+(      **********************************************) s
+(      *                                            *) s
+(      * Function minimization by SUBROUTINE HFITH  *) s
+(      * Variable-metric method                     *) s
+(      * ID =        100  CHOPT = E                 *) s
+(      *                                            *) s
+(      **********************************************) s
+(  Convergence when estimated distance to minimum \(EDM\) .LT.  0.10E+01) s
+( ) s
+(  FCN=   42.30497     FROM MINOS     STATUS=SUCCESSFUL    88 CALLS      174 TOTAL) s
+(                      EDM=  0.58E-04    STRATEGY= 1      ERROR MATRIX ACCURATE ) s
+( ) s
+(   EXT PARAMETER                  PARABOLIC         MINOS ERRORS        ) s
+(   NO.   NAME        VALUE          ERROR      NEGATIVE      POSITIVE   ) s
+(    1      P1        93.231        1.4921       -1.4909        1.4936    ) s
+(    2      P2        506.23        106.00       -105.73        106.28    ) s
+(    3      P3       -16083.        15769.       -15835.        15703.    ) s
+( ) s
+(  CHISQUARE = 0.1085E+01  NPFIT =    42) s
+( ) s
+(  REFITTING DATA2 with \(\(sqrt\(p1x**2+p1y**2\)<0.200\)&&\(sqrt\(p2x**2+p2y**2\)<0.200\)\)) s
+(  *** WARNING in HBOOK1 : Already existing histogram replaced : ID=     100 ) s
+(  *** VECTOR/CREATE D2P\(3\): existing vector D2P\(3\) replaced) s
+(  *** VECTOR/CREATE D2E\(3\): existing vector D2E\(3\) replaced) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+(  *** Unknown vector ) s
+(                                                                                  ) s
+( 1) s
+( ) s
+(      **********************************************) s
+(      *                                            *) s
+(      * Function minimization by SUBROUTINE HFITH  *) s
+(      * Variable-metric method                     *) s
+(      * ID =        100  CHOPT = E                 *) s
+(      *                                            *) s
+(      **********************************************) s
+(  Convergence when estimated distance to minimum \(EDM\) .LT.  0.10E+01) s
+( ) s
+(  FUNCTION MUST BE MINIMIZED BEFORE CALLING MINOs   ) s
+( ) s
+(  FCN=   58.46294     FROM MINOS     STATUS=SUCCESSFUL   126 CALLS      264 TOTAL) s
+(                      EDM=  0.16E-05    STRATEGY= 1      ERROR MATRIX ACCURATE ) s
+( ) s
+(   EXT PARAMETER                  PARABOLIC         MINOS ERRORS        ) s
+(   NO.   NAME        VALUE          ERROR      NEGATIVE      POSITIVE   ) s
+(    1      P1        888.65        4.6004       -4.6054        4.6055    ) s
+(    2      P2        4150.9        327.46       -327.65        327.69    ) s
+(    3      P3       -25294.        24136.       -48922.        48869.    ) s
+( ) s
+(  CHISQUARE = 0.1499E+01  NPFIT =    42) s
+( ) s
+(  changing cut 3 to \(1.eq.1\)) s
+( /NTUPLE/CUTS: Replacing cut $3) s
+(  DOING DATA2 with \(abs\(d0close\)<0.005\) in \($3&&$5\)) s
+(  nominal     20980.1 +/- 291.705, 8.27787 +/- 6.30217, 99.9606% +/- 0.0300202%) s
+(  shiftconst  20984.7 +/- 291.691, 8.28013 +/- 6.30185, 99.9606% +/- 0.0300121%) s
+(  shiftlinear 20923.2 +/- 291.877, 8.25 +/- 6.30606, 99.9606% +/- 0.0301203%) s
+endpage
+%%Page: 8 8
+startpage
+(  shiftquad   21308.1 +/- 290.718, 8.43875 +/- 6.27977, 99.9604% +/- 0.0294529%) s
+(  changing cut 3 to \(abs\(d0close\)<0.005\)) s
+( /NTUPLE/CUTS: Replacing cut $3) s
+(  DOING DATA2 with \(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\) in \($3&&$5\)) s
+(  nominal     20840.4 +/- 291, 139.662 +/- 20.274, 99.3343% +/- 0.0964342%) s
+(  shiftconst  20845 +/- 290.986, 139.681 +/- 20.2731, 99.3344% +/- 0.096409%) s
+(  shiftlinear 20783.8 +/- 291.171, 139.421 +/- 20.2844, 99.3336% +/- 0.0967463%) s
+(  shiftquad   21167.1 +/- 290.015, 141.05 +/- 20.2139, 99.338% +/- 0.0946665%) s
+(  changing cut 3 to \(abs\(d0close\)<0.005\)&&\(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\)) s
+( /NTUPLE/CUTS: Replacing cut $3) s
+(  DOING DATA2 with \(p1<0.8\) in \($3&&$5\)) s
+(  nominal     19742.8 +/- 288.807, 1097.59 +/- 35.6558, 94.7334% +/- 0.177754%) s
+(  shiftconst  19747.4 +/- 288.793, 1097.6 +/- 35.6554, 94.7345% +/- 0.177707%) s
+(  shiftlinear 19686.4 +/- 288.979, 1097.43 +/- 35.6596, 94.7198% +/- 0.178328%) s
+(  shiftquad   20068.6 +/- 287.817, 1098.48 +/- 35.6339, 94.8104% +/- 0.174512%) s
+(  changing cut 3 to \(abs\(d0close\)<0.005\)&&\(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\)&&\(p1<) s
+( /NTUPLE/CUTS: Replacing cut $3) s
+(  DOING DATA2 with \(chen+cneue>0.4\) in \($3&&$5\)) s
+(  nominal     19554 +/- 284.727, 188.854 +/- 48.3733, 99.0434% +/- 0.243065%) s
+(  shiftconst  19558.4 +/- 284.713, 189.009 +/- 48.3705, 99.0429% +/- 0.242994%) s
+(  shiftlinear 19499.4 +/- 284.896, 186.947 +/- 48.408, 99.0504% +/- 0.243948%) s
+(  shiftquad   19868.7 +/- 283.757, 199.862 +/- 48.1736, 99.0041% +/- 0.238071%) s
+(  all cuts \(including maximal trigger\)) s
+(  DOING DATA with \($5&&\(abs\(d0close\)<0.005\)&&\(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\)&&\() s
+(  nominal     1033.66 +/- 66.5835, 3491.77 +/- 171.904, 22.8411% +/- 1.42885%) s
+(  shiftconst  1035.15 +/- 66.5632, 3503.22 +/- 171.844, 22.8089% +/- 1.42395%) s
+(  shiftlinear 1024.74 +/- 66.7049, 3423.41 +/- 172.264, 23.0375% +/- 1.45877%) s
+(  shiftquad   1084.96 +/- 65.8924, 3885 +/- 169.851, 21.8304% +/- 1.27699%) s
+(  all cuts \(given maximal trigger\)) s
+(  DOING DATA2 with \($5&&\(abs\(d0close\)<0.005\)&&\(abs\(wz\)<0.075.or.\(wz<-100&&abs\(z0close\)<0.075\)\)&&) s
+(  nominal     19554 +/- 284.727, 1434.38 +/- 63.7343, 93.1658% +/- 0.297716%) s
+(  shiftconst  19558.4 +/- 284.713, 1434.57 +/- 63.7317, 93.1664% +/- 0.297638%) s
+(  shiftlinear 19499.4 +/- 284.896, 1432.05 +/- 63.7665, 93.1584% +/- 0.298688%) s
+(  shiftquad   19868.7 +/- 283.757, 1447.83 +/- 63.5492, 93.208% +/- 0.292212%) s
+(  number of tracks cuts) s
+(  DOING DATA2 with \(tracks>2\) in \($3&&$5\)) s
+(  nominal     19185.7 +/- 285.865, 557.123 +/- 41.1169, 97.1781% +/- 0.206469%) s
+(  shiftconst  19190.2 +/- 285.851, 557.205 +/- 41.1152, 97.1783% +/- 0.206412%) s
+(  shiftlinear 19130.2 +/- 286.036, 556.118 +/- 41.1384, 97.1751% +/- 0.207172%) s
+(  shiftquad   19505.7 +/- 284.883, 562.923 +/- 40.9932, 97.195% +/- 0.202489%) s
+(  DOING DATA2 with \(tracks>4\) in \($3&&$5\)) s
+(  nominal     17269.8 +/- 273.537, 2472.99 +/- 92.6668, 87.474% +/- 0.445749%) s
+(  shiftconst  17274 +/- 273.523, 2473.43 +/- 92.6626, 87.4747% +/- 0.445624%) s
+(  shiftlinear 17218.8 +/- 273.701, 2467.57 +/- 92.7183, 87.4656% +/- 0.447287%) s
+(  shiftquad   17564.3 +/- 272.592, 2504.27 +/- 92.3706, 87.5214% +/- 0.437045%) s
+( PAW >  Exiting from PAW.) s
+endpage
+
+%%Trailer
+cleanup
+docsave restore end

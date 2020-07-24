@@ -1,0 +1,19 @@
+nt/cuts $1 9.454<m<9.472
+nt/cuts $2 m<9.454.or.m>9.472
+h/cr/1d 200 'pass"H# in signal' 2 -0.5 1.5
+h/cr/1d 201 'pass"H# in sideband' 2 -0.5 1.5
+h/cr/1d 202 'pass"H#, sideband-subtracted' 2 -0.5 1.5
+ve/cr cont(2)
+ve/cr errs(2)
+nt/plot //data/UPSLNGMMEECSCDES/1.([1]) $1&&([2]) ! ! ! 'N' 200
+nt/plot //data/UPSLNGMMEECSCDES/1.([1]) $SIGMA(sig/sid)*($2&&([2])) ! ! ! 'N' 201
+sub 200 201 202 ! ! 'e'
+zone 1 1
+h/plot 202 'e'
+h/get_vect/contents 202 cont
+h/get_vect/errors 202 errs
+sigma a = cont(2)
+sigma ae = errs(2)
+sigma b = cont(1)
+sigma be = errs(1)
+message $SIGMA(a) +/- $SIGMA(ae), $SIGMA(b) +/- $SIGMA(be), $SIGMA(a/(a+b)*100.)% +/- $SIGMA(sqrt(ae**2*b**2+be**2*a**2)/(a+b)**2*100.)%

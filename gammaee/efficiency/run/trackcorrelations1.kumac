@@ -1,0 +1,104 @@
+h/file 1 /cdat/sol300/disk5/mccann/mcres17_01-track.rzn
+h/file 3 trackcorrelations.rzn ! 'N'
+
+nt/cuts $1 fit>0
+nt/cuts $2 dof>0&&chi2/dof<100
+nt/cuts $3 expect>0&&0.5<layers/expect<1.2
+nt/cuts $4 abs(d0)<0.03
+nt/cuts $5 abs(z0)<0.18
+nt/cuts $6 0.051776<p<7.7664
+nt/cuts $7 abs(cotth)<3.0424
+nt/cuts $8 errct<0.5
+nt/cuts $9 errz0<0.25
+nt/cuts $10 $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+
+h/cr/2d 112 'MC ch VS hf' 100 0.5 1.2 100 0. 100.
+h/cr/2d 113 'MC ch VS d0' 100 -0.03 0.03 100 0. 100.
+h/cr/2d 114 'MC ch VS z0' 100 -0.18 0.18 100 0. 100.
+h/cr/2d 115 'MC ch VS pm' 100 0.051776 7.7664 100 0. 100.
+h/cr/2d 116 'MC ch VS ct' 100 -3.0424 3.0424 100 0. 100.
+h/cr/2d 117 'MC ch VS ec' 100 0. 0.5 100 0. 100.
+h/cr/2d 118 'MC ch VS ez' 100 0. 0.25 100 0. 100.
+h/cr/2d 123 'MC hf VS d0' 100 -0.03 0.03 100 0.5 1.2
+h/cr/2d 124 'MC hf VS z0' 100 -0.18 0.18 100 0.5 1.2
+h/cr/2d 125 'MC hf VS pm' 100 0.051776 7.7664 100 0.5 1.2
+h/cr/2d 126 'MC hf VS ct' 100 -3.0424 3.0424 100 0.5 1.2
+h/cr/2d 127 'MC hf VS ec' 100 0. 0.5 100 0.5 1.2
+h/cr/2d 128 'MC hf VS ez' 100 0. 0.25 100 0.5 1.2
+h/cr/2d 134 'MC d0 VS z0' 100 -0.18 0.18 100 -0.03 0.03
+h/cr/2d 135 'MC d0 VS pm' 100 0.051776 7.7664 100 -0.03 0.03
+h/cr/2d 136 'MC d0 VS ct' 100 -3.0424 3.0424 100 -0.03 0.03
+h/cr/2d 137 'MC d0 VS ec' 100 0. 0.5 100 -0.03 0.03
+h/cr/2d 138 'MC d0 VS ez' 100 0. 0.25 100 -0.03 0.03
+h/cr/2d 145 'MC z0 VS pm' 100 0.051776 7.7664 100 -0.18 0.18
+h/cr/2d 146 'MC z0 VS ct' 100 -3.0424 3.0424 100 -0.18 0.18
+h/cr/2d 147 'MC z0 VS ec' 100 0. 0.5 100 -0.18 0.18
+h/cr/2d 148 'MC z0 VS ez' 100 0. 0.25 100 -0.18 0.18
+h/cr/2d 156 'MC pm VS ct' 100 -3.0424 3.0424 100 0.051776 7.7664
+h/cr/2d 157 'MC pm VS ec' 100 0. 0.5 100 0.051776 7.7664
+h/cr/2d 158 'MC pm VS ez' 100 0. 0.25 100 0.051776 7.7664
+h/cr/2d 167 'MC ct VS ec' 100 0. 0.5 100 -3.0424 3.0424
+h/cr/2d 168 'MC ct VS ez' 100 0. 0.25 100 -3.0424 3.0424
+h/cr/2d 178 'MC ec VS ez' 100 0. 0.25 100 0. 0.5
+
+cd //lun1/trackefficiency
+nt/plot 1.chi2/dof%layers/expect $10 ! ! ! 'N' 112 
+nt/plot 1.chi2/dof%d0 $10 ! ! ! 'N' 113 
+nt/plot 1.chi2/dof%z0 $10 ! ! ! 'N' 114 
+nt/plot 1.chi2/dof%p $10 ! ! ! 'N' 115 
+nt/plot 1.chi2/dof%cotth $10 ! ! ! 'N' 116 
+nt/plot 1.chi2/dof%errct $10 ! ! ! 'N' 117 
+nt/plot 1.chi2/dof%errz0 $10 ! ! ! 'N' 118 
+nt/plot 1.layers/expect%d0 $10 ! ! ! 'N' 123 
+nt/plot 1.layers/expect%z0 $10 ! ! ! 'N' 124 
+nt/plot 1.layers/expect%p $10 ! ! ! 'N' 125 
+nt/plot 1.layers/expect%cotth $10 ! ! ! 'N' 126 
+nt/plot 1.layers/expect%errct $10 ! ! ! 'N' 127 
+nt/plot 1.layers/expect%errz0 $10 ! ! ! 'N' 128 
+nt/plot 1.d0%z0 $10 ! ! ! 'N' 134 
+nt/plot 1.d0%p $10 ! ! ! 'N' 135 
+nt/plot 1.d0%cotth $10 ! ! ! 'N' 136 
+nt/plot 1.d0%errct $10 ! ! ! 'N' 137 
+nt/plot 1.d0%errz0 $10 ! ! ! 'N' 138 
+nt/plot 1.z0%p $10 ! ! ! 'N' 145 
+nt/plot 1.z0%cotth $10 ! ! ! 'N' 146 
+nt/plot 1.z0%errct $10 ! ! ! 'N' 147 
+nt/plot 1.z0%errz0 $10 ! ! ! 'N' 148 
+nt/plot 1.p%cotth $10 ! ! ! 'N' 156 
+nt/plot 1.p%errct $10 ! ! ! 'N' 157 
+nt/plot 1.p%errz0 $10 ! ! ! 'N' 158 
+nt/plot 1.cotth%errct $10 ! ! ! 'N' 167 
+nt/plot 1.cotth%errz0 $10 ! ! ! 'N' 168 
+nt/plot 1.errct%errz0 $10 ! ! ! 'N' 178 
+
+cd //lun3
+hrout 112
+hrout 113
+hrout 114
+hrout 115
+hrout 116
+hrout 117
+hrout 118
+hrout 123
+hrout 124
+hrout 125
+hrout 126
+hrout 127
+hrout 128
+hrout 134
+hrout 135
+hrout 136
+hrout 137
+hrout 138
+hrout 145
+hrout 146
+hrout 147
+hrout 148
+hrout 156
+hrout 157
+hrout 158
+hrout 167
+hrout 168
+hrout 178
+exit
+

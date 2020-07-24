@@ -1,0 +1,16 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/nt_db21.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/acceptance/run5/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_RES=2
+export USER_MCTYPE=db21
+
+suez -f ntuple_mc.tcl
+rm -f core
+
+exit

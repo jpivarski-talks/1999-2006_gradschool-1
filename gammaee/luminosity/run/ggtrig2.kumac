@@ -1,0 +1,179 @@
+nt/chain dat ../rzn/ntuple_121899.rzn
+nt/chain dat ../rzn/ntuple_121904.rzn
+nt/chain dat ../rzn/ntuple_121906.rzn
+nt/chain dat ../rzn/ntuple_122080.rzn
+nt/chain dat ../rzn/ntuple_122081.rzn
+nt/chain dat ../rzn/ntuple_122083.rzn
+nt/chain dat ../rzn/ntuple_122418.rzn
+nt/chain dat ../rzn/ntuple_122429.rzn
+nt/chain dat ../rzn/ntuple_122586.rzn
+nt/chain dat ../rzn/ntuple_122587.rzn
+nt/chain dat ../rzn/ntuple_122594.rzn
+nt/chain dat ../rzn/ntuple_122800.rzn
+nt/chain dat ../rzn/ntuple_122802.rzn
+nt/chain dat ../rzn/ntuple_123817.rzn
+nt/chain dat ../rzn/ntuple_125176.rzn
+nt/chain dat ../rzn/ntuple_126473.rzn
+nt/chain dat ../rzn/ntuple_126488.rzn
+nt/chain dat ../rzn/ntuple_126831.rzn
+nt/chain dat ../rzn/ntuple_126835.rzn
+nt/chain dat ../rzn/ntuple_129071.rzn
+nt/chain dat ../rzn/ntuple_129845.rzn
+nt/chain dat ../rzn/ntuple_129848.rzn
+nt/chain dat ../rzn/ntuple_130427.rzn
+nt/chain gam ../rzn/ntuple_gamgam.rzn
+nt/chain bha ../rzn/ntuple_bhabha.rzn
+* l1tt, l1rt, l1el, l1bb, l1eb,
+* rawtk, ntk, ebeam, e1, e2, p1, p2, ccen, neue, chen,
+* pos1, pos2,
+* s1costh, s2costh, s1phi, s2phi,
+* t1costh, t2costh, t1phi, t2phi,
+* d0close, z0close, pmiss
+nt/cuts $1 ntk==2&&p2>0.4&&pmiss<0.2&&abs(2-p1-p2-pmiss)<0.2&&e2>0.4&&(pos1-0.5)*(pos2-0.5)<0&&abs(s1costh-s2costh)/2<0.8&&abs(s1costh)<0.8&&abs(s2costh)<0.8&&l1tt==1
+
+nt/plot //dat/lumi/1.ntk $1 ! ! ! 'N' 1000001
+nt/plot //bha/lumi/1.ntk $1 ! ! ! 'N' 1000002
+sigma ptomc = $HINFO(1000001,'ENTRIES')/$HINFO(1000002,'ENTRIES')
+set hcol 0
+
+h/cr/1d 100 'Number of tracks' 6 -0.5 5.5
+h/cr/1d 101 'Number of tracks' 6 -0.5 5.5
+h/cr/1d 102 'Number of tracks' 6 -0.5 5.5
+nt/plot //dat/lumi/1.ntk p2>0.4&&pmiss<0.2&&abs(2-p1-p2-pmiss)<0.2&&e2>0.4&&(pos1-0.5)*(pos2-0.5)<0&&abs(s1costh-s2costh)/2<0.8&&abs(s1costh)<0.8&&abs(s2costh)<0.8&&l1tt==1 ! ! ! 'N' 100
+nt/plot //bha/lumi/1.ntk p2>0.4&&pmiss<0.2&&abs(2-p1-p2-pmiss)<0.2&&e2>0.4&&(pos1-0.5)*(pos2-0.5)<0&&abs(s1costh-s2costh)/2<0.8&&abs(s1costh)<0.8&&abs(s2costh)<0.8&&l1tt==1 ! ! ! 'N' 101
+add 101 101 102 $SIGMA(ptomc) 0.
+zone 2 3
+opt logy
+h/plot 100 'e'
+h/plot 102 's'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAx')
+dline 2.5 2.5 $SIGMA(10**bot) $SIGMA(10**top)
+
+h/cr/1d 150 'Second-biggest track momentum / eBeam' 120 0. 1.2
+h/cr/1d 151 'Second-biggest track momentum / eBeam' 120 0. 1.2
+h/cr/1d 152 'Second-biggest track momentum / eBeam' 120 0. 1.2
+nt/plot //dat/lumi/1.p2 ntk==2&&pmiss<0.2&&abs(2-p1-p2-pmiss)<0.2&&e2>0.4&&(pos1-0.5)*(pos2-0.5)<0&&abs(s1costh-s2costh)/2<0.8&&abs(s1costh)<0.8&&abs(s2costh)<0.8&&l1tt==1 ! ! ! 'N' 150
+nt/plot //bha/lumi/1.p2 ntk==2&&pmiss<0.2&&abs(2-p1-p2-pmiss)<0.2&&e2>0.4&&(pos1-0.5)*(pos2-0.5)<0&&abs(s1costh-s2costh)/2<0.8&&abs(s1costh)<0.8&&abs(s2costh)<0.8&&l1tt==1 ! ! ! 'N' 151
+add 151 151 152 $SIGMA(ptomc) 0.
+zone 2 3 2 's'
+opt logy
+h/plot 150 'e'
+h/plot 152 's'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAx')
+zone 5 4 4 's'
+opt liny
+null 0.9 1.1 0 $SIGMA(1.2*$HINFO(152,'MAX'))
+h/plot 150 'es'
+h/plot 152 's'
+
+h/cr/1d 200 'Momentum missing from top two tracks / eBeam' 100 0. 1.
+h/cr/1d 201 'Momentum missing from top two tracks / eBeam' 100 0. 1.
+h/cr/1d 202 'Momentum missing from top two tracks / eBeam' 100 0. 1.
+nt/plot //dat/lumi/1.pmiss ntk==2&&p2>0.4&&abs(2-p1-p2-pmiss)<0.2&&e2>0.4&&(pos1-0.5)*(pos2-0.5)<0&&abs(s1costh-s2costh)/2<0.8&&abs(s1costh)<0.8&&abs(s2costh)<0.8&&l1tt==1 ! ! ! 'N' 200
+nt/plot //bha/lumi/1.pmiss ntk==2&&p2>0.4&&abs(2-p1-p2-pmiss)<0.2&&e2>0.4&&(pos1-0.5)*(pos2-0.5)<0&&abs(s1costh-s2costh)/2<0.8&&abs(s1costh)<0.8&&abs(s2costh)<0.8&&l1tt==1 ! ! ! 'N' 201
+add 201 201 202 $SIGMA(ptomc) 0.
+zone 2 3 3 's'
+opt logy
+h/plot 200 'e'
+h/plot 202 's'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAx')
+dline 0.2 0.2 $SIGMA(10**bot) $SIGMA(10**top)
+zone 4 6 10 's'
+opt liny
+null 0. 0.05 0 $SIGMA(1.2*$HINFO(200,'MAX'))
+h/plot 200 'es'
+h/plot 202 's'
+
+h/cr/1d 300 'Energy constraint for e^+!e^-![g]' 150 -0.5 1.
+h/cr/1d 301 'Energy constraint for e^+!e^-![g]' 150 -0.5 1.
+h/cr/1d 302 'Energy constraint for e^+!e^-![g]' 150 -0.5 1.
+nt/plot //dat/lumi/1.2-p1-p2-pmiss ntk==2&&p2>0.4&&pmiss<0.2&&e2>0.4&&(pos1-0.5)*(pos2-0.5)<0&&abs(s1costh-s2costh)/2<0.8&&abs(s1costh)<0.8&&abs(s2costh)<0.8&&l1tt==1 ! ! ! 'N' 300
+nt/plot //bha/lumi/1.2-p1-p2-pmiss ntk==2&&p2>0.4&&pmiss<0.2&&e2>0.4&&(pos1-0.5)*(pos2-0.5)<0&&abs(s1costh-s2costh)/2<0.8&&abs(s1costh)<0.8&&abs(s2costh)<0.8&&l1tt==1 ! ! ! 'N' 301
+add 301 301 302 $SIGMA(ptomc) 0.
+zone 2 3 4 's'
+opt logy
+h/plot 300 'e'
+h/plot 302 's'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAx')
+dline 0.2 0.2 $SIGMA(10**bot) $SIGMA(10**top)
+dline -0.2 -0.2 $SIGMA(10**bot) $SIGMA(10**top)
+zone 4 6 12 's'
+opt liny
+null -0.05 0.05 0 $SIGMA(1.2*$HINFO(302,'MAX'))
+h/plot 300 'es'
+h/plot 302 's'
+
+h/cr/1d 400 'Second-biggest shower energy / eBeam' 120 0. 1.2
+h/cr/1d 401 'Second-biggest shower energy / eBeam' 120 0. 1.2
+h/cr/1d 402 'Second-biggest shower energy / eBeam' 120 0. 1.2
+nt/plot //dat/lumi/1.e2 ntk==2&&p2>0.4&&pmiss<0.2&&abs(2-p1-p2-pmiss)<0.2&&(pos1-0.5)*(pos2-0.5)<0&&abs(s1costh-s2costh)/2<0.8&&abs(s1costh)<0.8&&abs(s2costh)<0.8&&l1tt==1 ! ! ! 'N' 400
+nt/plot //bha/lumi/1.e2 ntk==2&&p2>0.4&&pmiss<0.2&&abs(2-p1-p2-pmiss)<0.2&&(pos1-0.5)*(pos2-0.5)<0&&abs(s1costh-s2costh)/2<0.8&&abs(s1costh)<0.8&&abs(s2costh)<0.8&&l1tt==1 ! ! ! 'N' 401
+add 401 401 402 $SIGMA(ptomc) 0.
+zone 2 3 5 's'
+opt logy
+h/plot 400 'e'
+h/plot 402 's'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline 0.4 0.4 $SIGMA(10**bot) $SIGMA(10**top)
+
+h/cr/1d 500 'shower "b#cos[Q?1!]-cos[Q?2!]"b#/2' 200 0. 1.
+h/cr/1d 501 'shower "b#cos[Q?1!]-cos[Q?2!]"b#/2' 200 0. 1.
+h/cr/1d 502 'shower "b#cos[Q?1!]-cos[Q?2!]"b#/2' 200 0. 1.
+nt/plot //dat/lumi/1.abs(s1costh-s2costh)/2 ntk==2&&p2>0.4&&pmiss<0.2&&abs(2-p1-p2-pmiss)<0.2&&e2>0.4&&(pos1-0.5)*(pos2-0.5)<0&&l1tt==1 ! ! ! 'N' 500
+nt/plot //bha/lumi/1.abs(s1costh-s2costh)/2 ntk==2&&p2>0.4&&pmiss<0.2&&abs(2-p1-p2-pmiss)<0.2&&e2>0.4&&(pos1-0.5)*(pos2-0.5)<0&&l1tt==1 ! ! ! 'N' 501
+add 501 501 502 $SIGMA(ptomc) 0.
+zone 2 3 6 's'
+opt logy
+h/plot 500 'e'
+h/plot 502 's'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline 0.8 0.8 $SIGMA(10**bot) $SIGMA(10**top)
+
+pict/print 'ggtrig4.ps'
+
+
+
+
+
+h/cr/1d 1000 'denom' 200 0. 0.8
+h/cr/1d 1001 'numer' 200 0. 0.8
+h/cr/1d 1002 'BarrelBhabha triggerline efficiency versus shower "b#cos[Q?1!]-cos[Q?2!]"b#/2' 200 0. 0.8
+h/cr/1d 1003 'e^+!e^-! "5# [g][g] "b#cos[Q?1!]-cos[Q?2!]"b#/2 (no cuts)' 200 0. 0.8
+nt/plot //dat/lumi/1.abs(s1costh-s2costh)/2 $1 ! ! ! 'N' 1000
+nt/plot //dat/lumi/1.abs(s1costh-s2costh)/2 $1&&l1bb==1 ! ! ! 'N' 1001
+nt/plot //gam/lumi/1.abs(s1costh-s2costh)/2*(s1costh>-1.1&&s2costh>-1.1)+2*(!(s1costh>-1.1&&s2costh>-1.1)) ! ! ! ! 'N' 1003
+ve/cr denom(200)
+ve/cr numer(200)
+ve/cr frac(200)
+ve/cr err(200)
+h/get_vect/contents 1000 denom
+h/get_vect/contents 1001 numer
+do i = 1, 200
+  ve/inp frac([i]) $SIGMA(numer([i])/denom([i]))
+  ve/inp err([i]) $SIGMA(sqrt(frac([i])*(1.-frac([i]))/numer([i])))
+enddo
+h/put_vect/contents 1002 frac
+h/put_vect/errors 1002 err
+zone 1 2
+opt liny
+opt nsta
+h/plot 1002
+opt sta
+set stat 1000010
+h/plot 1003
+
+
+
+nt/plot //gam/lumi/1.abs(s1costh-s2costh)/2*(s1costh>-1.1&&s2costh>-1.1)+2*(!(s1costh>-1.1&&s2costh>-1.1)) 

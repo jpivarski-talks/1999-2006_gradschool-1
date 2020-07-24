@@ -1,0 +1,173 @@
+macro counter label total cut line
+  swn 10 0 1 0.5 1
+  selnt 10
+  if ([total].eq.0) then
+    text 0.45 0.95 'sample' ! ! 'l'
+    text 0.80 0.95 'inside cut' ! ! 'r'
+    text 0.98 0.95 'total' ! ! 'r'
+    set ltype 1
+    dline 0.45 0.98 0.935 0.935
+  else
+    text 0.60 $SIGMA(0.93-0.03*[line]) [label] ! ! 'r'
+    text 0.80 $SIGMA(0.93-0.03*[line]) $HINFO([cut],'ENTRIES') ! ! 'r'
+    text 0.98 $SIGMA(0.93-0.03*[line]) $HINFO([total],'ENTRIES') ! ! 'r'
+    sigma percent = $HINFO([cut],'ENTRIES') / $HINFO([total],'ENTRIES') * 100
+    text 1.12 $SIGMA(0.93-0.03*[line]) $FORMAT($SIGMA(percent),F5.2)"Y# ! ! 'r'
+  endif
+return
+
+macro counterb label total cut line
+  swn 20 0 1 0.5 1
+  selnt 20
+  if ([total].eq.0) then
+    text 0.45 0.95 'sample' ! ! 'l'
+    text 0.80 0.95 'inside cut' ! ! 'r'
+    text 0.98 0.95 'total' ! ! 'r'
+    set ltype 1
+    dline 0.45 0.98 0.935 0.935
+  else
+    text 0.60 $SIGMA(0.93-0.03*[line]) [label] ! ! 'r'
+    text 0.80 $SIGMA(0.93-0.03*[line]) $HINFO([cut],'ENTRIES') ! ! 'r'
+    text 0.98 $SIGMA(0.93-0.03*[line]) $HINFO([total],'ENTRIES') ! ! 'r'
+    sigma percent = $HINFO([cut],'ENTRIES') / $HINFO([total],'ENTRIES') * 100
+    text 1.12 $SIGMA(0.93-0.03*[line]) $FORMAT($SIGMA(percent),F5.2)"Y# ! ! 'r'
+  endif
+return
+
+macro fillhistograms num
+  nt/cuts $1 fit>0
+  nt/cuts $2 dof>0&&chi2/dof<100
+  nt/cuts $3 expect>0&&0.5<layers/expect<1.2
+  nt/cuts $4 abs(d0)<0.03
+  nt/cuts $5 abs(z0)<0.18
+  nt/cuts $6 0.051776<p<7.7664
+  nt/cuts $7 abs(cotth)<3.0424
+  nt/cuts $8 sqrt(abs(errct))<0.5
+  nt/cuts $9 sqrt(abs(errz0))<0.25
+
+  h/cr/1d 1[num]00 'noFitAbort' 2 -0.5 1.5
+  h/cr/1d 2[num]00 'noFitAbort cut' 2 -0.5 1.5
+  h/cr/1d 3[num]00 'noFitAbort all cuts' 2 -0.5 1.5
+  h/cr/1d 4[num]00 'noFitAbort other cuts applied' 2 -0.5 1.5
+  nt/plot 1.fit ! ! ! ! 'N' 1[num]00
+  nt/plot 1.fit $1 ! ! ! 'N' 2[num]00
+  nt/plot 1.fit $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3[num]00
+  nt/plot 1.fit (($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 4[num]00
+
+  h/cr/1d 1[num]01 'reduced chi2' 60 -100. 200.
+  h/cr/1d 2[num]01 'reduced chi2 cut' 60 -100. 200.
+  h/cr/1d 3[num]01 'reduced chi2 all cuts' 60 -100. 200.
+  h/cr/1d 4[num]01 'reduced chi2 other cuts applied' 60 -100. 200.
+  nt/plot 1.chi2/dof dof>0 ! ! ! 'N' 1[num]01
+  nt/project 1[num]01 1.0 dof<=0
+  nt/plot 1.chi2/dof $2 ! ! ! 'N' 2[num]01
+  nt/project 2[num]01 1.0 dof<=0
+  nt/plot 1.chi2/dof $1&&(($2))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3[num]01
+  nt/project 3[num]01 1.0 $1&&((dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+  nt/plot 1.chi2/dof $1&&((dof>0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 4[num]01
+  nt/project 4[num]01 1.0 $1&&((dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+
+  h/cr/1d 1[num]02 'hitFraction' 64 0. 1.6
+  h/cr/1d 2[num]02 'hitFraction cut' 64 0. 1.6
+  h/cr/1d 3[num]02 'hitFraction all cuts' 64 0. 1.6
+  h/cr/1d 4[num]02 'hitFraction other cuts applied' 64 0. 1.6
+  nt/plot 1.layers/expect expect>0 ! ! ! 'N' 1[num]02
+  nt/project 1[num]02 1.0 expect<=0
+  nt/plot 1.layers/expect $3 ! ! ! 'N' 2[num]02
+  nt/plot 1.layers/expect $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3[num]02
+  nt/plot 1.layers/expect $1&&(($2).or.(dof<=0))&&expect>0&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 4[num]02
+  nt/project 4[num]02 1.0 $1&&(($2).or.(dof<=0))&&expect<=0&&$4&&$5&&$6&&$7&&$8&&$9
+
+  h/cr/1d 1[num]03 'd0' 40 -0.06 0.06
+  h/cr/1d 2[num]03 'd0 cut' 40 -0.06 0.06
+  h/cr/1d 3[num]03 'd0 all cuts' 40 -0.06 0.06
+  h/cr/1d 4[num]03 'd0 other cuts applied' 40 -0.06 0.06
+  nt/plot 1.d0 ! ! ! ! 'N' 1[num]03
+  nt/plot 1.d0 $4 ! ! ! 'N' 2[num]03
+  nt/plot 1.d0 $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3[num]03
+  nt/plot 1.d0 $1&&(($2).or.(dof<=0))&&$3&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 4[num]03
+
+  h/cr/1d 1[num]04 'z0' 40 -0.36 0.36
+  h/cr/1d 2[num]04 'z0 cut' 40 -0.36 0.36
+  h/cr/1d 3[num]04 'z0 all cuts' 40 -0.36 0.36
+  h/cr/1d 4[num]04 'z0 other cuts applied' 40 -0.36 0.36
+  nt/plot 1.z0 ! ! ! ! 'N' 1[num]04
+  nt/plot 1.z0 $5 ! ! ! 'N' 2[num]04
+  nt/plot 1.z0 $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3[num]04
+  nt/plot 1.z0 $1&&(($2).or.(dof<=0))&&$3&&$4&&$6&&$7&&$8&&$9 ! ! ! 'N' 4[num]04
+
+  h/cr/1d 1[num]05 'momentum' 40 0. 10.3552
+  h/cr/1d 2[num]05 'momentum cut' 40 0. 10.3552
+  h/cr/1d 3[num]05 'momentum all cuts' 40 0. 10.3552
+  h/cr/1d 4[num]05 'momentum other cuts applied' 40 0. 10.3552
+  nt/plot 1.p ! ! ! ! 'N' 1[num]05
+  nt/plot 1.p $6 ! ! ! 'N' 2[num]05
+  nt/plot 1.p $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3[num]05
+  nt/plot 1.p $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$7&&$8&&$9 ! ! ! 'N' 4[num]05
+
+  h/cr/1d 1[num]06 'cotTheta' 40 -6.0848 6.0848
+  h/cr/1d 2[num]06 'cotTheta cut' 40 -6.0848 6.0848
+  h/cr/1d 3[num]06 'cotTheta all cuts' 40 -6.0848 6.0848
+  h/cr/1d 4[num]06 'cotTheta other cuts applied' 40 -6.0848 6.0848
+  nt/plot 1.cotth ! ! ! ! 'N' 1[num]06
+  nt/plot 1.cotth $7 ! ! ! 'N' 2[num]06
+  nt/plot 1.cotth $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3[num]06
+  nt/plot 1.cotth $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' 4[num]06
+
+  h/cr/1d 1[num]07 'err in cotTheta' 50 0. 1.0
+  h/cr/1d 2[num]07 'err in cotTheta cut' 50 0. 1.0
+  h/cr/1d 3[num]07 'err in cotTheta all cuts' 50 0. 1.0
+  h/cr/1d 4[num]07 'err in cotTheta other cuts applied' 50 0. 1.0
+  nt/plot 1.sqrt(abs(errct)) ! ! ! ! 'N' 1[num]07
+  nt/plot 1.sqrt(abs(errct)) $8 ! ! ! 'N' 2[num]07
+  nt/plot 1.sqrt(abs(errct)) $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3[num]07
+  nt/plot 1.sqrt(abs(errct)) $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$9 ! ! ! 'N' 4[num]07
+
+  h/cr/1d 1[num]08 'err in z0' 50 0. 0.5
+  h/cr/1d 2[num]08 'err in z0 cut' 50 0. 0.5
+  h/cr/1d 3[num]08 'err in z0 all cuts' 50 0. 0.5
+  h/cr/1d 4[num]08 'err in z0 other cuts applied' 50 0. 0.5
+  nt/plot 1.sqrt(abs(errz0)) ! ! ! ! 'N' 1[num]08
+  nt/plot 1.sqrt(abs(errz0)) $9 ! ! ! 'N' 2[num]08
+  nt/plot 1.sqrt(abs(errz0)) $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8&&$9 ! ! ! 'N' 3[num]08
+  nt/plot 1.sqrt(abs(errz0)) $1&&(($2).or.(dof<=0))&&$3&&$4&&$5&&$6&&$7&&$8 ! ! ! 'N' 4[num]08
+return
+
+macro writehistograms num
+  hrout 1[num]00
+  hrout 2[num]00
+  hrout 3[num]00
+  hrout 4[num]00
+  hrout 1[num]01
+  hrout 2[num]01
+  hrout 3[num]01
+  hrout 4[num]01
+  hrout 1[num]02
+  hrout 2[num]02
+  hrout 3[num]02
+  hrout 4[num]02
+  hrout 1[num]03
+  hrout 2[num]03
+  hrout 3[num]03
+  hrout 4[num]03
+  hrout 1[num]04
+  hrout 2[num]04
+  hrout 3[num]04
+  hrout 4[num]04
+  hrout 1[num]05
+  hrout 2[num]05
+  hrout 3[num]05
+  hrout 4[num]05
+  hrout 1[num]06
+  hrout 2[num]06
+  hrout 3[num]06
+  hrout 4[num]06
+  hrout 1[num]07
+  hrout 2[num]07
+  hrout 3[num]07
+  hrout 4[num]07
+  hrout 1[num]08
+  hrout 2[num]08
+  hrout 3[num]08
+  hrout 4[num]08
+return

@@ -1,0 +1,67 @@
+double HadronFilterProc::highest_momentum_shower_sum( vector< int > identifier, Frame& iFrame )
+{
+   assert( identifier.size() > 2 );
+
+   FATable< NavTrack > navtracks;
+   extract( iFrame.record( Stream::kEvent ), navtracks );
+   FATable< NavTrack >::const_iterator tracks_end = navtracks.end();
+
+   FATable< NavShower > navshowers;
+   extract( iFrame.record( Stream::kEvent ), navshowers );
+   FATable< NavShower >::const_iterator showers_end = navshowers.end();
+
+   int i;
+   int nidentifier( identifier.size() );
+   int first(-1), second(-1);
+   double first_p(0.), second_p(0.);
+   for ( i = 0;  i < nidentifier;  i++ ) {
+      FATable< NavTrack >::const_iterator nav_iter = navtracks.find( identifier[i] );
+      assert( nav_iter != tracks_end );
+      double this_p( nav_iter->pionFit()->momentum().mag() );
+
+      if ( this_p > first_p ) {
+	 second = first;                                  second_p = first_p;
+	 first = nav_iter->pionFit()->identifier();       first_p = this_p;
+      }
+      else if ( this_p > second_p ) {
+	 second = nav_iter->pionFit()->identifier();      second_p = this_p;
+      }
+   } // end loop over cut helices
+   assert( first != -1  &&  second != -1 );
+
+   double first_e(0.);
+   double second_e(0.);
+   for ( FATable< NavShower >::const_iterator shower_iter = navshowers.begin();
+	 shower_iter != showers_end;
+	 shower_iter++ ) {
+      FATable< NavTkShMatch > matches( shower_iter->trackMatches() );
+      FATable< NavTkShMatch >::const_iterator match_end( matches.end() );
+
+      for ( FATable< NavTkShMatch >::const_iterator match_iter = matches.begin();
+	    match_iter != match_end;
+	    match_iter++ ) {
+	 if ( match_iter->identifier() == first ) first_e = shower_iter->attributes().energy();
+	 if ( match_iter->identifier() == second ) second_e = shower_iter->attributes().energy();
+      } // end loop over shower track matches
+   } // end loop over showers
+
+   return first_e + second_e;
+}
+
+double HadronFilterProc::max_angle( vector< KTHelix* > helix )
+{
+   double best(1.);
+
+   // This is a loop over the upper triangle of the helix-helix
+   // matrix.
+   int i, j;
+   int nhelix( helix.size() );
+   for ( i = 0;  i < nhelix;  i++ )
+      for ( j = i + 1;  j < nhelix;  j++ ) {
+	 double cos_angle( cos(helix[i] - helix[j]) );
+	 if ( cos_angle < best )
+	    best = cos_angle;
+      } // end loop over pairs of helices
+   return best;
+}
+

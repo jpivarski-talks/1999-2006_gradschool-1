@@ -1,0 +1,13 @@
+#$ -l calibration
+#$ -o /cdat/tem/mccann/trackshower_before.out
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/super_hadrons/run
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Jul13_02_P2
+
+C3_SHLIB=../build_SunOS/before_BigErrorMatrix_bug/shlib:/nfs/cleo3/Offline/rel/Jul13_02_P2/shlib/SunOS/CC
+export C3_SHLIB
+
+suez -f trackshower_before.tcl > /cdat/tem/mccann/trackshower_before.log

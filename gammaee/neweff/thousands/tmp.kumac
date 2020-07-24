@@ -1,0 +1,12 @@
+ve/read tmp tmp.vec
+ve/plot tmp
+h/cr/1d 100 'tmp' 100 -0.100 0.100
+ve/hfill tmp 100
+h/plot 100
+ve/cr par(6)
+ve/inp par 100 -0.025 0.025 0 180 0.001 
+h/fit 100(-0.005:0.1) tmp.f ! 6 par
+f/plot tmp.f -0.1 0.1 's'
+ve/inp par 100 -0.025 0.025 12.171 127.48 0.55969e-4
+h/fit 100 tmp.f ! 3 par
+h/fit 100 tmp.f ! 6 par

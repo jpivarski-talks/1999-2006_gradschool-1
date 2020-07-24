@@ -1,0 +1,363 @@
+h/file 26 /home/mccann/acceptance/rzn5/ntuple_db16.rzn
+h/file 28 /home/mccann/acceptance/rzn5/ntuple_db18.rzn
+h/file 29 /home/mccann/acceptance/rzn5/ntuple_db19.rzn
+h/file 21 /home/mccann/acceptance/rzn5/ntuple_db21.rzn
+h/file 23 /home/mccann/acceptance/rzn5/ntuple_db23.rzn
+
+nt/cuts $1 (t1had>0).or.(t1rad>0).or.(t1el>0)
+nt/cuts $2 abs(d0close)<0.005
+nt/cuts $3 e1<0.85
+nt/cuts $4 p2<0.85
+nt/cuts $5 (wz>800&&abs(z0close)<0.075).or.(wz<800&&abs(wz)<0.075)
+nt/cuts $6 visen>0.35
+nt/cuts $8 tracks>1
+nt/cuts $9 l4dec>0
+nt/cuts $7 ccen<0.85
+
+nt/cuts $10 nbunch<15&&bbunch<10
+
+h/cr/1d 101 'whatever' 10 -0.5 100
+h/cr/1d 102 'whatever' 10 -0.5 100
+message 'MC 16'
+nt/plot //lun26/cuts/1.tracks mctype>0 ! ! ! 'N' 101
+nt/plot //lun26/cuts/1.tracks mctype>0&&$10 ! ! ! 'N' 102
+message 'nothing ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun26/cuts/1.tracks mctype>0&&$1 ! ! ! 'N' 101
+nt/plot //lun26/cuts/1.tracks mctype>0&&$10&&$1 ! ! ! 'N' 102
+message 'trigger ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun26/cuts/1.tracks mctype>0&&$1&&$2 ! ! ! 'N' 101
+nt/plot //lun26/cuts/1.tracks mctype>0&&$10&&$1&&$2 ! ! ! 'N' 102
+message 'd0close ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun26/cuts/1.tracks mctype>0&&$1&&$2&&$3 ! ! ! 'N' 101
+nt/plot //lun26/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3 ! ! ! 'N' 102
+message 'e1 ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun26/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4 ! ! ! 'N' 101
+nt/plot //lun26/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4 ! ! ! 'N' 102
+message 'p2 ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun26/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5 ! ! ! 'N' 101
+nt/plot //lun26/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5 ! ! ! 'N' 102
+message 'wz ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun26/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 101
+nt/plot //lun26/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 102
+message 'visen ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun26/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$8 ! ! ! 'N' 101
+nt/plot //lun26/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6&&$8 ! ! ! 'N' 102
+message 'tracks ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun26/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' 101
+nt/plot //lun26/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' 102
+message 'l4dec ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun26/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&$7 ! ! ! 'N' 101
+nt/plot //lun26/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&$7 ! ! ! 'N' 102
+message 'ccen ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+
+message 'MC 18'
+nt/plot //lun28/cuts/1.tracks mctype>0 ! ! ! 'N' 101
+nt/plot //lun28/cuts/1.tracks mctype>0&&$10 ! ! ! 'N' 102
+message 'nothing ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun28/cuts/1.tracks mctype>0&&$1 ! ! ! 'N' 101
+nt/plot //lun28/cuts/1.tracks mctype>0&&$10&&$1 ! ! ! 'N' 102
+message 'trigger ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun28/cuts/1.tracks mctype>0&&$1&&$2 ! ! ! 'N' 101
+nt/plot //lun28/cuts/1.tracks mctype>0&&$10&&$1&&$2 ! ! ! 'N' 102
+message 'd0close ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun28/cuts/1.tracks mctype>0&&$1&&$2&&$3 ! ! ! 'N' 101
+nt/plot //lun28/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3 ! ! ! 'N' 102
+message 'e1 ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun28/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4 ! ! ! 'N' 101
+nt/plot //lun28/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4 ! ! ! 'N' 102
+message 'p2 ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun28/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5 ! ! ! 'N' 101
+nt/plot //lun28/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5 ! ! ! 'N' 102
+message 'wz ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun28/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 101
+nt/plot //lun28/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 102
+message 'visen ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun28/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$8 ! ! ! 'N' 101
+nt/plot //lun28/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6&&$8 ! ! ! 'N' 102
+message 'tracks ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun28/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' 101
+nt/plot //lun28/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' 102
+message 'l4dec ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun28/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&$7 ! ! ! 'N' 101
+nt/plot //lun28/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&$7 ! ! ! 'N' 102
+message 'ccen ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+
+message 'MC 19'
+nt/plot //lun29/cuts/1.tracks mctype>0 ! ! ! 'N' 101
+nt/plot //lun29/cuts/1.tracks mctype>0&&$10 ! ! ! 'N' 102
+message 'nothing ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun29/cuts/1.tracks mctype>0&&$1 ! ! ! 'N' 101
+nt/plot //lun29/cuts/1.tracks mctype>0&&$10&&$1 ! ! ! 'N' 102
+message 'trigger ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun29/cuts/1.tracks mctype>0&&$1&&$2 ! ! ! 'N' 101
+nt/plot //lun29/cuts/1.tracks mctype>0&&$10&&$1&&$2 ! ! ! 'N' 102
+message 'd0close ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun29/cuts/1.tracks mctype>0&&$1&&$2&&$3 ! ! ! 'N' 101
+nt/plot //lun29/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3 ! ! ! 'N' 102
+message 'e1 ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun29/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4 ! ! ! 'N' 101
+nt/plot //lun29/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4 ! ! ! 'N' 102
+message 'p2 ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun29/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5 ! ! ! 'N' 101
+nt/plot //lun29/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5 ! ! ! 'N' 102
+message 'wz ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun29/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 101
+nt/plot //lun29/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 102
+message 'visen ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun29/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$8 ! ! ! 'N' 101
+nt/plot //lun29/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6&&$8 ! ! ! 'N' 102
+message 'tracks ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun29/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' 101
+nt/plot //lun29/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' 102
+message 'l4dec ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun29/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&$7 ! ! ! 'N' 101
+nt/plot //lun29/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&$7 ! ! ! 'N' 102
+message 'ccen ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+
+message 'MC 21'
+nt/plot //lun21/cuts/1.tracks mctype>0 ! ! ! 'N' 101
+nt/plot //lun21/cuts/1.tracks mctype>0&&$10 ! ! ! 'N' 102
+message 'nothing ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun21/cuts/1.tracks mctype>0&&$1 ! ! ! 'N' 101
+nt/plot //lun21/cuts/1.tracks mctype>0&&$10&&$1 ! ! ! 'N' 102
+message 'trigger ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun21/cuts/1.tracks mctype>0&&$1&&$2 ! ! ! 'N' 101
+nt/plot //lun21/cuts/1.tracks mctype>0&&$10&&$1&&$2 ! ! ! 'N' 102
+message 'd0close ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun21/cuts/1.tracks mctype>0&&$1&&$2&&$3 ! ! ! 'N' 101
+nt/plot //lun21/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3 ! ! ! 'N' 102
+message 'e1 ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun21/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4 ! ! ! 'N' 101
+nt/plot //lun21/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4 ! ! ! 'N' 102
+message 'p2 ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun21/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5 ! ! ! 'N' 101
+nt/plot //lun21/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5 ! ! ! 'N' 102
+message 'wz ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun21/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 101
+nt/plot //lun21/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 102
+message 'visen ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun21/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$8 ! ! ! 'N' 101
+nt/plot //lun21/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6&&$8 ! ! ! 'N' 102
+message 'tracks ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun21/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' 101
+nt/plot //lun21/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' 102
+message 'l4dec ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun21/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&$7 ! ! ! 'N' 101
+nt/plot //lun21/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&$7 ! ! ! 'N' 102
+message 'ccen ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+
+message 'MC 23'
+nt/plot //lun23/cuts/1.tracks mctype>0 ! ! ! 'N' 101
+nt/plot //lun23/cuts/1.tracks mctype>0&&$10 ! ! ! 'N' 102
+message 'nothing ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun23/cuts/1.tracks mctype>0&&$1 ! ! ! 'N' 101
+nt/plot //lun23/cuts/1.tracks mctype>0&&$10&&$1 ! ! ! 'N' 102
+message 'trigger ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun23/cuts/1.tracks mctype>0&&$1&&$2 ! ! ! 'N' 101
+nt/plot //lun23/cuts/1.tracks mctype>0&&$10&&$1&&$2 ! ! ! 'N' 102
+message 'd0close ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun23/cuts/1.tracks mctype>0&&$1&&$2&&$3 ! ! ! 'N' 101
+nt/plot //lun23/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3 ! ! ! 'N' 102
+message 'e1 ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun23/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4 ! ! ! 'N' 101
+nt/plot //lun23/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4 ! ! ! 'N' 102
+message 'p2 ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun23/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5 ! ! ! 'N' 101
+nt/plot //lun23/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5 ! ! ! 'N' 102
+message 'wz ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun23/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 101
+nt/plot //lun23/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 102
+message 'visen ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun23/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$8 ! ! ! 'N' 101
+nt/plot //lun23/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6&&$8 ! ! ! 'N' 102
+message 'tracks ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun23/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' 101
+nt/plot //lun23/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9 ! ! ! 'N' 102
+message 'l4dec ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+nt/plot //lun23/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&$7 ! ! ! 'N' 101
+nt/plot //lun23/cuts/1.tracks mctype>0&&$10&&$1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&$7 ! ! ! 'N' 102
+message 'ccen ' $HINFO(101,'ENTRIES') $HINFO(102,'ENTRIES') 
+
+* when I forgot to restrict to hadrons
+* 
+*  MC 16
+*  nothing  102159 69656
+*  trigger  100186 68595
+*  d0close  100044 68564
+*  e1  97458 66795
+*  p2  96131 65854
+*  wz  95879 65764
+*  visen  95281 65465
+*  tracks  95096 65404
+*  l4dec  95095 65404
+*  ccen  93885 64567
+*  MC 18
+*  nothing  89437 60624
+*  trigger  87353 59567
+*  d0close  87221 59542
+*  e1  84601 57784
+*  p2  83371 56910
+*  wz  82845 56802
+*  visen  82226 56490
+*  tracks  81989 56417
+*  l4dec  81986 56417
+*  ccen  80775 55580
+*  MC 19
+*  nothing  65884 44913
+*  trigger  64320 44117
+*  d0close  64219 44099
+*  e1  62259 42771
+*  p2  61301 42096
+*  wz  60917 42005
+*  visen  60445 41757
+*  tracks  60299 41704
+*  l4dec  60297 41703
+*  ccen  59434 41139
+*  MC 21
+*  nothing  85536 60254
+*  trigger  84065 59527
+*  d0close  83964 59507
+*  e1  81654 57898
+*  p2  80444 57024
+*  wz  80012 56942
+*  visen  79527 56682
+*  tracks  79379 56635
+*  l4dec  79376 56635
+*  ccen  78328 55897
+*  MC 23
+*  nothing  98244 67083
+*  trigger  96567 66254
+*  d0close  96464 66239
+*  e1  93842 64460
+*  p2  92418 63461
+*  wz  91897 63348
+*  visen  91332 63052
+*  tracks  91162 63003
+*  l4dec  91160 63003
+*  ccen  89954 62163
+
+
+* now I'm restricting to hadrons
+* 
+*  MC 16
+*  nothing  96957 66392
+*  trigger  96477 66133
+*  d0close  96385 66103
+*  e1  95279 65336
+*  p2  94879 65053
+*  wz  94657 64979
+*  visen  94298 64799
+*  tracks  94163 64755
+*  l4dec  94163 64755
+*  ccen  92960 63921
+*  MC 18
+*  nothing  82626 56386
+*  trigger  82352 56244
+*  d0close  82263 56220
+*  e1  81447 55680
+*  p2  81401 55648
+*  wz  80938 55558
+*  visen  80672 55427
+*  tracks  80525 55385
+*  l4dec  80524 55385
+*  ccen  79320 54553
+*  MC 19
+*  nothing  60735 41647
+*  trigger  60551 41563
+*  d0close  60497 41550
+*  e1  59902 41163
+*  p2  59866 41135
+*  wz  59515 41055
+*  visen  59309 40959
+*  tracks  59208 40931
+*  l4dec  59206 40930
+*  ccen  58350 40372
+*  MC 21
+*  nothing  81742 57819
+*  trigger  81276 57587
+*  d0close  81203 57568
+*  e1  79912 56691
+*  p2  79378 56318
+*  wz  78975 56252
+*  visen  78658 56078
+*  tracks  78550 56046
+*  l4dec  78549 56046
+*  ccen  77512 55315
+*  MC 23
+*  nothing  93831 64285
+*  trigger  93315 64035
+*  d0close  93240 64021
+*  e1  91793 63075
+*  p2  91163 62636
+*  wz  90684 62537
+*  visen  90336 62358
+*  tracks  90205 62319
+*  l4dec  90204 62319
+*  ccen  89009 61487
+
+
+
+
+
+
+
+
+MC 16
+nothing  96957 66392
+trigger  96477 66133    0.9950493517744979 0.9960989275816363    = -0.1049575807138381 %
+d0close  96385 66103    0.999046404842605 0.9995463686812938    = -0.049996383868877725 %
+e1  95279 65336    0.9885251854541682 0.9883968957535967    = 0.012828970057154887 %
+p2  94879 65053    0.9958018031255575 0.9956685441410554    = 0.013325898450211593 %
+wz  94657 64979    0.9976601777000179 0.9988624659892703    = -0.12022882892523956 %
+visen  94298 64799    0.9962073592021721 0.9972298742670709    = -0.10225150648988102 %
+tracks  94163 64755    0.9985683683641222 0.9993209771755737    = -0.07526088114514495 %
+l4dec  94163 64755    1.0 1.0    = 0.0 %
+ccen  92960 63921    0.9872242812994488 0.9871206856613389    = 0.010359563810991013 %
+
+MC 18
+nothing  82626 56386
+trigger  82352 56244    0.9966838525403626 0.9974816443798106    = -0.07977918394479477 %
+d0close  82263 56220    0.9989192733631241 0.9995732878173672    = -0.06540144542430681 %
+e1  81447 55680    0.9900805951642901 0.9903948772678762    = -0.03142821035860832 %
+p2  81401 55648    0.9994352155389394 0.9994252873563219    = 0.0009928182617580106 %
+wz  80938 55558    0.9943121091878478 0.9983826912018401    = -0.4070582013992241 %
+visen  80672 55427    0.9967135338160074 0.9976421037474351    = -0.09285699314277585 %
+tracks  80525 55385    0.9981778064260214 0.9992422465585364    = -0.10644401325150543 %
+l4dec  80524 55385    0.9999875814964296 1.0    = -0.0012418503570366113 %
+ccen  79320 54553    0.985047936019075 0.9849778820980409    = 0.007005392103409669 %
+
+MC 19
+nothing  60735 41647
+trigger  60551 41563    0.9969704453774595 0.9979830479986553    = -0.10126026211958461 %
+d0close  60497 41550    0.9991081897904246 0.999687221807858    = -0.05790320174333674 %
+e1  59902 41163    0.990164801560408 0.9906859205776173    = -0.05211190172093039 %
+p2  59866 41135    0.9993990183967146 0.9993197774700581    = 0.007924092665656524 %
+wz  59515 41055    0.9941369057561888 0.9980551841497508    = -0.3918278393561958 %
+visen  59309 40959    0.9965386877257835 0.9976616733649982    = -0.11229856392147575 %
+tracks  59208 40931    0.9982970544099546 0.999316389560292    = -0.10193351503373638 %
+l4dec  59206 40930    0.9999662207809755 0.9999755686399062    = -0.0009347858930697228 %
+ccen  58350 40372    0.9855420058777826 0.9863669679941364    = -0.08249621163537446 %
+
+MC 21
+nothing  81742 57819
+trigger  81276 57587    0.9942991363069169 0.9959874781646172    = -0.16883418577002818 %
+d0close  81203 57568    0.9991018258772577 0.9996700644242624    = -0.0568238547004718 %
+e1  79912 56691    0.9841015726019975 0.9847658421345192    = -0.0664269532521744 %
+p2  79378 56318    0.9933176494143557 0.9934204723853874    = -0.01028229710317019 %
+wz  78975 56252    0.9949230265312807 0.9988280833836429    = -0.39050568523621987 %
+visen  78658 56078    0.9959860715416271 0.9969067766479414    = -0.09207051063142568 %
+tracks  78550 56046    0.9986269673777619 0.9994293662398802    = -0.08023988621183031 %
+l4dec  78549 56046    0.9999872692552514 1.0    = -0.0012730744748612466 %
+ccen  77512 55315    0.9867980496250748 0.9869571423473575    = -0.015909272228276095 %
+
+MC 23
+nothing  93831 64285
+trigger  93315 64035    0.9945007513508329 0.9961110679007544    = -0.16103165499214978 %
+d0close  93240 64021    0.9991962706960296 0.9997813695635199    = -0.058509886749036344 %
+e1  91793 63075    0.9844809094809095 0.98522359850674    = -0.0742689025830523 %
+p2  91163 62636    0.9931367315590514 0.9930400317082838    = 0.00966998507675454 %
+wz  90684 62537    0.9947456753288066 0.998419439300083    = -0.3673763971276389 %
+visen  90336 62358    0.9961624983459044 0.997137694484865    = -0.09751961389605768 %
+tracks  90205 62319    0.9985498583067659 0.9993745790435871    = -0.08247207368211606 %
+l4dec  90204 62319    0.9999889141400145 1.0    = -0.0011085859985549007 %
+ccen  89009 61487    0.9867522504545253 0.9866493364784416    = 0.010291397608375163 %

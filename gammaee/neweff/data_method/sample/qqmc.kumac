@@ -1,0 +1,53 @@
+h/file 1 ../../data_method_rzn/sample/qqmcother.rzn
+h/file 2 ../../data_method_rzn/sample/qqmcll.rzn
+
+* e1 e2 p1 p2
+* q2 costh
+* rawntk epntk visen ccen bgntk
+* bgrphi bgz bgd0 bgz0
+* neue q
+* nsh10 nsh50 nsh100 nsh500
+* trig1 level4
+* ph1px ph1py ph1pz ph2px ph2py ph2pz
+* tr1px tr1py tr1pz tr2px tr2py tr2pz
+
+*       (t1->isHadron() 	    ? 1. : 0.) +
+*       (t1->isMuPair() 	    ? 10. : 0.) +
+*       (t1->isCBSingleHi()   	    ? 100. : 0.) +
+*       (t1->isCESingleHi()   	    ? 1000. : 0.) +
+*       (t1->isBarrelBhabha() 	    ? 10000. : 0.) +
+*       (t1->isEndcapBhabha() 	    ? 100000. : 0.) +
+*       (t1->isElTrack()      	    ? 1000000. : 0.) +
+*       (t1->isRadTau() 	    ? 10000000. : 0.) +
+*       (t1->isPulser() 	    ? 100000000. : 0.) +
+*       (t1->isRandom() 	    ? 1000000000. : 0.) +
+*       (t1->isTwoTrack()     	    ? 10000000000. : 0.) +
+*       (t1->isMinBias()      	    ? 100000000000. : 0.)
+
+*        enum Decision { kFailed,
+*                        kKeepLevel3Garbage,
+*                        kLevel3AutoAccept,
+*                        kLevel4Keep
+
+nt/cuts $1 p2<0.80
+nt/cuts $2 e1<(-8./3.)*e2+2.
+nt/cuts $3 visen>0.1
+
+opt sta
+nt/plot //lun1/dupercuts2/1.epntk
+nt/plot //lun1/dupercuts2/1.epntk !($1&&$2&&$3)
+nt/plot //lun1/dupercuts2/1.epntk !($1&&$2&&$3)&&(trig1==0.or.level4==0)
+nt/plot //lun1/dupercuts2/1.epntk (trig1==0.or.level4==0)
+
+* yields...
+* 188831
+* 507
+* 62
+* 646
+
+opt sta
+zone 1 4
+nt/plot //lun2/dupercuts2/1.epntk
+nt/plot //lun2/dupercuts2/1.epntk ($1&&$2&&$3)
+nt/plot //lun2/dupercuts2/1.epntk ($1&&$2&&$3)&&(trig1==0.or.level4==0)
+nt/plot //lun2/dupercuts2/1.epntk (trig1==0.or.level4==0)

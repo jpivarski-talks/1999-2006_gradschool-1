@@ -1,0 +1,9 @@
+cd tables5
+
+for y in bblumi gglumi; do for x in all1 all2 all3 db16 db17 db18 db19 db21 db23; do (echo "1"; echo "exec plots_and_tables.kumac" $x $y) | paw | tee $x\_$y.log; done; done
+
+perl myepstopdf.pl 
+
+emacs tables5/plots_and_tables.m
+
+

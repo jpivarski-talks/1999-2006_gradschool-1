@@ -1,0 +1,133 @@
+nt/chain bb ../rzn2/ntuple_bhabha.rzn
+nt/chain gg ../rzn2/ntuple_gamgam.rzn
+nt/chain p1 ../rzn2/ntuple_123853.rzn
+nt/chain p1 ../rzn2/ntuple_124684.rzn
+nt/chain p2 ../rzn2/ntuple_126563.rzn
+nt/chain p2 ../rzn2/ntuple_126870.rzn
+nt/chain p2 ../rzn2/ntuple_127317.rzn
+nt/chain p2 ../rzn2/ntuple_127319.rzn
+nt/chain p2 ../rzn2/ntuple_129564.rzn
+nt/chain p2 ../rzn2/ntuple_129572.rzn
+nt/chain p2 ../rzn2/ntuple_129630.rzn
+nt/chain p2 ../rzn2/ntuple_130473.rzn
+nt/chain p3 ../rzn2/ntuple_121969.rzn
+nt/chain p3 ../rzn2/ntuple_121972.rzn
+nt/chain p3 ../rzn2/ntuple_122132.rzn
+nt/chain p3 ../rzn2/ntuple_122136.rzn
+nt/chain p3 ../rzn2/ntuple_122143.rzn
+nt/chain p3 ../rzn2/ntuple_122147.rzn
+nt/chain p3 ../rzn2/ntuple_122576.rzn
+nt/chain p3 ../rzn2/ntuple_122647.rzn
+nt/chain p3 ../rzn2/ntuple_122816.rzn
+nt/chain p3 ../rzn2/ntuple_122829.rzn
+nt/chain p3 ../rzn2/ntuple_122831.rzn
+nt/chain p3 ../rzn2/ntuple_123043.rzn
+nt/chain p3 ../rzn2/ntuple_123044.rzn
+nt/chain p3 ../rzn2/ntuple_122133.rzn
+nt/chain p3 ../rzn2/ntuple_122832.rzn
+* ../rzn2/ntuple_122137.rzn was dropped because of a weird hadronic
+* trigger (in the hadronic efficiency also)
+nt/chain c1 ../rzn2/ntuple_123817.rzn
+nt/chain c1 ../rzn2/ntuple_125176.rzn
+nt/chain c2 ../rzn2/ntuple_126473.rzn
+nt/chain c2 ../rzn2/ntuple_126488.rzn
+nt/chain c2 ../rzn2/ntuple_126831.rzn
+nt/chain c2 ../rzn2/ntuple_126835.rzn
+nt/chain c2 ../rzn2/ntuple_129071.rzn
+nt/chain c2 ../rzn2/ntuple_129845.rzn
+nt/chain c2 ../rzn2/ntuple_129848.rzn
+nt/chain c2 ../rzn2/ntuple_130427.rzn
+nt/chain c3 ../rzn2/ntuple_121899.rzn
+nt/chain c3 ../rzn2/ntuple_121904.rzn
+nt/chain c3 ../rzn2/ntuple_121906.rzn
+nt/chain c3 ../rzn2/ntuple_122080.rzn
+nt/chain c3 ../rzn2/ntuple_122081.rzn
+nt/chain c3 ../rzn2/ntuple_122083.rzn
+nt/chain c3 ../rzn2/ntuple_122418.rzn
+nt/chain c3 ../rzn2/ntuple_122429.rzn
+nt/chain c3 ../rzn2/ntuple_122586.rzn
+nt/chain c3 ../rzn2/ntuple_122587.rzn
+nt/chain c3 ../rzn2/ntuple_122594.rzn
+nt/chain c3 ../rzn2/ntuple_122800.rzn
+nt/chain c3 ../rzn2/ntuple_122802.rzn
+nt/chain c3 ../rzn2/ntuple_122091.rzn
+nt/chain c3 ../rzn2/ntuple_122430.rzn
+
+nt/chain big ../rzn2/ntuple_129071.rzn
+
+* l1tt, l1rt, l1el, l1bb, l1eb, rawtk, ntrack, ebeam,
+* epe1, epe2, epp1, epp2, ccen, neue, chen, l4dec,
+* sh1e, sh1cos, sh1phi, sh1e925, sh1wide, sh1mat, sh1ang,
+* sh2e, sh2cos, sh2phi, sh2e925, sh2wide, sh2mat, sh2ang,
+* sh3e, sh3cos, sh3phi, sh3e925, sh3wide, sh3mat, sh3ang,
+* sh4e, sh4cos, sh4phi, sh4e925, sh4wide, sh4mat, sh4ang,
+* m12, m123, m1234,
+* hits,
+* tr1p, tr1cos, tr1phi,
+* tr2p, tr2cos, tr2phi,
+* tr3p, tr3cos, tr3phi,
+* tr4p, tr4cos, tr4phi,
+* c12r, c12z, c12z2,
+* c13r, c13z, c13z2,
+* c14r, c14z, c14z2,
+* c23r, c23z, c23z2,
+* c24r, c24z, c24z2,
+* c34r, c34z, c34z2,
+* pmiss
+
+opt logy
+
+nt/plot //bb/lumi2/1.epe1 ! ! ! ! 
+nt/plot //bb/lumi2/1.epe1 epp2<0.7 ! ! ! 's'
+
+nt/plot //bb/lumi2/1.sh1cos ! ! ! ! 
+nt/plot //bb/lumi2/1.sh1cos epp2<0.7 ! ! ! 's'
+
+nt/plot //bb/lumi2/1.epe1/epp1 epp1>0&&abs(epe1/epp1)<2 ! ! ! 
+nt/plot //bb/lumi2/1.epe1/epp1 epp1>0&&abs(epe1/epp1)<2&&epp2<0.7 ! ! ! 's'
+
+
+
+
+nt/cuts $1 (l1el==1)&&(ntrack==2)&&(pmiss<0.2)&&(abs(2-epp1-epp2-pmiss)<0.2)&&(epp2>0.5)&&(sh2e!=-1000)&&(0.1<abs(sin(sh1phi-sh2phi))<0.2)
+* &&(abs(d0miss)<0.005)&&(abs(z0miss)<0.05)
+
+h/cr/1d 100 'BarrelBhabha trigger efficiency VS cos([Q])' 100 -1 1
+h/cr/1d 101 'BarrelBhabha trigger efficiency VS cos([Q])' 100 -1 1
+h/cr/1d 102 'BarrelBhabha trigger efficiency VS cos([Q])' 100 -1 1
+nt/plot //c3/lumi2/1.(sh1cos-sh2cos)/2 $1 ! ! ! ! 100
+nt/plot //c3/lumi2/1.(sh1cos-sh2cos)/2 $1&&l1bb==1 ! ! ! 's' 101
+div 101 100 102
+ve/cr numer(100)
+ve/cr denom(100)
+ve/cr err(100)
+h/get_vect/contents 101 numer
+h/get_vect/contents 100 denom
+do i = 1, 100
+  ve/inp err([i]) $SIGMA(sqrt((numer([i])/denom([i]))*(1-numer([i])/denom([i]))/denom([i])))
+enddo
+h/put_vect/errors 102 err
+min 102 0.5
+max 102 1.01
+h/plot 102
+* dline -1 1 1 1
+dline 0.7 0.7 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 0.4 0.4 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline -0.7 -0.7 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline -0.4 -0.4 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+nt/plot //c1/lumi2/1.sin(sh1phi-sh2phi) $2&&
+nt/plot //c1/lumi2/1.sin(sh1phi-sh2phi) $1
+
+nt/cuts $2 (l1bb==1)&&(ntrack==0)&&(sh2e!=-1000)&&(epe2>0.4)&&(0.4<abs(sh1cos)<0.7)&&(0.4<abs(sh2cos)<0.7)&&(abs(sin(sh1phi-sh2phi))<0.02)
+
+h/cr/1d 200 'cos([Q]?1!) for gamgams' 200 -1 1
+h/cr/1d 201 'cos([Q]?2!) for gamgams' 200 -1 1
+nt/plot //big/lumi2/1.sh1cos $2 ! ! ! ! 200
+nt/plot //big/lumi2/1.sh2cos $2 ! ! ! ! 201
+
+nt/plot //big/lumi2/1.(sh1cos-sh2cos)/2 $2 ! ! ! ! 200
+
+
+
+

@@ -1,0 +1,1272 @@
+h/file 1 ../rzn5/highcont3.rzn
+h/file 2 ../rzn5/lowcont3.rzn
+h/file 3 ../rzn5/somecont3.rzn
+
+* "t1had", "t1rad", "t1el", "t1bb",
+* "d0close", "e1", "p2", "wz", "z0close",
+* "visen", "tracks", "l4dec", "ccen", "ebeam",
+* "etwo", "westphi", "eastphi", "cott", "westcot"};
+
+* "t1had", "t1rad", "t1el", "t1bb",
+* "d0close", "z0close", "wz",
+* "e1", "e2", "u1", "p1", "p2", "pmiss", "pemiss",
+* "visen", "cvisen", "tracks", "l4dec", "ccen", "ebeam",
+* "westphi", "eastphi", "cott", "westcot",
+
+nt/cuts $21 (t1had>0.or.t1rad>0.or.t1el>0)
+nt/cuts $22 (abs(d0close)<0.005)
+nt/cuts $23 (e1<0.85)
+nt/cuts $24 (p2<0.85)
+nt/cuts $25 (abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))
+nt/cuts $26 (visen>0.35)
+nt/cuts $27 (tracks>1)
+nt/cuts $28 (l4dec>0)
+nt/cuts $29 (ccen<0.85)
+
+nt/cuts $1 (t1had>0.or.t1rad>0.or.t1el>0)
+nt/cuts $2 (abs(d0close)<0.005)
+nt/cuts $3 (abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))
+nt/cuts $4 (p1<0.8)
+nt/cuts $5 (e1+e2<0.9)
+nt/cuts $6 (visen>0.4)
+
+nt/cuts $1 (t1had>0.or.t1rad>0.or.t1el>0)
+nt/cuts $2 (abs(d0close)<0.005)
+nt/cuts $3 (abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))
+nt/cuts $4 (p1<0.8)
+nt/cuts $5 (visen>0.4)
+
+nt/cuts $11 (t1bb>0)
+nt/cuts $12 (l4dec>0)
+nt/cuts $13 (e2>0.9)
+nt/cuts $14 (tracks==0)
+nt/cuts $15 !(-0.68722<westphi<0.44179&&abs(cott)<0.54)
+nt/cuts $16 !(-2.60163<westphi<0.68722&&abs(cott)>0.95)
+nt/cuts $17 (abs(2.*westcot-2.*cott)<0.1)
+nt/cuts $18 (abs(sin(westphi-eastphi))<0.04)
+nt/cuts $19 (0.15<abs(cott)<1.28)
+
+
+
+
+
+h/cr/1d 101 'CC energy / eCOM' 120 0.6 1.2
+h/cr/1d 111 'CC energy / eCOM' 120 0.6 1.2
+h/cr/1d 102 'CC energy / eCOM' 120 0.6 1.2
+h/cr/1d 112 'CC energy / eCOM' 120 0.6 1.2
+nt/plot //lun1/whatswrong/1.fccen $21&&$22&&$24&&$25&&$26&&$27&&$28 ! ! ! 'N' 101
+nt/plot //lun1/whatswrong/1.ccen $21&&$22&&$24&&$25&&$26&&$27&&$28 ! ! ! 'N' 111
+nt/plot //lun2/whatswrong/1.fccen $21&&$22&&$24&&$25&&$26&&$27&&$28 ! ! ! 'N' 102
+nt/plot //lun2/whatswrong/1.ccen $21&&$22&&$24&&$25&&$26&&$27&&$28 ! ! ! 'N' 112
+zone 1 2
+h/plot 101
+h/plot 111 's'
+set ltyp 2
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+h/plot 102
+h/plot 112 's'
+set ltyp 2
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+pict/print '/home/mccann/tmp.ps'
+
+h/cr/1d 201 'biggest shower energy / eBeam' 120 0.6 1.2
+h/cr/1d 211 'biggest shower energy / eBeam' 120 0.6 1.2
+h/cr/1d 202 'biggest shower energy / eBeam' 120 0.6 1.2
+h/cr/1d 212 'biggest shower energy / eBeam' 120 0.6 1.2
+nt/plot //lun1/whatswrong/1.fccen $21&&$22&&$24&&$25&&$26&&$27&&$28 ! ! ! 'N' 201
+nt/plot //lun1/whatswrong/1.ccen $21&&$22&&$24&&$25&&$26&&$27&&$28 ! ! ! 'N' 211
+nt/plot //lun2/whatswrong/1.fccen $21&&$22&&$24&&$25&&$26&&$27&&$28 ! ! ! 'N' 202
+nt/plot //lun2/whatswrong/1.ccen $21&&$22&&$24&&$25&&$26&&$27&&$28 ! ! ! 'N' 212
+zone 1 2
+h/plot 201
+h/plot 211 's'
+set ltyp 2
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+h/plot 202
+h/plot 212 's'
+set ltyp 2
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+pict/print '/home/mccann/tmp.ps'
+
+nt/plot //lun1/whatswrong/1.ccen $21&&$22&&$24&&$25&&$26&&$27&&$28&&(ccen<0.85&&e1<0.85)
+message $HINFO(1000000,'ENTRIES')
+nt/plot //lun1/whatswrong/1.ccen $21&&$22&&$24&&$25&&$26&&$27&&$28&&(ccen>0.85.or.e1>0.85)
+message $HINFO(1000000,'ENTRIES')
+
+nt/plot //lun1/whatswrong/1.ccen $21&&$22&&$24&&$25&&$26&&$27&&$28&&(fccen<0.85&&fe1<0.85)
+message $HINFO(1000000,'ENTRIES')
+nt/plot //lun1/whatswrong/1.ccen $21&&$22&&$24&&$25&&$26&&$27&&$28&&(fccen>0.85.or.fe1>0.85)
+message $HINFO(1000000,'ENTRIES')
+
+
+
+
+nt/plot //lun2/whatswrong/1.ccen $21&&$22&&$24&&$25&&$26&&$27&&$28&&(ccen<0.85&&e1<0.85)
+message $HINFO(1000000,'ENTRIES')
+nt/plot //lun2/whatswrong/1.ccen $21&&$22&&$24&&$25&&$26&&$27&&$28&&(ccen>0.85.or.e1>0.85)
+message $HINFO(1000000,'ENTRIES')
+
+nt/plot //lun2/whatswrong/1.ccen $21&&$22&&$24&&$25&&$26&&$27&&$28&&(fccen<0.85&&fe1<0.85)
+message $HINFO(1000000,'ENTRIES')
+nt/plot //lun2/whatswrong/1.ccen $21&&$22&&$24&&$25&&$26&&$27&&$28&&(fccen>0.85.or.fe1>0.85)
+message $HINFO(1000000,'ENTRIES')
+
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $30 $21&&$22&&$23&&$24&&$25&&$26&&$27&&$28&&$29
+nt/cuts $31 $11&&$12&&(e2>0.9)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 200 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $30 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $31 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $30 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $31 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $30 $21&&$22&&$24&&$25&&$26&&$27&&$28
+nt/cuts $31 $11&&$12&&(e2>0.9)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 200 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $30 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $31 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $30 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $31 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $30 $21&&$22&&$24&&$25&&$26&&$27&&$28&&(fccen<0.85&&fe1<0.85)
+nt/cuts $31 $11&&$12&&(e2>0.9)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 200 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $30 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $31 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $30 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $31 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+
+
+
+
+
+
+
+
+h/cr/2d 101 'cvisen - fvisen vs cvisen' 1 0 1.2 1 0 1.2
+nt/plot //lun2/whatswrong/1.cvisen-fvisen%cvisen ! ! ! ! ! 101
+pict/print '/home/mccann/tmp.ps'
+
+h/cr/1d 102 'cvisen with all hadron cuts except fvisen.lt.0.4' 150 0 1.5
+h/cr/1d 103 'cvisen with all hadron cuts except fvisen.lt.0.4' 150 0 1.5
+opt logy
+nt/plot //lun1/whatswrong/1.cvisen $1&&$2&&$3&&$4&&fvisen<0.4 ! ! ! ! 102
+nt/plot //lun2/whatswrong/1.cvisen 0.7*($1&&$2&&$3&&$4&&fvisen<0.4) ! ! ! 's' 103
+* add 103 103 104 0.7 0.
+* h/plot 102
+* h/plot 104 's'
+opt liny
+h/plot 102(0.4:1.5)
+h/plot 103(0.4:1.5) 's'
+
+pict/print '/home/mccann/tmp.ps'
+ve/cr tmp(150)
+h/get_vect/contents 103 tmp
+sigma thesum = 0
+sigma theerr = 0
+do i=41, 150
+  sigma thesum = thesum + tmp([i])
+enddo
+message $SIGMA(thesum) $SIGMA(sqrt(thesum)) 
+* 1616 40.1995 for the first
+* 1988.7 44.5949 for the second
+
+h/cr/1d 112 'cvisen with all hadron cuts except fvisen.lt.0.4' 110 0.4 1.5
+h/cr/1d 113 'cvisen with all hadron cuts except fvisen.lt.0.4' 110 0.4 1.5
+nt/plot //lun1/whatswrong/1.cvisen $1&&$2&&$3&&$4&&fvisen<0.4 ! ! ! ! 112
+nt/plot //lun2/whatswrong/1.cvisen 0.7*($1&&$2&&$3&&$4&&fvisen<0.4) ! ! ! 's' 113
+pict/print '/home/mccann/tmp.ps'
+message $HINFO(112,'SUM') $HINFO(113,'SUM')
+
+h/cr/1d 200 'cos([Q]) of biggest shower for visen.lt.0.4' 100 0 1
+nt/plot //lun1/whatswrong/1.westcot/sqrt(1+westcot**2) $1&&$2&&$3&&$4&&visen<0.4&&westcot>-100 ! ! ! ! 200
+* nt/plot //lun2/whatswrong/1.westcot/sqrt(1+westcot**2) $1&&$2&&$3&&$4&&visen<0.4&&westcot>-100 ! ! ! ! 200
+pict/print '/home/mccann/tmp.ps'
+
+
+
+
+
+
+
+
+
+
+
+
+
+h/cr/1d 100 'e1' 100 0.9 1.1
+nt/plot //lun1/whatswrong/1.e1 ! ! ! ! ! 100
+message $HINFO(100,'ENTRIES')
+* 553693
+nt/plot //lun2/whatswrong/1.e1 ! ! ! ! ! 100
+message $HINFO(100,'ENTRIES')
+* 869204
+sigma ctoc = 553693.0/869204.0
+
+
+h/cr/1d 101 'e1' 100 0 2
+h/cr/1d 102 'e1' 100 0 2
+nt/plot //lun1/whatswrong/1.e1 ! ! ! ! ! 101
+nt/plot //lun2/whatswrong/1.e1 $SIGMA(ctoc) ! ! ! ! 102
+opt logy
+h/plot 101
+h/plot 102 's'
+pict/print '/home/mccann/tmp.ps'
+
+h/cr/1d 201 'e2 for tail e1' 100 0 2
+h/cr/1d 202 'e2 for tail e1' 100 0 2
+nt/plot //lun1/whatswrong/1.e2 1.5<e1<2. ! ! ! ! 201
+nt/plot //lun2/whatswrong/1.e2 $SIGMA(ctoc)*(1.5<e1<2.) ! ! ! ! 202
+opt logy
+h/plot 201
+h/plot 202
+pict/print '/home/mccann/tmp.ps'
+
+h/cr/1d 300 'cos([Q]) for tail e1' 100 0 1
+nt/plot //lun2/whatswrong/1.cott/sqrt(1+cott**2) 1.5<e1<2 ! ! ! ! 300
+pict/print '/home/mccann/tmp.ps'
+
+h/cr/1d 400 'westphi for tail e1' 100 -3.1415926 3.1415926
+nt/plot //lun2/whatswrong/1.westphi 1.5<e1<2 ! ! ! ! 400
+pict/print '/home/mccann/tmp.ps'
+
+h/cr/2d 500 'westphi vs cot([Q]) for tail e1' 100 0 2 128 -3.1415926 3.1415926
+nt/plot //lun2/whatswrong/1.westphi%cott 1.5<e1<2 ! ! ! ! 500
+h/plot 500 'box'
+pict/print '/home/mccann/tmp.ps'
+
+nt/plot //lun1/whatswrong/1.e1 westphi>1.5&&cott/sqrt(1+cott**2)>0.85
+
+
+
+
+
+
+
+zone 1 2
+nt/plot //lun1/whatswrong/1.t1bb $21&&$22&&$23&&$24&&$25&&$26&&$27&&$28&&$29
+nt/plot //lun1/whatswrong/1.t1bb $1&&$2&&$3&&$4&&$6
+
+
+
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $30 $21&&$22&&$23&&$24&&$25&&$26&&$27&&$28&&$29
+nt/cuts $31 $11&&$12&&(e2>0.9)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 200 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $30 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $31 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $30 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $31 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $30 $21&&$22&&$23&&$24&&$25&&$26&&$27&&$28
+nt/cuts $31 $11&&$12&&(e2>0.9)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 200 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $30 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $31 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $30 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $31 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message drop ccen $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $30 $21&&$22&&$24&&$25&&$26&&$27&&$28&&$29
+nt/cuts $31 $11&&$12&&(e2>0.9)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 200 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $30 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $31 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $30 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $31 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message drop e1 instead $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $30 $1&&$2&&$3&&$4&&$6
+nt/cuts $31 $11&&$12&&(e2>0.9)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 200 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $30 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $31 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $30 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $31 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message use new hadron cuts $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $30 $1&&$2&&$3&&$4&&$6
+nt/cuts $31 $11&&$12&&(e2>0.7)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 200 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $30 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $31 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $30 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $31 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message new hadron, new gamgam cuts $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+
+
+
+
+
+
+
+
+h/cr/1d 100 'e2' 60 0 1.2
+h/cr/1d 101 'e2' 60 0 1.2
+nt/plot //lun1/whatswrong/1.e2 $11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19 ! ! ! ! ! 100
+nt/plot //lun2/whatswrong/1.e2 $11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19 ! ! ! 's' 101
+
+
+h/plot 1000000(0.9:0.92)
+
+message $hinfo(1000000,'entries')
+
+
+nt/plot //lun1/whatswrong/1.e2 $11&&$12&&(e2>0.7)&&$14&&$15&&$16&&$17&&$18&&$19 ! ! ! ! ! 100
+message $hinfo(1000000,'entries')
+
+
+nt/plot //lun1/whatswrong/1.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+* plots for the pta talk
+
+set tsiz 0.5
+set vsiz 0.3
+set ymgl 5.
+
+h/cr/1d 100 '(E?COM! - E?track 1! - E?track 2! - "B#p?track 1! + p?track 2!"B#)/E?COM!' 150 -0.5 1.
+h/cr/1d 101 '(E?COM! - E?track 1! - E?track 2! - "B#p?track 1! + p?track 2!"B#)/E?COM!' 150 -0.5 1.
+opt logy
+nt/plot //lun1/whatswrong/1.(2.0-p1-p2-pmiss)/2.0 $1&&$2&&$3&&(cvisen>0.4)&&e1>0.8 ! ! ! ! 100
+nt/plot //lun1/whatswrong/1.(2.0-p1-p2-pmiss)/2.0 $1&&$2&&$3&&(cvisen>0.4) ! ! ! ! 101
+
+h/plot 100
+h/plot 101 's'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline 0.1 0.1 $SIGMA(10**bot) $SIGMA(10**top)
+text 0.65 2000 'all events' 0.5 ! 'c'
+text 0.65 1.5 'E1"g#0.8' 0.5 ! 'c'
+pict/print '/home/mccann/synthesis/lumieff/ptatalk/bhabha_discrimination.eps'
+
+
+opt sta
+nt/plot //lun1/whatswrong/1.cvisen $1&&$2&&$3&&(p1<0.8)&&(cvisen>0.4)
+* 77754
+nt/plot //lun1/whatswrong/1.cvisen $1&&$2&&$3&&(p1<0.8&&e1+e2<0.9)&&(cvisen>0.4)
+* 46858
+nt/plot //lun1/whatswrong/1.cvisen $1&&$2&&$3&&(p2<0.85&&e1<0.85&&ccen<0.85)&&(cvisen>0.4)
+* 78635
+nt/plot //lun1/whatswrong/1.cvisen $1&&$2&&$3&&(p2<0.85&&e1<0.85&&ccen<0.85&&e1+e2<0.9)&&(cvisen>0.4)
+* 48926
+
+
+
+
+nt/plot //lun1/whatswrong/1.cvisen $1&&$2&&$3&&(p1<0.8)&&(cvisen>0.4)
+* 77754
+nt/plot //lun1/whatswrong/1.cvisen $1&&$2&&$3&&(p1<0.8&&2-p1-p2-pmiss>0.2)&&(cvisen>0.4)
+* 71215
+nt/plot //lun1/whatswrong/1.cvisen $1&&$2&&$3&&(p2<0.85&&e1<0.85&&ccen<0.85)&&(cvisen>0.4)
+* 78635
+nt/plot //lun1/whatswrong/1.cvisen $1&&$2&&$3&&(p2<0.85&&2-p1-p2-pmiss>0.2&&ccen<0.85)&&(cvisen>0.4)
+* 72906
+
+
+
+h/cr/1d 100 'hadron visible energy' 80 0.4 1.2
+h/cr/1d 101 'hadron visible energy' 80 0.4 1.2
+nt/plot //lun1/whatswrong/1.cvisen $1&&$2&&$3&&$4 ! ! ! 'N' 100
+nt/plot //lun2/whatswrong/1.cvisen $1&&$2&&$3&&$4 ! ! ! 'N' 101
+sigma ctoc = $HINFO(100,'SUM') / $HINFO(101,'SUM')
+sub 100 101 102 1. $SIGMA(ctoc) 'e'
+h/plot 102
+
+h/cr/1d 200 'hadron visible energy' 80 0.4 1.2
+h/cr/1d 201 'hadron visible energy' 80 0.4 1.2
+nt/plot //lun1/whatswrong/1.visen $1&&$2&&$3&&$4 ! ! ! 'N' 200
+nt/plot //lun2/whatswrong/1.visen $1&&$2&&$3&&$4 ! ! ! 'N' 201
+sigma ctoc = $HINFO(100,'SUM') / $HINFO(101,'SUM')
+sub 200 201 202 1. $SIGMA(ctoc) 'e'
+h/plot 202
+
+h/cr/1d 300 'hadron visible energy' 80 0.4 1.2
+h/cr/1d 301 'hadron visible energy' 80 0.4 1.2
+nt/plot //lun1/whatswrong/1.visen $21&&$22&&$23&&$24&&$25&&$27&&$28&&$29 ! ! ! 'N' 300
+nt/plot //lun2/whatswrong/1.visen $21&&$22&&$23&&$24&&$25&&$27&&$28&&$29 ! ! ! 'N' 301
+sigma ctoc = $HINFO(100,'SUM') / $HINFO(101,'SUM')
+sub 300 301 302 1. $SIGMA(ctoc) 'e'
+h/plot 302
+
+
+
+
+
+set tsiz 0.4
+set vsiz 0.3
+set ysiz 1.0
+set ymgl 10.
+
+zone 3 1
+
+h/cr/1d 100 'hadron E1' 100 0.7 1.2
+h/cr/1d 101 'hadron E1' 100 0.7 1.2
+nt/plot //lun1/whatswrong/1.e1 $21&&$22&&$24&&$25&&$26&&$27&&$28&&$29 ! ! ! 'N' 100
+nt/plot //lun2/whatswrong/1.e1 $21&&$22&&$24&&$25&&$26&&$27&&$28&&$29 ! ! ! 'N' 101
+normalize 100
+normalize 101
+h/plot 100
+h/plot 101 's'
+set ltyp 3
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+h/cr/1d 200 'hadron CC energy' 100 0.7 1.2
+h/cr/1d 201 'hadron CC energy' 100 0.7 1.2
+nt/plot //lun1/whatswrong/1.ccen $21&&$22&&$23&&$24&&$25&&$26&&$27&&$28 ! ! ! 'N' 200
+nt/plot //lun2/whatswrong/1.ccen $21&&$22&&$23&&$24&&$25&&$26&&$27&&$28 ! ! ! 'N' 201
+normalize 200
+normalize 201
+h/plot 200
+h/plot 201 's'
+set ltyp 3
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+h/cr/1d 300 'gamgam E2' 100 0.7 1.2
+h/cr/1d 301 'gamgam E2' 100 0.7 1.2
+nt/plot //lun1/whatswrong/1.e2 $11&&$12&&$14&&$15&&$16&&$17&&$18&&$19 ! ! ! 'N' 300
+nt/plot //lun2/whatswrong/1.e2 $11&&$12&&$14&&$15&&$16&&$17&&$18&&$19 ! ! ! 'N' 301
+normalize 300
+normalize 301
+h/plot 300
+h/plot 301 's'
+set ltyp 3
+dline 0.9 0.9 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+pict/print 'forptatalk.eps'
+* %%BoundingBox: 0 220 540 530
+
+
+
+
+
+
+zone 1 2
+h/cr/1d 100 'visible energy with trigger, d0close, wz' 100 0.9 1.1
+h/cr/1d 101 'visible energy with trigger, d0close, wz' 100 0.9 1.1
+h/cr/1d 102 'cool visible energy with trigger, d0close, wz' 100 0.9 1.1
+h/cr/1d 103 'cool visible energy with trigger, d0close, wz' 100 0.9 1.1
+nt/plot //lun1/whatswrong/1.visen $1&&$2&&$3 ! ! ! ! 100
+nt/plot //lun2/whatswrong/1.visen 0.613558*($1&&$2&&$3) ! ! ! 's' 101
+nt/plot //lun1/whatswrong/1.cvisen $1&&$2&&$3 ! ! ! ! 102
+nt/plot //lun2/whatswrong/1.cvisen 0.613558*($1&&$2&&$3) ! ! ! 's' 103
+h/fit 100(0.98:1.025) g '0'
+h/fit 101(0.98:1.025) g '0'
+h/fit 102(0.98:1.025) g '0'
+h/fit 103(0.98:1.025) g '0'
+h/plot 100 'hist'
+h/plot 101 'shist'
+h/plot 102 'hist'
+h/plot 103 'shist'
+pict/print '/home/mccann/tmp.ps'
+message $SIGMA((0.99796-1.0009)*1000.) $SIGMA((0.99507-0.99606)*1000.)
+h/fit 100(0.99:1.01) g '0'
+h/fit 101(0.99:1.01) g '0'
+h/fit 102(0.99:1.01) g '0'
+h/fit 103(0.99:1.01) g '0'
+h/plot 100 'hist'
+h/plot 101 'shist'
+h/plot 102 'hist'
+h/plot 103 'shist'
+pict/print '/home/mccann/tmp.ps'
+message $SIGMA((1.0004-1.0015)*1000.) $SIGMA((0.99731-0.99698)*1000.)
+nt/plot //lun1/whatswrong/1.visen $1&&$2&&$3&&$4 ! ! ! ! 100
+nt/plot //lun2/whatswrong/1.visen 0.613558*($1&&$2&&$3&&$4) ! ! ! 's' 101
+nt/plot //lun1/whatswrong/1.cvisen $1&&$2&&$3&&$4 ! ! ! ! 102
+nt/plot //lun2/whatswrong/1.cvisen 0.613558*($1&&$2&&$3&&$4) ! ! ! 's' 103
+pict/print '/home/mccann/tmp.ps'
+
+
+
+
+nt/plot //lun1/whatswrong/1.e1 $1&&$2&&$3 ! ! ! ! 100
+nt/plot //lun2/whatswrong/1.e1 0.613558*($1&&$2&&$3) ! ! ! 's' 101
+h/fit 100(0.98:1.02) g
+h/fit 101(0.98:1.02) g
+message $SIGMA((0.99195-0.99821)*1000.)
+
+
+
+
+
+zone 1 3
+h/cr/1d 100 'visible energy with trigger, d0close, wz' 120 0 1.2
+h/cr/1d 101 'visible energy also with p1.lt.0.8' 120 0 1.2
+h/cr/1d 102 'visible energy also also with e1+e2.lt.0.9' 120 0 1.2
+nt/plot //lun1/whatswrong/1.visen $1&&$2&&$3 ! ! ! ! 100
+nt/plot //lun1/whatswrong/1.visen $1&&$2&&$3&&$4 ! ! ! ! 101
+nt/plot //lun1/whatswrong/1.visen $1&&$2&&$3&&$4&&$5 ! ! ! ! 102
+pict/print 'tmp1.ps'
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $20 $1&&$2&&$3&&$4&&$5&&$6
+nt/cuts $21 $11&&$12&&(e2>0.7)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 200 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message e1.lt.0.6 $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19 $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+zone 1 1
+h/cr/1d 200 'e1+e2 with trigger, d0close, wz, p1 (dashed indicates calibration shift)' 100 0 2
+h/cr/1d 201 'e1+e2 with trigger, d0close, wz, p1' 100 0 2
+nt/plot //lun1/whatswrong/1.e1+e2 $1&&$2&&$3&&$4 ! ! ! ! 200
+nt/plot //lun2/whatswrong/1.e1+e2 0.638667*($1&&$2&&$3&&$4) ! ! ! 's' 201
+max 200 4000
+h/plot 200
+h/plot 201 's'
+set ltyp 2
+dline 0.9 0.9 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+pict/print 'tmp2.ps'
+
+h/cr/2d 300 ' ' 1 0 1.2 1 0 1.2
+nt/plot //lun1/whatswrong/1.e2%u1 $1&&$2&&$3&&$4&&!$5 ! ! ! ! 300
+
+
+h/cr/1d 202 'p1 with trigger, d0close, wz' 100 0.8 1.2
+h/cr/1d 203 'p1 with trigger, d0close, wz' 100 0.8 1.2
+nt/plot //lun1/whatswrong/1.p1 $1&&$2&&$3 ! ! ! ! 202
+nt/plot //lun2/whatswrong/1.p1 0.638667*($1&&$2&&$3) ! ! ! 's' 203
+h/fit 202(0.985:1.015) g
+h/fit 203(0.985:1.015) g
+message $SIGMA(0.99872-0.99888)
+
+
+
+
+
+
+
+
+h/cr/1d 100 'e1' 100 0.8 1.2
+nt/plot //lun1/whatswrong/1.e1 ! ! ! ! ! 100
+h/cr/1d 101 'e1' 100 0.8 1.2
+nt/plot //lun2/whatswrong/1.e1 ! ! ! ! ! 101
+h/fit 100(0.975:1.015) g
+h/fit 101(0.98:1.02) g
+
+message $SIGMA(0.99324-0.99940)
+
+
+
+ve/cr peak(120)
+ve/inp peak 133493.0 1591.0 2125.0 2762.0 3037.0 3698.0 4685.0 6210.0 8472.0 11679.0 14865.0 18459.0 21710.0 24480.0 26188.0 27506.0 27569.0 27577.0 26870.0 25690.0 24064.0 22530.0 20601.0 18862.0 17192.0 15477.0 13805.0 12431.0 11352.0 10357.0 9107.0 8548.0 8070.0 7629.0 7331.0 6971.0 6715.0 6328.0 6273.0 6083.0 5967.0 5816.0 5661.0 5535.0 5543.0 5509.0 5596.0 5482.0 5331.0 5551.0 5600.0 5521.0 5603.0 5742.0 5653.0 5842.0 5892.0 5940.0 6106.0 6279.0 6450.0 6745.0 6891.0 7284.0 7381.0 7550.0 7874.0 7959.0 8198.0 8607.0 8767.0 9230.0 9482.0 9529.0 10208.0 10498.0 10979.0 11300.0 11766.0 12315.0 13068.0 13650.0 14430.0 15302.0 16061.0 17170.0 18238.0 20017.0 21843.0 23785.0 26043.0 29372.0 32950.0 37691.0 44687.0 54389.0 71711.0 106791.0 201624.0 274864.0 83457.0 6159.0 873.0 209.0 93.0 56.0 55.0 38.0 29.0 35.0 33.0 34.0 28.0 15.0 25.0 27.0 15.0 16.0 20.0 20.0 
+ve/cr cont(120)
+ve/inp cont 345428.0 3944.0 5226.0 6546.0 6707.0 7656.0 8896.0 10549.0 12672.0 15592.0 18642.0 21821.0 24745.0 26991.0 29151.0 30698.0 31498.0 32312.0 31956.0 31769.0 30414.0 29414.0 27790.0 26227.0 24607.0 23010.0 21302.0 19797.0 18483.0 17126.0 16136.0 15514.0 15374.0 15076.0 14943.0 14761.0 14508.0 14486.0 14377.0 14362.0 14179.0 14071.0 13769.0 13837.0 13746.0 13539.0 13652.0 13981.0 13943.0 14093.0 13967.0 14244.0 14203.0 14532.0 14762.0 15081.0 15303.0 15647.0 16124.0 16413.0 16835.0 17471.0 17922.0 18440.0 19063.0 19455.0 20461.0 20888.0 21442.0 22662.0 23214.0 23298.0 24545.0 25512.0 26260.0 27142.0 28316.0 29604.0 30870.0 32219.0 33431.0 35742.0 37391.0 39684.0 42251.0 44564.0 47491.0 51434.0 56467.0 61463.0 67548.0 75488.0 84833.0 96878.0 114948.0 139866.0 183144.0 274123.0 518757.0 726837.0 220677.0 15456.0 2063.0 595.0 283.0 168.0 132.0 99.0 98.0 86.0 88.0 81.0 80.0 71.0 79.0 66.0 64.0 72.0 57.0 65.0
+h/cr/1d 9998 'p1 peak' 120 0 1.2
+h/cr/1d 9999 'p1 cont' 120 0 1.2
+h/put_vect/contents 9998 peak
+h/put_vect/contents 9999 cont
+do i = 1, 120
+  ve/inp peak([i]) $SIGMA(sqrt(peak([i])))
+  ve/inp cont([i]) $SIGMA(sqrt(cont([i])))
+enddo
+h/put_vect/errors 9998 peak
+h/put_vect/errors 9999 cont
+h/fit 9998(0.99:1.0) g '0'
+h/plot 9998(0.9:1.1)
+h/fit 9999(0.99:1.0) g '0'
+h/plot 9999(0.9:1.1)
+sub 9998 9999 10000 1. 0.381012245658 'e'
+h/plot 10000
+
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $20 (t1had>0.or.t1rad>0.or.t1el>0)&&(abs(d0close)<0.005)&&(e1<0.6)&&(p2<0.85)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(visen>0.4)
+nt/cuts $21 $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 100 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message e1.lt.0.6 $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19 $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $20 (t1had>0.or.t1rad>0.or.t1el>0)&&(abs(d0close)<0.005)&&(p2<0.85)&&(abs(wz)<0.075.or.(wz<-100&&abs(z0close)<0.075))&&(visen>0.4)
+nt/cuts $21 $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 100 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message same no e1 cut $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19 $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $20 $1&&$2&&$3&&$5&&$6&&$8
+nt/cuts $21 $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 100 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message $1&&$2&&$3&&$5&&$6&&$8 $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19 $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $20 $1&&$2&&$4&&$5&&$6&&$8
+nt/cuts $21 $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 100 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message $1&&$2&&$4&&$5&&$6&&$8 $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19 $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $20 $1&&$2&&$4&&$5&&$6&&$7&&$8
+nt/cuts $21 $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 100 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message $1&&$2&&$4&&$5&&$6&&$7&&$8 $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19 $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $20 $1&&$2&&$4&&$5&&$6&&$7&&$8&&$9
+nt/cuts $21 $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 100 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message $1&&$2&&$4&&$5&&$6&&$7&&$8&&$9 $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19 $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $20 $1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+nt/cuts $21 $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 100 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message $1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9 $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19 $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $20 $1&&$2&&$3&&$5&&$6&&$7&&$8&&$9
+nt/cuts $21 $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 100 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message $1&&$2&&$3&&$5&&$6&&$7&&$8&&$9 $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19 $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+* fishing for a better cut
+zone 1 4
+opt sta
+set stat 0000010
+nt/cuts $20 $1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+nt/cuts $21 $11&&$12&&(etwo>0.9)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 100 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message $1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9 $11&&$12&&(etwo>0.9)&&$14&&$15&&$16&&$17&&$18&&$19 $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+
+
+* zone 1 2
+* opt sta
+* nt/plot //lun1/whatswrong/1.t1bb $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19
+* nt/plot //lun2/whatswrong/1.t1bb $11&&$12&&(etwo>0.7)&&$14&&$15&&$16&&$17&&$18&&$19
+* opt nsta
+* zone 1 1
+
+zone 1 1
+opt nsta
+h/cr/1d 100 'p2 in a no-e1, no-ccen-cut world (no tracks cut either)' 120 0. 1.2
+h/cr/1d 101 'p2 in a no-e1, no-ccen-cut world (no tracks cut either)' 120 0. 1.2
+nt/plot //lun1/whatswrong/1.p2 $1&&$2&&$5&&$6&&$8 ! ! ! ! 100
+nt/plot //lun2/whatswrong/1.p2 ($1&&$2&&$5&&$6&&$8)*0.613558 ! ! ! 's' 101
+opt liny
+h/plot 100 'e'
+h/plot 101 's'
+pict/print 'whatswrong_nicep2.ps'
+
+zone 1 1
+opt nsta
+h/cr/1d 100 'visen in a no-e1, no-ccen-cut world (no tracks cut either)' 120 0. 1.2
+h/cr/1d 101 'visen in a no-e1, no-ccen-cut world (no tracks cut either)' 120 0. 1.2
+nt/plot //lun1/whatswrong/1.visen $1&&$2&&(p2<0.7)&&$5&&$8 ! ! ! ! 100
+nt/plot //lun2/whatswrong/1.visen ($1&&$2&&(p2<0.7)&&$5&&$8)*.613558 ! ! ! 's' 101
+opt liny
+h/plot 100 'e'
+h/plot 101 's'
+pict/print 'whatswrong_nicevisen.ps'
+
+
+
+zone 1 1
+opt nsta
+nt/plot //lun1/whatswrong/1.e1%p2 $1&&$2&&$5&&$6&&$7&&$8&&$9&&p2>-100&&e1+p2<0.85
+nt/plot //lun1/whatswrong/1.e1+p2 $1&&$2&&$5&&$6&&$7&&$8&&$9&&p2>-100&&e1+p2<0.85
+nt/plot //lun1/whatswrong/1.etwo%p2 $1&&$2&&$5&&$6&&$7&&$8&&$9&&p2>-100&&etwo>-100&&e1+p2<0.85
+
+
+
+
+
+
+
+
+
+
+* Surik's idea: compare with mupairs
+zone 1 4
+opt sta
+set stat 0000010
+* cosmic ray contamination: 50/5445 events = 0.9%
+nt/cuts $20 (t1rad>0)&&(p2>0.85)&&(e1<0.4)&&(abs(z0close)<0.05)&&(abs(d0close)<0.001)
+nt/cuts $21 $11&&$12&&(etwo>0.4)&&$14&&$15&&$16&&$17&&$18&&$19
+h/cr/1d 100 'dummy' 1 -50 50
+nt/plot //lun1/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma hihad = $HINFO(100,'ENTRIES')
+nt/plot //lun1/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma higam = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $20 ! ! ! ! 100
+sigma lohad = $HINFO(100,'ENTRIES')
+nt/plot //lun2/whatswrong/1.t1bb $21 ! ! ! ! 100
+sigma logam = $HINFO(100,'ENTRIES')
+message $SIGMA(hihad/higam) / $SIGMA(lohad/logam) = $SIGMA((hihad/higam)/(lohad/logam))
+* nope: 2% statistical error with mupairs: you won't see it
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+* * Just to make sure you reproduce the drift:
+* zone 1 4
+* opt sta
+* set stat 0000010
+* nt/plot //lun1/whatswrong/1.t1bb $1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+* nt/plot //lun1/whatswrong/1.t1bb $11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19
+* nt/plot //lun2/whatswrong/1.t1bb $1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+* nt/plot //lun2/whatswrong/1.t1bb $11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19
+
+* zone 1 2
+* opt sta
+* nt/plot //lun1/whatswrong/1.t1bb $11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19
+* nt/plot //lun2/whatswrong/1.t1bb $11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19
+* * highcont has 11272 -- no, 9452 gamgams
+* * lowcont has 18611 -- no, 15627 gamgams
+* * --> lowcont has too much luminosity.  Multiply lowcont by 0.60485
+* opt nsta
+* zone 1 1
+
+fortran/file 65 'whatswrong_look.ps'
+graphics/metafile 65 -111
+igset mtype 1
+
+sigma pre = 100
+h/cr/1d $SIGMA(pre+10) 'trigger' 8 -0.5 7.5
+h/cr/1d $SIGMA(pre+11) 'trigger' 8 -0.5 7.5
+h/cr/1d $SIGMA(pre+20) 'trigger' 8 -0.5 7.5
+h/cr/1d $SIGMA(pre+21) 'trigger' 8 -0.5 7.5
+nt/plot //lun1/whatswrong/1.(t1had)+2*(t1rad)+4*(t1el) ($2&&$3&&$4&&$5&&$6&&$7&&$8&&$9) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.(t1had)+2*(t1rad)+4*(t1el) ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.(t1had)+2*(t1rad)+4*(t1el) ($2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)*0.60485 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.(t1had)+2*(t1rad)+4*(t1el) ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)*0.60485 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message trigger 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+sigma pre = 200
+h/cr/1d $SIGMA(pre+10) 'd0close' 100 -0.01 0.01
+h/cr/1d $SIGMA(pre+11) 'd0close' 100 -0.01 0.01
+h/cr/1d $SIGMA(pre+20) 'd0close' 100 -0.01 0.01
+h/cr/1d $SIGMA(pre+21) 'd0close' 100 -0.01 0.01
+nt/plot //lun1/whatswrong/1.d0close ($1&&$3&&$4&&$5&&$6&&$7&&$8&&$9) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.d0close ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.d0close ($1&&$3&&$4&&$5&&$6&&$7&&$8&&$9)*0.60485 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.d0close ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)*0.60485 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.005 0.005 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline -0.005 -0.005 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message d0close 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+sigma pre = 300
+h/cr/1d $SIGMA(pre+10) 'e1' 60 0. 1.2
+h/cr/1d $SIGMA(pre+11) 'e1' 60 0. 1.2
+h/cr/1d $SIGMA(pre+20) 'e1' 60 0. 1.2
+h/cr/1d $SIGMA(pre+21) 'e1' 60 0. 1.2
+nt/plot //lun1/whatswrong/1.e1 ($1&&$2&&$4&&$5&&$6&&$7&&$8&&$9) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.e1 ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.e1 ($1&&$2&&$4&&$5&&$6&&$7&&$8&&$9)*0.60485 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.e1 ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)*0.60485 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message e1 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+sigma pre = 400
+h/cr/1d $SIGMA(pre+10) 'p2' 60 0. 1.2
+h/cr/1d $SIGMA(pre+11) 'p2' 60 0. 1.2
+h/cr/1d $SIGMA(pre+20) 'p2' 60 0. 1.2
+h/cr/1d $SIGMA(pre+21) 'p2' 60 0. 1.2
+nt/plot //lun1/whatswrong/1.p2 ($1&&$2&&$3&&$5&&$6&&$7&&$8&&$9) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.p2 ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.p2 ($1&&$2&&$3&&$5&&$6&&$7&&$8&&$9)*0.60485 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.p2 ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)*0.60485 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message p2 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+sigma pre = 500
+h/cr/1d $SIGMA(pre+10) 'wz' 100 -0.1 0.1
+h/cr/1d $SIGMA(pre+11) 'wz' 100 -0.1 0.1
+h/cr/1d $SIGMA(pre+20) 'wz' 100 -0.1 0.1
+h/cr/1d $SIGMA(pre+21) 'wz' 100 -0.1 0.1
+nt/plot //lun1/whatswrong/1.wz ($1&&$2&&$3&&$4&&$6&&$7&&$8&&$9) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.wz ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.wz ($1&&$2&&$3&&$4&&$6&&$7&&$8&&$9)*0.60485 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.wz ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)*0.60485 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.05 0.05 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline -0.05 -0.05 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message wz 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+sigma pre = 600
+h/cr/1d $SIGMA(pre+10) 'visen' 60 0. 1.2
+h/cr/1d $SIGMA(pre+11) 'visen' 60 0. 1.2
+h/cr/1d $SIGMA(pre+20) 'visen' 60 0. 1.2
+h/cr/1d $SIGMA(pre+21) 'visen' 60 0. 1.2
+nt/plot //lun1/whatswrong/1.visen ($1&&$2&&$3&&$4&&$5&&$7&&$8&&$9) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.visen ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.visen ($1&&$2&&$3&&$4&&$5&&$7&&$8&&$9)*0.60485 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.visen ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)*0.60485 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.35 0.35 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message visen 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+sigma pre = 700
+h/cr/1d $SIGMA(pre+10) 'tracks' 19 -0.5 18.5
+h/cr/1d $SIGMA(pre+11) 'tracks' 19 -0.5 18.5
+h/cr/1d $SIGMA(pre+20) 'tracks' 19 -0.5 18.5
+h/cr/1d $SIGMA(pre+21) 'tracks' 19 -0.5 18.5
+nt/plot //lun1/whatswrong/1.tracks ($1&&$2&&$3&&$4&&$5&&$6&&$8&&$9) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.tracks ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.tracks ($1&&$2&&$3&&$4&&$5&&$6&&$8&&$9)*0.60485 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.tracks ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)*0.60485 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 1.5 1.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message tracks 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+sigma pre = 800
+h/cr/1d $SIGMA(pre+10) 'l4dec' 5 -0.5 4.5
+h/cr/1d $SIGMA(pre+11) 'l4dec' 5 -0.5 4.5
+h/cr/1d $SIGMA(pre+20) 'l4dec' 5 -0.5 4.5
+h/cr/1d $SIGMA(pre+21) 'l4dec' 5 -0.5 4.5
+nt/plot //lun1/whatswrong/1.l4dec ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$9) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.l4dec ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.l4dec ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$9)*0.60485 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.l4dec ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)*0.60485 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message l4dec 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+sigma pre = 900
+h/cr/1d $SIGMA(pre+10) 'ccen' 60 0. 1.2
+h/cr/1d $SIGMA(pre+11) 'ccen' 60 0. 1.2
+h/cr/1d $SIGMA(pre+20) 'ccen' 60 0. 1.2
+h/cr/1d $SIGMA(pre+21) 'ccen' 60 0. 1.2
+nt/plot //lun1/whatswrong/1.ccen ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.ccen ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.ccen ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8)*0.60485 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.ccen ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)*0.60485 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message ccen 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+close 65
+
+
+* * Measure luminosity with hadrons
+* zone 1 2
+* opt sta
+* nt/plot //lun1/whatswrong/1.tracks ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+* nt/plot //lun2/whatswrong/1.tracks ($1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9)
+* * highcont has 10114 -- no, 59247 -- no, 64511 hadrons
+* * lowcont has 16192 -- no, 92794 -- no, 100268 hadrons
+* * --> lowcont has too much luminosity.  Multiply lowcont by 0.643386
+* opt nsta
+* zone 1 1
+
+fortran/file 65 'whatswrong_look2.ps'
+graphics/metafile 65 -111
+igset mtype 1
+
+sigma pre = 1100
+h/cr/1d $SIGMA(pre+10) 't1bb' 2 -0.5 1.5
+h/cr/1d $SIGMA(pre+11) 't1bb' 2 -0.5 1.5
+h/cr/1d $SIGMA(pre+20) 't1bb' 2 -0.5 1.5
+h/cr/1d $SIGMA(pre+21) 't1bb' 2 -0.5 1.5
+nt/plot //lun1/whatswrong/1.t1bb ($12&&$13&&$14&&$15&&$16&&$17&&$18&&$19) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.t1bb ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.t1bb ($12&&$13&&$14&&$15&&$16&&$17&&$18&&$19)*0.643386 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.t1bb ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19)*0.643386 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message t1bb 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+sigma pre = 1200
+h/cr/1d $SIGMA(pre+10) 'l4dec' 5 -0.5 4.5
+h/cr/1d $SIGMA(pre+11) 'l4dec' 5 -0.5 4.5
+h/cr/1d $SIGMA(pre+20) 'l4dec' 5 -0.5 4.5
+h/cr/1d $SIGMA(pre+21) 'l4dec' 5 -0.5 4.5
+nt/plot //lun1/whatswrong/1.l4dec ($11&&$13&&$14&&$15&&$16&&$17&&$18&&$19) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.l4dec ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.l4dec ($11&&$13&&$14&&$15&&$16&&$17&&$18&&$19)*0.643386 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.l4dec ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19)*0.643386 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message l4dec 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+sigma pre = 1300
+h/cr/1d $SIGMA(pre+10) 'etwo' 60 0. 1.2
+h/cr/1d $SIGMA(pre+11) 'etwo' 60 0. 1.2
+h/cr/1d $SIGMA(pre+20) 'etwo' 60 0. 1.2
+h/cr/1d $SIGMA(pre+21) 'etwo' 60 0. 1.2
+nt/plot //lun1/whatswrong/1.etwo ($11&&$12&&$14&&$15&&$16&&$17&&$18&&$19) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.etwo ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.etwo ($11&&$12&&$14&&$15&&$16&&$17&&$18&&$19)*0.643386 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.etwo ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19)*0.643386 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.9 0.9 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message etwo 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+sigma pre = 1400
+h/cr/1d $SIGMA(pre+10) 'tracks' 19 -0.5 18.5
+h/cr/1d $SIGMA(pre+11) 'tracks' 19 -0.5 18.5
+h/cr/1d $SIGMA(pre+20) 'tracks' 19 -0.5 18.5
+h/cr/1d $SIGMA(pre+21) 'tracks' 19 -0.5 18.5
+nt/plot //lun1/whatswrong/1.tracks ($11&&$12&&$13&&$15&&$16&&$17&&$18&&$19) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.tracks ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.tracks ($11&&$12&&$13&&$15&&$16&&$17&&$18&&$19)*0.643386 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.tracks ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19)*0.643386 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message tracks 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+sigma pre = 1500
+h/cr/1d $SIGMA(pre+10) 'excludeblockA' 2 -0.5 1.5
+h/cr/1d $SIGMA(pre+11) 'excludeblockA' 2 -0.5 1.5
+h/cr/1d $SIGMA(pre+20) 'excludeblockA' 2 -0.5 1.5
+h/cr/1d $SIGMA(pre+21) 'excludeblockA' 2 -0.5 1.5
+nt/plot //lun1/whatswrong/1.$15 ($11&&$12&&$13&&$14&&$16&&$17&&$18&&$19) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.$15 ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.$15 ($11&&$12&&$13&&$14&&$16&&$17&&$18&&$19)*0.643386 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.$15 ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19)*0.643386 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message excludeblockA 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+sigma pre = 1600
+h/cr/1d $SIGMA(pre+10) 'excludeblockBC' 2 -0.5 1.5
+h/cr/1d $SIGMA(pre+11) 'excludeblockBC' 2 -0.5 1.5
+h/cr/1d $SIGMA(pre+20) 'excludeblockBC' 2 -0.5 1.5
+h/cr/1d $SIGMA(pre+21) 'excludeblockBC' 2 -0.5 1.5
+nt/plot //lun1/whatswrong/1.$16 ($11&&$12&&$13&&$14&&$15&&$17&&$18&&$19) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.$16 ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.$16 ($11&&$12&&$13&&$14&&$15&&$17&&$18&&$19)*0.643386 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.$16 ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19)*0.643386 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message excludeblockBC 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+sigma pre = 1700
+h/cr/1d $SIGMA(pre+10) 'cotthetadiff' 100 -0.2 0.2
+h/cr/1d $SIGMA(pre+11) 'cotthetadiff' 100 -0.2 0.2
+h/cr/1d $SIGMA(pre+20) 'cotthetadiff' 100 -0.2 0.2
+h/cr/1d $SIGMA(pre+21) 'cotthetadiff' 100 -0.2 0.2
+nt/plot //lun1/whatswrong/1.(2.*westcot-2.*cott) ($11&&$12&&$13&&$14&&$15&&$16&&$18&&$19) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.(2.*westcot-2.*cott) ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.(2.*westcot-2.*cott) ($11&&$12&&$13&&$14&&$15&&$16&&$18&&$19)*0.643386 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.(2.*westcot-2.*cott) ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19)*0.643386 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.1 0.1 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline -0.1 -0.1 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message cotthetadiff 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+sigma pre = 1800
+h/cr/1d $SIGMA(pre+10) 'sinphidiff' 100 -0.1 0.1
+h/cr/1d $SIGMA(pre+11) 'sinphidiff' 100 -0.1 0.1
+h/cr/1d $SIGMA(pre+20) 'sinphidiff' 100 -0.1 0.1
+h/cr/1d $SIGMA(pre+21) 'sinphidiff' 100 -0.1 0.1
+nt/plot //lun1/whatswrong/1.sin(westphi-eastphi) ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$19) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.sin(westphi-eastphi) ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.sin(westphi-eastphi) ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$19)*0.643386 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.sin(westphi-eastphi) ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19)*0.643386 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.04 0.04 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline -0.04 -0.04 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message sinphidiff 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+sigma pre = 1900
+h/cr/1d $SIGMA(pre+10) 'cotT' 70 0 1.4
+h/cr/1d $SIGMA(pre+11) 'cotT' 70 0 1.4
+h/cr/1d $SIGMA(pre+20) 'cotT' 70 0 1.4
+h/cr/1d $SIGMA(pre+21) 'cotT' 70 0 1.4
+nt/plot //lun1/whatswrong/1.cott ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18) ! ! ! 'N' $SIGMA(pre+10)
+nt/plot //lun1/whatswrong/1.cott ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19) ! ! ! 'N' $SIGMA(pre+11)
+nt/plot //lun2/whatswrong/1.cott ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18)*0.643386 ! ! ! 'N' $SIGMA(pre+20)
+nt/plot //lun2/whatswrong/1.cott ($11&&$12&&$13&&$14&&$15&&$16&&$17&&$18&&$19)*0.643386 ! ! ! 'N' $SIGMA(pre+21)
+h/plot $SIGMA(pre+10) 'e'
+set dmod 1
+h/plot $SIGMA(pre+20) 's'
+set ltyp 2
+dline 0.15 0.15 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 1.28 1.28 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma high = $HINFO($SIGMA(pre+11),'ENTRIES')/$HINFO($SIGMA(pre+10),'ENTRIES')
+sigma low = $HINFO($SIGMA(pre+21),'ENTRIES')/$HINFO($SIGMA(pre+20),'ENTRIES')
+message cott 2*($SIGMA(high) - $SIGMA(low))/($SIGMA(high) + $SIGMA(low)) = $SIGMA(2.*(high-low)/(high+low))
+
+close 65
+

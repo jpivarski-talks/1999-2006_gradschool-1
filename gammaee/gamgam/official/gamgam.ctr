@@ -1,0 +1,153 @@
+C --------------------------------------------------------------------
+C  This is a control file which lists ALL variables that are read in, 
+C  and the default values. 
+C
+C  (All variables are defined as CHRACTER*6 strings.)
+C
+C --------------------------------------------------------------------
+C LIST
+C
+C ============  General parameters ============================
+C
+C               Single beam energy (in GeV).
+EBEAM   5.29
+C		Number of events in run
+C NEVMGG  2000000
+NEVMGG  10000
+C		Throw version
+THRWGG  1
+C	1 = Throw W-square
+C	2 = Throw omega-2
+C
+C		Random number seed (1 to 15)
+IUSEED  1
+C		W cutoff (in GeV)
+WMINGG  2.0
+WMAXGG	-1.0
+WPOWER	12.0
+C		Minimum tag energy.
+EPMIN   0.511E-3
+C		Minimum tag angle
+THPMIN  0.0
+C	THPMIN  0.3
+C
+C		Continuum/Resonance Choice 
+CONRES  1
+C	1 = Continuum
+C	2 = Resonance
+C
+C		Final State Selection
+FSSEL   12
+ICHANL  2
+C	Final State	FSSEL	ICHANL
+C       GAMMA GAMMA = 	1	*
+C       PI PI GAMMA = 	2	*     via eta_prime
+C       PI+ PI-     = 	3	*
+C       K+ K-       = 	4	*
+C       FOUR PI     = 	5	*
+C       MU+ MU-     = 	6	*
+C       TAU TAU     = 	7	*
+C       E+ E-       = 	8	*
+C       CHI_0       = 	9	*
+C       CHI_1       =  10	*
+C       CHI_2       =  11	0, then the Chi_c2 does not decay, 
+C				1, Chi_c2 --> J/Psi Gamma.
+C       BARYON ANTiB=  12	1  --> proton / antiproton
+C                   		2  --> lambda / antilambda
+C                   		3  --> sigma0 / antisigma0
+C                   		4  --> sigma+ / antisigma+
+C                   		5  --> sigma- / antisigma-
+C                   		6  --> xi0 / antixi0
+C                   		7  --> xi- / antixi-
+C       K0S K0S     =  13	*
+C       4 PI+- PI0  =  14	*
+C       ETA_C       =  15	0, ETA_C does not decay,
+C				1, ETA_C --> K*0(1430) K_short and
+C				   K*0(1430) --> K+- pi-+	    
+C				2, ETA_C --> K*0(1430) K+- and
+C				   K*0(1430) --> K_short pi-+	    
+C       K0S K PI    =  16	*
+C       K0S/PI0     =  17	0, K0S does not decay
+C				1, K0S --> pi0 pi0
+C				2, K0S --> pi+ pi-
+C			       10, pi0 does not decay
+C			       11, pi0 --> gamma gamma
+C       F2          =  18	0, f2 does not decay
+C				1, f2 --> pi0 pi0
+C				2, f2 --> pi+ pi-
+C
+C                Maximum weight implementation
+WTMXGG  0.2
+C
+C         WTMXGG	Final State	Energy	#Events
+C	  28.0E+3	E E		5.29	1E5
+C         20.0		MU MU		5.29	1E6 
+C         8.7 		PI PI PI PI	5.29	7.5E5 
+C         16.0		PI PI		5.29	7.5E6
+C	  1.0E-4 	TAU TAU		5.29	5000 
+C	  0.2		CHI_C_2
+C	  ???		CHI_C_1
+C	  0.045		CHI_C_0
+C	  0.075		ETA_C		
+C	  1.0E6		ETA_PRIME
+C
+C		The following parameters are required for 
+C		Resonance generation.  They may be arbitrary 
+C		for Continuum generation.
+C		============================================
+C---------------Mass of resonance for VMD (in GeV).--------------
+MSRSGG  0.957
+C	MSRSGG  0.1349739 for PI0
+C	MSRSGG  0.497671 for K0
+C	MSRSGG  0.957  for ETA_PRIME
+C       MSRSGG  1.274  for the f2
+C	MSRSGG  2.9796 for the ETA_C
+C	MSRSGG  3.5563 for CHI_C_2
+C	MSRSGG  3.4151 for CHI_C_0
+C
+C---------------Spin of resonance-------------------------------
+SPRSGG  0
+C		0 for pi0, K0s, eta, eta', eta_c, chi_c0
+C		1 for chi_c1
+C		2 for chi_c2, and f2
+C
+C---------------Two photon Width of Resonance (in keV).-----------
+WDRSGG  4.2
+C		WDRSGG  0.00725 for pi0.
+C		WDRSGG  1.77E-14 for K0S.
+C		WDRSGG  0.463   for eta.
+C		WDRSGG  4.49    for eta'.
+C		WDRSGG	1.0 for eta_c, chi_c0,1,2
+C               WDRSGG  2.775   for f2
+C
+C---------------Total Width of Resonance (in GeV).----------------
+WDRSTO  2.08E-4
+C		WDRSTO  7.25E-9 for pi0.
+C		WDRSTO  7.38E-15 for K0S.
+C		WDRSTO  1.19E-6 for eta.
+C		WDRSTO  2.08E-4 for eta'.
+C		WDRSTO  0.0103  for eta_c.
+C		WDRSTO  0.014   for chi_c0.
+C		WDRSTO  0.0013  for chi_c1.
+C		WDRSTO  0.002   for chi_c2.
+C               WDRSTO  0.185   for f2
+C
+C---------------FFCHOI, choice of form factor, 1=unity, 2=rho, 3=J/Psi
+FFCHOI  2
+C		1 == unity
+C		2 == rho, also selected if FFCHOI is illegal!
+C		3 == J/Psi
+C
+C===================================================================
+C		Output event file control
+C===================================================================
+EVTFIL  T
+C		Histogram the generation stage
+GENHST  T
+C		Histograms for final state 
+FINHST  T
+C		Detector Simulation
+DETSIM  F
+C
+C=============================================================================
+END

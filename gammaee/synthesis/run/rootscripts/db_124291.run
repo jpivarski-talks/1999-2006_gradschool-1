@@ -1,0 +1,15 @@
+#$ -l u5
+#$ -o /cdat/dafe/mccann/synthesis/rootlog/db_124291.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/synthesis/run/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_RUN=124291
+export USER_DB=18
+suez -f rootdb.tcl
+rm -f core
+
+exit

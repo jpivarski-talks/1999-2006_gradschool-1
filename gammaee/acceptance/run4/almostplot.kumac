@@ -1,0 +1,52 @@
+h/delete $SIGMA(pre+10)
+h/delete $SIGMA(pre+11)
+h/delete $SIGMA(pre+12)
+h/delete $SIGMA(pre+20)
+h/delete $SIGMA(pre+90)
+h/delete $SIGMA(pre+21)
+h/delete $SIGMA(pre+22)
+h/delete $SIGMA(pre+23)
+h/delete $SIGMA(pre+24)
+h/delete $SIGMA(pre+25)
+h/delete $SIGMA(pre+26)
+h/delete $SIGMA(pre+27)
+h/delete $SIGMA(pre+28)
+h/delete $SIGMA(pre+29)
+h/delete $SIGMA(pre+31)
+h/delete $SIGMA(pre+32)
+h/delete $SIGMA(pre+33)
+h/delete $SIGMA(pre+34)
+h/delete $SIGMA(pre+35)
+h/delete $SIGMA(pre+36)
+h/delete $SIGMA(pre+37)
+h/delete $SIGMA(pre+38)
+h/delete $SIGMA(pre+39)
+h/delete $SIGMA(pre+41)
+h/delete $SIGMA(pre+42)
+h/delete $SIGMA(pre+43)
+h/delete $SIGMA(pre+44)
+h/delete $SIGMA(pre+45)
+h/delete $SIGMA(pre+46)
+h/delete $SIGMA(pre+47)
+h/delete $SIGMA(pre+48)
+h/delete $SIGMA(pre+49)
+h/delete $SIGMA(pre+51)
+h/delete $SIGMA(pre+52)
+h/delete $SIGMA(pre+53)
+h/delete $SIGMA(pre+54)
+h/delete $SIGMA(pre+55)
+h/delete $SIGMA(pre+56)
+h/delete $SIGMA(pre+57)
+h/delete $SIGMA(pre+58)
+h/delete $SIGMA(pre+59)
+sub $SIGMA(pre+03) $SIGMA(pre+04) $SIGMA(pre+10) 1. $SIGMA(ptoc) 'e'
+sub $SIGMA(pre+03) $SIGMA(pre+04) $SIGMA(pre+11) 1. $SIGMA(ptocup) 'e'
+sub $SIGMA(pre+03) $SIGMA(pre+04) $SIGMA(pre+12) 1. $SIGMA(ptocdo) 'e'
+sub $SIGMA(pre+02) $SIGMA(pre+02) $SIGMA(pre+20) $SIGMA(ptomc) 0. 'e'
+sub $SIGMA(pre+09) $SIGMA(pre+09) $SIGMA(pre+90) $SIGMA(ptomc) 0. 'e'
+do i = 1, 9
+  sub $SIGMA(pre+01) $SIGMA(pre+01) $SIGMA(pre+20+[i]) $SIGMA(ptomcy([i])) 0. 'e'
+  add $SIGMA(pre+20+[i]) $SIGMA(pre+05) $SIGMA(pre+30+[i]) 1. $SIGMA(ptobge-ptocy([i])*ctobge) 'e'
+  add $SIGMA(pre+30+[i]) $SIGMA(pre+06) $SIGMA(pre+40+[i]) 1. $SIGMA(ptobgp-ptocy([i])*ctobgp) 'e'
+  add $SIGMA(pre+40+[i]) $SIGMA(pre+07) $SIGMA(pre+50+[i]) 1. $SIGMA(cosy([i])) 'e'
+enddo

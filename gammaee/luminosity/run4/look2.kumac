@@ -1,0 +1,321 @@
+nt/chain mc3 ../rzn4/cleo3mc_deeper.rzn
+nt/chain da3 ../rzn4/cleo3data_deeper.rzn
+nt/chain mcc ../rzn4/cleocmc_deeper.rzn
+nnt/chain dac ../rzn4/cleocdata_deeper.rzn
+
+* "tracks", "oldtk", "trig", "ebeam",
+* "e1", "e1cos", "e1cot", "e1phi",
+* "e2", "e2cos", "e2cot", "e2phi", "acop",
+* "cnum", "cen", "cbig", "cang", "ccos", "cacop",
+* "epho", "mcvx", "mcvy", "mcvz",
+* "vchi2", "vx", "vy", "vz",
+* "t1px", "t1py", "t1pz", "t1d0", "t1z0",
+* "t2px", "t2py", "t2pz", "t2d0", "t2z0",
+* "t3px", "t3py", "t3pz", "t3d0", "t3z0"};
+
+* $1&&$2&&trig>0 are the Brian-Surik cuts
+nt/cuts $1 tracks<2&&acop<0.05&&(e1+e2)/2>0.9
+nt/cuts $2 (abs(e1cos)<0.766&&abs(e2cos)<0.707).or.(abs(e2cos)<0.766&&abs(e1cos)<0.707)
+nt/cuts $3 e1>0.9&&abs(e1cos)<0.4
+* nt/cuts $4 abs(t1pz/sqrt(t1px**2+t1py**2+t1pz**2)-t2pz/sqrt(t2px**2+t2py**2+t2pz**2))<0.025&&0.005<abs(sin(atan2(t1py,t1px)-atan2(t2py,t2px)))<0.06
+nt/cuts $4 abs(t1pz/sqrt(t1px**2+t1py**2+t1pz**2)-t2pz/sqrt(t2px**2+t2py**2+t2pz**2))<0.025
+
+
+* * needs deeper_again
+* h/cr/2d 100 'electrons from conversions p1 v p2' 1 0 1 1 0 1
+* nt/plot //mc3/convert/1.sqrt(t1px**2+t1py**2+t1pz**2)/ebeam%sqrt(t2px**2+t2py**2+t2pz**2)/ebeam e1>0.9&&tracks==2&&abs(t1pz/sqrt(t1px**2+t1py**2)-t2pz/sqrt(t2px**2+t2py**2))<0.025 ! ! ! ! 100
+* nt/plot //mc3/convert/1.sqrt(t2px**2+t2py**2+t2pz**2)/ebeam e1>0.9&&tracks==2&&abs(t1pz/sqrt(t1px**2+t1py**2)-t2pz/sqrt(t2px**2+t2py**2))<0.025
+
+
+* * counting the number passing cuts
+* zone 1 2
+* opt sta
+* nt/plot //da3/convert/1.e1 $1&&$2
+* nt/plot //mc3/convert/1.e1 $1&&$2
+* nt/plot //dac/convert/1.e1 $1&&$2
+* nt/plot //mcc/convert/1.e1 $1&&$2
+* zone 1 1
+* opt nsta
+
+* h/cr/1d 300 'number of tracks with e1.gt.0.9 (CLEO-III)' 5 -0.5 4.5
+* h/cr/1d 301 'number of tracks with e1.gt.0.9 (CLEO-III)' 5 -0.5 4.5
+* nt/plot //da3/convert/1.tracks ($1&&$2) ! ! ! 'N' 300
+* nt/plot //mc3/convert/1.tracks 0.4439*($1&&$2) ! ! ! 'N' 301
+* h/plot 300 'e'
+* h/plot 301 's'
+
+
+h/cr/1d 400 'difference in track cos([Q]) (CLEO-III)' 100 -3 0.30103
+h/cr/1d 401 'difference in track cos([Q]) (CLEO-III)' 100 -3 0.30103
+h/cr/1d 410 'difference in track cos([Q]) (CLEO-III)' 100 0 2
+h/cr/1d 411 'difference in track cos([Q]) (CLEO-III)' 100 0 2
+nt/plot //da3/convert/1.log10(abs(t1pz/sqrt(t1px**2+t1py**2+t1pz**2)-t2pz/sqrt(t2px**2+t2py**2+t2pz**2))) (e1>0.9&&tracks>1&&abs(e1cos)<0.7) ! ! ! 'N' 400
+nt/plot //mc3/convert/1.log10(abs(t1pz/sqrt(t1px**2+t1py**2+t1pz**2)-t2pz/sqrt(t2px**2+t2py**2+t2pz**2))) 0.4439*(e1>0.9&&tracks>1&&abs(e1cos)<0.7) ! ! ! 'N' 401
+nt/plot //da3/convert/1.abs(t1pz/sqrt(t1px**2+t1py**2+t1pz**2)-t2pz/sqrt(t2px**2+t2py**2+t2pz**2)) (e1>0.9&&tracks>1&&abs(e1cos)<0.7) ! ! ! 'N' 410
+nt/plot //mc3/convert/1.abs(t1pz/sqrt(t1px**2+t1py**2+t1pz**2)-t2pz/sqrt(t2px**2+t2py**2+t2pz**2)) 0.4439*(e1>0.9&&tracks>1&&abs(e1cos)<0.7) ! ! ! 'N' 411
+
+set dmod 1
+zone 1 2
+opt linx
+opt logy
+set hcol 1005
+h/plot 411 'hist'
+set hcol 1
+h/plot 410 'se'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline 0.025 0.025 $SIGMA(10**bot) $SIGMA(10**top) 
+
+opt logx
+opt liny
+null 0.001 2 0.1 30
+opt linx
+set hcol 1005
+h/plot 401 'shist'
+set hcol 1
+h/plot 400 'se'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline $SIGMA(log10(0.025)) $SIGMA(log10(0.025)) $SIGMA(bot) $SIGMA(top) 
+
+
+h/cr/1d 500 'sin(difference in track [f]) (CLEO-III)' 100 -3 0
+h/cr/1d 501 'sin(difference in track [f]) (CLEO-III)' 100 -3 0
+h/cr/1d 510 'sin(difference in track [f]) (CLEO-III)' 100 0 1
+h/cr/1d 511 'sin(difference in track [f]) (CLEO-III)' 100 0 1
+nt/plot //da3/convert/1.log10(abs(sin(atan2(t1py,t1px)-atan2(t2py,t2px)))) (e1>0.9&&tracks>1&&abs(e1cos)<0.7) ! ! ! 'N' 500
+nt/plot //mc3/convert/1.log10(abs(sin(atan2(t1py,t1px)-atan2(t2py,t2px)))) 0.4439*(e1>0.9&&tracks>1&&abs(e1cos)<0.7) ! ! ! 'N' 501
+nt/plot //da3/convert/1.abs(sin(atan2(t1py,t1px)-atan2(t2py,t2px))) (e1>0.9&&tracks>1&&abs(e1cos)<0.7) ! ! ! 'N' 510
+nt/plot //mc3/convert/1.abs(sin(atan2(t1py,t1px)-atan2(t2py,t2px))) 0.4439*(e1>0.9&&tracks>1&&abs(e1cos)<0.7) ! ! ! 'N' 511
+
+set dmod 1
+zone 1 2
+opt linx
+opt logy
+set hcol 1005
+h/plot 511 'hist'
+set hcol 1
+h/plot 510 'se'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline 0.005 0.005 $SIGMA(10**bot) $SIGMA(10**top) 
+dline 0.06 0.06 $SIGMA(10**bot) $SIGMA(10**top) 
+
+opt logx
+opt liny
+null 0.001 2 0 50
+opt linx
+set hcol 1005
+h/plot 501 'shist'
+set hcol 1
+h/plot 500 'se'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline $SIGMA(log10(0.005)) $SIGMA(log10(0.005)) $SIGMA(bot) $SIGMA(top) 
+dline $SIGMA(log10(0.06)) $SIGMA(log10(0.06)) $SIGMA(bot) $SIGMA(top) 
+
+h/cr/1d 600 'difference in track cos([Q]) (CLEO-c)' 100 -3 0.30103
+h/cr/1d 601 'difference in track cos([Q]) (CLEO-c)' 100 -3 0.30103
+h/cr/1d 610 'difference in track cos([Q]) (CLEO-c)' 100 0 2
+h/cr/1d 611 'difference in track cos([Q]) (CLEO-c)' 100 0 2
+nt/plot //dac/convert/1.log10(abs(t1pz/sqrt(t1px**2+t1py**2+t1pz**2)-t2pz/sqrt(t2px**2+t2py**2+t2pz**2))) (e1>0.9&&tracks>1&&abs(e1cos)<0.7) ! ! ! 'N' 600
+nt/plot //mcc/convert/1.log10(abs(t1pz/sqrt(t1px**2+t1py**2+t1pz**2)-t2pz/sqrt(t2px**2+t2py**2+t2pz**2))) 0.1434*(e1>0.9&&tracks>1&&abs(e1cos)<0.7) ! ! ! 'N' 601
+nt/plot //dac/convert/1.abs(t1pz/sqrt(t1px**2+t1py**2+t1pz**2)-t2pz/sqrt(t2px**2+t2py**2+t2pz**2)) (e1>0.9&&tracks>1&&abs(e1cos)<0.7) ! ! ! 'N' 610
+nt/plot //mcc/convert/1.abs(t1pz/sqrt(t1px**2+t1py**2+t1pz**2)-t2pz/sqrt(t2px**2+t2py**2+t2pz**2)) 0.1434*(e1>0.9&&tracks>1&&abs(e1cos)<0.7) ! ! ! 'N' 611
+
+set dmod 1
+zone 1 2
+opt linx
+opt logy
+set hcol 1005
+h/plot 611 'hist'
+set hcol 1
+h/plot 610 'se'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline 0.025 0.025 $SIGMA(10**bot) $SIGMA(10**top) 
+
+opt logx
+opt liny
+null 0.001 2 0 20
+opt linx
+set hcol 1005
+h/plot 601 'shist'
+set hcol 1
+h/plot 600 'se'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline $SIGMA(log10(0.025)) $SIGMA(log10(0.025)) $SIGMA(bot) $SIGMA(top)
+
+
+* counting MC deficit with the vertexer on, $4 off
+opt sta
+set stat 1000000
+zone 1 2
+set hcol 1
+opt liny
+opt linx
+nt/plot //mcc/convert/1.e1 0.1434*(e1>0.9&&abs(e1cos)<0.7&&vchi2>0&&0<=sqrt(vx**2+vy**2)<0.3)
+nt/plot //dac/convert/1.e1 (trig>0&&e1>0.9&&abs(e1cos)<0.7&&vchi2>0&&0<=sqrt(vx**2+vy**2)<0.3)
+
+nt/plot //mcc/convert/1.e1 $1&&$2
+nt/plot //dac/convert/1.e1 $1&&$2
+
+
+nt/plot //mc3/convert/1.e1 0.4439*(e1>0.9&&abs(e1cos)<0.7&&vchi2>0)
+nt/plot //da3/convert/1.e1 (trig>0&&e1>0.9&&abs(e1cos)<0.7&&vchi2>0)
+
+nt/plot //da3/convert/1.sqrt(t1px**2+t1py**2+t1pz**2)/ebeam t1px>-1000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+h/cr/1d 700 'sin(difference in track [f]) (CLEO-c)' 100 -3 0
+h/cr/1d 701 'sin(difference in track [f]) (CLEO-c)' 100 -3 0
+h/cr/1d 710 'sin(difference in track [f]) (CLEO-c)' 100 0 1
+h/cr/1d 711 'sin(difference in track [f]) (CLEO-c)' 100 0 1
+nt/plot //dac/convert/1.log10(abs(sin(atan2(t1py,t1px)-atan2(t2py,t2px)))) (e1>0.9&&tracks>1&&abs(e1cos)<0.7) ! ! ! 'N' 700
+nt/plot //mcc/convert/1.log10(abs(sin(atan2(t1py,t1px)-atan2(t2py,t2px)))) 0.1434*(e1>0.9&&tracks>1&&abs(e1cos)<0.7) ! ! ! 'N' 701
+nt/plot //dac/convert/1.abs(sin(atan2(t1py,t1px)-atan2(t2py,t2px))) (e1>0.9&&tracks>1&&abs(e1cos)<0.7) ! ! ! 'N' 710
+nt/plot //mcc/convert/1.abs(sin(atan2(t1py,t1px)-atan2(t2py,t2px))) 0.1434*(e1>0.9&&tracks>1&&abs(e1cos)<0.7) ! ! ! 'N' 711
+
+set dmod 1
+zone 1 2
+opt linx
+opt logy
+set hcol 1005
+h/plot 711 'hist'
+set hcol 1
+h/plot 710 'se'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline 0.005 0.005 $SIGMA(10**bot) $SIGMA(10**top) 
+dline 0.06 0.06 $SIGMA(10**bot) $SIGMA(10**top) 
+
+opt logx
+opt liny
+null 0.001 2 0 20
+opt linx
+set hcol 1005
+h/plot 701 'shist'
+set hcol 1
+h/plot 700 'se'
+set ltyp 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline $SIGMA(log10(0.005)) $SIGMA(log10(0.005)) $SIGMA(bot) $SIGMA(top) 
+dline $SIGMA(log10(0.06)) $SIGMA(log10(0.06)) $SIGMA(bot) $SIGMA(top) 
+
+
+
+zone 1 2
+opt liny
+set dmod 1
+
+h/cr/1d 100 'phi distribution of converted track pair (CLEO-III)' 60 -3.1415926 3.1415926
+h/cr/1d 101 'phi distribution of converted track pair (CLEO-III)' 60 -3.1415926 3.1415926
+nt/plot //da3/convert/1.atan2(t1py+t2py,t1px+t2px) (e1>0.9&&tracks>1&&abs(e1cos)<0.7&&$4) ! ! ! 'N' 100
+nt/plot //mc3/convert/1.atan2(t1py+t2py,t1px+t2px) 0.4439*(e1>0.9&&tracks>1&&abs(e1cos)<0.7&&$4) ! ! ! 'N' 101
+opt fit
+h/fit 100 p0 '0'
+max 100 30
+set hcol 1
+h/plot 100 'e'
+set hcol 1005
+h/plot 101 'shist'
+set hcol 1
+h/plot 100 'es'
+text 2. 23. '80 percent C.L.' ! ! 'c'
+
+h/cr/1d 200 'phi distribution of converted track pair (CLEO-c)' 60 -3.1415926 3.1415926
+h/cr/1d 201 'phi distribution of converted track pair (CLEO-c)' 60 -3.1415926 3.1415926
+nt/plot //dac/convert/1.atan2(t1py+t2py,t1px+t2px) (e1>0.9&&tracks>1&&abs(e1cos)<0.7&&$4) ! ! ! 'N' 200
+nt/plot //mcc/convert/1.atan2(t1py+t2py,t1px+t2px) 0.1434*(e1>0.9&&tracks>1&&abs(e1cos)<0.7&&$4) ! ! ! 'N' 201
+opt fit
+h/fit 200 p0 '0'
+max 200 16
+set hcol 1
+h/plot 200 'e'
+set hcol 1005
+h/plot 201 'shist'
+set hcol 1
+h/plot 200 'es'
+text 2. 12. '35 percent C.L.' ! ! 'c'
+
+
+zone 1 2
+h/cr/1d 1000 '1/sin([Q]) of converted track pair (CLEO-III)' 28 1 1.4
+h/cr/1d 1001 '1/sin([Q]) of converted track pair (CLEO-III)' 28 1 1.4
+nt/plot //da3/convert/1.sqrt((t1px+t2px)**2+(t1py+t2py)**2+(t1pz+t2pz)**2)/sqrt((t1px+t2px)**2+(t1py+t2py)**2) (e1>0.9&&tracks>1&&abs(e1cos)<0.7&&$4) ! ! ! 'N' 1000
+nt/plot //mc3/convert/1.sqrt((t1px+t2px)**2+(t1py+t2py)**2+(t1pz+t2pz)**2)/sqrt((t1px+t2px)**2+(t1py+t2py)**2) 0.4439*(e1>0.9&&tracks>1&&abs(e1cos)<0.7&&$4) ! ! ! 'N' 1001
+set hcol 1
+h/plot 1000 'e'
+set hcol 1005
+h/plot 1001 's'
+set hcol 1
+h/plot 1000 'es'
+
+h/cr/1d 1010 '1/sin([Q]) of converted track pair (CLEO-c)' 28 1 1.4
+h/cr/1d 1011 '1/sin([Q]) of converted track pair (CLEO-c)' 28 1 1.4
+nt/plot //dac/convert/1.sqrt((t1px+t2px)**2+(t1py+t2py)**2+(t1pz+t2pz)**2)/sqrt((t1px+t2px)**2+(t1py+t2py)**2) (e1>0.9&&tracks>1&&abs(e1cos)<0.7&&$4) ! ! ! 'N' 1010
+nt/plot //mcc/convert/1.sqrt((t1px+t2px)**2+(t1py+t2py)**2+(t1pz+t2pz)**2)/sqrt((t1px+t2px)**2+(t1py+t2py)**2) 0.1434*(e1>0.9&&tracks>1&&abs(e1cos)<0.7&&$4) ! ! ! 'N' 1011
+set hcol 1
+h/plot 1010 'e'
+set hcol 1005
+h/plot 1011 's'
+set hcol 1
+h/plot 1010 'es'
+
+
+zone 1 2
+h/cr/1d 1100 '1/sin([Q]) of converted track pair (CLEO-III) requiring the vertexer' 28 1 1.4
+h/cr/1d 1101 '1/sin([Q]) of converted track pair (CLEO-III) requiring the vertexer' 28 1 1.4
+nt/plot //da3/convert/1.sqrt((t1px+t2px)**2+(t1py+t2py)**2+(t1pz+t2pz)**2)/sqrt((t1px+t2px)**2+(t1py+t2py)**2) (e1>0.9&&tracks>1&&abs(e1cos)<0.7&&$4&&vchi2>0) ! ! ! 'N' 1100
+nt/plot //mc3/convert/1.sqrt((t1px+t2px)**2+(t1py+t2py)**2+(t1pz+t2pz)**2)/sqrt((t1px+t2px)**2+(t1py+t2py)**2) 0.4439*(e1>0.9&&tracks>1&&abs(e1cos)<0.7&&$4&&vchi2>0) ! ! ! 'N' 1101
+set hcol 1
+h/plot 1100 'e'
+set hcol 1005
+h/plot 1101 's'
+set hcol 1
+h/plot 1100 'es'
+
+h/cr/1d 1110 '1/sin([Q]) of converted track pair (CLEO-c) requiring the vertexer' 28 1 1.4
+h/cr/1d 1111 '1/sin([Q]) of converted track pair (CLEO-c) requiring the vertexer' 28 1 1.4
+nt/plot //dac/convert/1.sqrt((t1px+t2px)**2+(t1py+t2py)**2+(t1pz+t2pz)**2)/sqrt((t1px+t2px)**2+(t1py+t2py)**2) (e1>0.9&&tracks>1&&abs(e1cos)<0.7&&$4&&vchi2>0) ! ! ! 'N' 1110
+nt/plot //mcc/convert/1.sqrt((t1px+t2px)**2+(t1py+t2py)**2+(t1pz+t2pz)**2)/sqrt((t1px+t2px)**2+(t1py+t2py)**2) 0.1434*(e1>0.9&&tracks>1&&abs(e1cos)<0.7&&$4&&vchi2>0) ! ! ! 'N' 1111
+set hcol 1
+h/plot 1110 'e'
+set hcol 1005
+h/plot 1111 's'
+set hcol 1
+h/plot 1110 'es'
+
+
+zone 1 2
+h/cr/1d 1200 'Conversion radius from vertexer (CLEO-III)' 30 0 0.3
+h/cr/1d 1201 'Conversion radius from vertexer (CLEO-III)' 30 0 0.3
+h/cr/1d 1210 'Conversion radius from vertexer (CLEO-c)' 30 0 0.3
+h/cr/1d 1211 'Conversion radius from vertexer (CLEO-c)' 30 0 0.3
+nt/plot //da3/convert/1.sqrt(vx**2+vy**2) (e1>0.9&&tracks>1&&abs(e1cos)<0.7&&vchi2>0) ! ! ! 'e' 1200
+nt/plot //mc3/convert/1.sqrt(vx**2+vy**2) 0.4439*(e1>0.9&&tracks>1&&abs(e1cos)<0.7&&vchi2>0) ! ! ! 'e' 1201
+
+

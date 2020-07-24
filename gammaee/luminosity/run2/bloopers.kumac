@@ -1,0 +1,30 @@
+nt/cr 1 'title' 3 ! ! 'x' 'y' 'z'
+nt/read 1 /cdat/dafe/mccann/luminosity/rzn2/quick_gamgam.ntuple
+
+h/cr/2d 100 'y vs x' 1 -0.5 0.5 1 -0.5 0.5
+nt/plot 1.y%x ! ! ! ! ! 100
+
+h/cr/2d 100 'y vs x' 1 -0.2 0.2 1 -0.2 0.2
+nt/plot 1.y%x ! ! ! ! ! 100
+
+h/cr/2d 100 'y vs x' 1 -0.05 0.05 1 -0.05 0.05
+nt/plot 1.y%x ! ! ! ! ! 100
+
+* just beampipe
+nt/plot 1.z sqrt(x**2+y**2)<0.023&&abs(z)<0.1
+
+nt/plot 1.y%x 0.02<sqrt(x**2+y**2)<0.023&&abs(z)<0.1
+
+
+* just silicon
+nt/plot 1.y%x 0.023<sqrt(x**2+y**2)<0.14
+nt/plot 1.z 0.023<sqrt(x**2+y**2)<0.14
+nt/plot 1.sqrt(x**2+y**2)%z 0.023<sqrt(x**2+y**2)<0.14
+dline 0 0.17 0 0.12
+dline 0 -0.17 0 0.12
+
+nt/plot 1.x%z 0.023<sqrt(x**2+y**2)<0.14&&abs(y)<0.01
+
+
+nt/plot 1.sqrt(x**2+y**2) 0<sqrt(x**2+y**2)<0.8
+

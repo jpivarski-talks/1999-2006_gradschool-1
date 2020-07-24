@@ -1,0 +1,261 @@
+h/file 1 /cdat/sol300/disk5/mccann/mcres16_01-track.rzn
+h/file 2 /cdat/sol300/disk5/mccann/mcres17_01-track.rzn
+
+h/file 30 /cdat/sol300/disk5/mccann/y3s-nov29-01-peak.rzn
+h/file 31 /cdat/sol300/disk5/mccann/y3s-dec06-01-peak.rzn
+h/file 32 /cdat/sol300/disk5/mccann/y3s-dec13-01-peak.rzn
+h/file 33 /cdat/sol300/disk5/mccann/y3s-dec20-01-peak.rzn
+h/file 34 /cdat/sol300/disk5/mccann/y3s-dec25-01-peak.rzn
+h/file 35 /cdat/sol300/disk5/mccann/y3s-jan03-02-peak.rzn
+h/file 36 /cdat/sol300/disk5/mccann/y3s-jan10-02-peak.rzn
+
+* nt/print //lun1/trackefficiency/1
+ ********************************************************
+ * NTUPLE ID=    1  ENTRIES=  40715   vars
+ ********************************************************
+ *  Var numb  *   Name    *    Lower     *    Upper     *
+ ********************************************************
+ *      1     * run       * 0.121339E+06 * 0.121362E+06 *
+ *      2     * event     * 0.100000E+01 * 0.960000E+03 *
+ *      3     * fit       * 0.000000E+00 * 0.100000E+01 *
+ *      4     * chi2      * 0.500000E-03 * 0.838861E+04 *
+ *      5     * dof       * -.500000E+01 * 0.790000E+02 *
+ *      6     * expect    * 0.000000E+00 * 0.560000E+02 *
+ *      7     * layers    * 0.400000E+01 * 0.560000E+02 *
+ *      8     * d0        * -.499999E+00 * 0.548574E+00 *
+ *      9     * z0        * -.100000E+01 * 0.109715E+01 *
+ *     10     * p         * 0.239926E-01 * 0.687207E+02 *
+ *     11     * cotth     * -.100000E+02 * 0.109715E+02 *
+ *     12     * errct     * 0.000000E+00 * 0.553073E+01 *
+ *     13     * errz0     * 0.000000E+00 * 0.822105E+02 *
+ *     14     * curv      * -.262681E+02 * 0.143132E+02 *
+ *     15     * phi0      * 0.135000E-03 * 0.941560E+01 *
+ *     16     * mctag     * 0.000000E+00 * 0.100000E+02 *
+ ********************************************************
+
+h/cr/2d 100 'fit vs mctagged' 6 -0.5 1.5 6 -0.5 1.5
+nt/plot //lun1/trackefficiency/1.fit>0%mctag>0 ! ! ! ! text 100
+
+zone 1 1
+h/cr/1d 200 'reduced chi2' 60 -100. 200.
+h/cr/1d 201 'reduced chi2' 60 -100. 200.
+h/cr/1d 210 'reduced chi2' 60 -100. 200.
+h/cr/1d 211 'reduced chi2' 60 -100. 200.
+h/cr/1d 220 'reduced chi2' 60 -100. 200.
+h/cr/1d 230 'reduced chi2' 60 -100. 200.
+h/cr/1d 221 'reduced chi2' 60 -100. 200.
+h/cr/1d 231 'reduced chi2' 60 -100. 200.
+h/cr/1d 222 'reduced chi2' 60 -100. 200.
+h/cr/1d 232 'reduced chi2' 60 -100. 200.
+h/cr/1d 223 'reduced chi2' 60 -100. 200.
+h/cr/1d 233 'reduced chi2' 60 -100. 200.
+h/cr/1d 224 'reduced chi2' 60 -100. 200.
+h/cr/1d 234 'reduced chi2' 60 -100. 200.
+h/cr/1d 225 'reduced chi2' 60 -100. 200.
+h/cr/1d 235 'reduced chi2' 60 -100. 200.
+h/cr/1d 226 'reduced chi2' 60 -100. 200.
+h/cr/1d 236 'reduced chi2' 60 -100. 200.
+nt/plot //lun1/trackefficiency/1.chi2/dof dof!=0 ! ! ! 'N' 200
+nt/project 200 //lun1/trackefficiency/1.0 dof==0
+nt/plot //lun1/trackefficiency/1.chi2/dof dof!=0&&chi2/dof<100 ! ! ! 'N' 201
+nt/project 201 //lun1/trackefficiency/1.0 dof==0
+nt/plot //lun2/trackefficiency/1.chi2/dof dof!=0 ! ! ! 'N' 210
+nt/project 210 //lun2/trackefficiency/1.0 dof==0
+nt/plot //lun2/trackefficiency/1.chi2/dof dof!=0&&chi2/dof<100 ! ! ! 'N' 211
+nt/project 211 //lun2/trackefficiency/1.0 dof==0
+nt/plot //lun30/trackefficiency/1.chi2/dof dof!=0 ! ! ! 'N' 220
+nt/project 220 //lun30/trackefficiency/1.0 dof==0
+nt/plot //lun30/trackefficiency/1.chi2/dof dof!=0&&chi2/dof<100 ! ! ! 'N' 230
+nt/project 230 //lun30/trackefficiency/1.0 dof==0
+nt/plot //lun31/trackefficiency/1.chi2/dof dof!=0 ! ! ! 'N' 221
+nt/project 221 //lun31/trackefficiency/1.0 dof==0
+nt/plot //lun31/trackefficiency/1.chi2/dof dof!=0&&chi2/dof<100 ! ! ! 'N' 231
+nt/project 231 //lun31/trackefficiency/1.0 dof==0
+nt/plot //lun32/trackefficiency/1.chi2/dof dof!=0 ! ! ! 'N' 222
+nt/project 222 //lun32/trackefficiency/1.0 dof==0
+nt/plot //lun32/trackefficiency/1.chi2/dof dof!=0&&chi2/dof<100 ! ! ! 'N' 232
+nt/project 232 //lun32/trackefficiency/1.0 dof==0
+nt/plot //lun33/trackefficiency/1.chi2/dof dof!=0 ! ! ! 'N' 223
+nt/project 223 //lun33/trackefficiency/1.0 dof==0
+nt/plot //lun33/trackefficiency/1.chi2/dof dof!=0&&chi2/dof<100 ! ! ! 'N' 233
+nt/project 233 //lun33/trackefficiency/1.0 dof==0
+nt/plot //lun34/trackefficiency/1.chi2/dof dof!=0 ! ! ! 'N' 224
+nt/project 224 //lun34/trackefficiency/1.0 dof==0
+nt/plot //lun34/trackefficiency/1.chi2/dof dof!=0&&chi2/dof<100 ! ! ! 'N' 234
+nt/project 234 //lun34/trackefficiency/1.0 dof==0
+nt/plot //lun35/trackefficiency/1.chi2/dof dof!=0 ! ! ! 'N' 225
+nt/project 225 //lun35/trackefficiency/1.0 dof==0
+nt/plot //lun35/trackefficiency/1.chi2/dof dof!=0&&chi2/dof<100 ! ! ! 'N' 235
+nt/project 235 //lun35/trackefficiency/1.0 dof==0
+nt/plot //lun36/trackefficiency/1.chi2/dof dof!=0 ! ! ! 'N' 226
+nt/project 226 //lun36/trackefficiency/1.0 dof==0
+nt/plot //lun36/trackefficiency/1.chi2/dof dof!=0&&chi2/dof<100 ! ! ! 'N' 236
+nt/project 236 //lun36/trackefficiency/1.0 dof==0
+normalize 200
+normalize 210
+normalize 220
+normalize 221
+normalize 222
+normalize 223
+normalize 224
+normalize 225
+normalize 226
+h/plot 200
+h/plot 210 's'
+h/plot 220 's'
+h/plot 221 's'
+h/plot 222 's'
+h/plot 223 's'
+h/plot 224 's'
+h/plot 225 's'
+h/plot 226 's'
+set ltyp 3
+dline 100 100 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counter 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 200 201 1
+exec trackefficiency_macros#counter 'data17 MC' 210 211 2
+exec trackefficiency_macros#counter 'nov29-01' 220 230 3
+exec trackefficiency_macros#counter 'dec06-01' 221 231 4
+exec trackefficiency_macros#counter 'dec13-01' 222 232 5
+exec trackefficiency_macros#counter 'dec20-01' 223 233 6
+exec trackefficiency_macros#counter 'dec25-01' 224 234 7
+exec trackefficiency_macros#counter 'jan03-02' 225 235 8
+exec trackefficiency_macros#counter 'jan10-02' 226 236 9
+
+zone 1 1
+h/cr/1d 300 'hitFraction' 64 0. 1.6
+h/cr/1d 301 'hitFraction' 64 0. 1.6
+h/cr/1d 310 'hitFraction' 64 0. 1.6
+h/cr/1d 311 'hitFraction' 64 0. 1.6
+nt/plot //lun1/trackefficiency/1.layers/expect expect>0 ! ! ! 'N' 300
+nt/plot //lun1/trackefficiency/1.layers/expect expect>0&&0.5<layers/expect<1.2 ! ! ! 'N' 301
+nt/plot //lun2/trackefficiency/1.layers/expect expect>0 ! ! ! 'N' 310
+nt/plot //lun2/trackefficiency/1.layers/expect expect>0&&0.5<layers/expect<1.2 ! ! ! 'N' 311
+normalize 300
+normalize 310
+h/plot 300
+h/plot 310 's'
+set ltyp 3
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 1.2 1.2 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counter 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 300 301 1
+exec trackefficiency_macros#counter 'data17 MC' 310 311 2
+
+zone 1 1
+h/cr/1d 400 'd0' 40 -0.06 0.06
+h/cr/1d 401 'd0' 40 -0.06 0.06
+h/cr/1d 410 'd0' 40 -0.06 0.06
+h/cr/1d 411 'd0' 40 -0.06 0.06
+nt/plot //lun1/trackefficiency/1.d0 ! ! ! ! 'N' 400
+nt/plot //lun1/trackefficiency/1.d0 abs(d0)<0.03 ! ! ! 'N' 401
+nt/plot //lun2/trackefficiency/1.d0 ! ! ! ! 'N' 410
+nt/plot //lun2/trackefficiency/1.d0 abs(d0)<0.03 ! ! ! 'N' 411
+normalize 400
+normalize 410
+h/plot 400
+h/plot 410 's'
+set ltyp 3
+dline -0.03 -0.03 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 0.03 0.03 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counter 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 400 401 1
+exec trackefficiency_macros#counter 'data17 MC' 410 411 2
+
+zone 1 1
+h/cr/1d 500 'z0' 40 -0.36 0.36
+h/cr/1d 501 'z0' 40 -0.36 0.36
+h/cr/1d 510 'z0' 40 -0.36 0.36
+h/cr/1d 511 'z0' 40 -0.36 0.36
+nt/plot //lun1/trackefficiency/1.z0 ! ! ! ! 'N' 500
+nt/plot //lun1/trackefficiency/1.z0 abs(z0)<0.18 ! ! ! 'N' 501
+nt/plot //lun2/trackefficiency/1.z0 ! ! ! ! 'N' 510
+nt/plot //lun2/trackefficiency/1.z0 abs(z0)<0.18 ! ! ! 'N' 511
+normalize 500
+normalize 510
+h/plot 500
+h/plot 510 's'
+set ltyp 3
+dline -0.18 -0.18 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 0.18 0.18 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counter 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 500 501 1
+exec trackefficiency_macros#counter 'data17 MC' 510 511 2
+
+zone 1 1
+h/cr/1d 600 'momentum' 40 0. 10.3552
+h/cr/1d 601 'momentum' 40 0. 10.3552
+h/cr/1d 610 'momentum' 40 0. 10.3552
+h/cr/1d 611 'momentum' 40 0. 10.3552
+nt/plot //lun1/trackefficiency/1.p ! ! ! ! 'N' 600
+nt/plot //lun1/trackefficiency/1.p 0.051776<p<7.7664 ! ! ! 'N' 601
+nt/plot //lun2/trackefficiency/1.p ! ! ! ! 'N' 610
+nt/plot //lun2/trackefficiency/1.p 0.051776<p<7.7664 ! ! ! 'N' 611
+normalize 600
+normalize 610
+h/plot 600
+h/plot 610 's'
+set ltyp 3
+dline 0.051776 0.051776 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 7.7664 7.7664 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counter 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 800 801 1
+exec trackefficiency_macros#counter 'data17 MC' 810 811 2
+
+zone 1 1
+h/cr/1d 800 'cotTheta' 40 -6.0848 6.0848
+h/cr/1d 801 'cotTheta' 40 -6.0848 6.0848
+h/cr/1d 810 'cotTheta' 40 -6.0848 6.0848
+h/cr/1d 811 'cotTheta' 40 -6.0848 6.0848
+nt/plot //lun1/trackefficiency/1.cotth ! ! ! ! 'N' 800
+nt/plot //lun1/trackefficiency/1.cotth abs(cotth)<3.0424 ! ! ! 'N' 801
+nt/plot //lun2/trackefficiency/1.cotth ! ! ! ! 'N' 810
+nt/plot //lun2/trackefficiency/1.cotth abs(cotth)<3.0424 ! ! ! 'N' 811
+normalize 800
+normalize 810
+h/plot 800
+h/plot 810 's'
+set ltyp 3
+dline -3.0424 -3.0424 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 3.0424 3.0424 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counter 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 800 801 1
+exec trackefficiency_macros#counter 'data17 MC' 810 811 2
+
+zone 1 1
+h/cr/1d 900 'err in cotTheta' 50 0. 1.0
+h/cr/1d 901 'err in cotTheta' 50 0. 1.0
+h/cr/1d 910 'err in cotTheta' 50 0. 1.0
+h/cr/1d 911 'err in cotTheta' 50 0. 1.0
+nt/plot //lun1/trackefficiency/1.errct ! ! ! ! 'N' 900
+nt/plot //lun1/trackefficiency/1.errct errct<0.5 ! ! ! 'N' 901
+nt/plot //lun2/trackefficiency/1.errct ! ! ! ! 'N' 910
+nt/plot //lun2/trackefficiency/1.errct errct<0.5 ! ! ! 'N' 911
+normalize 900
+normalize 910
+h/plot 900
+h/plot 910 's'
+set ltyp 3
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counter 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 900 901 1
+exec trackefficiency_macros#counter 'data17 MC' 910 911 2
+
+zone 1 1
+h/cr/1d 1000 'err in z0' 50 0. 0.5
+h/cr/1d 1001 'err in z0' 50 0. 0.5
+h/cr/1d 1010 'err in z0' 50 0. 0.5
+h/cr/1d 1011 'err in z0' 50 0. 0.5
+nt/plot //lun1/trackefficiency/1.errz0 ! ! ! ! 'N' 1000
+nt/plot //lun1/trackefficiency/1.errz0 errz0<0.25 ! ! ! 'N' 1001
+nt/plot //lun2/trackefficiency/1.errz0 ! ! ! ! 'N' 1010
+nt/plot //lun2/trackefficiency/1.errz0 errz0<0.25 ! ! ! 'N' 1011
+normalize 1000
+normalize 1010
+h/plot 1000
+h/plot 1000 's'
+set ltyp 3
+dline 0.25 0.25 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+exec trackefficiency_macros#counter 0 0 0 0
+exec trackefficiency_macros#counter 'data16 MC' 1000 1001 1
+exec trackefficiency_macros#counter 'data17 MC' 1010 1011 2

@@ -1,0 +1,72 @@
+sigma mc16ld = 0
+exec load_[1].kumac
+
+nt/cuts $1 (t1had>0).or.(t1rad>0).or.(t1el>0)
+nt/cuts $2 abs(d0close)<0.005
+nt/cuts $3 e1<0.85
+nt/cuts $4 p2<0.85
+nt/cuts $5 (wz>800&&abs(z0close)<0.075).or.(wz<800&&abs(wz)<0.075)
+nt/cuts $6 visen>0.2
+nt/cuts $8 tracks>1
+nt/cuts $9 l4dec>0
+
+h/cr/1d 100 'strange set' 10 0. 5.
+h/cr/1d 200 'strange set with low visen' 10 0. 5.
+nt/plot //peak/cuts/1.visen $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&ccen>0.85 ! ! ! 'N' 100
+nt/plot //peak/cuts/1.visen $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&ccen>0.85&&visen<0.35 ! ! ! 'N' 200
+message $HINFO(100,'ENTRIES') $HINFO(200,'ENTRIES')
+
+h/cr/1d 101 'strange set' 10 0. 5.
+h/cr/1d 201 'strange set with low visen' 10 0. 5.
+nt/plot //cont/cuts/1.visen $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&ccen>0.85 ! ! ! 'N' 101
+nt/plot //cont/cuts/1.visen $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&ccen>0.85&&visen<0.35 ! ! ! 'N' 201
+message $HINFO(101,'ENTRIES') $HINFO(201,'ENTRIES')
+
+exit
+
+* lnx193> for x in all1 all2 all3; do (echo "1"; echo "exec checkvisenchange.kumac" $x) | paw; done
+*  ******************************************************
+*  *                                                    *
+*  *            W E L C O M E    to   P A W             *
+*  *                                                    *
+*  *       Version 2.09/18      19 March 1998           *
+*  *                                                    *
+*  ******************************************************
+*  Workstation type (?=HELP) <CR>=1 :  Version 1.23/09 of HIGZ started
+*  *** Using default PAWLOGON file "/home/mccann/.pawlogon.kumac"
+
+*  Macro search order is Command
+* PAW > exec checkvisenchange.kumac all1
+*  2252 2
+*  1754 0
+*  Exiting from PAW.
+*  ******************************************************
+*  *                                                    *
+*  *            W E L C O M E    to   P A W             *
+*  *                                                    *
+*  *       Version 2.09/18      19 March 1998           *
+*  *                                                    *
+*  ******************************************************
+*  Workstation type (?=HELP) <CR>=1 :  Version 1.23/09 of HIGZ started
+*  *** Using default PAWLOGON file "/home/mccann/.pawlogon.kumac"
+
+*  Macro search order is Command
+* PAW > exec checkvisenchange.kumac all2
+*  8081 1
+*  6331 2
+*  Exiting from PAW.
+*  ******************************************************
+*  *                                                    *
+*  *            W E L C O M E    to   P A W             *
+*  *                                                    *
+*  *       Version 2.09/18      19 March 1998           *
+*  *                                                    *
+*  ******************************************************
+*  Workstation type (?=HELP) <CR>=1 :  Version 1.23/09 of HIGZ started
+*  *** Using default PAWLOGON file "/home/mccann/.pawlogon.kumac"
+
+*  Macro search order is Command
+* PAW > exec checkvisenchange.kumac all3
+*  11395 1
+*  9213 1
+*  Exiting from PAW.

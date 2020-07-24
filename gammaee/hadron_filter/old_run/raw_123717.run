@@ -1,0 +1,73 @@
+#!/usr/local/bin/tcsh
+
+cd $HOME/hadron_filter/run
+. /nfs/cleo3/scripts/cleo3defs
+c3rel cleo3_Pass2_Oct09_2001
+
+#  OSAGENT_PORT=31416
+#  export OSAGENT_PORT
+#  C3_CONST=/nfs/c3con/ccon3/constants/Codi
+#  export C3_CONST
+#  echo Using OSAGENT_PORT $OSAGENT_PORT and constants server $C3_CONST
+
+suez -q > $USER_TMP/raw_123717.log << EOF
+
+default prompt off
+exception continueEventLoop on
+
+module select LoadGeantModule
+module select LoadHbookModule
+module sel LoadHbook4MModule
+module sel HbookHistogramModule
+hbook file raw_123717.rzn
+hbook init
+
+# run_file \$env(C3_SCRIPTS)/getConstants.tcl
+module sel CorbaModule
+corba init
+module sel ConstantsModule
+constants in \$env(C3_CONST) meta Online
+constants in \$env(C3_CONST) meta Offline MetaListRetrieval
+constants in \$env(C3_CONST) meta CesrOffset MetaListRetrieval
+# constants in \$env(C3_CONST) meta RunByRun MetaListRetrieval
+constants in \$env(C3_CONST) meta BaseGeometry MetaListRetrieval
+constants in \$env(C3_CONST) meta SVHybridEfficiency MetaListRetrieval
+constants in \$env(C3_CONST) meta Alignment MetaListRetrieval
+# constants in \$env(C3_CONST) meta FieldMap MetaListRetrieval
+
+source_format sel AsciiSourceFormat
+file in \$env(C3_DATA)/material.asc basegeometry
+
+module sel RunStatisticsSourceModule
+runstatistics in
+
+prod select MuConsProd
+
+# source_format sel SVHybridEfficiencyFileSourceFormat
+# file in normal.svhybridefficiency
+
+run_file \$env(C3_SCRIPTS)/trackingDataFull.tcl
+
+run_file \$env(C3_SCRIPTS)/C3cc.tcl
+prod sel CcfcReconProd
+prod sel TrackShowerMatchingProd
+
+prod sel MutrReconProd
+prod sel MuConsProd
+run_file \$env(C3_SCRIPTS)/load_geometry_producers.tcl
+run_file \$env(C3_SCRIPTS)/load_dg_to_geant3_converter.tcl
+prod sel MagFieldProd
+prod sel RawDataProd
+prod sel DBRunHeaderProd
+
+prod sel DBEventHeaderProd
+
+source_format sel BinarySourceFormat
+file in ../dafedir/run_123717.bin event beginrun startrun endrun
+
+proc sel ../build_SunOS/shlib/Y3sHadronFilter.so
+
+go 10000
+exit
+
+EOF

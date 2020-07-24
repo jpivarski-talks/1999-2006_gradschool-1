@@ -1,0 +1,78 @@
+(Everything is double precision--- none of these are integers.)
+
+variable parameters with starting values:
+  area = 3.58
+  rmsbm = 4.48
+  back = 0.404
+  nov28 = -2.12
+  dec05 = -3.99
+  dec12 = -3.18
+  dec19 = -2.46
+  dec26 = -2.72
+  jan02 = -2.55
+  jan09 = -2.64
+
+(starting step sizes are all 0.1)
+
+fixed parameters:
+  fulgam = 0.0263
+  yint = 0.01823
+  phi = 0.
+  btt = 0.0239
+  tauint = 0.27
+  tauphi = 0.
+  ggfrac = 0.0792
+  u1area = 13.681922588
+  u2area = 5.7247399379
+
+The fit function(area, rmsbm, back, fulgam, yint, phi, btt, tauint, tauphi, ggfrac, u1area, u2area, w)
+where w is the energy (first column in file)
+
+        fitfun = 0.
+        fitfun = fitfun + area * 0.9708 * gbwkf(10355.2, fulgam, rmsbm, yint, phi, w-10355.2)
+        fitfun = fitfun + area * 0.578 * btt * taukf(10355.2, fulgam, rmsbm, tauint, tauphi, w-10355.2)
+        fitfun = fitfun + back * (1. - ggfrac) * 9000.**2 / w**2
+        fitfun = fitfun + back * ggfrac * log(w**2 / 9000.**2)
+        fitfun = fitfun + u1area * 0.076 / (w - 9460.3)
+        fitfun = fitfun + u2area * 0.076 / (w - 10023.26)
+	return fitfun
+
+The first two terms are calls to two different copies of gbwkf, one
+for hadrons and another for taus.  This is to account for the fact
+that taus have a different interference than hadrons.  (If the same
+gbwkf is called in succession, it will waste time re-initializing the
+Breit-Wigner with different interference terms.)  The last two terms
+simulate high-energy tails very far from the U(1S) and U(2S) (the
+0.076 factor comes from lining up the 1/E curve with the gbwkf output
+by eye).
+
+I don't know how you're going to implement reading the data points
+from files and keeping track of them, so I've left some of this as
+pseudocode.  The cross-section is the second line in the files, and
+the error is the third.  I found it convenient to split the chi^2
+calculation up into two functions:
+
+The chi^2 contribution function
+
+        function contrb(which_dataset, shift)
+        chi2 = 0.
+        for energy, crosssection, error in which_dataset
+            chi2 = chi2 + (fitfunction(all those parameters, energy + shift) - crosssection)**2 / error**2
+	endfor
+	return chi2
+
+The chi^2 function
+
+        chi2 = 0.
+	chi2 = chi2 + contrb("conthigh", 0.)
+	chi2 = chi2 + contrb("nov28", nov28)
+	chi2 = chi2 + contrb("dec05", dec05)
+	chi2 = chi2 + contrb("dec12", dec12)
+	chi2 = chi2 + contrb("dec19", dec19)
+	chi2 = chi2 + contrb("dec26", dec26)
+	chi2 = chi2 + contrb("jan02", jan02)
+	chi2 = chi2 + contrb("jan09", jan09)
+        return chi2
+
+This is the fit that gave me a factor of 2 difference between
+parabolic errors and MINOS errors.

@@ -1,0 +1,51 @@
+sigma scale0 = 1.6164+(3915.4*dp(1)-28.128*dp(2))/(-5156.7*dp(1)+10.019*dp(2)+dp(3))
+sigma scale1 = (0.018*(de(1)+dp(1))+0.0000486*dp(2)-6.5828e-6*dp(3))/(0.021*(de(1)+dp(1))-0.0000408*dp(2)-4.0724e-6*dp(3))
+sigma scale2 = (0.018*dp(1)+0.0000486*(de(2)+dp(2))-6.5828e-6*dp(3))/(0.021*dp(1)-0.0000408*(de(2)+dp(2))-4.0724e-6*dp(3))
+sigma scale3 = (0.018*dp(1)+0.0000486*dp(2)-6.5828e-6*(de(3)+dp(3)))/(0.021*dp(1)-0.0000408*dp(2)-4.0724e-6*(de(3)+dp(3)))
+
+nt/plot //data/UPSLNGMMEECSCDES/1.([1]) $1&&([2]) ! ! ! 'N' 200
+nt/plot //data/UPSLNGMMEECSCDES/1.([1]) $2&&([2]) ! ! ! 'N' 201
+
+h/delete 202
+h/cr/1d 202 'pass"H#, sideband-subtracted' 2 -0.5 1.5
+sub 200 201 202 1.0 $SIGMA(scale0) 'e'
+h/get_vect/contents 202 cont
+h/get_vect/errors 202 errs
+sigma a = cont(2)
+sigma ae = errs(2)
+sigma b = cont(1)
+sigma be = errs(1)
+message nominal     $SIGMA(a) +/- $SIGMA(ae), $SIGMA(b) +/- $SIGMA(be), $SIGMA(a/(a+b)*100.)% +/- $SIGMA(sqrt(ae**2*b**2+be**2*a**2)/(a+b)**2*100.)%
+
+h/delete 202
+h/cr/1d 202 'pass"H#, sideband-subtracted' 2 -0.5 1.5
+sub 200 201 202 1.0 $SIGMA(scale1) 'e'
+h/get_vect/contents 202 cont
+h/get_vect/errors 202 errs
+sigma a = cont(2)
+sigma ae = errs(2)
+sigma b = cont(1)
+sigma be = errs(1)
+message shiftconst  $SIGMA(a) +/- $SIGMA(ae), $SIGMA(b) +/- $SIGMA(be), $SIGMA(a/(a+b)*100.)% +/- $SIGMA(sqrt(ae**2*b**2+be**2*a**2)/(a+b)**2*100.)%
+
+h/delete 202
+h/cr/1d 202 'pass"H#, sideband-subtracted' 2 -0.5 1.5
+sub 200 201 202 1.0 $SIGMA(scale2) 'e'
+h/get_vect/contents 202 cont
+h/get_vect/errors 202 errs
+sigma a = cont(2)
+sigma ae = errs(2)
+sigma b = cont(1)
+sigma be = errs(1)
+message shiftlinear $SIGMA(a) +/- $SIGMA(ae), $SIGMA(b) +/- $SIGMA(be), $SIGMA(a/(a+b)*100.)% +/- $SIGMA(sqrt(ae**2*b**2+be**2*a**2)/(a+b)**2*100.)%
+
+h/delete 202
+h/cr/1d 202 'pass"H#, sideband-subtracted' 2 -0.5 1.5
+sub 200 201 202 1.0 $SIGMA(scale3) 'e'
+h/get_vect/contents 202 cont
+h/get_vect/errors 202 errs
+sigma a = cont(2)
+sigma ae = errs(2)
+sigma b = cont(1)
+sigma be = errs(1)
+message shiftquad   $SIGMA(a) +/- $SIGMA(ae), $SIGMA(b) +/- $SIGMA(be), $SIGMA(a/(a+b)*100.)% +/- $SIGMA(sqrt(ae**2*b**2+be**2*a**2)/(a+b)**2*100.)%

@@ -1,0 +1,15 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/peak1_125366.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/acceptance/run2/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_DB=19
+export USER_RUN=125366
+export USER_DIR=peak1
+
+suez -f make_index.tcl
+rm -f core

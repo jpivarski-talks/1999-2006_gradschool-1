@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title> Cleog and Geant calls by the MCResponseProd Producer </title>
+</head>
+
+<body>
+<h1> Cleog and Geant calls by the MCResponseProd Producer </h1>
+<ul>
+  <li> setup_geant_() <br>
+       called in the MCResponseProd constructor. <p>
+
+  <li> set_geant_run_() <br>
+       called by <code>MCResponseProd::updateCleogBeginRun</code> - tells
+       Geant what the run number is which is set by the Suez system. <p>
+       
+  <li> setup_kuip_() <br>
+       called by <code>MCResponseProd::updateCleogBeginRun</code> after
+       the geometry is created if the user has set the Suez run time
+       parameter <code>UseKuip true</code>.  The KUIP interface is
+       available to Geant/Cleog "experts".  Standard running of cleog
+       will not require KUIP and most users will only use the Suez
+       interface. <p>
+       
+  <li> cleog_update_br_() <br>
+       Cleog update begin run constants. <p>
+       
+  <li> usbrun_() <br>
+       Geant user begin run routine. <p>
+       
+  <li> cleog_trig_() <br>
+       Routine that triggers Geant for the event.  This replaces cgtrig
+       to avoid a name conflict. <p>
+       
+  <li> uglast_() <br>
+       Geant user end of job call, called in the MCResponseProd
+       destructor. <p>
+       
+  <li> paexit_() <br>
+       CERN routine to exit & cleanup from paw, called in the MCResponseProd destructor.
+
+</ul>
+
+
+
+
+
+
+<hr>
+<address><a href="http://w4.lns.cornell.edu/~jjo/">John O'Neill &lt;jjo@mail.lns.cornell.edu &gt;</a></address>
+<!-- hhmts start -->
+Last modified: Mon May  3 15:54:01 EDT 1999
+<!-- hhmts end -->
+</body> </html>

@@ -1,0 +1,1 @@
+(for x in ~/synthesis/lumilogs/gl_*.run.*; do fgrep "Bhabha P2Lum" $x | fgrep -v "P2LumiRun        0" | perl -ne 'print "bsbha[".substr($_,89,6)."] = ".substr($_,55,9)."\n"'; done) > bsbha.py

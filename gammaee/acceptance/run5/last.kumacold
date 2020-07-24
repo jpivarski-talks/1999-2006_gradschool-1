@@ -1,0 +1,27 @@
+*** Begin of history file: Tue Feb 15 16:48:09 2005
+exec /tmp/pawtmp-7215.kumac
+exec i_cant_believe 1 'Visible energy / center-of-mass energy' 60 0. 1.2 visen $1&&$2&&$3&&$4
+exec i_cant_believe_oh_plot_it_anyway 1
+exec i_cant_believe 1 'Visible energy / center-of-mass energy' 60 0. 1.2 visen $1&&$2&&$3
+exec i_cant_believe_oh_plot_it_anyway 1
+exec i_cant_believe 1 'Visible energy / center-of-mass energy' 60 0. 1.2 visen $1&&$2&&$3&&$4
+exec i_cant_believe_oh_plot_it_anyway 1
+ve/cr par(4)
+ve/inp par 48870. 0.12815 0.24769E-02 0.24769E-02
+h/fit 141(0.05:0.4) twog.f '0' 4 par
+h/plot 141
+h/fit 141(0.06:0.4) twog.f '0' 4 par
+h/plot 141
+h/fit 141(0.08:0.4) twog.f '0' 4 par
+h/plot 141
+h/fit 141(0.1:0.4) twog.f '0' 4 par
+h/plot 141
+message $HINFO(141,'SUM')
+ve/print par
+f/plot twog.f 0 1.2 's'
+message $SIGMA(twog.f(0.2))
+ve/print par
+dline 0.1 0.1 0 60000
+message $HINFO(141,'SUM')
+message $SIGMA((6703.99*55+(50000+20000+10000+5000))/610012)
+*** End   of history file: Tue Feb 15 17:03:05 2005

@@ -1,0 +1,169 @@
+% \documentclass[12pt]{article}
+\documentclass{cornell}
+\usepackage{amsmath}
+
+\usepackage[pdftex]{graphicx}
+%\usepackage{graphicx}
+
+\begin{document}
+
+\newcommand{\subs}[1]{{\mbox{\scriptsize #1}}}
+\newcommand{\inputfile}[1]{\noindent {\bf Filename: #1} \setlength{\baselineskip}{0 cm} \input{files/#1} \normalspacing \vspace{0.5 cm}}
+\newcommand{\inputfilenoname}[1]{\noindent \setlength{\baselineskip}{0 cm} \input{files/#1} \normalspacing \vspace{0.5 cm}}
+
+\newcommand{\dxy}{$d_{XY}$}
+\newcommand{\dz}{$d_Z$}
+\newcommand{\pone}{$|\vec{p}_1|$}
+\newcommand{\ptwo}{$|\vec{p}_2|$}
+\newcommand{\eone}{$E_1$}
+\newcommand{\etwo}{$E_2$}
+\newcommand{\ethree}{$E_3$}
+\newcommand{\eisr}{$E_{\mbox{\scriptsize ISR}}$}
+\newcommand{\visen}{$E_{\mbox{\scriptsize vis}}$}
+\newcommand{\hotvisen}{$E_{\mbox{\scriptsize vis}}^{\mbox{\scriptsize hot}}$}
+\newcommand{\lfourdec}{L4$_{\mbox{\scriptsize dec}}$}
+\newcommand{\pdotp}{$|\vec{p}_1\cdot\vec{p}_2|$}
+\newcommand{\ebeam}{$E_{\mbox{\scriptsize beam}}$}
+\newcommand{\ecom}{$E_{\mbox{\scriptsize COM}}$}
+\newcommand{\pz}{$\sum p_z$}
+
+\newcommand{\scosmic}{$s_{\mbox{\scriptsize cosmic}}$}
+
+\normalspacing
+\setcounter{page}{1}
+\pagenumbering{arabic}
+\pagestyle{cornellc}
+
+%% \tableofcontents
+
+%% \chapter{Introduction: $\Gamma_{ee}$ and Why it Matters}
+%% %% \input{intro.tex}
+
+%% \chapter{Experimental Technique}
+%% %% \input{experiment.tex}
+
+%% \chapter{Relevant Parts of the CLEO-III Detector}
+%% %% \input{detector.tex}
+
+%% \chapter{Event Selection Criteria} \label{chp:cuts}
+%% \input{cuts.tex}
+
+%% \chapter{Datasets, Scale Factors and Backgrounds} \label{chp:datasets}
+%% \input{datasets.tex}
+
+%% \chapter{Signal Monte Carlo}
+%% \input{mc.tex}
+
+%% \chapter{Upsilons from Di-Pion Cascades}
+%% \input{cascades.tex}
+
+%% \chapter{Trigger Efficiency}
+%% \input{trigger.tex}
+
+%% \chapter{Signal Efficiency}
+%% \input{efficiency.tex}
+
+%% \chapter{Search for Gamgam Backgrounds} \label{chp:gamgambkgnds}
+%% \input{gamgamback.tex}
+
+%% \chapter{Run-by-Run Dependence of Hadronic Cross-Section}
+%% \input{runbyrun.tex}
+
+\chapter{Lineshape Fitting}
+\input{fitting.tex}
+
+%% \chapter{Luminosity Calibration}
+%% %% \input{luminosity.tex}
+
+%% \chapter{Conclusion: the Value of $\Gamma_{ee}$}
+%% %% \input{conclusion.tex}
+
+%% \appendix
+
+%% \chapter{Files for Monte Carlo Generation} \label{chp:appendixmc}
+
+%% \section{User DECAY.DEC files}
+
+%% These tell the Monte Carlo what branching fractions to assume for
+%% each decay mode.
+
+%% \subsection{For Upsilon(1S)}
+
+%% \inputfile{y1ee.dec}
+%% \inputfile{y1mumu.dec}
+%% \inputfile{y1tautau.dec}
+%% \inputfile{y1ggg.dec}
+%% \inputfile{y1gggam.dec}
+%% \inputfile{y1qq.dec}
+
+%% \subsection{For Upsilon(2S)}
+
+%% The $e^+e^-$, $\mu^+\mu^-$, $\tau^+\tau^-$, $ggg$, $gg\gamma$, and
+%% $q\bar{q}$ decays are equivalent to those decays in the
+%% $\Upsilon(1S)$.
+
+%% \vspace{1 cm}
+%% \inputfile{y2scas.dec}
+%% \inputfile{y2pipi.dec}
+%% \inputfile{y2pho3.dec}
+
+%% \subsection{For Upsilon(3S)}
+
+%% The $e^+e^-$, $\mu^+\mu^-$, $\tau^+\tau^-$, $ggg$, $gg\gamma$, and
+%% $q\bar{q}$ decays are equivalent to those decays in the
+%% $\Upsilon(1S)$.
+
+%% \vspace{1 cm}
+%% \inputfile{y3scas.dec}
+%% \inputfile{y3pho3.dec}
+
+%% \section{TCL files}
+
+%% These control the Monte Carlo generation code.  The first,
+%% generate.tcl, is used to create physics 4-vectors with EvtGen (this is
+%% where hadronization takes place).  It was executed in a modern code
+%% release to have access to EvtGen.  The second, cleog.tcl, controls
+%% detector simulation, hit reconstruction and long-lived particle
+%% decays, and it was executed in the ``MC code releases'' listed in
+%% Table \ref{datasets:unfiltered}.  The third, mcpass2.tcl, reconstructs
+%% tracks and showers.
+
+%% \vspace{1 cm}
+%% \inputfile{generate.tcl}
+%% \inputfile{cleog.tcl}
+%% \inputfile{mcpass2.tcl}
+
+%% \chapter{Files for Data Processing} \label{chp:appendixdata}
+
+%% \section{Unfiltered data TCL}
+%% \inputfilenoname{rawdata.tcl}
+
+%% \section{Beam-gas TCL}
+%% \inputfilenoname{beamgas.tcl}
+
+%% \section{Cosmic Ray TCL}
+%% \inputfilenoname{cosmics.tcl}
+
+%% \chapter{References}
+
+%% \begin{enumerate}
+
+%%   \item \label{cite:inga} Inga's trigger track efficiency study
+%%   (private communications?)
+
+%%   \item \label{cite:istvan} Istvan's $\mathcal{B}_{\mu\mu}$ (CBX 04-19?
+%%   No!  I should use his published paper\ldots)
+
+%%   \item \label{cite:novoR} Z Phys C70 (1996) 31 Blinov
+
+%%   \item \label{cite:pdg} PDG 2004 (branching fractions)
+
+%%   \item \label{cite:pdgggg} PDG 2004 ($\Gamma_{gg\gamma}/\Gamma_{ggg}$)
+
+%%   \item \label{cite:cleoggg} PRG 55, 5273 B. Nemati (1997)
+
+%%   \item \label{cite:trackeff} I need to claim that track-finding efficiency is good to 2\%\ldots
+
+%% \end{enumerate}
+
+\end{document}

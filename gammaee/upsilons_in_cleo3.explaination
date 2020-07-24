@@ -1,0 +1,169 @@
+The file `/home/mccann/public_html/upsilons_in_cleo3.dat` (also to be
+found at http://www.lepp.cornell.edu/~mccann/upsilons_in_cleo3.dat)
+contains the following:
+
+RUNNUMBER   RESONANCE   BEAMENERGY   NUMBEROFUPSILONS   STATISTICALERROR
+
+where $1 RUNNUMBER         is the 6-digit run number
+      $2 RESONANCE         is 1, 2, or 3 for U(nS)--- including nearby off-resonance!
+      $3 BEAMENERGY        is the single-beam energy in GeV (~5)
+      $4 NUMBEROFUPSILONS  is the number of Upsilons that decayed during that run
+      $5 STATISTICALERROR  is the statistical error in the above number
+                           (I will discuss systematic error near the
+                            bottom of this document.)
+
+The number of Upsilons is efficiency corrected, so it represents the
+number of decays that happened, not the number that were seen in the
+detector.  It was calculated like this:
+
+(number of hadrons) -
+     (gg luminosity)/(continuum sample lumi) * (number of hadrons in continuum sample)
+                            * ((continuum energy) / (run energy))^2
+
+all divided by the hadronic efficiency (99.05%, 96.95%, 96.80% for 1S, 2S, 3S)
+
+all divided by (1 - 3 Bmumu)
+
+where Bmumu is the branching fraction to muons (all leptons, assuming
+lepton universality).  I use Istvan's new measurements:
+(2.49 +/- 0.07)% (1S),   (2.03 +/- 0.09)% (2S),   (2.39 +/- 0.12)% (3S)
+
+The gamma-gamma luminosity is used rather than bhabha because the
+RunInfo bhabha luminosity doesn't have Upsilon --> e+ e- subtracted
+off.  This makes a few percent difference as you pass through a large
+resonance, particularly the U(1S).  Gamma-gamma has a larger
+statistical error but at least it's unbiased.
+
+The list contains ALL runs in datasets 16, 17, 18, 19, 21, 22, 23, 25,
+and 27 with beam energy between 4.71 GeV and 5.205 GeV (that have been
+pass2'ed).  If you are looking for a run that isn't in the list, it
+has a way-wrong energy, and couldn't possibly contain any Upsilons
+(maybe it's a Lambda_b scan point).
+
+Some of the runs were used in the continuum subtraction mentioned
+above--- it would be statistically wrong to count Upsilons from them
+since the calculation of the number of Upsilons depends on them.
+Therefore, these entries in `upsilons_in_cleo3.dat' return 10^20 with
+-1 as an uncertainty to punish your job if you do so.  Hopefully, if
+you mistakenly include one of them, you will be puzzled by the results
+and find your error.  These runs make up the continuum sample, for the
+U(1S):
+
+123369 123370 123378 123380 123382 123565 123566 123567 123568 123569
+123570 123591 123592 123767 123768 123771 123772 123773 123774 123775
+123793 123794 123796 123800 123803 123809 123810 123811 123812 123813
+123814 123815 123816 123817 123818 123820 123938 123939 123941 123944
+123951 123952 123953 123955 123956 123958 123959 123960 123961 123962
+124113 124114 124115 124117 124121 124123 124125 124126 124127 124128
+124129 124132 124134 124137 124138 124139 124140 124141 124299 124300
+124301 124302 124309 124311 124312 124313 124314 124315 124318 124319
+124321 124322 124323 124324 124326 124454 124456 124458 124462 124464
+124465 124466 124467 124469 124472 124473 124475 124477 124644 124645
+124647 124648 124650 124651 124652 124655 124657 124658 124659 124660
+124663 124665 124667 124668 124807 124808 124809 124810 124812 124814
+124816 124820 125158 125159 125163 125166 125168 125169 125170 125171
+125175 125176 125177 125178 125297 125315
+
+and for the U(2S):
+
+126252 126253 126254 126255 126256 126257 126258 126259 126260 126263
+126265 126266 126268 126273 126471 126472 126473 126475 126476 126477
+126478 126479 126480 126483 126485 126487 126488 126490 126492 126494
+126651 126652 126653 126656 126657 126658 126662 126664 126665 126666
+126667 126668 126669 126670 126673 126832 126834 126835 126836 126837
+126838 126839 126842 126845 126846 126847 126851 126853 126854 126855
+126856 127417 127418 127420 127421 127422 127423 127424 127442 127443
+127444 127619 127620 127621 127622 127623 127625 127626 127627 127630
+127631 127635 127637 127638 127641 127642 127643 127644 127645 127646
+127647 127650 127651 127652 127654 127657 127659 127661 127662 127663
+127667 127668 127670 127673 127677 127678 127680 127681 127682 127683
+127684 127685 127690 127692 127694 127695 127698 127700 127701 127702
+127703 127710 127712 127721 127722 127723 127951 127955 128314 129065
+129066 129069 129070 129071 129072 129073 129080 129519 129522 129524
+129526 129527 129529 129531 129672 129673 129674 129675 129676 129678
+129680 129681 129685 129687 129689 129691 129692 129693 129707 129708
+129709 129710 129711 129712 129713 129714 129715 129716 129719 129723
+129724 129728 129730 129845 129847 129848 129849 129850 129851 129852
+129853 129855 129857 129860 129861 129863 129864 130199 130200 130203
+130204 130205 130206 130207 130209 130210 130247 130248 130249 130250
+130251 130252 130254 130255 130259 130271 130272 130275 130276 130278
+130420 130421 130423 130424 130425 130426 130427 130429 130460 130461
+130462 130463 130464 130467 130469 130470 130614 130616 130626 130628
+130629 130630
+
+and the U(3S):
+
+121899 121901 121902 121903 121904 121905 121906 121911 121912 121914
+121915 122064 122066 122080 122081 122083 122085 122091 122264 122268
+122269 122272 122273 122418 122420 122422 122423 122424 122425 122426
+122427 122428 122429 122430 122432 122433 122434 122585 122586 122587
+122590 122593 122594 122596 122599 122602 122603 122604 122605 122606
+122783 122786 122787 122789 122796 122797 122798 122799 122800 122801
+122802 122803 122804 122805 122808 122809 122810 123011 123012 123013
+123014 123016 123018 123019
+
+There are runs in `upsilons_in_cleo3.dat' which are significantly
+off-resonance (both above and below) which were NOT used in the
+continuum subtraction.  You are free to count Upsilons from these
+runs, though they are statistically consistent with zero.  If you want
+to restrict yourself to on-resonance runs in your analysis, here are
+some beam energy ranges to use.
+
+Widest reasonable ranges:
+   4.72625 -- 4.735 (1S)     5.009 -- 5.0165 (2S)    5.175 -- 5.184 (3S)
+(These will include a lot of scan points, down to about a quarter- or
+an eigth-maximum (meaning: well beyond half-maximum).  If you are
+worried about your final state interfereing with continuum processes,
+you may not want to leave the window so wide.)
+
+Peak energies:
+        4.73019 (1S)            5.01285 (2S)             5.1792 (3S)
+(You can decide for yourself how wide to make a window, but these are
+the centers of the peaks.  About 90% of the runs should be within an
+MeV or two of these.  Resonance-continuum interference passes through
+zero at the peak.)
+
+--- SYSTEMATIC ERRORS --- Systematic Errors --- systematic errors ---
+
+The continuum subtraction involves a sufficiently large block of runs
+that counting statistics of hadrons and gamma-gammas account for only
+a 0.1% error.
+
+Much bigger is the efficiency correction, which includes a 0.58%,
+0.77%, 0.81% error for U(1S), U(2S), and U(3S).  There's a CBX coming
+out on this measurement soon.  I made two physics assumtions: lepton
+universality (again), and I assumed there are no non-Standard Model
+Upsilon decays with more than 65% missing energy.  Depending on your
+analysis, you might differ with the second assumtion.  If you do,
+increase the efficiency uncertainties to 1.22%, 1.49%, and 2.03%.
+
+The gamma-gamma luminosity has a 2.5% systematic error, but it is only
+being used in ratios.  Jean Duboscq finds a scatter of at most 1.1%
+when continuum-subtracting tau events in data11, and since I'll be
+studying this thoroughly very soon, I will use this number as a
+systematic error right now.
+
+The Bmumu error is in the denominator, but when the error is
+propogated to the 1/(1-3B) factor which is multiplied to the result,
+the uncertainties in this factor are 0.25%, 0.31%, and 0.42%.  Before
+the efficiency correction, a small remnant of Upsilon --> tau+ tau-
+had to be subtracted (1.5% of the total).  The uncertainty in Bmumu
+was not counted twice.
+
+After cuts and continuum subtraction, 0.05% of the events are
+two-photon fusion (they don't scale as 1/s) and as a worst case,
++/-0.5% of the events are beam-gas, beam-wall, and cosmic rays.  The
+first background is ignored and the second is treated as a systematic
+error, as it may be positive or negative (there may have been more
+junk in the continuum subtraction than the on-resonance run).
+
+All the systematic errors added together are:
+
+             1.4% (1S)      1.5% (2S)      1.5% (3S)
+
+of the total number of Upsilons counted.
+
+When I typed this document, the date stamp on
+`/home/mccann/public_html/upsilons_in_cleo3.dat' was Jan 28 11:10
+(2005).  I have made it read-only for myself as well as the outside
+world.

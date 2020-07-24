@@ -1,0 +1,71 @@
+class HepSymMatrix {
+   public:
+      HepSymMatrix();
+      HepSymMatrix( HepSymMatrix& other );
+      ~HepSymMatrix();
+
+      void setval(int row, int col, double value);
+      double& operator()(int row, int col);
+      
+   private:
+      double m_val[5][5];
+};
+
+class KTHelix {
+   public:
+      enum ParameterOrder {
+	 kCurvature = 1,
+	 kPhi0,
+	 kD0,
+	 kCotTheta,
+	 kZ0
+      };
+
+      KTHelix( double aCurvature, double aPhi0, double aD0, double aCotTheta, double aZ0,
+	       HepSymMatrix& aErrorMatrix );
+
+      double curvature();
+      double phi0();
+      double d0();
+      double cotTheta();
+      double z0();
+      HepSymMatrix errorMatrix();
+
+   private:
+      double m_curvature;
+      double m_phi0;
+      double m_d0;
+      double m_cotTheta;
+      double m_z0;
+      HepSymMatrix m_errMatrix;
+};
+
+double sqr( double x );
+double abs( double x );
+
+int main ( int argc, char** argv );
+
+void event_vertex(
+   double& x, double& y, double& sig2x, double& sig2y, vector< KTHelix* >& helix );
+
+void average_others(
+   double& xothers, double& yothers, double& sig2xothers, double& sig2yothers, double& sig2xyothers,
+   vector< double >& xpoints, vector< double >& ypoints,
+   vector< double >& sig2xpoints, vector< double >& sig2ypoints, vector< double >& sig2xypoints,
+   int i, int length );
+
+double chi2separation( 
+   double xthis, double ythis, double sig2xthis, double sig2ythis, double sig2xythis,
+   double xothers, double yothers, double sig2xothers, double sig2yothers, double sig2xyothers );
+
+bool calc_intersection(
+   double& x, double& y, double& sig2x, double& sig2y, double& sig2xy,
+   KTHelix& a, KTHelix& b );
+
+bool calc_closest(
+   double& x, double& y, double& sig2x, double& sig2y, double& sig2xy,
+   KTHelix& a, KTHelix& b );
+
+void calc_errors(
+   double x, double y, double* dx_dcirc, double* dy_dcirc,
+   KTHelix& a, KTHelix& b, double& sig2x, double& sig2y, double& sig2xy );

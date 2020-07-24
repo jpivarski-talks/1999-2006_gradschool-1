@@ -1,0 +1,484 @@
+***************************************************************
+*
+* "t1had", "t1rad", "t1el", "t1tt",
+* "tracks", "visen", "ccen",
+* "p2", "e1",
+* "ci", "wz", "d0close", "z0close",
+* "run", "ebeam", "neue", "q",
+* "axial", "stereo", "cblo", "cbmd",
+* "rawtk", "pmiss", "tr1", "tr2", "trperp1", "trperp2", "e2",
+* "shperp", "shdot",
+* "l4dec", "l4tracks",
+* "mctype",
+* "wpz", "cotthp"
+*
+***************************************************************
+ 
+sigma mc16ld = 0
+sigma which = 1
+if $SIGMA(which).eq.1 then
+  exec load_all1.kumac
+  sigma ptobge = 0.775	 
+  sigma ptobgp = 0.807666
+  sigma ctobge = 0.578646
+  sigma ctobgp = 0.642509
+  sigma ma = 140209
+  sigma pa = 105060
+  sigma ca = 23000 
+  sigma mb = 2525  
+  sigma pb = 81188 
+  sigma cb = 65674 
+  sigma ptomc  = (pa - pb*ca/cb)/(ma - mb*ca/cb)
+  sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  sigma ptocup = (pa*1.5*mb/ma - pb)/(ca*1.5*mb/ma - cb)
+  sigma ptocdo = (pa*0.5*mb/ma - pb)/(ca*0.5*mb/ma - cb)
+  ve/cr ptocy(3)
+  ve/inp ptocy $SIGMA(ptocup) $SIGMA(ptoc) $SIGMA(ptocdo)
+  ve/cr ptomcy(3)
+  ve/inp ptomcy 0.551738 0.549987 0.548247
+  ve/cr cosy(3)
+  ve/inp cosy -0.230925 -0.22559 -0.220286
+endif
+if $SIGMA(which).eq.2 then
+  exec load_all2.kumac
+  sigma ptobge = 2.96563
+  sigma ptobgp = 8.58676
+  sigma ctobge = 2.39375
+  sigma ctobgp = 8.95192
+  sigma ma = 168282
+  sigma pa = 228821
+  sigma ca = 92612 
+  sigma mb = 2654	 
+  sigma pb = 306556
+  sigma cb = 252568
+  sigma ptomc  = (pa - pb*ca/cb)/(ma - mb*ca/cb)
+  sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  sigma ptocup = (pa*1.5*mb/ma - pb)/(ca*1.5*mb/ma - cb)
+  sigma ptocdo = (pa*0.5*mb/ma - pb)/(ca*0.5*mb/ma - cb)
+  ve/cr ptocy(3)
+  ve/inp ptocy $SIGMA(ptocup) $SIGMA(ptoc) $SIGMA(ptocdo)
+  ve/cr ptomcy(3) 0.697823 0.695797 0.693778
+  ve/inp ptomcy 
+  ve/cr cosy(3)
+  ve/inp cosy 0.189363 0.203774 0.218146
+endif
+if $SIGMA(which).eq.3 then
+  exec load_all3.kumac
+  sigma ptobge = 6.67031
+  sigma ptobgp = 10.3596
+  sigma ctobge = 5.41458
+  sigma ctobgp = 8.87526
+  sigma ma = 94296
+  sigma pa = 265640
+  sigma ca = 141741
+  sigma mb = 1464
+  sigma pb = 383254
+  sigma cb = 324028
+  sigma ptomc  = (pa - pb*ca/cb)/(ma - mb*ca/cb)
+  sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  sigma ptocup = (pa*1.5*mb/ma - pb)/(ca*1.5*mb/ma - cb)
+  sigma ptocdo = (pa*0.5*mb/ma - pb)/(ca*0.5*mb/ma - cb)
+  ve/cr ptocy(3)
+  ve/inp ptocy $SIGMA(ptocup) $SIGMA(ptoc) $SIGMA(ptocdo)
+  ve/cr ptomcy(3)
+  ve/inp ptomcy 1.04988 1.0463 1.04274
+  ve/cr cosy(3)
+  ve/inp cosy -1.16454 -1.1469 -1.12934
+endif
+nt/chain bge /home/mccann/acceptance/rzn5/bgneg.rzn
+nt/chain bgp /home/mccann/acceptance/rzn5/bgpos.rzn
+nt/chain cos /home/mccann/acceptance/rzn5/cosmic.rzn
+
+
+
+
+
+
+* opt sta
+* nt/plot //mc/cuts/1.tracks mctype>0&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+* message $HINFO(1000000,'ENTRIES')
+
+* message $SIGMA(137797/143361)
+* message $SIGMA(137728/143361)
+* message $SIGMA(115746/143361) 
+
+
+* nt/plot //mc/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&axial>1 ! ! ! ! 100
+* nt/plot //mc/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&axial>1 ! ! ! ! 101
+
+* nt/plot //peak/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1 ! ! ! ! 200
+* nt/plot //peak/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1 ! ! ! ! 201
+* nt/plot //cont/cuts/1.tracks $2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1 ! ! ! ! 300
+* nt/plot //cont/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6&&$8&&$9&&t1tt==1 ! ! ! ! 301
+
+* message $HINFO(201,'ENTRIES')
+* message $HINFO(301,'ENTRIES')
+* message $HINFO(200,'ENTRIES')
+* message $HINFO(300,'ENTRIES')
+
+
+
+
+
+* 1S  0.0256
+* 2S  0.0150
+* 3S  0.0181 or 0.0150 for tau
+
+* Analysis cuts
+nt/cuts $1 (t1had>0).or.(t1rad>0).or.(t1el>0)
+nt/cuts $2 abs(d0close)<0.005
+nt/cuts $3 e1<0.85
+nt/cuts $4 p2<0.85
+nt/cuts $5 (wz>800&&abs(z0close)<0.075).or.(wz<800&&abs(wz)<0.075)
+nt/cuts $6 visen>0.35
+nt/cuts $7 ccen<0.85
+nt/cuts $8 tracks>1
+nt/cuts $9 l4dec>0
+
+
+h/cr/1d 100 'tracks' 31 -0.5 30.5
+nt/plot //mc/cuts/1.tracks mctype>0 ! ! ! ! 100
+ve/cr vec(31)
+h/get_vect/contents 100 vec
+ve/print vec 0
+
+h/cr/2d 200 'tracks vs cblo' 31 -0.5 30.5 31 -0.5 30.5
+nt/plot //mc/cuts/1.tracks%cblo mctype>0 ! ! ! ! 200
+ve/cr cblo(31,31)
+h/get_vect/contents 200 cblo
+ve/print cblo 0
+
+h/cr/2d 300 'tracks vs cbmd' 31 -0.5 30.5 31 -0.5 30.5
+nt/plot //mc/cuts/1.tracks%cbmd mctype>0 ! ! ! ! 300
+ve/cr cbmd(31,31)
+h/get_vect/contents 300 cbmd
+ve/print cbmd 0
+
+h/cr/2d 400 'tracks vs axial' 31 -0.5 30.5 31 -0.5 30.5
+nt/plot //mc/cuts/1.tracks%axial mctype>0 ! ! ! ! 400
+ve/cr axial(31,31)
+h/get_vect/contents 400 axial
+ve/print axial 0
+
+h/cr/2d 500 'axial vs stereo' 31 -0.5 30.5 31 -0.5 30.5
+nt/plot //mc/cuts/1.axial%stereo mctype>0 ! ! ! ! 500
+ve/cr stereo(31,31)
+h/get_vect/contents 500 stereo
+ve/print stereo 0
+
+
+
+
+opt sta
+nt/plot //mc/cuts/1.axial mctype>0
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.axial mctype>0&&((axial>2&&cblo>0).or.(stereo>1&&(cblo>1.or.cbmd>0)).or.(axial>0&&cbmd>0))
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.axial mctype>0&&((axial-2>2&&cblo>0).or.(stereo-2>1&&(cblo>1.or.cbmd>0)).or.(axial-2>0&&cbmd>0))
+message $HINFO(1000000,'ENTRIES')
+
+ 143361
+ 142910
+ 137328
+
+message $SIGMA(142910/143361)
+message $SIGMA(137328/143361)
+
+
+
+
+
+sigma pre = 2000
+h/cr/1d $SIGMA(pre+01) 'Number of quality tracks' 19 -0.5 18.5
+h/cr/1d $SIGMA(pre+02) 'Number of quality tracks' 19 -0.5 18.5
+h/cr/1d $SIGMA(pre+03) 'Number of quality tracks' 19 -0.5 18.5
+h/cr/1d $SIGMA(pre+04) 'Number of quality tracks' 19 -0.5 18.5
+h/cr/1d $SIGMA(pre+05) 'Number of quality tracks' 19 -0.5 18.5
+h/cr/1d $SIGMA(pre+06) 'Number of quality tracks' 19 -0.5 18.5
+h/cr/1d $SIGMA(pre+07) 'Number of quality tracks' 19 -0.5 18.5
+h/cr/1d $SIGMA(pre+08) 'Number of quality tracks' 19 -0.5 18.5
+h/cr/1d $SIGMA(pre+09) 'Number of quality tracks' 19 -0.5 18.5
+nt/plot //mc/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+01)
+nt/plot //mc/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+02)
+nt/plot //mc/cuts/1.tracks (mctype>0.or.-35<mctype<-29)&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+09)
+nt/plot //peak/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+03)
+nt/plot //cont/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+04)
+nt/plot //bge/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+05)
+nt/plot //bgp/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+06)
+nt/plot //cos/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+07)
+sigma top = 0
+sigma bot = 0
+sigma left = 0
+sigma right = 0
+exec plot.kumac 19
+set ltyp 3
+dline 1.5 1.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+ve/cr p(19)
+ve/cr d(19)
+h/get_vect/contents $SIGMA(pre+52) p
+h/get_vect/contents $SIGMA(pre+10) d
+ve/print p(1:5)
+ve/print d(1:5)
+message $HINFO($SIGMA(pre+52),'SUM')
+message $HINFO($SIGMA(pre+10),'SUM')
+
+nt/plot //mc/cuts/1.tracks tracks>2&&$1
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks tracks>2
+message $HINFO(1000000,'ENTRIES')
+
+
+
+
+
+opt sta
+nt/plot //mc/cuts/1.tracks mctype>=50&&$1&&$2&&$3&&$4
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks mctype>=50
+message $HINFO(1000000,'ENTRIES')
+
+
+
+
+
+
+nt/plot //mc/cuts/1.tracks -32<=mctype<=-30&&$1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks -32<=mctype<=-30
+message $HINFO(1000000,'ENTRIES')
+
+nt/plot //mc/cuts/1.tracks -22<=mctype<=-20&&$1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks -22<=mctype<=-20
+message $HINFO(1000000,'ENTRIES')
+
+nt/plot //mc/cuts/1.tracks -12<=mctype<=-10&&$1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks -12<=mctype<=-10
+message $HINFO(1000000,'ENTRIES')
+
+
+
+
+
+
+
+opt sta
+
+nt/plot //mc/cuts/1.tracks mctype>0&&t1el>0&&abs(d0close)<0.005&&e1<0.6&&$5&&((t1had>0).or.(t1rad>0))
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks mctype>0&&t1el>0&&abs(d0close)<0.005&&e1<0.6&&$5
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks mctype<0&&t1el>0&&abs(d0close)<0.005&&e1<0.6&&$5&&((t1had>0).or.(t1rad>0))
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks mctype<0&&t1el>0&&abs(d0close)<0.005&&e1<0.6&&$5
+message $HINFO(1000000,'ENTRIES')
+
+nt/plot //peak/cuts/1.tracks t1el>0&&abs(d0close)<0.005&&e1<0.6&&$5&&((t1had>0).or.(t1rad>0))
+message $HINFO(1000000,'ENTRIES')
+nt/plot //peak/cuts/1.tracks t1el>0&&abs(d0close)<0.005&&e1<0.6&&$5
+message $HINFO(1000000,'ENTRIES')
+nt/plot //cont/cuts/1.tracks t1el>0&&abs(d0close)<0.005&&e1<0.6&&$5&&((t1had>0).or.(t1rad>0))
+message $HINFO(1000000,'ENTRIES')
+nt/plot //cont/cuts/1.tracks t1el>0&&abs(d0close)<0.005&&e1<0.6&&$5
+message $HINFO(1000000,'ENTRIES')
+
+nt/plot //bge/cuts/1.tracks t1el>0&&abs(d0close)<0.005&&e1<0.6&&$5&&((t1had>0).or.(t1rad>0))
+message $HINFO(1000000,'ENTRIES')
+nt/plot //bge/cuts/1.tracks t1el>0&&abs(d0close)<0.005&&e1<0.6&&$5
+message $HINFO(1000000,'ENTRIES')
+nt/plot //bgp/cuts/1.tracks t1el>0&&abs(d0close)<0.005&&e1<0.6&&$5&&((t1had>0).or.(t1rad>0))
+message $HINFO(1000000,'ENTRIES')
+nt/plot //bgp/cuts/1.tracks t1el>0&&abs(d0close)<0.005&&e1<0.6&&$5
+message $HINFO(1000000,'ENTRIES')
+nt/plot //cos/cuts/1.tracks t1el>0&&abs(d0close)<0.005&&e1<0.6&&$5&&((t1had>0).or.(t1rad>0))
+message $HINFO(1000000,'ENTRIES')
+nt/plot //cos/cuts/1.tracks t1el>0&&abs(d0close)<0.005&&e1<0.6&&$5
+message $HINFO(1000000,'ENTRIES')
+
+message $SIGMA(ptobge-ptoc*ctobge)
+message $SIGMA(ptobgp-ptoc*ctobgp)
+message $SIGMA(cosy(2))
+
+
+
+
+
+
+nt/plot //mc/cuts/1.stereo $1&&stereo>=2 37350
+
+
+nt/plot //mc/cuts/1.stereo mctype>0&&$1&&stereo<2
+nt/plot //mc/cuts/1.stereo mctype>0&&stereo<2
+
+nt/plot //mc/cuts/1.stereo mctype>0&&$1&&stereo>=2 37350
+nt/plot //mc/cuts/1.stereo mctype>0&&stereo>=2 37350
+
+nt/plot //mc/cuts/1.stereo mctype>0&&$1
+nt/plot //mc/cuts/1.stereo mctype>0
+
+
+
+
+nt/plot //peak/cuts/1.tracks t1el>0&&t1rad>0
+message $HINFO(1000000,'ENTRIES')
+nt/plot //peak/cuts/1.tracks t1el>0
+message $HINFO(1000000,'ENTRIES')
+nt/plot //cont/cuts/1.tracks t1el>0&&t1rad>0
+message $HINFO(1000000,'ENTRIES')
+nt/plot //cont/cuts/1.tracks t1el>0
+message $HINFO(1000000,'ENTRIES')
+
+nt/plot //mc/cuts/1.tracks mctype>0&&t1el>0&&t1rad>0
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks mctype>0&&t1el>0
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks mctype<0&&t1el>0&&t1rad>0
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks mctype<0&&t1el>0
+message $HINFO(1000000,'ENTRIES')
+
+
+
+
+
+
+
+opt sta
+nt/plot //peak/cuts/1.tracks t1el>0&&$2&&$3&&$4&&$5&&$6&&$7&&neue>0.35&&t1rad>0
+message $HINFO(1000000,'ENTRIES')
+nt/plot //peak/cuts/1.tracks t1el>0&&$2&&$3&&$4&&$5&&$6&&$7&&neue>0.35
+message $HINFO(1000000,'ENTRIES')
+
+nt/plot //cont/cuts/1.tracks t1el>0&&$2&&$3&&$4&&$5&&$6&&$7&&neue>0.35&&t1rad>0
+message $HINFO(1000000,'ENTRIES')
+nt/plot //cont/cuts/1.tracks t1el>0&&$2&&$3&&$4&&$5&&$6&&$7&&neue>0.35
+message $HINFO(1000000,'ENTRIES')
+
+message $SIGMA(ptoc) +/- $SIGMA((ptocup-ptocdo)/2)
+
+h/cr/1d 100 'stereo tracks with El-Track Trigger' 16 -0.5 15.5
+h/cr/1d 101 'stereo tracks with El-Track Trigger' 16 -0.5 15.5
+h/cr/1d 102 'stereo tracks with El-Track Trigger' 16 -0.5 15.5
+h/cr/1d 201 'stereo tracks with El-Track Trigger' 16 -0.5 15.5
+h/cr/1d 202 'stereo tracks with El-Track Trigger' 16 -0.5 15.5
+h/cr/1d 300 'stereo tracks with El-Track Trigger' 16 -0.5 15.5
+h/cr/1d 301 'stereo tracks with El-Track Trigger' 16 -0.5 15.5
+nt/plot //tpeak/triggeronlyproc/1.stereo t1el>0 ! ! ! ! 101
+nt/plot //tcont/triggeronlyproc/1.stereo t1el>0 ! ! ! ! 102
+sub 101 102 100 1. 1.1780 'e'
+nt/plot //mc/cuts/1.stereo mctype>0&&t1el>0 ! ! ! ! 201
+nt/plot //mc/cuts/1.stereo mctype<0&&t1el>0 ! ! ! ! 202
+sub 100 202 300 1. 0.97765 'e'
+sub 201 201 301 0.97765 0. 'e'
+h/plot 300
+h/plot 301 'shist'
+ve/cr data(16)
+ve/cr mcmc(16)
+h/get_vect/contents 300 data
+h/get_vect/contents 301 mcmc
+sigma dn = 0
+sigma mn = 0
+do i = 3, 16
+  sigma dn = dn + data([i])
+  sigma mn = mn + mcmc([i])
+enddo
+sigma dd = $HINFO(300,'SUM')
+sigma md = $HINFO(301,'SUM')
+message $SIGMA(dn/dd) $SIGMA(mn/md)
+set ltyp 2
+dline 1.5 1.5 0 $GRAFINFO('WNYMAX')
+pict/print 'eltrack_fails_3s.eps'
+
+
+
+sigma pre = 1800
+h/cr/1d $SIGMA(pre+01) 'Visible energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+02) 'Visible energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+03) 'Visible energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+04) 'Visible energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+05) 'Visible energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+06) 'Visible energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+07) 'Visible energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+08) 'Visible energy' 50 0. 1.25
+h/cr/1d $SIGMA(pre+09) 'Visible energy' 50 0. 1.25
+nt/plot //mc/cuts/1.visen $1&&$2&&$3&&$4&&$5 ! ! ! 'N' $SIGMA(pre+01)
+nt/plot //mc/cuts/1.visen mctype>0&&$1&&$2&&$3&&$4&&$5 ! ! ! 'N' $SIGMA(pre+02)
+nt/plot //mc/cuts/1.visen (mctype>0.or.-35<mctype<-29)&&$1&&$2&&$3&&$4&&$5 ! ! ! 'N' $SIGMA(pre+09)
+nt/plot //peak/cuts/1.visen $1&&$2&&$3&&$4&&$5 ! ! ! 'N' $SIGMA(pre+03)
+nt/plot //cont/cuts/1.visen $1&&$2&&$3&&$4&&$5 ! ! ! 'N' $SIGMA(pre+04)
+nt/plot //bge/cuts/1.visen $1&&$2&&$3&&$4&&$5 ! ! ! 'N' $SIGMA(pre+05)
+nt/plot //bgp/cuts/1.visen $1&&$2&&$3&&$4&&$5 ! ! ! 'N' $SIGMA(pre+06)
+nt/plot //cos/cuts/1.visen $1&&$2&&$3&&$4&&$5 ! ! ! 'N' $SIGMA(pre+07)
+sigma top = 0
+sigma bot = 0
+sigma left = 0
+sigma right = 0
+exec plot.kumac 50
+
+
+
+
+
+
+opt sta
+nt/plot //mc/cuts/1.tracks mctype>0&&t1el>0&&$2&&$3&&$4&&$5&&$6&&$7&&neue>0.35&&t1rad>0
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks mctype>0&&t1el>0&&$2&&$3&&$4&&$5&&$6&&$7&&neue>0.35
+message $HINFO(1000000,'ENTRIES')
+
+nt/plot //mc/cuts/1.tracks mctype<0&&t1el>0&&$2&&$3&&$4&&$5&&$6&&$7&&neue>0.35&&t1rad>0
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks mctype<0&&t1el>0&&$2&&$3&&$4&&$5&&$6&&$7&&neue>0.35
+message $HINFO(1000000,'ENTRIES')
+
+
+
+
+* cosmics (used to subtract cos from single-beam)
+nt/cut $20 0.04<abs(d0close)<0.1&&0.<=accen/2./ebeam<=0.2&&trperp1<-0.999
+nt/cut $30 !($2&&$5)&&$1&&$3&&$4&&$6&&$7&&$8&&$9&&$20
+* cosmics (used to scale cosmics for run-by-run)
+nt/cut $40 trperp1<-0.999&&0<=accen/2/ebeam<=0.2&&abs(z0close)>0.075
+nt/cut $50 $1&&$3&&$4&&(visen>0.02)&&$7&&$8&&$9&&$40
+* electrons
+nt/cut $21 abs(d0close)<0.02&&0.075<abs(wz)<0.4&&-0.9<trperp1<0.9&&wpz<-1.
+nt/cut $31 !($2&&$5)&&$1&&$3&&$4&&$6&&$7&&$8&&$9&&$21
+* positrons
+nt/cut $22 abs(d0close)<0.02&&0.075<abs(wz)<0.4&&-0.9<trperp1<0.9&&wpz>1.
+nt/cut $32 !($2&&$5)&&$1&&$3&&$4&&$6&&$7&&$8&&$9&&$22
+
+zone 1 3
+opt sta
+nt/plot //peak/cuts/1.rawtk $31
+nt/plot //peak/cuts/1.rawtk $32
+nt/plot //peak/cuts/1.rawtk $50
+
+
+
+
+
+opt sta
+nt/plot //mc/cuts/1.tracks mctype>0&&$1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks -32<=mctype<=-30&&$1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks -22<=mctype<=-20&&$1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks -12<=mctype<=-10&&$1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9
+message $HINFO(1000000,'ENTRIES')
+
+
+
+
+
+nt/plot //mc/cuts/1.tracks mctype>0&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&visen-neue>0.35&&t1tt==1&&$1
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks mctype>0&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&visen-neue>0.35&&t1tt==1
+message $HINFO(1000000,'ENTRIES')
+
+nt/plot //mc/cuts/1.tracks mctype<0&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&visen-neue>0.35&&t1tt==1&&$1
+message $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.tracks mctype<0&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9&&visen-neue>0.35&&t1tt==1
+message $HINFO(1000000,'ENTRIES')

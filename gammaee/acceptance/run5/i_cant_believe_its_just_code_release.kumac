@@ -1,0 +1,135 @@
+sigma which = 23
+if $SIGMA(which).eq.18 then
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db18.rzn
+  nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y1gggam_db18.rzn
+  nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y1ggg_db18.rzn
+  nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y1qq_db18.rzn
+  sigma ptobge = 0.775	 
+  sigma ptobgp = 0.807666
+  sigma ctobge = 0.578646
+  sigma ctobgp = 0.642509
+  sigma ma = 0.989625
+  sigma mb = 0.0183919
+  sigma pa = 116608
+  sigma ca = 32573
+  sigma pb = 81188 
+  sigma cb = 65674 
+endif
+if $SIGMA(which).eq.19 then
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db19.rzn
+  nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y1gggam_db19.rzn
+  nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y1ggg_db19.rzn
+  nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y1qq_db19.rzn
+  sigma ptobge = 0.775	 
+  sigma ptobgp = 0.807666
+  sigma ctobge = 0.578646
+  sigma ctobgp = 0.642509
+  sigma ma = 0.989625
+  sigma mb = 0.0183919
+  sigma pa = 116608
+  sigma ca = 32573
+  sigma pb = 81188 
+  sigma cb = 65674 
+endif
+if $SIGMA(which).eq.21 then
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db21.rzn
+  nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y2gggam_db21.rzn
+  nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y2ggg_db21.rzn
+  nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y2qq_db21.rzn
+  nt/chain mccas /home/mccann/acceptance/rzn5/ntuple_cas_db21.rzn
+  sigma ptobge = 2.96563
+  sigma ptobgp = 8.58676
+  sigma ctobge = 2.39375
+  sigma ctobgp = 8.95192
+  sigma ma = 0.955274
+  sigma mb = 0.0200853
+  sigma pa = 273574
+  sigma ca = 129549
+  sigma pb = 306556
+  sigma cb = 252568
+endif
+if $SIGMA(which).eq.23 then
+  nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db23.rzn
+  nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y2gggam_db23.rzn
+  nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y2ggg_db23.rzn
+  nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y2qq_db23.rzn
+  nt/chain mccas /home/mccann/acceptance/rzn5/ntuple_cas_db23.rzn
+  sigma ptobge = 2.96563
+  sigma ptobgp = 8.58676
+  sigma ctobge = 2.39375
+  sigma ctobgp = 8.95192
+  sigma ma = 0.955274
+  sigma mb = 0.0200853
+  sigma pa = 273574
+  sigma ca = 129549
+  sigma pb = 306556
+  sigma cb = 252568
+endif
+* if $SIGMA(which).eq.16 then
+*   nt/chain mc    /home/mccann/acceptance/rzn5/ntuple_db16.rzn
+*   nt/chain mcgam /home/mccann/acceptance/rzn5/ntuple_ldmc_y3gggam_db16.rzn
+*   nt/chain mcggg /home/mccann/acceptance/rzn5/ntuple_ldmc_y3ggg_db16.rzn
+*   nt/chain mcqq  /home/mccann/acceptance/rzn5/ntuple_ldmc_y3qq_db16.rzn
+*   nt/chain mccas /home/mccann/acceptance/rzn5/ntuple_cas_db16.rzn
+*   sigma ma = 0.954255
+*   sigma mb = 0.021645
+* endif
+* Analysis cuts
+nt/cuts $1 (t1had>0).or.(t1rad>0).or.(t1el>0)
+nt/cuts $2 abs(d0close)<0.005
+nt/cuts $3 e1<0.85
+nt/cuts $4 p2<0.85
+nt/cuts $5 (wz>800&&abs(z0close)<0.075).or.(wz<800&&abs(wz)<0.075)
+nt/cuts $6 visen>0.35
+nt/cuts $7 tracks>1
+nt/cuts $8 l4dec>0
+nt/cuts $9 ccen<0.85
+* Bhabha luminosity cuts
+nt/cuts $15 (rawtk>=2).and.(tracks<=4).and.(pmiss<0.2).and.(abs(2-tr1-tr2-pmiss)<0.2).and.(visen>0.75).and.(ccen>0.75).and.(abs(d0close)<0.005).and.(abs(z0close)<0.05)
+* MC cuts
+nt/cuts $10 nbunch<15&&bbunch<10
+nt/cuts $11 -12<=mctype<=-10
+nt/cuts $12 -22<=mctype<=-20
+nt/cuts $13 -32<=mctype<=-30
+nt/cuts $21 10<=mctype<=12
+nt/cuts $22 20<=mctype<=22
+nt/cuts $23 !$21&&!$22
+nt/plot //mcggg/cuts/1.mctype $10 ! ! ! 'N' 1000000
+sigma nmcggg = $HINFO(1000000,'ENTRIES')
+nt/plot //mcgam/cuts/1.mctype $10 ! ! ! 'N' 1000000
+sigma nmcgam = $HINFO(1000000,'ENTRIES')
+nt/plot //mcqq/cuts/1.mctype $10 ! ! ! 'N' 1000000
+sigma nmcqq = $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.mctype $10&&$11 ! ! ! 'N' 1000000
+sigma nmcee = $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.mctype $10&&$12 ! ! ! 'N' 1000000
+sigma nmcmm = $HINFO(1000000,'ENTRIES')
+nt/plot //mc/cuts/1.mctype $10&&$13 ! ! ! 'N' 1000000
+sigma nmctt = $HINFO(1000000,'ENTRIES')
+if $SIGMA(which).ne.1 then
+  nt/plot //mccas/cuts/1.mctype $10&&$21 ! ! ! 'N' 1000000
+  sigma nmccee = $HINFO(1000000,'ENTRIES')
+  nt/plot //mccas/cuts/1.mctype $10&&$22 ! ! ! 'N' 1000000
+  sigma nmccmm = $HINFO(1000000,'ENTRIES')
+  nt/plot //mccas/cuts/1.mctype $10&&$23 ! ! ! 'N' 1000000
+  sigma nmccas = $HINFO(1000000,'ENTRIES')
+endif
+exec i_cant_believe_scale_code_release 0 0 0 0 0 0 0 0 0 0
+
+exec i_cant_believe_code_release 1 'pass 1 - 6' 2 -0.5 1.5 $1&&$2&&$3&&$4&&$5&&$6 axial>-10
+ve/cr mcvec(2)
+ve/cr mcerr(2)
+h/get_vect/contents 154 mcvec
+h/get_vect/errors   154 mcerr
+sigma mceff = mcvec(2)/(mcvec(1)+mcvec(2))*100
+sigma mceer = sqrt(mcvec(2)**2*mcerr(1)**2+mcvec(1)**2*mcerr(2)**2)/(mcvec(1)+mcvec(2))**2*100
+message one through six $SIGMA(mceff) +/- $SIGMA(mceer) %
+
+exec i_cant_believe_code_release 2 'pass all' 2 -0.5 1.5 $1&&$2&&$3&&$4&&$5&&$6&&$7&&$8&&$9 axial>-10
+ve/cr mcvec(2)
+ve/cr mcerr(2)
+h/get_vect/contents 254 mcvec
+h/get_vect/errors   254 mcerr
+sigma mceff = mcvec(2)/(mcvec(1)+mcvec(2))*100
+sigma mceer = sqrt(mcvec(2)**2*mcerr(1)**2+mcvec(1)**2*mcerr(2)**2)/(mcvec(1)+mcvec(2))**2*100
+message all $SIGMA(mceff) +/- $SIGMA(mceer) %

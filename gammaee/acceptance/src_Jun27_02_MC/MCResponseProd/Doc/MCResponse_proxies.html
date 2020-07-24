@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title> MCResponse Proxies </title>
+</head>
+
+<body>
+<h1> What a MCxxResponseProxy Does </h1>
+
+Some general info on the MCxxResponseProxy proxies.  Each proxy holds a
+pointer to the MCResponseProd producer through which it calls the
+producer's methods.  The proxies are bindable proxies and are bound to
+the beginRun record to make sure that Cleog has the correct constants
+for this run number which is done via <code>updateBeginRun()</code>.
+<p>
+
+The MCxxResponseProxy.cc proxies are bindable proxies 
+inorder to update Cleog's begin run data.  The proxy's
+method <code>updateBeginRun()</code> are bound to the BeginRun stream; 
+this calls the MCResponseProd method
+<code>updateBeginRun()</code> to determines if Cleog's begin run
+data needs to be updated.
+<p>
+
+The proxy's method <code>invalidateCache()</code> calls the
+MCResponseProd producer method <code>invalidateGeantEvent()</code>
+which tells the producer we need to trigger Geant for the next event
+and deletes the ptrTable of the MCxxResponse objects.
+<p>
+
+
+The proxy's <code>faultHandler()</code> method determines if Geant needs
+to be triggered and then creates the MCResponse objects.  The proxy
+first calls the MCResponseProd method <code>triggerGeantEvent()</code>
+which triggers Geant for the event if needed.  Then the MC Responses are
+created for the event via a call to Fortran subroutine
+<code>mc_xx_reponses_()</code> for sub-detector xx.  The Fortran
+subroutines pass the MC Response info back to the C++ proxy using the
+"on-the-fly" or "bulk-insertion" method (see above) and the proxy
+creates the MCxxResponse objects.  This is illustrated by the
+diagram below.
+<p>
+<a href="mcresponse_geant.ps">
+<img alt="MCResponse diagram" src="mcresponse_geant.gif">
+</a>
+<br>
+The figures from xfig will not show correctly in ghostview but
+should print fine (although xfig isn't WYSIWYG so there might
+be minor problems).  
+<p>
+<br>
+
+
+
+
+
+
+<hr>
+<address><a href="http://w4.lns.cornell.edu/~jjo/">John O'Neill &lt;jjo@mail.lns.cornell.edu &gt;</a></address>
+
+$Id: MCResponse_proxies.html,v 1.2 1999/10/13 17:51:56 jjo Exp $
+<!-- 
+$Log: MCResponse_proxies.html,v $
+Revision 1.2  1999/10/13 17:51:56  jjo
+Update documentation
+
+Revision 1.1  1999/05/03 20:26:14  jjo
+Add/improve documentation
+
+
+-->
+
+<!-- hhmts start -->
+Last modified: Wed Oct 13 13:22:56 EDT 1999
+<!-- hhmts end -->
+</body> </html>

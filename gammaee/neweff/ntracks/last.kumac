@@ -1,0 +1,247 @@
+*** Begin of history file: Wed Jan 28 13:01:32 2004
+chain peak ../newrzn/y3s-dec13-01-peak.rzn ../newrzn/y3s-dec20-01-peak.rzn ../newrzn/y3s-nov29-01-peak.rzn
+chain cont ../newrzn/y3s-dec06-01-cont.rzn ../newrzn/y3s-dec13-01-cont.rzn ../newrzn/y3s-dec20-01-cont.rzn ../newrzn/y3s-dec25-01-cont.rzn ../newrzn/y3s-jan03-02-cont.rzn ../newrzn/y3s-jan10-02-cont.rzn ../newrzn/y3s-nov29-01-cont.rzn
+sigma pnum = 1533131
+sigma cnum = 555511
+sigma plum = 156898
+sigma clum = 93899.4
+sigma xs = pnum/plum - cnum/clum
+h/file 31 ../oldrzn/y3s-peak.rzn
+h/file 32 ../oldrzn/y3s-cont.rzn
+sigma hpnum = 62502
+sigma hcnum = 41704
+sigma hplum = 62502/(pnum/plum)
+sigma hclum = 41704/(cnum/clum)
+sigma hxs = hpnum/hplum - hcnum/hclum
+nt/chain mc ../oldrzn/mcres16_01.rzn ../oldrzn/mcres16_02.rzn ../oldrzn/mcres16_03.rzn ../oldrzn/mcres16_04.rzn ../oldrzn/mcres16_05.rzn ../oldrzn/mcres16_06.rzn ../oldrzn/mcres16_07.rzn ../oldrzn/mcres16_08.rzn ../oldrzn/mcres16_09.rzn ../oldrzn/mcres16_10.rzn ../oldrzn/mcres16_11.rzn ../oldrzn/mcres16_12.rzn ../oldrzn/mcres16_13.rzn ../oldrzn/mcres16_14.rzn ../oldrzn/mcres16_15.rzn ../oldrzn/mcres16_16.rzn ../oldrzn/mcres16_17.rzn ../oldrzn/mcres16_18.rzn ../oldrzn/mcres16_19.rzn ../oldrzn/mcres16_20.rzn ../oldrzn/mcres16_21.rzn ../oldrzn/mcres16_22.rzn ../oldrzn/mcres16_23.rzn ../oldrzn/mcres16_24.rzn ../oldrzn/mcres16_25.rzn ../oldrzn/mcres16_26.rzn ../oldrzn/mcres16_27.rzn ../oldrzn/mcres16_28.rzn ../oldrzn/mcres16_29.rzn ../oldrzn/mcres16_30.rzn ../oldrzn/mcres16_31.rzn ../oldrzn/mcres16_32.rzn ../oldrzn/mcres16_33.rzn ../oldrzn/mcres16_34.rzn ../oldrzn/mcres16_35.rzn ../oldrzn/mcres16_36.rzn ../oldrzn/mcres16_37.rzn
+sigma mcnum = 1666804
+sigma mclum = 1666804/(pnum/plum)
+sigma mcxs = mcnum/mclum
+nt/cuts $1 ((l5ccen/2/l5ebeam>0.15).and.((l5ccen/2/l5ebeam<0.75).or.(l5bigges/l5ebeam<0.75))).or.l5tracks>4
+h/cr/1d 101 'Visible Energy (ACBM and ntracks applied)' 60 0. 12.
+h/cr/1d 102 'Visible Energy (ACBM and ntracks applied)' 60 0. 12.
+h/cr/1d 103 'Visible Energy (ACBM and ntracks applied)' 60 0. 12.
+h/cr/1d 111 'Visible Energy (ACBM and ntracks applied)' 60 0. 12.
+h/cr/1d 112 'Visible Energy (ACBM and ntracks applied)' 60 0. 12.
+h/cr/1d 113 'Visible Energy (ACBM and ntracks applied)' 60 0. 12.
+h/cr/1d 123 'Visible Energy (ACBM and ntracks applied)' 60 0. 12.
+h/cr/1d 124 'Visible Energy (ACBM and ntracks applied)' 60 0. 12.
+nt/plot //peak/efficiency/1.l5visen (l5tracks>2).and.$1 ! ! ! 'N' 101
+nt/plot //cont/efficiency/1.l5visen (l5tracks>2).and.$1 ! ! ! 'N' 102
+nt/plot //lun31/efficiency/1.l5visen (l5tracks>2).and.$1 ! ! ! 'N' 111
+nt/plot //lun32/efficiency/1.l5visen (l5tracks>2).and.$1 ! ! ! 'N' 112
+nt/plot //mc/efficiency/1.l5visen (l5tracks>2).and.$1 ! ! ! 'N' 123
+sub 101 102 103 $SIGMA(100/plum/xs) $SIGMA(100/clum/xs) 'e'
+sub 111 112 113 $SIGMA(100/hplum/hxs) $SIGMA(100/hclum/hxs) 'e'
+add 123 123 124 $SIGMA(100/mcnum) 0. 'e'
+h/plot 103
+h/plot 113 's'
+h/plot 124 's'
+h/cr/1d 201 'Number of Tracks (ACBM and visibEn applied)' 17 -0.5 16.5
+h/cr/1d 202 'Number of Tracks (ACBM and visibEn applied)' 17 -0.5 16.5
+h/cr/1d 203 'Number of Tracks (ACBM and visibEn applied)' 17 -0.5 16.5
+h/cr/1d 211 'Number of Tracks (ACBM and visibEn applied)' 17 -0.5 16.5
+h/cr/1d 212 'Number of Tracks (ACBM and visibEn applied)' 17 -0.5 16.5
+h/cr/1d 213 'Number of Tracks (ACBM and visibEn applied)' 17 -0.5 16.5
+h/cr/1d 223 'Number of Tracks (ACBM and visibEn applied)' 17 -0.5 16.5
+h/cr/1d 224 'Number of Tracks (ACBM and visibEn applied)' 17 -0.5 16.5
+nt/plot //peak/efficiency/1.l5tracks (l5visen/2/l5ebeam>0.2).and.$1 ! ! ! 'N' 201
+nt/plot //cont/efficiency/1.l5tracks (l5visen/2/l5ebeam>0.2).and.$1 ! ! ! 'N' 202
+nt/plot //lun31/efficiency/1.l5tracks (l5visen/2/l5ebeam>0.2).and.$1 ! ! ! 'N' 211
+nt/plot //lun32/efficiency/1.l5tracks (l5visen/2/l5ebeam>0.2).and.$1 ! ! ! 'N' 212
+nt/plot //mc/efficiency/1.l5tracks (l5visen/2/l5ebeam>0.2).and.$1 ! ! ! 'N' 223
+sub 201 202 203 $SIGMA(100/plum/xs) $SIGMA(100/clum/xs) 'e'
+sub 211 212 213 $SIGMA(100/hplum/hxs) $SIGMA(100/hclum/hxs) 'e'
+sub 223 223 224 $SIGMA(100/mcnum) 0. 'e'
+h/plot 203
+h/plot 213 's'
+h/plot 224 's'
+h/plot 203
+h/plot 213 's'
+h/plot 224 'shist'
+h/plot 103
+h/plot 113 's'
+h/plot 124 'shist'
+message $SIGMA(xs) $SIGMA(hxs)
+h/plot 203
+h/plot 213 's'
+h/plot 224 'shist'
+dline 2.5 2.5 0 16
+dline 4.5 4.5 0 16
+h/plot 201
+h/plot 211 's'
+h/plot 211
+h/plot 201
+h/plot 211
+help normalize
+normalize 201 1
+normalize 211 1
+h/plot 201
+h/plot 211 's'
+normalize 201 1.2
+normalize 211 1
+h/plot 201
+h/plot 211 's'
+normalize 201 1.18
+normalize 211 1
+h/plot 201
+h/plot 211 's'
+normalize 201 1.15
+normalize 211 1
+h/plot 201
+h/plot 211 's'
+normalize 201 1.22
+normalize 211 1
+h/plot 201
+h/plot 211 's'
+normalize 201 1.24
+normalize 211 1
+h/plot 201
+h/plot 211 's'
+normalize 201 1.25
+normalize 211 1
+h/plot 201
+h/plot 211 's'
+normalize 202 1.25
+normalize 212 1
+h/plot 202
+h/plot 212 's'
+normalize 202 1.35
+normalize 212 1
+h/plot 202
+h/plot 212 's'
+normalize 202 1.5
+normalize 212 1
+h/plot 202
+h/plot 212 's'
+normalize 202 1.45
+normalize 212 1
+h/plot 202
+h/plot 212 's'
+opt sta
+set stat 1111111
+nt/plot //peak/efficiency/1.l5visen l5tracks>2.and.l5visen/2/l5ebeam>0.2.and.$1
+nt/plot //cont/efficiency/1.l5visen l5tracks>2.and.l5visen/2/l5ebeam>0.2.and.$1
+opt nsta
+sigma pnum = 1533131
+sigma cnum = 555511
+sigma plum = 156898
+sigma clum = 93899.4
+sigma xs = 1289559/plum - 405617/clum
+sigma hpnum = 62502
+sigma hcnum = 41704
+sigma hplum = 62502/(pnum/plum)
+sigma hclum = 41704/(cnum/clum)
+sigma hxs = hpnum/hplum - hcnum/hclum
+sigma mcnum = 1666804
+sigma mclum = 1666804/(pnum/plum)
+sigma mcxs = mcnum/mclum
+sub 101 102 103 $SIGMA(100/plum/xs) $SIGMA(100/clum/xs) 'e'
+sub 111 112 113 $SIGMA(100/hplum/hxs) $SIGMA(100/hclum/hxs) 'e'
+add 123 123 124 $SIGMA(100/mcnum) 0. 'e'
+h/plot 103
+h/plot 113 's'
+h/plot 124 'shist'
+sub 201 202 203 $SIGMA(100/plum/xs) $SIGMA(100/clum/xs) 'e'
+sub 211 212 213 $SIGMA(100/hplum/hxs) $SIGMA(100/hclum/hxs) 'e'
+sub 223 223 224 $SIGMA(100/mcnum) 0. 'e'
+h/plot 203
+h/plot 213 's'
+h/plot 224 'shist'
+message $SIGMA(xs) $SIGMA(hxs)
+sigma hplum = 62502/(1289559/plum)
+sigma hclum = 41704/(405617/clum)
+sigma hxs = hpnum/hplum - hcnum/hclum
+sigma mcnum = 1666804
+sigma mclum = 1666804/(pnum/plum)
+sigma mcxs = mcnum/mclum
+message $SIGMA(xs) $SIGMA(hxs)
+sub 201 202 203 $SIGMA(100/plum/xs) $SIGMA(100/clum/xs) 'e'
+sub 211 212 213 $SIGMA(100/hplum/hxs) $SIGMA(100/hclum/hxs) 'e'
+sub 223 223 224 $SIGMA(100/mcnum) 0. 'e'
+h/plot 203
+h/plot 213 's'
+h/plot 224 'shist'
+sub 101 102 103 $SIGMA(100/plum/xs) $SIGMA(100/clum/xs) 'e'
+sub 111 112 113 $SIGMA(100/hplum/hxs) $SIGMA(100/hclum/hxs) 'e'
+add 123 123 124 $SIGMA(100/mcnum) 0. 'e'
+h/plot 103
+h/plot 113 's'
+h/plot 124 'shist'
+h/plot 203
+h/plot 213 's'
+h/plot 224 'shist'
+h/plot 103
+h/plot 113 's'
+h/plot 124 'shist'
+pict/print 'visiben.ps'
+h/plot 203
+h/plot 213 's'
+h/plot 224 'shist'
+pict/print 'ntracks.ps'
+pict/print 'ntracks.ps'
+h/plot 103
+h/plot 113 's'
+h/plot 124 'shist'
+pict/print 'visiben.eps'
+h/plot 203
+h/plot 213 's'
+h/plot 224 'shist'
+pict/print 'ntracks.eps'
+opt sta
+h/plot 213
+h/plot 203
+h/plot 224
+exec /tmp/pawtmp-7215.kumac
+opt nsta
+exec /tmp/pawtmp-1550.kumac
+set ltyp 3
+dline 1.5 1.5 0 $GRAFINFO('WNYMAX')
+dline 7.5 7.5 0 $GRAFINFO('WNYMAX')
+dline 8.5 8.5 0 $GRAFINFO('WNYMAX')
+pict/print 'ccen.eps'
+exec /tmp/pawtmp-2647.kumac
+h/plot 403
+h/plot 413 's'
+h/plot 424 'shist'
+set ltyp 3
+dline $SIGMA(7.5/2) $SIGMA(7.5) 0 $GRAFINFO('WNYMAX')
+h/plot 403
+h/plot 413 's'
+h/plot 424 'shist'
+set ltyp 3
+dline $SIGMA(7.5/2) $SIGMA(7.5/2) 0 $GRAFINFO('WNYMAX')
+dline $SIGMA(8.5/2) $SIGMA(8.5/2) 0 $GRAFINFO('WNYMAX')
+pict/print 'biggestsh.eps'
+h/plot 203
+h/plot 213 's'
+h/plot 224 'shist'
+set ltyp 3
+dline 1.5 1.5 0 $GRAFINFO('WNYMAX')
+dline 2.5 2.5 0 $GRAFINFO('WNYMAX')
+pict/print 'ntracks.eps'
+h/plot 103
+h/plot 113 's'
+h/plot 124 'shist'
+set ltyp 3
+dline 2. 2. 0 $GRAFINFO('WNYMAX')
+pict/print 'visiben.eps'
+nt/print //mc/efficiency/1
+nt/cuts $2 abs(l6z)<0.05
+exec /tmp/pawtmp-3875.kumac
+exec /tmp/pawtmp-2931.kumac
+h/plot 203
+h/plot 213 's'
+h/plot 224 'shist'
+set ltyp 3
+dline 1.5 1.5 0 $GRAFINFO('WNYMAX')
+dline 2.5 2.5 0 $GRAFINFO('WNYMAX')
+h/plot 203
+h/plot 213 's'
+h/plot 224 'shist'
+set ltyp 3
+dline 1.5 1.5 0 $GRAFINFO('WNYMAX')
+dline 2.5 2.5 0 $GRAFINFO('WNYMAX')
+pict/print 'ntracks_bgcut.eps'
+exit
+*** End   of history file: Thu Jan 29 16:54:56 2004

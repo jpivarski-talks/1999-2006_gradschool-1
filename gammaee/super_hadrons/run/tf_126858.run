@@ -1,0 +1,15 @@
+#$ -l calibration
+#$ -o /cdat/tem/mccann/tf_126858.out
+#$ -S /bin/bash
+#$ -j y
+
+USER_DB=21
+export USER_DB
+USER_RUN=126858
+export USER_RUN
+
+cd /home/mccann/super_hadrons/run
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Nov04_02_P2
+
+suez -f test_factor.tcl > /cdat/tem/mccann/tf_126858.log

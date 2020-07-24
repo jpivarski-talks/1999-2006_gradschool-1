@@ -1,0 +1,29 @@
+sigma mc16ld = 0
+* exec load_all1.kumac
+* exec load_all2.kumac
+exec load_all3.kumac
+
+nt/cuts $1 (t1had>0).or.(t1rad>0).or.(t1el>0)
+nt/cuts $2 abs(d0close)<0.005
+nt/cuts $3 e1<0.85
+nt/cuts $4 p2<0.85
+nt/cuts $5 (wz>800&&abs(z0close)<0.075).or.(wz<800&&abs(wz)<0.075)
+nt/cuts $6 visen>0.35
+nt/cuts $7 ccen<0.85
+nt/cuts $8 tracks>1
+nt/cuts $9 l4dec>0
+
+opt sta
+nt/plot //mc/cuts/1.d0close mctype>0&&$1
+nt/plot //mc/cuts/1.d0close mctype>0&&$1&&abs(d0close)<0.002
+nt/plot //mc/cuts/1.d0close mctype>0&&$1&&abs(d0close)<0.005
+
+nt/plot //mc/cuts/1.e1 mctype>0&&$1&&$2
+nt/plot //mc/cuts/1.e1 mctype>0&&$1&&$2&&e1<0.7
+nt/plot //mc/cuts/1.e1 mctype>0&&$1&&$2&&e1<0.85
+nt/plot //mc/cuts/1.e1 mctype>0&&$1&&$2&&e1<1
+
+nt/plot //mc/cuts/1.p2 mctype>0&&$1&&$2&&$3
+nt/plot //mc/cuts/1.p2 mctype>0&&$1&&$2&&$3&&p2<0.7
+nt/plot //mc/cuts/1.p2 mctype>0&&$1&&$2&&$3&&p2<0.85
+nt/plot //mc/cuts/1.p2 mctype>0&&$1&&$2&&$3&&p2<1

@@ -1,0 +1,61 @@
+#!/bin/csh
+#-----------------------------------------------------------------------
+#
+# UNIX script file to run a job to create 4-vectors using QQ
+#
+# The user needs to "setenv" the environment variables
+#
+#-----------------------------------------------------------------------
+# working area 
+setenv MYWORKAREA $1 
+# control file and path
+setenv MYCTR $2
+# run number to generate
+setenv MYRUNNUMBER $3
+# number of events to generate
+setenv MYNEVT $4 
+
+# use dlib
+set CLIB=dlib 
+source /usr/local/bin/cleodef
+c3rel data19_MC
+
+setenv C_RUNFIL_ORIG ${C_RUNFIL}
+setenv C_RUNFIL ${MYWORKAREA}/runfil
+
+if (! -e ${MYWORKAREA}/runfil ) then
+   mkdir ${MYWORKAREA}/runfil
+endif
+
+ln -fs $C_RUNFIL_ORIG/cleoii.ini $C_RUNFIL/cleoii.ini
+ln -fs $C_RUNFIL_ORIG/decay.evt $C_RUNFIL/decay.evt
+#ln -fs $C_RUNFIL_ORIG/decay.dec $C_RUNFIL/decay.dec
+#ln -fs $C_RUNFIL_ORIG/ldecay.tab $C_RUNFIL/ldecay.tab
+ln -fs $C_RUNFIL_ORIG/dvseq.ini $C_RUNFIL/dvseq.ini
+
+setenv  TMPRUN `expr $MYRUNNUMBER - 1 `
+echo "   " $TMPRUN > $C_RUNFIL/qqseq.ini
+unsetenv TMPRUN
+
+cat << QQINT
+#######################################################
+#                Starting   QQ                        #
+#######################################################
+       
+  QQ control file    : $MYCTR
+  Output file        : qq_${MYRUNNUMBER}_nofsr.rp
+  Using runfil area  : $C_RUNFIL
+
+  Produce $MYNEVT total events
+
+#######################################################
+QQINT
+${C_EXE}/qq<<End_qq
+$MYCTR
+datadisk out qq_${MYRUNNUMBER}_nofsr.rp
+write single
+maxevt ${MYNEVT}
+go
+exit
+End_qq
+exit

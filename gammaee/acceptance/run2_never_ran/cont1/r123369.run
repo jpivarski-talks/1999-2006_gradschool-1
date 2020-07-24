@@ -1,0 +1,15 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/cont1_123369.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/acceptance/run2/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_DB=18
+export USER_RUN=123369
+export USER_DIR=cont1
+
+suez -f make_index.tcl
+rm -f core

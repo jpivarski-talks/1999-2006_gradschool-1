@@ -1,0 +1,853 @@
+%!PS-Adobe-1.0
+/$a2psdict 100 dict def
+$a2psdict begin
+% Initialize page description variables.
+/inch {72 mul} bind def
+/landscape false def
+/twinpage false def
+/sheetheight 11 inch def
+/sheetwidth 8.5 inch def
+/margin 1.2 inch def
+/noborder true def
+/noheader true def
+/headersize 0.0 def
+/bodyfontsize 9 def
+/lines 77 def
+/columns 96 def
+/date (Mar 17 2005 15:29:06) def
+%!  PostScript Source Code
+%
+%  File: imag:/users/local/a2ps/header.ps
+%  Created: Tue Nov 29 12:14:02 1988 by miguel@imag (Miguel Santana)
+%  Version: 2.0
+%  Description: PostScript prolog for a2ps ascii to PostScript program.
+% 
+%  Edit History:
+%  - Original version by evan@csli (Evan Kirshenbaum).
+%  - Modified by miguel@imag to:
+%    1) Correct an overflow bug when printing page number 10 (operator
+%	cvs).
+%    2) Define two other variables (sheetwidth, sheetheight) describing
+%	the physical page (by default A4 format).
+%    3) Minor changes (reorganization, comments, etc).
+%  - Modified by tullemans@apolloway.prl.philips.nl
+%    1) Correct stack overflows with regard to operators cvs and copy.
+%       The resulting substrings where in some cases not popped off 
+%       the stack, what can result in a stack overflow.
+%    2) Replaced copypage and erasepage by showpage. Page througput
+%       degrades severely (see red book page 140) on our ps-printer
+%       after printing sheet 16 (i.e. page 8) of a file which was 
+%       actually bigger. For this purpose the definitions of startdoc
+%       and startpage are changed.
+%  - Modified by Tim Clark <T.Clark@uk.ac.warwick> to:
+%    1) Print one page per sheet (portrait) as an option.
+%    2) Reduce size of file name heading, if it's too big.
+%    3) Save and restore PostScript state at begining/end. It now uses
+%	conventional %%Page %%Trailer markers.
+%    4) Print one wide page per sheet in landscape mode as an option.
+%  - Modified by miguel@imag.fr to
+%    1) Add new option to print n copies of a file.
+%    2) Add new option to suppress heading printing.
+%    3) Add new option to suppress page surrounding border printing.
+%    4) Add new option to change font size. Number of lines and columns
+%	are now automatically adjusted, depending on font size and
+%	printing mode used.
+%    5) Minor changes (best layout, usage message, etc).
+%
+
+% Copyright (c) 1988, Miguel Santana, miguel@imag.imag.fr
+%
+% Permission is granted to copy and distribute this file in modified
+% or unmodified form, for noncommercial use, provided (a) this copyright
+% notice is preserved, (b) no attempt is made to restrict redistribution
+% of this file, and (c) this file is not distributed as part of any
+% collection whose redistribution is restricted by a compilation copyright.
+%
+
+
+% General macros.
+/xdef {exch def} bind def
+/getfont {exch findfont exch scalefont} bind def
+
+% Page description variables and inch function are defined by a2ps program.
+
+% Character size for differents fonts.
+   landscape
+   { /filenamefontsize 12 def }
+   { /filenamefontsize 16 def }
+ifelse
+/datefontsize filenamefontsize 0.8 mul def
+/headermargin filenamefontsize 0.25 mul def
+/bodymargin bodyfontsize 0.7 mul def
+
+% Font assignment to differents kinds of "objects"
+/filenamefontname /Helvetica-Bold def
+/stdfilenamefont filenamefontname filenamefontsize getfont def
+/datefont /Helvetica datefontsize getfont def
+/bodyfont /Courier bodyfontsize getfont def
+
+% Logical page attributs (a half of a real page or sheet).
+/pagewidth
+   bodyfont setfont (0) stringwidth pop columns mul bodymargin dup add add
+   def
+/pageheight
+   bodyfontsize lines mul bodymargin dup add add headersize add
+   def
+
+% Coordinates for upper corner of a logical page and for sheet number.
+% Coordinates depend on format mode used.
+% In twinpage mode, coordinate x of upper corner is not the same for left
+% and right pages: upperx is an array of two elements, indexed by sheetside.
+/rightmargin margin 3 div def
+/leftmargin margin 2 mul 3 div def
+/topmargin margin twinpage {3} {2} ifelse div def
+landscape
+{  % Landscape format
+   /uppery rightmargin pageheight add bodymargin add def
+   /sheetnumbery sheetwidth leftmargin pageheight add datefontsize add sub def
+   twinpage
+   {  % Two logical pages
+      /upperx [ topmargin			% upperx for left page
+		dup 2 mul pagewidth add		% upperx for right page
+	      ] def
+      /sheetnumberx sheetheight topmargin sub def
+   }
+   {  /upperx [ topmargin dup ] def
+      /sheetnumberx sheetheight topmargin sub datefontsize sub def
+   }
+   ifelse
+}
+{  % Portrait format
+   /uppery topmargin pageheight add def
+   /upperx [ leftmargin dup ] def
+   /sheetnumberx sheetwidth rightmargin sub datefontsize sub def
+   /sheetnumbery
+	 sheetheight 
+	 topmargin pageheight add datefontsize add headermargin add
+      sub
+      def
+
+}
+ifelse
+
+% Strings used to make easy printing numbers
+/pnum 12 string def
+/empty 12 string def
+
+% Other initializations.
+/datewidth date stringwidth pop def
+/filenameroom
+         pagewidth
+	 filenamefontsize 4 mul datewidth add (Page 999) stringwidth pop add
+      sub
+   def
+
+
+% Function startdoc: initializes printer and global variables.
+/startdoc
+    { /sheetside 0 def			% sheet side that contains current page
+      /sheet 1 def			% sheet number
+   } bind def
+
+% Function newfile: init file name and reset page number for each new file.
+/newfile
+    { cleanup
+      /filename xdef
+      /filenamewidth filename stringwidth pop def
+      /filenamefont
+	 filenamewidth filenameroom gt
+	 {
+	       filenamefontname
+	       filenamefontsize filenameroom mul filenamewidth div
+	    getfont
+	 }
+	 {  stdfilenamefont }
+	 ifelse
+	 def
+      /pagenum 1 def
+    } bind def
+
+% Function printpage: Print a physical page.
+/printpage
+    { /sheetside 0 def
+      twinpage
+      {  noborder not
+	    { sheetnumber }
+	 if
+      }
+      {  noheader noborder not and
+	    { sheetnumber }
+	 if
+      }
+      ifelse
+      showpage 
+%      pagesave restore
+      /sheet sheet 1 add def
+    } bind def
+
+% Function cleanup: terminates printing, flushing last page if necessary.
+/cleanup
+    { twinpage sheetside 1 eq and
+         { printpage }
+      if
+    } bind def
+
+%
+% Function startpage: prints page header and page border and initializes
+% printing of the file lines.
+/startpage
+    { sheetside 0 eq
+	{ % /pagesave save def
+	  landscape
+	    { sheetwidth 0 inch translate	% new coordinates system origin
+	      90 rotate				% landscape format
+	    } if
+	} if
+      noborder not { printborder } if
+      noheader not { printheader } if
+	 upperx sheetside get  bodymargin  add
+	    uppery
+	    bodymargin bodyfontsize add  noheader {0} {headersize} ifelse  add
+	 sub
+      moveto
+      bodyfont setfont
+    } bind def
+
+% Function printheader: prints page header.
+/printheader
+    { upperx sheetside get  uppery headersize sub 1 add  moveto
+      datefont setfont
+      gsave
+        datefontsize headermargin rmoveto
+	date show					% date/hour
+      grestore
+      gsave
+	pagenum pnum cvs pop
+	   pagewidth (Page 999) stringwidth pop sub
+	   headermargin
+	rmoveto
+        (Page ) show pnum show				% page number
+      grestore
+      empty pnum copy pop
+      gsave
+        filenamefont setfont
+	      filenameroom filename stringwidth pop sub 2 div datewidth add
+	      bodymargin 2 mul 
+	   add 
+	   headermargin
+	rmoveto
+        filename show						% file name
+      grestore
+    } bind def
+
+% Function printborder: prints border page.
+/printborder 
+    { upperx sheetside get uppery moveto
+      gsave					% print the four sides
+        pagewidth 0 rlineto			% of the square
+        0 pageheight neg rlineto
+        pagewidth neg 0 rlineto
+        closepath stroke
+      grestore
+      noheader not
+         { 0 headersize neg rmoveto pagewidth 0 rlineto stroke }
+      if
+    } bind def
+
+%
+% Function endpage: adds a sheet number to the page (footnote) and prints
+% the formatted page (physical impression). Activated at the end of each
+% source page (lines reached or FF character).
+/endpage
+   { /pagenum pagenum 1 add def
+     twinpage  sheetside 0 eq  and
+        { /sheetside 1 def }
+        { printpage }
+     ifelse
+   } bind def
+
+% Function sheetnumber: prints the sheet number.
+/sheetnumber
+    { sheetnumberx sheetnumbery moveto
+      datefont setfont
+      sheet pnum cvs
+	 dup stringwidth pop (0) stringwidth pop sub neg 0 rmoveto show
+      empty pnum copy pop
+    } bind def
+
+% Function s: print a source line
+/s  { gsave
+        show
+      grestore
+      0 bodyfontsize neg rmoveto
+    } bind def
+%%EndProlog
+
+/docsave save def
+startdoc
+(fixup_2s.log) newfile
+/sheet 1 def
+%%Page: 1 1
+startpage
+( THESE ARE THE 2S CORRECTIONS!!!!) s
+( ) s
+(  trigger only) s
+(  nominal MC: 99.6126 +/- 0.024015 %) s
+(  +bmm: 0.00160217 %) s
+(  -bmm: -0.00158691 %) s
+(  +arr: 0.000770569 %) s
+(  -arr: -0.000770569 %) s
+(  +gag: 0.00270844 %) s
+(  -gag: -0.00270081 %) s
+(  +bca: 0.00205994 %) s
+(  -bca: -0.00205231 %) s
+(  +bcm: 0.0091629 %) s
+(  -bcm: 0.0091629 %) s
+(  nominal data: 96.9918 +/- 0.660187 %) s
+(  +ptoc: -0.399353 %) s
+(  -ptoc: 0.38221 %) s
+(  +bge: 0.00202942 %) s
+(  -bge: -0.00201416 %) s
+(  +bgp: 0.0891876 %) s
+(  -bgp: -0.0898895 %) s
+(  +cos: -0.349022 %) s
+(  -cos: 0.340118 %) s
+(  +ptomc: -0.00720978 %) s
+(  -ptomc: 0.00719452 %) s
+(  +bmm: -0.0381699 %) s
+(  -bmm: 0.0379562 %) s
+( ) s
+(  d0close given previous wiggled up to 2 mm) s
+(  nominal MC: 99.9372 +/- 0.00801364 %) s
+(  +bmm: 0.00012207 %) s
+(  -bmm: -0.00012207 %) s
+(  +arr: 0.00012207 %) s
+(  -arr: -0.00012207 %) s
+(  +gag: 0.00130463 %) s
+(  -gag: -0.001297 %) s
+(  +bca: -0.000335693 %) s
+(  -bca: 0.000328064 %) s
+(  +bcm: -5.34058E-05 %) s
+(  -bcm: -5.34058E-05 %) s
+(  nominal data: 99.8363 +/- 0.676151 %) s
+(  +ptoc: -0.00826263 %) s
+(  -ptoc: 0.00809479 %) s
+(  +bge: -0.0170059 %) s
+(  -bge: 0.0170517 %) s
+(  +bgp: 0.227417 %) s
+(  -bgp: -0.228745 %) s
+(  +cos: -0.906334 %) s
+(  -cos: 0.889511 %) s
+(  +ptomc: 7.62939E-06 %) s
+(  -ptomc: -2.28882E-05 %) s
+(  +bmm: -0.121155 %) s
+(  -bmm: 0.120712 %) s
+( ) s
+(  d0close given previous) s
+(  nominal MC: 99.9729 +/- 0.005299 %) s
+(  +bmm: 6.86646E-05 %) s
+(  -bmm: -6.10352E-05 %) s
+(  +arr: 6.10352E-05 %) s
+(  -arr: -6.10352E-05 %) s
+(  +gag: 0.000579834 %) s
+(  -gag: -0.000579834 %) s
+(  +bca: -8.39233E-05 %) s
+(  -bca: 9.15527E-05 %) s
+(  +bcm: -1.52588E-05 %) s
+(  -bcm: -1.52588E-05 %) s
+(  nominal data: 100.116 +/- 0.634297 %) s
+(  +ptoc: -0.0149155 %) s
+(  -ptoc: 0.0144958 %) s
+(  +bge: -0.011528 %) s
+(  -bge: 0.0115738 %) s
+(  +bgp: 0.151016 %) s
+(  -bgp: -0.151894 %) s
+(  +cos: -0.863159 %) s
+(  -cos: 0.847145 %) s
+(  +ptomc: -6.10352E-05 %) s
+(  -ptomc: 6.10352E-05 %) s
+endpage
+%%Page: 2 2
+startpage
+(  +bmm: -0.114807 %) s
+(  -bmm: 0.114418 %) s
+( ) s
+(  e1 given previous) s
+(  nominal MC: 98.7009 +/- 0.0427978 %) s
+(  +bmm: 0.00102997 %) s
+(  -bmm: -0.00102997 %) s
+(  +arr: -0.00088501 %) s
+(  -arr: 0.000900269 %) s
+(  +gag: 0.0277634 %) s
+(  -gag: -0.0277176 %) s
+(  +bca: 0.000976563 %) s
+(  -bca: -0.000968933 %) s
+(  +bcm: 0.03685 %) s
+(  -bcm: 0.03685 %) s
+(  nominal data: 99.6406 +/- 0.772875 %) s
+(  +ptoc: -0.943481 %) s
+(  -ptoc: 0.910408 %) s
+(  +bge: 3.05176E-05 %) s
+(  -bge: -3.8147E-05 %) s
+(  +bgp: -0.000495911 %) s
+(  -bgp: 0.000495911 %) s
+(  +cos: -0.000213623 %) s
+(  -cos: 0.000213623 %) s
+(  +ptomc: -0.0131073 %) s
+(  -ptomc: 0.0130768 %) s
+(  +bmm: 0.0458908 %) s
+(  -bmm: -0.0460434 %) s
+( ) s
+(  p2 given previous) s
+(  nominal MC: 99.3092 +/- 0.0360481 %) s
+(  +bmm: 0.00215149 %) s
+(  -bmm: -0.0021286 %) s
+(  +arr: 0.000137329 %) s
+(  -arr: -0.0001297 %) s
+(  +gag: -0.00262451 %) s
+(  -gag: 0.00262451 %) s
+(  +bca: 0.00144958 %) s
+(  -bca: -0.00143433 %) s
+(  +bcm: 0.0338821 %) s
+(  -bcm: 0.0338821 %) s
+(  nominal data: 98.9703 +/- 0.167343 %) s
+(  +ptoc: -0.0287094 %) s
+(  -ptoc: 0.0282288 %) s
+(  +bge: 2.28882E-05 %) s
+(  -bge: -7.62939E-06 %) s
+(  +bgp: -0.00139618 %) s
+(  -bgp: 0.00141907 %) s
+(  +cos: -0.00248718 %) s
+(  -cos: 0.00250244 %) s
+(  +ptomc: -0.00852203 %) s
+(  -ptomc: 0.0085144 %) s
+(  +bmm: -0.0502243 %) s
+(  -bmm: 0.0501556 %) s
+( ) s
+(  wz given previous wiggled up to 5 cm) s
+(  nominal MC: 99.806 +/- 0.0155139 %) s
+(  +bmm: 0.000999451 %) s
+(  -bmm: -0.000984192 %) s
+(  +arr: 0.000747681 %) s
+(  -arr: -0.000747681 %) s
+(  +gag: 0.000839233 %) s
+(  -gag: -0.000823975 %) s
+(  +bca: 0.00106049 %) s
+(  -bca: -0.00106049 %) s
+(  +bcm: 3.8147E-05 %) s
+(  -bcm: 3.8147E-05 %) s
+(  nominal data: 99.5593 +/- 0.326323 %) s
+(  +ptoc: -0.0130157 %) s
+(  -ptoc: 0.0128479 %) s
+(  +bge: -0.0102768 %) s
+(  -bge: 0.0102768 %) s
+(  +bgp: 0.134056 %) s
+(  -bgp: -0.134438 %) s
+(  +cos: -0.059021 %) s
+(  -cos: 0.0589371 %) s
+(  +ptomc: -0.000221252 %) s
+endpage
+%%Page: 3 3
+startpage
+(  -ptomc: 0.000221252 %) s
+(  +bmm: -0.00771332 %) s
+(  -bmm: 0.00769806 %) s
+( ) s
+(  visen given previous wiggled up to 0.4) s
+(  nominal MC: 99.3039 +/- 0.0302237 %) s
+(  +bmm: 0.0022583 %) s
+(  -bmm: -0.00224304 %) s
+(  +arr: 0.00154114 %) s
+(  -arr: -0.00154877 %) s
+(  +gag: 0.000595093 %) s
+(  -gag: -0.000595093 %) s
+(  +bca: 0.00470734 %) s
+(  -bca: -0.00470734 %) s
+(  +bcm: 0.000328064 %) s
+(  -bcm: 0.000328064 %) s
+(  nominal data: 97.2512 +/- 0.573226 %) s
+(  +ptoc: -0.485542 %) s
+(  -ptoc: 0.477715 %) s
+(  +bge: -0.001091 %) s
+(  -bge: 0.00110626 %) s
+(  +bgp: 0.0125046 %) s
+(  -bgp: -0.0125046 %) s
+(  +cos: -0.0232849 %) s
+(  -cos: 0.0232773 %) s
+(  +ptomc: -0.00185394 %) s
+(  -ptomc: 0.0018692 %) s
+(  +bmm: 0.0519333 %) s
+(  -bmm: -0.0519867 %) s
+( ) s
+(  wz given previous) s
+(  nominal MC: 99.8777 +/- 0.0121215 %) s
+(  +bmm: 0.000816345 %) s
+(  -bmm: -0.000816345 %) s
+(  +arr: 0.00062561 %) s
+(  -arr: -0.00063324 %) s
+(  +gag: 0.00062561 %) s
+(  -gag: -0.00063324 %) s
+(  +bca: 0.000602722 %) s
+(  -bca: -0.000602722 %) s
+(  +bcm: 2.28882E-05 %) s
+(  -bcm: 2.28882E-05 %) s
+(  nominal data: 99.7108 +/- 0.31525 %) s
+(  +ptoc: -0.00985718 %) s
+(  -ptoc: 0.00974274 %) s
+(  +bge: -0.0101089 %) s
+(  -bge: 0.0101166 %) s
+(  +bgp: 0.131439 %) s
+(  -bgp: -0.131813 %) s
+(  +cos: -0.0510254 %) s
+(  -cos: 0.0509567 %) s
+(  +ptomc: -0.000190735 %) s
+(  -ptomc: 0.000205994 %) s
+(  +bmm: -0.00692749 %) s
+(  -bmm: 0.00691986 %) s
+( ) s
+(  visen given previous) s
+(  nominal MC: 99.667 +/- 0.021337 %) s
+(  +bmm: 0.00118256 %) s
+(  -bmm: -0.00118256 %) s
+(  +arr: 0.000732422 %) s
+(  -arr: -0.000740051 %) s
+(  +gag: 0.000366211 %) s
+(  -gag: -0.000366211 %) s
+(  +bca: 0.00351715 %) s
+(  -bca: -0.00351715 %) s
+(  +bcm: 0.000289917 %) s
+(  -bcm: 0.000289917 %) s
+(  nominal data: 97.7798 +/- 0.566855 %) s
+(  +ptoc: -0.473969 %) s
+(  -ptoc: 0.466339 %) s
+(  +bge: -0.0010376 %) s
+(  -bge: 0.00104523 %) s
+(  +bgp: 0.0124283 %) s
+(  -bgp: -0.0124283 %) s
+(  +cos: -0.0227661 %) s
+(  -cos: 0.0227585 %) s
+endpage
+%%Page: 4 4
+startpage
+(  +ptomc: -0.001297 %) s
+(  -ptomc: 0.00130463 %) s
+(  +bmm: 0.0539474 %) s
+(  -bmm: -0.0540085 % ) s
+( ) s
+(  1 through 6 dont believe data) s
+(  nominal MC: 97.1688 +/- 0.06442 %) s
+(  +bmm: 0.00668335 %) s
+(  -bmm: -0.00666046 %) s
+(  +arr: 0.00139618 %) s
+(  -arr: -0.00140381 %) s
+(  +gag: 0.028923 %) s
+(  -gag: -0.0289001 %) s
+(  +bca: 0.00830078 %) s
+(  -bca: -0.00830078 %) s
+(  +bcm: 0.0786209 %) s
+(  -bcm: 0.0786209 %) s
+(  nominal data: 93.362 +/- 1.26388 %) s
+(  +ptoc: -1.78194 %) s
+(  -ptoc: 1.70545 %) s
+(  +bge: -0.0192032 %) s
+(  -bge: 0.0192719 %) s
+(  +bgp: 0.35936 %) s
+(  -bgp: -0.362129 %) s
+(  +cos: -1.21677 %) s
+(  -cos: 1.18574 %) s
+(  +ptomc: -0.0287323 %) s
+(  -ptomc: 0.0286789 %) s
+(  +bmm: -0.103111 %) s
+(  -bmm: 0.10231 %) s
+( ) s
+(  2 through 6 compare data and MC for fun) s
+(  nominal MC: 97.5466 +/- 0.0602831 %) s
+(  +bmm: 0.00514221 %) s
+(  -bmm: -0.00512695 %) s
+(  +arr: 0.000648499 %) s
+(  -arr: -0.000648499 %) s
+(  +gag: 0.0263901 %) s
+(  -gag: -0.0263596 %) s
+(  +bca: 0.00632477 %) s
+(  -bca: -0.00631714 %) s
+(  +bcm: 0.0699615 %) s
+(  -bcm: 0.0699615 %) s
+(  nominal data: 96.2576 +/- 1.16158 %) s
+(  +ptoc: -1.43503 %) s
+(  -ptoc: 1.38448 %) s
+(  +bge: -0.0218124 %) s
+(  -bge: 0.0218582 %) s
+(  +bgp: 0.282242 %) s
+(  -bgp: -0.283897 %) s
+(  +cos: -0.904869 %) s
+(  -cos: 0.888084 %) s
+(  +ptomc: -0.0224686 %) s
+(  -ptomc: 0.022438 %) s
+(  +bmm: -0.0684052 %) s
+(  -bmm: 0.0678558 %) s
+( ) s
+(  5 and 6 compare data and MC for systematic error on wz and visen together) s
+(  nominal MC: 99.5451 +/- 0.0244957 %) s
+(  +bmm: 0.0019989 %) s
+(  -bmm: -0.00198364 %) s
+(  +arr: 0.00137329 %) s
+(  -arr: -0.00136566 %) s
+(  +gag: 0.000991821 %) s
+(  -gag: -0.000991821 %) s
+(  +bca: 0.00411987 %) s
+(  -bca: -0.00410461 %) s
+(  +bcm: 0.000312805 %) s
+(  -bcm: 0.000312805 %) s
+(  nominal data: 97.497 +/- 0.642399 %) s
+(  +ptoc: -0.482292 %) s
+(  -ptoc: 0.474457 %) s
+(  +bge: -0.0109253 %) s
+(  -bge: 0.0109177 %) s
+(  +bgp: 0.140884 %) s
+(  -bgp: -0.141312 %) s
+(  +cos: -0.0726166 %) s
+endpage
+%%Page: 5 5
+startpage
+(  -cos: 0.0724869 %) s
+(  +ptomc: -0.00149536 %) s
+(  -ptomc: 0.0014801 %) s
+(  +bmm: 0.0470123 %) s
+(  -bmm: -0.047081 %) s
+( ) s
+(  tracks given previous only believe data) s
+(  nominal MC: 99.9412 +/- 0.00811339 %) s
+(  +bmm: 0.000549316 %) s
+(  -bmm: -0.000534058 %) s
+(  +arr: 0.000434875 %) s
+(  -arr: -0.000427246 %) s
+(  +gag: 0.000778198 %) s
+(  -gag: -0.000778198 %) s
+(  +bca: 0.000244141 %) s
+(  -bca: -0.000244141 %) s
+(  +bcm: 0.000114441 %) s
+(  -bcm: 0.000114441 %) s
+(  nominal data: 100.087 +/- 0.234578 %) s
+(  +ptoc: -0.0819092 %) s
+(  -ptoc: 0.0813599 %) s
+(  +bge: -8.39233E-05 %) s
+(  -bge: 7.62939E-05 %) s
+(  +bgp: 6.10352E-05 %) s
+(  -bgp: -5.34058E-05 %) s
+(  +cos: -0.00157928 %) s
+(  -cos: 0.00158691 %) s
+(  +ptomc: -0.000213623 %) s
+(  -ptomc: 0.000205994 %) s
+(  +bmm: 0.00980377 %) s
+(  -bmm: -0.0098114 %) s
+( ) s
+(  l4dec given previous only believe data) s
+(  nominal MC: 99.999 +/- 0.000983929 %) s
+(  +bmm: -1.52588E-05 %) s
+(  -bmm: 7.62939E-06 %) s
+(  +arr: -7.62939E-06 %) s
+(  -arr: 7.62939E-06 %) s
+(  +gag: 0 %) s
+(  -gag: 0 %) s
+(  +bca: -3.8147E-05 %) s
+(  -bca: 3.05176E-05 %) s
+(  +bcm: 0 %) s
+(  -bcm: 0 %) s
+(  nominal data: 100.011 +/- 0.0109169 %) s
+(  +ptoc: -0.000198364 %) s
+(  -ptoc: 0.000190735 %) s
+(  +bge: 3.05176E-05 %) s
+(  -bge: -2.28882E-05 %) s
+(  +bgp: -3.05176E-05 %) s
+(  -bgp: 3.8147E-05 %) s
+(  +cos: -0.000198364 %) s
+(  -cos: 0.000205994 %) s
+(  +ptomc: 0 %) s
+(  -ptomc: 0 %) s
+(  +bmm: -7.62939E-06 %) s
+(  -bmm: 0 %) s
+( ) s
+(  ccen given previous only believe data) s
+(  nominal MC: 99.1508 +/- 0.0339575 %) s
+(  +bmm: 0.00160217 %) s
+(  -bmm: -0.00158691 %) s
+(  +arr: 0.000724792 %) s
+(  -arr: -0.000717163 %) s
+(  +gag: 0.00501251 %) s
+(  -gag: -0.00499725 %) s
+(  +bca: 0.00881958 %) s
+(  -bca: -0.00879669 %) s
+(  +bcm: 0.000495911 %) s
+(  -bcm: 0.000495911 %) s
+(  nominal data: 99.6466 +/- 0.107661 %) s
+(  +ptoc: -0.0162125 %) s
+(  -ptoc: 0.0161285 %) s
+(  +bge: 0 %) s
+(  -bge: 0 %) s
+(  +bgp: 0 %) s
+(  -bgp: 0 %) s
+endpage
+%%Page: 6 6
+startpage
+(  +cos: 7.62939E-06 %) s
+(  -cos: -7.62939E-06 %) s
+(  +ptomc: -9.15527E-05 %) s
+(  -ptomc: 9.15527E-05 %) s
+(  +bmm: 0.00164795 %) s
+(  -bmm: -0.00164032 %) s
+( ) s
+(  just the data ones all together) s
+(  nominal MC: 99.0916 +/- 0.03489 %) s
+(  +bmm: 0.00213623 %) s
+(  -bmm: -0.00212097 %) s
+(  +arr: 0.00113678 %) s
+(  -arr: -0.00113678 %) s
+(  +gag: 0.00578308 %) s
+(  -gag: -0.00577545 %) s
+(  +bca: 0.00902557 %) s
+(  -bca: -0.00901031 %) s
+(  +bcm: 0.000595093 %) s
+(  -bcm: 0.000595093 %) s
+(  nominal data: 99.7439 +/- 0.257689 %) s
+(  +ptoc: -0.0980606 %) s
+(  -ptoc: 0.0973969 %) s
+(  +bge: -5.34058E-05 %) s
+(  -bge: 4.57764E-05 %) s
+(  +bgp: 1.52588E-05 %) s
+(  -bgp: -2.28882E-05 %) s
+(  +cos: -0.00178528 %) s
+(  -cos: 0.00177002 %) s
+(  +ptomc: -0.000312805 %) s
+(  -ptomc: 0.000297546 %) s
+(  +bmm: 0.0113983 %) s
+(  -bmm: -0.0114136 %) s
+( ) s
+(  cuts 5 through 9 for the 2s) s
+(  nominal MC: 98.6408 +/- 0.0423668 %) s
+(  +bmm: 0.00410461 %) s
+(  -bmm: -0.0040741 %) s
+(  +arr: 0.00248718 %) s
+(  -arr: -0.00247955 %) s
+(  +gag: 0.00675201 %) s
+(  -gag: -0.00672913 %) s
+(  +bca: 0.0130692 %) s
+(  -bca: -0.013031 %) s
+(  +bcm: 0.000907898 %) s
+(  -bcm: 0.000907898 %) s
+(  nominal data: 97.2473 +/- 0.685971 %) s
+(  +ptoc: -0.577164 %) s
+(  -ptoc: 0.567726 %) s
+(  +bge: -0.0109482 %) s
+(  -bge: 0.0109406 %) s
+(  +bgp: 0.140549 %) s
+(  -bgp: -0.140968 %) s
+(  +cos: -0.0741653 %) s
+(  -cos: 0.0740356 %) s
+(  +ptomc: -0.00178528 %) s
+(  -ptomc: 0.00177765 %) s
+(  +bmm: 0.0580063 %) s
+(  -bmm: -0.0581131 %) s
+( ) s
+(  the backgrounds after 1 - 6) s
+(  bge: 74.4624 pm 2.73914) s
+(  bgp: -203.991 pm 18.173) s
+(  cos: 42.5645 pm 2.0819) s
+(  ee: 29.887 pm 6.85655) s
+(  mumu: 106.732 pm 12.757) s
+(  tautau: 1697.88 pm 48.8309) s
+(  data with backgrounds still in it: 128651 pm 699.635 but statistically independent of control ) s
+( ) s
+(  the backgrounds after EVERYTHING) s
+(  bge: 46.1485 pm 2.15638) s
+(  bgp: -134.375 pm 14.7496) s
+(  cos: 25.7627 pm 1.61969) s
+(  ee: 7.865 pm 3.51733) s
+(  mumu: 97.584 pm 12.198) s
+(  tautau: 1669.8 pm 48.4253) s
+(  data with backgrounds still in it: 128291 pm 618.229 but statistically independent of control ) s
+( ) s
+endpage
+%%Page: 7 7
+startpage
+(  e1 given previous no PHOTOS look at central value only) s
+(  nominal MC: 98.4654 +/- 0.0534499 %) s
+(  +bmm: 0.00175476 %) s
+(  -bmm: -0.00175476 %) s
+(  +arr: -0.000846863 %) s
+(  -arr: 0.000846863 %) s
+(  +gag: 0.0268021 %) s
+(  -gag: -0.0267792 %) s
+(  +bca: 0.00891113 %) s
+(  -bca: -0.00889587 %) s
+(  +bcm: 0.0374603 %) s
+(  -bcm: 0.0374603 %) s
+(  nominal data: 99.6538 +/- 0.773424 %) s
+(  +ptoc: -0.943214 %) s
+(  -ptoc: 0.910172 %) s
+(  +bge: 3.8147E-05 %) s
+(  -bge: -3.05176E-05 %) s
+(  +bgp: -0.000488281 %) s
+(  -bgp: 0.000480652 %) s
+(  +cos: -0.000228882 %) s
+(  -cos: 0.000228882 %) s
+(  +ptomc: -0.0131912 %) s
+(  -ptomc: 0.0131912 %) s
+(  +bmm: 0.0452957 %) s
+(  -bmm: -0.0454254 %) s
+( ) s
+(  p2 given previous no PHOTOS look at central value only) s
+(  nominal MC: 99.1701 +/- 0.0435376 %) s
+(  +bmm: 0.00258636 %) s
+(  -bmm: -0.00256348 %) s
+(  +arr: 0.000160217 %) s
+(  -arr: -0.000160217 %) s
+(  +gag: -0.0031662 %) s
+(  -gag: 0.00315857 %) s
+(  +bca: 0.0050354 %) s
+(  -bca: -0.0050354 %) s
+(  +bcm: 0.0359955 %) s
+(  -bcm: 0.0359955 %) s
+(  nominal data: 99.0065 +/- 0.168512 %) s
+(  +ptoc: -0.029007 %) s
+(  -ptoc: 0.0285263 %) s
+(  +bge: 2.28882E-05 %) s
+(  -bge: 0 %) s
+(  +bgp: -0.00134277 %) s
+(  -bgp: 0.00135803 %) s
+(  +cos: -0.0025177 %) s
+(  -cos: 0.00252533 %) s
+(  +ptomc: -0.0087738 %) s
+(  -ptomc: 0.00878143 %) s
+(  +bmm: -0.0518112 %) s
+(  -bmm: 0.0517426 %) s
+( ) s
+(  1 through 6 no PHOTOS look at central value only dont believe data) s
+(  nominal MC: 96.7594 +/- 0.0763907 %) s
+(  +bmm: 0.00793457 %) s
+(  -bmm: -0.00791168 %) s
+(  +arr: 0.0014801 %) s
+(  -arr: -0.00147247 %) s
+(  +gag: 0.0272369 %) s
+(  -gag: -0.0272064 %) s
+(  +bca: 0.0209961 %) s
+(  -bca: -0.0209656 %) s
+(  +bcm: 0.0812225 %) s
+(  -bcm: 0.0812225 %) s
+(  nominal data: 93.457 +/- 1.26587 %) s
+(  +ptoc: -1.78408 %) s
+(  -ptoc: 1.70748 %) s
+(  +bge: -0.0192337 %) s
+(  -bge: 0.0192871 %) s
+(  +bgp: 0.359718 %) s
+(  -bgp: -0.362503 %) s
+(  +cos: -1.21803 %) s
+(  -cos: 1.18694 %) s
+(  +ptomc: -0.0294418 %) s
+(  -ptomc: 0.0294113 %) s
+(  +bmm: -0.107513 %) s
+(  -bmm: 0.106674 %) s
+endpage
+
+%%Trailer
+cleanup
+docsave restore end

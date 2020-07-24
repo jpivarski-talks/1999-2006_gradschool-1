@@ -1,0 +1,56 @@
+*** Begin of history file: Thu Sep 12 10:09:56 2002
+h/file 1 ../rzn/positrons_ntuple.rzn
+cd bigntuple2
+nt/plot 2.cos(ttp_th)%tot_tr_p 0<tot_tr_p<6
+h/file 2 ../rzn/electrons_ntuple.rzn
+sh ls ../rzn/*ntuple*rzn
+h/file 2 ../rzn/positrons_ntuple_nhc.rzn
+cd //lun2/bigntuple2
+nt/plot 2.cos(ttp_th)%tot_tr_p 0<tot_tr_p<6
+nt/plot 2.cos(ttp_th)%tot_tr_p 0<tot_tr_p<4&&cos(ttp_th)>0.5 ! ! ! box
+help add
+h/file 2 ../rzn/electrons_ntuple_nhc.rzn
+h/file 30 ../rzn/electrons_ntuple_nhc.rzn
+cd //lun30/bigntuple2
+h/cr/1d 5000 '`Junk Run` (Electron Single Beam) Closest Intersection' 100 0. 0.006
+h/plot 5000
+h/plot 5000
+h/cr/1d 5000 '"Junk Run" (Electron Single Beam) Closest Intersection' 100 0. 0.006
+h/plot 5000
+h/cr/1d 5000 'Junk Run (Electron Single Beam) Closest Intersection' 100 0. 0.006
+h/plot 5000
+nt/plot 2.xydist num_tr>2 ! ! ! ! 5000
+h/cr/1d 5000 'Junk Run (Electron Single Beam) Closest Intersection' 40 0. 0.12
+nt/plot 2.xydist num_tr>2 ! ! ! ! 5000
+nt/plot 2.xydist num_tr>2 ! ! ! ! 5000
+set ltyp 2
+dline 0.003 0.003 0 $GRAFINFO('WNYMAX')
+dline 0.021 0.021 0 $GRAFINFO('WNYMAX')
+nt/plot 2.xydist num_tr>2&&abs(w_z0)<0.1 ! ! ! ! 5000
+set stat 0000010
+opt stat
+h/plot 5000
+set ltyp 2
+dline 0.021 0.021 0 $GRAFINFO('WNYMAX')
+dline 0.003 0.003 0 100
+h/plot 5000
+set ltyp 2
+dline 0.003 0.003 0 100
+set ltyp 3
+dline 0.021 0.021 0 $GRAFINFO('WNYMAX')
+pict/print '~/public_html/private/my_gammaee/dafdir/cuts_pta/sb_ci.eps'
+nt/plot 2.xydist num_tr>2 ! ! ! ! 5000
+nt/plot 2.xydist num_tr>2xydist<0.003 ! ! ! ! 5000
+nt/plot 2.xydist num_tr>2&&xydist<0.003 ! ! ! ! 5000
+nt/plot 2.xydist num_tr>2&&abs(w_z0)<0.1 ! ! ! ! 5000
+nt/plot 2.xydist num_tr>2&&abs(w_z0)<0.1&&xydist<0.003 ! ! ! ! 5000
+nt/plot 2.xydist num_tr>2&&abs(w_z0)<0.1&&xydist<0.003 ! ! ! ! 5000
+nt/plot 2.xydist num_tr>2&&abs(w_z0)<0.1 ! ! ! ! 5000
+nt/plot 2.xydist num_tr>2&&abs(w_z0)<0.1&&tot_sh_e>1.5 ! ! ! ! 5000
+nt/plot 2.xydist num_tr>2&&abs(w_z0)<0.1 ! ! ! ! 5000
+nt/plot 2.xydist abs(w_z0)<0.1 ! ! ! ! 5000
+nt/plot 2.xydist num_tr>2&&abs(w_z0)<0.1 ! ! ! ! 5000
+nt/plot 2.xydist num_tr>2&&abs(w_z0)<0.1&&tot_sh_e>1.5 ! ! ! ! 5000
+nt/plot 2.xydist num_tr>2&&abs(w_z0)<0.1&&tot_sh_e>1.5&&max_sh_e<7.5 ! ! ! ! 5000
+exit
+*** End   of history file: Fri Sep 13 12:15:34 2002

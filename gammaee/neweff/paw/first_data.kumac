@@ -1,0 +1,512 @@
+h/file 21 ../rzn/peaky1s.rzn
+h/file 22 ../rzn/peaky2s.rzn
+h/file 23 ../rzn/peaky3s.rzn
+h/file 31 ../rzn/conty1s.rzn
+h/file 32 ../rzn/conty2s.rzn
+h/file 33 ../rzn/conty3s.rzn
+h/file 41 ../rzn/egy1s.rzn
+h/file 42 ../rzn/egy2s.rzn
+h/file 43 ../rzn/egy3s.rzn
+h/file 51 ../rzn/qqy1s.rzn
+h/file 52 ../rzn/qqy2s.rzn
+h/file 53 ../rzn/qqy3s.rzn
+
+* what you multiply to cont to make it subtractable from peak
+sigma ptoc1 = (1094.1+1500.3+2266.1)/(1699.0+1562.2+1691.4)
+sigma ptoc2 = (375.3+2711.4)/(1664.5+548.8+2295.1)
+sigma ptoc3 = (448.2+1482.5+1962.3)/(678.4+469.5+1714.4)
+
+* "d0close", "z0close",
+* "ebeam", "ntracks",
+* "e1", "e2", "p1", "p2",
+* "shxy", "shz", "shphi1", "shphi2", "shcosth1", "shcosth2",
+* "trxy", "trz", "d0miss", "z0miss", "trphi1", "trphi2", "trcosth1", "trcosth2",
+* "rawntracks", "visen", "ccen", "neue", "q", "pass", "trigger"
+
+nt/cuts $1 10<=trigger<=100
+
+nt/cuts $2 sqrt((e1-1)**2+(e2-1)**2)<0.05
+nt/plot //lun21/cuts/1.e1%e2 $1&&!$2
+nt/plot //lun21/cuts/1.e1+e2 $1&&!$2
+
+nt/cuts $3 p1*p2<0&&sqrt((abs(p1)-1)**2+(abs(p2)-1)**2)<0.05
+nt/plot //lun21/cuts/1.abs(p1)%abs(p2) $1&&!$3
+nt/plot //lun21/cuts/1.abs(p1)+abs(p2) $1&&!$3
+
+nt/cuts $4 visen>0.2*ebeam
+nt/plot //lun21/cuts/1.visen/ebeam $1&&$4
+
+nt/cuts $5 shxy+shz<-0.99
+nt/plot //lun21/cuts/1.shxy+shz $1&&$5
+
+nt/cuts $6 trxy+trz<-0.9999
+nt/plot //lun21/cuts/1.trxy+trz $1&&$6
+
+zone 1 3
+opt logy
+h/cr/1d 101 'Peak Number of Tracks' 15 -0.5 14.5
+h/cr/1d 102 'Cont Number of Tracks' 15 -0.5 14.5
+h/cr/1d 103 'Number of Tracks' 15 -0.5 14.5
+nt/plot //lun21/cuts/1.ntracks $1&&$4 ! ! ! ! 101
+nt/plot //lun21/cuts/1.ntracks $1&&!(($2.or.$5).or.($3.or.$6))&&$4 ! ! ! 's' 101
+nt/plot //lun31/cuts/1.ntracks $1&&$4 ! ! ! ! 102
+nt/plot //lun31/cuts/1.ntracks $1&&!(($2.or.$5).or.($3.or.$6))&&$4 ! ! ! 's' 102
+sub 101 102 103 1. $SIGMA(ptoc1) 'e'
+opt liny
+h/plot 103
+pict/print 'more_plots.ps'
+ve/cr val(15)
+ve/cr err(15)
+h/get_vect/contents 103 val
+h/get_vect/errors   103 err
+ve/print err(3)
+
+
+nt/plot //lun21/cuts/1.sin(shphi1-shphi2) $1&&(($2.or.$5).or.($3.or.$6))&&$4
+nt/plot //lun21/cuts/1.sin(shphi1-shphi2) $1&&($2.or.$3)&&$4
+nt/plot //lun21/cuts/1.sin(shphi1-shphi2) $1&&!($2.or.$3)&&$4
+
+nt/plot //lun21/cuts/1.sin(trphi1-trphi2) abs(sin(trphi1-trphi2))<0.1&&$1&&(($2.or.$5).or.($3.or.$6))&&$4
+nt/plot //lun21/cuts/1.sin(trphi1-trphi2) abs(sin(trphi1-trphi2))<0.1&&$1&&($2.or.$3)&&$4 ! ! ! 's'
+nt/plot //lun21/cuts/1.sin(trphi1-trphi2) abs(sin(trphi1-trphi2))<0.1&&$1&&!($2.or.$3)&&$4
+
+
+
+
+nt/cuts $1 10<=trigger<=100
+
+nt/cuts $2 sqrt((e1-1)**2+(e2-1)**2)<0.2
+nt/cuts $3 p1*p2<0&&sqrt((abs(p1)-1)**2+(abs(p2)-1)**2)<0.2
+nt/cuts $4 visen>0.2*ebeam
+nt/cuts $7 ((ntracks>1&&trxy/sqrt(1-trcosth1**2)/sqrt(1-trcosth2**2)>-0.99995).or.ntracks<2)
+nt/cuts $8 (ntracks>1&&!(abs(2-abs(p1)-abs(p2)-pmiss)<0.1)).or.ntracks<2
+
+opt sta
+set stat 0000010
+zone 1 2
+nt/plot //lun52/cuts/1.2-abs(p1)-abs(p2)-pmiss ntracks>1
+nt/plot //lun52/cuts/1.2-abs(p1)-abs(p2)-pmiss ntracks>1&&$8
+nt/plot //lun41/cuts/1.2-abs(p1)-abs(p2)-pmiss ntracks>1
+nt/plot //lun41/cuts/1.2-abs(p1)-abs(p2)-pmiss ntracks>1&&$8
+
+zone 1 1
+nt/plot //lun22/cuts/1.2-abs(p1)-abs(p2)-pmiss ntracks>1
+nt/plot //lun22/cuts/1.2-abs(p1)-abs(p2)-pmiss ntracks>1&&$8 ! ! ! 's'
+nt/plot //lun22/cuts/1.ntracks $8
+
+
+
+
+zone 1 1
+nt/plot //lun21/cuts/1.ntracks $1&&!($2.or.$3.or.$6)&&$4
+nt/plot //lun21/cuts/1.ntracks $1&&!($2.or.$3)&&$8&&$7&&$4 ! ! ! 's'
+
+
+opt sta
+set stat 0000010
+zone 1 3
+nt/plot //lun41/cuts/1.ntracks ! ! ! ! ! 1000
+nt/plot //lun41/cuts/1.ntracks !($2.or.$3)&&$8 ! ! ! ! 1001
+div 1000 1001 1002 ! ! 'e'
+min 1002 0.9
+max 1002 1.1
+h/plot 1002
+dline $GRAFINFO('WNXMIN') $GRAFINFO('WNXMAX') 1 1
+
+
+opt sta
+set stat 0000010
+zone 1 3
+nt/plot //lun51/cuts/1.ntracks ! ! ! ! ! 1000
+nt/plot //lun51/cuts/1.ntracks !($2.or.$3)&&$8 ! ! ! ! 1001
+div 1000 1001 1002 ! ! 'e'
+min 1002 0.9
+max 1002 1.1
+h/plot 1002
+dline $GRAFINFO('WNXMIN') $GRAFINFO('WNXMAX') 1 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*********** I'm redefining 2 and 3 to be anti-bhabhas
+
+nt/cuts $1 10<=trigger<=100
+
+nt/cuts $2 !(sqrt((e1-1)**2+(e2-1)**2)<0.2)
+nt/cuts $3 !(p1*p2<0&&sqrt((abs(p1)-1)**2+(abs(p2)-1)**2)<0.2)
+nt/cuts $4 visen>0.2*ebeam
+nt/cuts $7 ((ntracks>1&&trxy/sqrt(1-trcosth1**2)/sqrt(1-trcosth2**2)>-0.99999).or.ntracks<2)
+nt/cuts $8 (ntracks>1&&!(abs(2-abs(p1)-abs(p2)-pmiss)<0.1)).or.ntracks<2
+
+opt sta
+set stat 0000010
+zone 1 2
+nt/plot //lun52/cuts/1.2-abs(p1)-abs(p2)-pmiss ntracks>1
+nt/plot //lun52/cuts/1.2-abs(p1)-abs(p2)-pmiss ntracks>1&&$8
+nt/plot //lun41/cuts/1.2-abs(p1)-abs(p2)-pmiss ntracks>1
+nt/plot //lun41/cuts/1.2-abs(p1)-abs(p2)-pmiss ntracks>1&&$8
+
+zone 1 1
+nt/plot //lun22/cuts/1.2-abs(p1)-abs(p2)-pmiss ntracks>1
+nt/plot //lun22/cuts/1.2-abs(p1)-abs(p2)-pmiss ntracks>1&&$8 ! ! ! 's'
+nt/plot //lun22/cuts/1.ntracks $8
+
+opt sta
+set stat 0000010
+zone 1 2
+nt/plot //lun52/cuts/1.trxy/sqrt(1-trcosth1**2)/sqrt(1-trcosth2**2) ntracks>1
+nt/plot //lun52/cuts/1.trxy/sqrt(1-trcosth1**2)/sqrt(1-trcosth2**2) ntracks>1&&$7
+nt/plot //lun41/cuts/1.trxy/sqrt(1-trcosth1**2)/sqrt(1-trcosth2**2) ntracks>1
+nt/plot //lun41/cuts/1.trxy/sqrt(1-trcosth1**2)/sqrt(1-trcosth2**2) ntracks>1&&$7
+
+zone 1 1
+nt/plot //lun22/cuts/1.ntracks $1
+nt/plot //lun22/cuts/1.ntracks $1&&$2&&$3&&$4&&$7&&$8 ! ! ! 's'
+nt/plot //lun22/cuts/1.ntracks $1&&$2&&$3&&$4&&$7&&$8
+
+
+
+
+
+nt/plot //lun22/cuts/1.sqrt((abs(p1)*(1-trcosth1**2)*sin(trphi1)+abs(p2)*(1-trcosth2**2)*sin(trphi2))**2+(abs(p1)*(1-trcosth1**2)*cos(trphi1)+abs(p2)*(1-trcosth2**2)*cos(trphi2))**2+(abs(p1)*trcosth1+abs(p2)*trcosth2)**2) ntracks>1
+
+nt/plot //lun22/cuts/1.(abs(p1)*(1-trcosth1**2)*sin(trphi1)+abs(p2)*(1-trcosth2**2)*sin(trphi2)) ntracks==2
+nt/plot //lun22/cuts/1.(abs(p1)*(1-trcosth1**2)*cos(trphi1)+abs(p2)*(1-trcosth2**2)*cos(trphi2)) ntracks==2
+nt/plot //lun22/cuts/1.(abs(p1)*trcosth1+abs(p2)*trcosth2) ntracks==2
+
+(abs(p1)*(1-trcosth1**2)*sin(trphi1))*(abs(p2)*(1-trcosth2**2)*sin(trphi2))
+
+
+
+
+
+
+***********************
+
+nt/plot //lun21/cuts/1.2-abs(p1)-abs(p2)-pmiss ntracks>1
+nt/plot //lun21/cuts/1.2-abs(p1)-abs(p2)-pnext ntracks>1&&abs(2-abs(p1)-abs(p2)-pnext)<2
+nt/plot //lun41/cuts/1.2-abs(p1)-abs(p2)-pnext ntracks>1&&abs(2-abs(p1)-abs(p2)-pnext)<2
+nt/plot //lun51/cuts/1.2-abs(p1)-abs(p2)-pnext ntracks>1&&abs(2-abs(p1)-abs(p2)-pnext)<2
+nt/plot //lun21/cuts/1.2-abs(p1)-abs(p2)-pnext ntracks>1&&0.1<abs(2-abs(p1)-abs(p2)-pnext)<2
+
+nt/plot //lun21/cuts/1.pmiss ntracks>1&&abs(2-abs(p1)-abs(p2)-pmiss)<0.2
+nt/plot //lun41/cuts/1.pmiss ntracks>1&&abs(2-abs(p1)-abs(p2)-pmiss)<0.2
+nt/plot //lun51/cuts/1.pmiss ntracks>1&&abs(2-abs(p1)-abs(p2)-pmiss)<0.2
+
+nt/plot //lun21/cuts/1.pnext ntracks>1&&abs(2-abs(p1)-abs(p2)-pnext)<0.2
+nt/plot //lun41/cuts/1.pnext ntracks>1&&abs(2-abs(p1)-abs(p2)-pnext)<0.2
+nt/plot //lun51/cuts/1.pnext ntracks>1&&abs(2-abs(p1)-abs(p2)-pnext)<0.2
+
+
+
+
+
+nt/cuts $2 !(sqrt((e1-1)**2+(e2-1)**2)<0.2)
+nt/cuts $3 !(p1*p2<0&&sqrt((abs(p1)-1)**2+(abs(p2)-1)**2)<0.2)
+nt/cuts $4 visen>0.2*ebeam
+nt/cuts $7 ((ntracks>1&&trxy/sqrt(1-trcosth1**2)/sqrt(1-trcosth2**2)>-0.99999).or.ntracks<2)
+nt/cuts $8 (ntracks>1&&!(abs(2-abs(p1)-abs(p2)-pmiss)<0.2&&pmiss<0.2)).or.ntracks<2
+nt/cuts $9 (ntracks>1&&!(abs(2-abs(p1)-abs(p2)-pnext)<0.2&&pnext<0.2)).or.ntracks<2
+
+nt/plot //lun21/cuts/1.trxy+trz ntracks>1&&trxy+trz<-0.9999
+nt/plot //lun21/cuts/1.trxy/sqrt(1-trcosth1**2)/sqrt(1-trcosth2**2) ntracks>1&&trxy/sqrt(1-trcosth1**2)/sqrt(1-trcosth2**2)<-0.9999 ! ! ! 's'
+dline -0.99999 -0.99999 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+h/cr/1d 100 'number of tracks' 15 -0.5 14.5
+nt/plot //lun21/cuts/1.ntracks abs(z0close)<0.05&&$2&&$3&&$4&&$7&&$8 ! ! ! ! 100
+nt/plot //lun21/cuts/1.ntracks abs(z0close)<0.05&&$2&&$3&&$4&&$7&&$8&&$9 ! ! ! 's' 100
+
+nt/plot //lun21/cuts/1.abs(p1)%abs(p2) ntracks>1&&(2-abs(p1)-abs(p2)-pmiss)>0.2 10000
+nt/plot //lun21/cuts/1.(2-abs(p1)-abs(p2)-pmiss)%(2-abs(p1)-abs(p2)-pnext) ntracks>1 10000
+nt/plot //lun41/cuts/1.(2-abs(p1)-abs(p2)-pmiss)%(2-abs(p1)-abs(p2)-pnext) ntracks>1 10000
+dline -0.15 0.15 0.15 0.15
+dline -0.15 -0.15 $GRAFINFO('WNYMIN') 0.15
+dline 0.15 0.15 $GRAFINFO('WNYMIN') 0.15
+
+nt/plot //lun21/cuts/1.pmiss%pnext ntracks>1&&(2-abs(p1)-abs(p2)-pmiss)<0.15&&abs(2-abs(p1)-abs(p2)-pnext)<0.15 10000
+nt/plot //lun21/cuts/1.pnext ntracks>1&&(2-abs(p1)-abs(p2)-pmiss)<0.15&&abs(2-abs(p1)-abs(p2)-pnext)<0.15
+nt/plot //lun41/cuts/1.pmiss%pnext ntracks>1&&(2-abs(p1)-abs(p2)-pmiss)<0.15&&abs(2-abs(p1)-abs(p2)-pnext)<0.15 10000
+
+
+
+nt/plot //lun21/cuts/1.abs(p1)%abs(p2) ntracks>1&&(2-abs(p1)-abs(p2)-pmiss)<0.15&&abs(2-abs(p1)-abs(p2)-pnext)<0.15&&pnext<0.4 10000
+nt/plot //lun21/cuts/1.abs(p1)%abs(p2) ntracks>1&&!((2-abs(p1)-abs(p2)-pmiss)<0.15&&abs(2-abs(p1)-abs(p2)-pnext)<0.15&&pnext<0.4) 10000
+nt/plot //lun41/cuts/1.abs(p1)%abs(p2) ntracks>1&&(2-abs(p1)-abs(p2)-pmiss)<0.15&&abs(2-abs(p1)-abs(p2)-pnext)<0.15&&pnext<0.4 10000
+nt/plot //lun51/cuts/1.abs(p1)%abs(p2) ntracks>1&&(2-abs(p1)-abs(p2)-pmiss)<0.15&&abs(2-abs(p1)-abs(p2)-pnext)<0.15&&pnext<0.4 10000
+
+nt/plot //lun21/cuts/1.ntracks (ntracks>=2&&!((2-abs(p1)-abs(p2)-pmiss)<0.15&&abs(2-abs(p1)-abs(p2)-pnext)<0.15&&pnext<0.4)).or.ntracks<2
+
+
+nt/plot //lun21/cuts/1.z0close ntracks==1
+nt/plot //lun21/cuts/1.d0close ntracks==1
+nt/plot //lun41/cuts/1.z0close ntracks==1
+nt/plot //lun41/cuts/1.d0close ntracks==1
+
+h/cr/1d 100 'number of tracks' 15 -0.5 14.5
+nt/plot //lun21/cuts/1.ntracks ((ntracks>=2&&!((2-abs(p1)-abs(p2)-pmiss)<0.15&&abs(2-abs(p1)-abs(p2)-pnext)<0.15&&pnext<0.4)&&trxy/sqrt(1-trcosth1**2)/sqrt(1-trcosth2**2)>-0.9999).or.ntracks<2)&&visen>0.2*ebeam ! ! ! ! 100
+nt/plot //lun21/cuts/1.ntracks ((ntracks>=2&&!((2-abs(p1)-abs(p2)-pmiss)<0.15&&abs(2-abs(p1)-abs(p2)-pnext)<0.15&&pnext<0.4)&&trxy/sqrt(1-trcosth1**2)/sqrt(1-trcosth2**2)>-0.9999).or.ntracks<2)&&visen>0.2*ebeam&&((rawntrac>0&&abs(d0close)<0.01&&abs(z0close)<0.05).or.rawntrac==0) ! ! ! 's' 100
+
+* this is no longer a copy of the above
+nt/cuts $1 ((ntracks>=2&&!((2-abs(p1)-abs(p2)-pmiss)<0.15&&abs(2-abs(p1)-abs(p2)-pnext)<0.15&&pnext<0.4)&&trxy/sqrt(1-trcosth1**2)/sqrt(1-trcosth2**2)>-0.99999).or.ntracks<2)
+nt/cuts $2 10<=trigger<100
+
+nt/plot //lun21/cuts/1.visen/ebeam $1&&$2&&ntracks<3
+nt/plot //lun21/cuts/1.visen/ebeam abs(z0close)>0.05&&$1&&$2&&ntracks<3 ! ! ! 's'
+
+
+
+opt nsta
+zone 1 1
+h/cr/1d 1000 'data ntracks' 15 -0.5 14.5
+h/cr/1d 1001 'data ntracks' 15 -0.5 14.5
+nt/plot //lun21/cuts/1.ntracks $2 ! ! ! ! 1000
+nt/plot //lun21/cuts/1.ntracks $1&&$2 ! ! ! 's' 1001
+
+opt sta
+set stat 0000010
+zone 1 3
+h/cr/1d 1000 'ntracks with cuts' 15 -0.5 14.5
+h/cr/1d 1001 'ntracks' 15 -0.5 14.5
+h/cr/1d 1002 'ratio' 15 -0.5 14.5
+nt/plot //lun41/cuts/1.ntracks $1&&$2 ! ! ! ! 1000
+nt/plot //lun41/cuts/1.ntracks $2 ! ! ! ! 1001
+div 1000 1001 1002 ! ! 'e'
+min 1002 0.9
+max 1002 1.1
+opt nsta
+h/plot 1002
+dline $GRAFINFO('WNXMIN') $GRAFINFO('WNXMAX') 1 1
+
+
+
+
+
+
+** a better trxy
+
+h/cr/1d 100 'tr1 DOT tr2 with ea correction' 100 -1. -0.9999
+opt sta
+set stat 0001110
+nt/plot //lun21/cuts/1.cos(trphi1)*cos(trphi2+0.008*sin(trphi1))+sin(trphi1)*sin(trphi2+0.008*sin(trphi1)) ntracks>1 ! ! ! ! 100
+nt/plot //lun21/cuts/1.trxy/sqrt(1-trcosth1**2)/sqrt(1-trcosth2**2) ntracks>1 ! ! ! 's' 100
+nt/plot //lun21/cuts/1.trxy+trz ntracks>1 ! ! ! 's' 100
+pict/print 'tmp5.ps'
+
+nt/plot //lun21/cuts/1.ebeam ebeam>4.73012
+
+h/cr/1d 100 'tr1 DOT tr2 with ea correction' 100 -1. -0.9999
+h/cr/2d 101 'tr1 DOT tr2 with ea correction' 1 0 $SIGMA(2.*3.1415926) 1 -1. -0.9999
+nt/plot //lun21/cuts/1.(cos(trphi1)*(ebeam*cos(trphi2)-0.013343)+sin(trphi1)*(ebeam*sin(trphi2)))/sqrt((ebeam*cos(trphi2)-0.013343)**2+(ebeam*sin(trphi2))**2)%trphi1 ebeam>4.73012 ! ! ! ! 101
+nt/plot //lun21/cuts/1.(cos(trphi1)*(ebeam*cos(trphi2)+0.013343)+sin(trphi1)*(ebeam*sin(trphi2)))/sqrt((ebeam*cos(trphi2)+0.013343)**2+(ebeam*sin(trphi2))**2)%trphi1 ebeam>4.73012 ! ! ! ! 101
+nt/plot //lun21/cuts/1.(cos(trphi1)*(ebeam*cos(trphi2)+0.)+sin(trphi1)*(ebeam*sin(trphi2)))/sqrt((ebeam*cos(trphi2)+0.)**2+(ebeam*sin(trphi2))**2)%trphi1 ebeam>4.73012 ! ! ! ! 101
+
+ve/cr ea(60)
+ve/cr rms(60)
+opt sta
+set stat 101100
+do i = 1, 60
+  nt/plot //lun21/cuts/1.(cos(trphi1)*(ebeam*cos(trphi2)+0.001*[i])+sin(trphi1)*(ebeam*sin(trphi2)))/sqrt((ebeam*cos(trphi2)+0.001*[i])**2+(ebeam*sin(trphi2))**2) ebeam>4.73012 ! ! ! ! 100
+  ve/inp ea([i]) $SIGMA(0.001*[i])
+  ve/inp rms([i]) $HINFO(100,'RMS')
+enddo
+graph 60 ea rms
+
+
+
+h/cr/1d 200 'ntracks' 15 -0.5 14.5
+nt/plot //lun21/cuts/1.ntracks ! ! ! ! ! 200
+nt/plot //lun21/cuts/1.ntracks (ntracks>1&&cos(trphi1)*cos(trphi2+0.008*sin(trphi1))+sin(trphi1)*sin(trphi2+0.008*sin(trphi1))>-0.99998).or.ntracks<2 ! ! ! 's' 200
+
+
+
+
+
+
+*** these were in a tmp.kumac
+
+h/file 1 ../thrzn/peak1.rzn
+nt/print //lun1/cuts/1
+
+nt/plot //lun1/cuts/1.ephalf
+nt/plot //lun1/cuts/1.epwhole
+nt/plot //lun1/cuts/1.epdouble
+
+nt/plot //lun1/cuts/1.trigger trigger<100
+nt/plot //lun1/cuts/1.trax
+nt/plot //lun1/cuts/1.trax trigger<100
+nt/plot //lun1/cuts/1.trax trigger>99
+
+nt/plot //lun1/cuts/1.trperp1 trperp1<-0.9999&&ntracks==2
+nt/plot //lun1/cuts/1.trperp2 trperp2<-0.9999&&ntracks==2
+nt/plot //lun1/cuts/1.trperp4 trperp4<-0.9999&&ntracks==2
+
+nt/plot //lun1/cuts/1.ntracks
+nt/plot //lun1/cuts/1.ntracks trigger<100
+nt/plot //lun1/cuts/1.ntracks trigger<100&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998 ! ! ! 's'
+
+nt/plot //lun1/cuts/1.2-abs(p1)-abs(p2)-pmiss trigger<100&&ntracks>1
+nt/plot //lun1/cuts/1.2-abs(p1)-abs(p2)-pfound-pnext trigger<100&&ntracks>1&&pfound<100
+nt/plot //lun1/cuts/1.2-abs(p1)-abs(p2)-pmiss%2-abs(p1)-abs(p2)-pfound-pnext trigger<100&&ntracks>1&&pfound<100
+nt/plot //lun1/cuts/1.2-abs(p1)-abs(p2)-pmiss%2-abs(p1)-abs(p2)-pfound-pnext trigger<100&&ntracks>1&&pfound<100&&ntracks==2
+nt/plot //lun1/cuts/1.2-abs(p1)-abs(p2)-pmiss%2-abs(p1)-abs(p2)-pfound-pnext trigger<100&&ntracks>1&&pfound<100&&pfound<0.1
+nt/plot //lun1/cuts/1.2-abs(p1)-abs(p2)-pmiss%2-abs(p1)-abs(p2)-pfound-pnext trigger<100&&ntracks>1&&pfound<100&&pfound<0.1&&pnext<0.1
+dline -1 2 -1 2
+dline -1 2 -0.95 2.05
+nt/plot //lun1/cuts/1.2-abs(p1)-abs(p2)-pmiss%2-abs(p1)-abs(p2)-pfound-pnext trigger<100&&ntracks>1&&pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05
+dline -1 2 -0.95 2.05
+nt/plot //lun1/cuts/1.2-abs(p1)-abs(p2)-pmiss trigger<100&&ntracks>1&&pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05
+
+nt/plot //lun1/cuts/1.ntracks
+nt/plot //lun1/cuts/1.ntracks trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2) ! ! ! 's'
+nt/plot //lun1/cuts/1.ntracks trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998 ! ! ! 's'
+* this is the best yet!
+
+
+
+
+nt/plot //lun1/cuts/1.pfound trigger<100&&ntracks>1&&pfound<100&&2-abs(p1)-abs(p2)-pmiss<-0.2&&pfound<0.1
+
+nt/plot //lun1/cuts/1.wrphi trigger<100&&pass>=11000&&wrphi<0.01
+nt/plot //lun1/cuts/1.wz abs(wz)<0.20
+
+nt/plot //lun1/cuts/1.pass pass>=11000
+
+
+
+** after copy
+
+h/cr/1d 100 'momenum sum' 100 -0.025 0.025
+nt/plot //lun1/cuts/1.sqrt((sin(trphi1)*sqrt(1-trcosth1**2)+sin(trphi2)*sqrt(1-trcosth2**2))**2+(cos(trphi1)*sqrt(1-trcosth1**2)+cos(trphi2)*sqrt(1-trcosth2**2))**2+(trcosth1+trcosth2)**2) trcosth1<2 ! ! ! ! 100
+nt/plot //lun1/cuts/1.(sin(trphi1)*sqrt(1-trcosth1**2)+sin(trphi2)*sqrt(1-trcosth2**2)) trcosth1<2 ! ! ! ! 100
+nt/plot //lun1/cuts/1.(cos(trphi1)*sqrt(1-trcosth1**2)+cos(trphi2)*sqrt(1-trcosth2**2)) trcosth1<2 ! ! ! ! 100
+nt/plot //lun1/cuts/1.trcosth1+trcosth2 trcosth1<2
+
+nt/plot //lun1/cuts/1.(cos(trphi1)*sqrt(1-trcosth1**2)+cos(trphi2)*sqrt(1-trcosth2**2)) trcosth1<2 ! ! ! ! 100
+nt/plot //lun1/cuts/1.(abs(p1)*cos(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*cos(trphi2)*sqrt(1-trcosth2**2)) trcosth1<2 ! ! ! ! 100
+
+nt/plot //lun1/cuts/1.(abs(p1)*cos(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*cos(trphi2)*sqrt(1-trcosth2**2)) abs(p1)>0&&abs(p2)>0&&trcosth1<2&&abs(abs(p1)*cos(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*cos(trphi2)*sqrt(1-trcosth2**2))<0.04&&trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998
+
+
+nt/plot //lun1/cuts/1.(cos(trphi1)*sqrt(1-trcosth1**2)+cos(trphi2)*sqrt(1-trcosth2**2)) abs(p1)>0&&abs(p2)>0&&trcosth1<2&&abs(cos(trphi1)*sqrt(1-trcosth1**2)+cos(trphi2)*sqrt(1-trcosth2**2))<0.04&&trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998
+
+
+
+
+nt/plot //lun1/cuts/1.sqrt((abs(p1)*sin(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*sin(trphi2)*sqrt(1-trcosth2**2))**2+(abs(p1)*cos(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*cos(trphi2)*sqrt(1-trcosth2**2))**2+(abs(p1)*trcosth1+abs(p2)*trcosth2)**2) trcosth1<2 ! ! ! ! 100
+
+nt/plot //lun1/cuts/1.p1 trcosth1<2&&sqrt((abs(p1)*sin(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*sin(trphi2)*sqrt(1-trcosth2**2))**2+(abs(p1)*cos(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*cos(trphi2)*sqrt(1-trcosth2**2))**2+(abs(p1)*trcosth1+abs(p2)*trcosth2)**2)<0.0001
+
+
+
+nt/plot //lun1/cuts/1.sqrt((abs(p1)*sin(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*sin(trphi2)*sqrt(1-trcosth2**2))**2+(abs(p1)*cos(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*cos(trphi2)*sqrt(1-trcosth2**2))**2+(abs(p1)*trcosth1+abs(p2)*trcosth2)**2) abs(p1)>0&&abs(p2)>0&&trcosth1<2&&sqrt((abs(p1)*sin(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*sin(trphi2)*sqrt(1-trcosth2**2))**2+(abs(p1)*cos(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*cos(trphi2)*sqrt(1-trcosth2**2))**2+(abs(p1)*trcosth1+abs(p2)*trcosth2)**2)<0.1
+
+nt/plot //lun1/cuts/1.sqrt((abs(p1)*sin(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*sin(trphi2)*sqrt(1-trcosth2**2))**2+(abs(p1)*cos(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*cos(trphi2)*sqrt(1-trcosth2**2))**2) abs(p1)>0&&abs(p2)>0&&trcosth1<2&&sqrt((abs(p1)*sin(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*sin(trphi2)*sqrt(1-trcosth2**2))**2+(abs(p1)*cos(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*cos(trphi2)*sqrt(1-trcosth2**2))**2)<0.1
+
+nt/plot //lun1/cuts/1.abs(abs(p1)*sin(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*sin(trphi2)*sqrt(1-trcosth2**2)) abs(p1)>0&&abs(p2)>0&&trcosth1<2&&abs(abs(p1)*sin(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*sin(trphi2)*sqrt(1-trcosth2**2))<0.1
+
+nt/plot //lun1/cuts/1.abs(p1)*sin(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*sin(trphi2)*sqrt(1-trcosth2**2) abs(p1)>0&&abs(p2)>0&&trcosth1<2&&abs(abs(p1)*sin(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*sin(trphi2)*sqrt(1-trcosth2**2))<2&&trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998
+
+
+
+
+
+nt/plot //lun1/cuts/1.(abs(p1)*cos(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*cos(trphi2)*sqrt(1-trcosth2**2))/abs(p1)/abs(p2) abs(p1)>0&&abs(p2)>0&&trcosth1<2&&abs(abs(p1)*cos(trphi1)*sqrt(1-trcosth1**2)+abs(p2)*cos(trphi2)*sqrt(1-trcosth2**2))/abs(p1)/abs(p2)<0.01
+
+
+
+
+
+
+
+
+
+
+h/cr/1d 10 'tracks' 16 -0.5 15.5
+nt/plot //lun1/cuts/1.ntracks trigger<100 ! ! ! ! 10
+nt/plot //lun1/cuts/1.ntracks trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998 ! ! ! 's' 10
+
+
+nt/plot //lun1/cuts/1.cos(shphi1-shphi2) e2>0.9
+nt/plot //lun1/cuts/1.cos(shphi1-shphi2) e1<0.9 ! ! ! 's'
+
+nt/plot //lun1/cuts/1.shcosth1+shcosth2 e2>0.9
+nt/plot //lun1/cuts/1.shcosth1+shcosth2 e1<0.9 ! ! ! 's'
+
+nt/plot //lun1/cuts/1.sqrt((e1*sin(shphi1)*sqrt(1-shcosth1**2)+e2*sin(shphi2)*sqrt(1-shcosth2**2))**2+(e1*cos(shphi1)*sqrt(1-shcosth1**2)+e2*cos(shphi2)*sqrt(1-shcosth2**2))**2)/(e1+e2) shcosth1<2&&abs(e1)>0&&abs(e2)>0 
+nt/plot //lun1/cuts/1.sqrt((e1*sin(shphi1)*sqrt(1-shcosth1**2)+e2*sin(shphi2)*sqrt(1-shcosth2**2))**2+(e1*cos(shphi1)*sqrt(1-shcosth1**2)+e2*cos(shphi2)*sqrt(1-shcosth2**2))**2)/(e1+e2) shcosth1<2&&abs(e1)>0&&abs(e2)>0&&e2>0.9 ! ! ! 's'
+nt/plot //lun1/cuts/1.sqrt((e1*sin(shphi1)*sqrt(1-shcosth1**2)+e2*sin(shphi2)*sqrt(1-shcosth2**2))**2+(e1*cos(shphi1)*sqrt(1-shcosth1**2)+e2*cos(shphi2)*sqrt(1-shcosth2**2))**2)/(e1+e2) shcosth1<2&&abs(e1)>0&&abs(e2)>0&&e1<0.9 ! ! ! 's'
+
+
+
+nt/plot //lun1/cuts/1.sqrt((e1*sin(shphi1)*sqrt(1-shcosth1**2)+e2*sin(shphi2)*sqrt(1-shcosth2**2))**2+(e1*cos(shphi1)*sqrt(1-shcosth1**2)+e2*cos(shphi2)*sqrt(1-shcosth2**2))**2)/(e1+e2) shcosth1<2&&abs(e1)>0&&abs(e2)>0&&sqrt((e1*sin(shphi1)*sqrt(1-shcosth1**2)+e2*sin(shphi2)*sqrt(1-shcosth2**2))**2+(e1*cos(shphi1)*sqrt(1-shcosth1**2)+e2*cos(shphi2)*sqrt(1-shcosth2**2))**2)/(e1+e2)<0.1
+nt/plot //lun1/cuts/1.sqrt((e1*sin(shphi1)*sqrt(1-shcosth1**2)+e2*sin(shphi2)*sqrt(1-shcosth2**2))**2+(e1*cos(shphi1)*sqrt(1-shcosth1**2)+e2*cos(shphi2)*sqrt(1-shcosth2**2))**2)/(e1+e2) shcosth1<2&&abs(e1)>0&&abs(e2)>0&&sqrt((e1*sin(shphi1)*sqrt(1-shcosth1**2)+e2*sin(shphi2)*sqrt(1-shcosth2**2))**2+(e1*cos(shphi1)*sqrt(1-shcosth1**2)+e2*cos(shphi2)*sqrt(1-shcosth2**2))**2)/(e1+e2)<0.1&&e2>0.9 ! ! ! 's'
+nt/plot //lun1/cuts/1.sqrt((e1*sin(shphi1)*sqrt(1-shcosth1**2)+e2*sin(shphi2)*sqrt(1-shcosth2**2))**2+(e1*cos(shphi1)*sqrt(1-shcosth1**2)+e2*cos(shphi2)*sqrt(1-shcosth2**2))**2)/(e1+e2) shcosth1<2&&abs(e1)>0&&abs(e2)>0&&sqrt((e1*sin(shphi1)*sqrt(1-shcosth1**2)+e2*sin(shphi2)*sqrt(1-shcosth2**2))**2+(e1*cos(shphi1)*sqrt(1-shcosth1**2)+e2*cos(shphi2)*sqrt(1-shcosth2**2))**2)/(e1+e2)<0.1&&e1<0.9 ! ! ! 's'
+
+nt/plot //lun1/cuts/1.e1%e2 !(0.9<e2<1.1)
+
+
+
+
+h/cr/1d 10 'tracks' 16 -0.5 15.5
+nt/plot //lun1/cuts/1.ntracks trigger<100 ! ! ! ! 10
+nt/plot //lun1/cuts/1.ntracks trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998 ! ! ! 's' 10
+nt/plot //lun1/cuts/1.ntracks trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998&&!(0.9<e2<1.1) ! ! ! 's' 10
+nt/plot //lun1/cuts/1.ntracks trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998&&!(shcosth1<2&&e1>0&&e2>0&&0.03<sqrt((e1*sin(shphi1)*sqrt(1-shcosth1**2)+e2*sin(shphi2)*sqrt(1-shcosth2**2))**2+(e1*cos(shphi1)*sqrt(1-shcosth1**2)+e2*cos(shphi2)*sqrt(1-shcosth2**2))**2)/(e1+e2)<0.06&&(0.9<e2<1.1)) ! ! ! 's' 10
+
+
+
+
+
+nt/plot //lun1/cuts/1.z0close rawntrac>5&&abs(z0close)<0.20
+
+
+
+h/cr/1d 10 'tracks' 16 -0.5 15.5
+nt/plot //lun1/cuts/1.ntracks trigger<100 ! ! ! ! 10
+nt/plot //lun1/cuts/1.ntracks trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998 ! ! ! 's' 10
+nt/plot //lun1/cuts/1.ntracks trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998&&((rawntrac>0&&abs(z0close)<0.05).or.rawntrac==0) ! ! ! 's' 10
+* this is looking very good
+
+
+
+nt/plot //lun1/cuts/1.abs(p1)+abs(p2) trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998&&((rawntrac>0&&abs(z0close)<0.05).or.rawntrac==0)
+nt/plot //lun1/cuts/1.e1+e2 trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998&&((rawntrac>0&&abs(z0close)<0.05).or.rawntrac==0)
+
+
+
+** I changed a cut
+
+h/cr/1d 10 'tracks' 16 -0.5 15.5
+nt/plot //lun1/cuts/1.ntracks trigger<100 ! ! ! ! 10
+nt/plot //lun1/cuts/1.ntracks trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998 ! ! ! 's' 10
+nt/plot //lun1/cuts/1.ntracks trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998&&((rawntrac>0&&abs(z0close)<0.06).or.rawntrac==0) ! ! ! 's' 10
+* this is looking very good
+
+
+
+nt/plot //lun1/cuts/1.abs(p1)+abs(p2) trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998&&((rawntrac>0&&abs(z0close)<0.06).or.rawntrac==0)
+nt/plot //lun1/cuts/1.e1+e2 trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998&&((rawntrac>0&&abs(z0close)<0.06).or.rawntrac==0)
+
+
+
+
+
+
+nt/plot //lun1/cuts/1.visen trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998&&((rawntrac>0&&abs(z0close)>0.06).or.rawntrac==0)&&visen<5
+nt/plot //lun1/cuts/1.visen trigger<100&&(ntracks>=2&&!(pfound<100&&pfound<0.1&&pnext<0.1&&2-abs(p1)-abs(p2)-pmiss<2-abs(p1)-abs(p2)-pfound-pnext+0.05&&2-abs(p1)-abs(p2)-pmiss<0.5).or.ntracks<2)&&trperp1>-0.99998&&trperp2>-0.99998&&trperp4>-0.99998&&((rawntrac>0&&abs(z0close)<0.06).or.rawntrac==0)&&visen<5 ! ! ! 's'

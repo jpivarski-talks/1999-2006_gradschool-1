@@ -1,0 +1,15 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/u3s.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/luminosity/makemc/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Jun27_02_MC
+
+suez -f u3s.tcl
+rm -f core
+suez -f u3s_followup.tcl
+rm -f core
+
+exit

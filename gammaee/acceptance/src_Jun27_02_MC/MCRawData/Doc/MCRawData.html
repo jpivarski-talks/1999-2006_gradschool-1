@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+<head>
+<title>MCRawData Library</title>
+</head>
+<body bgcolor="#FFFFFF">
+<h1>MCRawData</h1>
+
+This document explains the functioning of the 
+<CODE>MCRawData</CODE> library.
+
+<P>
+This library contains the classes which define and fill the
+raw data objects from the 
+<A href="http://www.lns.cornell.edu/~cleo3/development/src/MCResponse/Doc/MCResponse.html">
+<CODE>MCResponse</CODE></A> of each sub-detector.
+The library has a producer which holds proxies for
+all the <A href="http://www.lns.cornell.edu/~cleo3/current/src/RawData/Doc/RawData.txt">
+<CODE>RawData</CODE></A> objects. The <CODE>faultHandler()</CODE>
+for each proxy, in turn, asks for the information it needs
+to assemble the raw data, probably an 
+<CODE>FATable&lt; MCXXXResponse &gt;</CODE>, to which it
+adds noise, digitizes, sparsifies, etc.
+
+Right now they are mostly dummy skeletons which do little
+except set the structure for returning the information.
+
+<P>
+The following are links to the important files:
+<UL>
+<LI> <A href="http://www.lns.cornell.edu/~cleo3/development/src/MCRawData/Class/MCRawPreludeProxy.cc">
+<CODE>MCRawPreludeProxy.cc</CODE></A>,
+<LI> <A href="http://www.lns.cornell.edu/~cleo3/development/src/MCRawData/Class/MCRawHeaderProxy.cc">
+<CODE>MCRawHeaderProxy.cc</CODE></A>,
+<LI> <A href="http://www.lns.cornell.edu/~cleo3/development/src/MCRawData/Class/MCRawCCHitsProxy.cc">
+<CODE>MCRawCCHitsProxy.cc</CODE></A>,
+<LI>  <A href="http://www.lns.cornell.edu/~cleo3/development/src/MCRawData/Class/MCRawCathodesProxy.cc">
+<CODE>MCRawCathodesProxy.cc</CODE></A>,
+<LI>  <A href="http://www.lns.cornell.edu/~cleo3/development/src/MCRawData/Class/MCRawDRHitsProxy.cc">
+<CODE>MCRawDRHitsProxy.cc</CODE></A>,
+<LI>  <A href="http://www.lns.cornell.edu/~cleo3/development/src/MCRawData/Class/MCRawMUHitsProxy.cc">
+<CODE>MCRawMUHitsProxy.cc</CODE></A>,
+<LI>  <A href="http://www.lns.cornell.edu/~cleo3/development/src/MCRawData/Class/MCRawRichHitsProxy.cc">
+<CODE>MCRawRichHitsProxy.cc</CODE></A>,
+<LI>  <A href="http://www.lns.cornell.edu/~cleo3/development/src/MCRawData/Class/MCRawSVHitsProxy.cc">
+<CODE>MCRawSVHitsProxy.cc</CODE></A>,
+<LI> <A href="http://www.lns.cornell.edu/~cleo3/development/src/MCRawData/Class/MCRawTriggerProxy.cc">
+<CODE>MCRawTriggerProxy.cc</CODE></A>,
+<LI> <A href="http://www.lns.cornell.edu/~cleo3/development/src/MCRawData/Class/MCRawRunControlProxy.cc">
+<CODE>MCRawRunControlProxy.cc</CODE></A>,
+<LI> <A href="http://www.lns.cornell.edu/~cleo3/development/src/MCRawData/Class/MCRawLuminosityProxy.cc">
+<CODE>MCRawLuminosityProxy.cc</CODE></A>,
+<LI> <A href="http://www.lns.cornell.edu/~cleo3/development/src/MCRawData/Class/MCRawLevel3TriggerProxy.cc">
+<CODE>MCRawLevel3TriggerProxy.cc</CODE></A>,
+<LI>  <A href="http://www.lns.cornell.edu/~cleo3/development/src/MCRawData/Class/MCRawEventDataProxy.cc">
+<CODE>MCRawEventDataProxy.cc</CODE></A>.
+</UL>
+</P>
+
+<P><hr>
+<address><a href="mailto:bkh@mail.lns.cornell.edu/">Brian Heltsley &lt;bkh@lns.cornell.edu&gt;</a></address>
+<!-- hhmts start -->
+Last modified: Mon Feb 22 13:30:10 EST 1999
+<!-- hhmts end -->
+</body> </html>
+

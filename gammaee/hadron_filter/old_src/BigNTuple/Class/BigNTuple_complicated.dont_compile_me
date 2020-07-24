@@ -1,0 +1,1866 @@
+// -*- C++ -*-
+//
+// Package:     BigNTuple
+// Module:      BigNTuple
+// 
+// Description: <one line class summary>
+//
+// Implementation:
+//     <Notes on implementation>
+//
+// Author:      Jim McCann
+// Created:     Thu May 30 15:00:07 EDT 2002
+// $Id$
+//
+// Revision history
+//
+// $Log$
+//
+
+#include "Experiment/Experiment.h"
+
+// system include files
+
+// user include files
+#include "BigNTuple/BigNTuple.h"
+#include "Experiment/report.h"
+#include "Experiment/units.h"  // for converting to/from standard CLEO units
+
+#include "DataHandler/Record.h"
+#include "DataHandler/Frame.h"
+#include "FrameAccess/extract.h"
+#include "FrameAccess/FAItem.h"
+#include "FrameAccess/FATable.h"
+
+#include "Navigation/NavTrack.h"
+#include "TrackRoot/TRHelixFit.h"
+#include "TrackRoot/TRTrackFitQuality.h"
+#include "TrackRoot/TRSeedTrackQuality.h"
+#include "TrackDelivery/TDKinematicFit.h"
+
+#include "Navigation/NavTrack.h"
+#include "TrackRoot/TRHelixFit.h"
+#include "TrackRoot/TRTrackFitQuality.h"
+#include "TrackRoot/TRSeedTrackQuality.h"
+#include "TrackDelivery/TDKinematicFit.h"
+#include "C3Mu/MuTrack.h"
+#include "Navigation/NavShower.h"
+#include "C3cc/CcShowerAttributes.h"
+#include "Navigation/NavConReg.h"
+#include "KinematicTrajectory/KTKinematicData.h"
+#include "Navigation/NavTkShMatch.h"
+#include "C3cc/CcAssignedEnergyHit.h"
+#include "BunchFinder/BunchDecision.h"
+#include "TrackletBunchFinder/TrackletBunchDecision.h"
+#include "/home/mccann/hadron_filter/src/EventVertex/EventVertex/EventVertex.h"
+
+//RICH example 
+//Dedx example
+//Event Shape example
+
+
+// STL classes
+// You may have to uncomment some of these or other stl headers 
+// depending on what other header files you include (e.g. FrameAccess etc.)!
+//#include <string>
+//#include <vector>
+//#include <set>
+//#include <map>
+//#include <algorithm>
+//#include <utility>
+
+//
+// constants, enums and typedefs
+//
+static const char* const kFacilityString = "Processor.BigNTuple" ;
+
+// ---- cvs-based strings (Id and Tag with which file was checked out)
+static const char* const kIdString  = "$Id: processor.cc,v 1.30 2002/04/02 22:04:09 ajm36 Exp $";
+static const char* const kTagString = "$Name: v06_05_01 $";
+
+//
+// static data member definitions
+//
+
+
+
+//
+// constructors and destructor
+//
+BigNTuple::BigNTuple( void )               // anal1
+   : Processor( "BigNTuple" )
+   , m_lookForCosmics( "lookForCosmics", this, false )
+   , m_getBunchData( "getBunchData", this, true )
+{
+   report( DEBUG, kFacilityString ) << "here in ctor()" << endl;
+
+   // ---- bind a method to a stream -----
+   // These lines ARE VERY IMPORTANT! If you don't bind the 
+   // code you've just written (the "action") to a stream, 
+   // your code won't get executed!
+
+   bind( &BigNTuple::event,    Stream::kEvent );
+   //bind( &BigNTuple::beginRun, Stream::kBeginRun );
+   //bind( &BigNTuple::endRun,   Stream::kEndRun );
+
+   // do anything here that needs to be done at creation time
+   // (e.g. allocate resources etc.)
+
+}
+
+BigNTuple::~BigNTuple()                    // anal5
+{
+   report( DEBUG, kFacilityString ) << "here in dtor()" << endl;
+ 
+   // do anything here that needs to be done at desctruction time
+   // (e.g. close files, deallocate resources etc.)
+
+}
+
+//
+// member functions
+//
+
+// ------------ methods for beginning/end "Interactive" ------------
+// --------------------------- init method -------------------------
+void
+BigNTuple::init( void )          // anal1 "Interactive"
+{
+   report( DEBUG, kFacilityString ) << "here in init()" << endl;
+
+   // do any initialization here based on Parameter Input by User
+   // (e.g. run expensive algorithms that are based on parameters
+   //  specified by user at run-time)
+
+}
+
+// -------------------- terminate method ----------------------------
+void
+BigNTuple::terminate( void )     // anal5 "Interactive"
+{
+   report( DEBUG, kFacilityString ) << "here in terminate()" << endl;
+
+   // do anything here BEFORE New Parameter Change
+   // (e.g. write out result based on parameters from user-input)
+ 
+}
+
+const double cosmic_energy_low = 0.210-0.060;
+const double cosmic_energy_high = 0.210+0.060;
+
+const double cosmic_phi0diff_low = 3.1415926-0.005;
+const double cosmic_phi0diff_high = 3.1415926+0.005;
+
+const double cosmic_d0sum_low = -0.0005;
+const double cosmic_d0sum_high = 0.0005;
+		    
+const double cosmic_z0diff_low = -0.001;
+const double cosmic_z0diff_high = 0.001;
+		    
+const double cosmic_cotThetadiff_low = -0.015;
+const double cosmic_cotThetadiff_high = 0.015;
+
+const char* ntuple_labels[BigNTuple::kEntries] = {
+   "w_z0",
+   "w_d0",
+   "charge",
+   "ch_px",
+   "ch_py",
+   "ch_pz",
+   "n_px",
+   "n_py",
+   "n_pz",
+   "num_sh",
+   "num_un",
+   "num_tr",
+   "tot_sh_e",
+   "max_sh_e",
+   "tot_un_e",
+   "max_un_e",
+   "tot_tr_p",
+   "max_tr_p",
+   "tot_tr_e",
+   "max_tr_e",
+   "bw_best",
+   "bw_next",
+   "v_x",
+   "v_y",
+   "v_z",
+   "v_chi2",
+   "v_chi2pT",
+};
+
+// ---------------- standard place to book histograms ---------------
+void
+BigNTuple::hist_book( HIHistoManager& iHistoManager )
+{
+   report( DEBUG, kFacilityString ) << "here in hist_book()" << endl;
+
+   // book your histograms here
+
+   m_cosmic = iHistoManager.ntuple(
+      1, "cosmic", kEntries, 262144, ntuple_labels );
+
+   m_other = iHistoManager.ntuple(
+      2, "other", kEntries, 262144, ntuple_labels );
+
+   m_cosmic_energy = iHistoManager.histogram(
+      100, "cosmic energy", 100, cosmic_energy_low, cosmic_energy_high );
+   m_cosmic_phi0diff = iHistoManager.histogram(
+      200, "cosmic phi0diff", 100, cosmic_phi0diff_low, cosmic_phi0diff_high );
+   m_cosmic_d0sum = iHistoManager.histogram(
+      300, "cosmic d0sum", 100, cosmic_d0sum_low, cosmic_d0sum_high );
+   m_cosmic_z0diff = iHistoManager.histogram(
+      400, "cosmic z0diff", 100, cosmic_z0diff_low, cosmic_z0diff_high );
+   m_cosmic_cotThetadiff = iHistoManager.histogram(
+      500, "cosmic cotThetadiff", 100, cosmic_cotThetadiff_low, cosmic_cotThetadiff_high );
+
+   m_cosmic_un_cosTh = iHistoManager.histogram(
+      600, "cosmic unmatched shower cos(theta)", 100, -1., 1. );
+   m_other_un_cosTh = iHistoManager.histogram(
+      650, "other unmatched shower cos(theta)", 100, -1., 1. );
+}
+
+// --------------------- methods bound to streams -------------------
+ActionBase::ActionResult
+BigNTuple::event( Frame& iFrame )          // anal3 equiv.
+{
+   report( DEBUG, kFacilityString ) << "here in event()" << endl;
+
+   DABoolean isCosmic( false );
+
+   FATable< NavShower > navshowers;
+   extract( iFrame.record( Stream::kEvent ), navshowers );
+   FATable< NavShower >::const_iterator showers_end = navshowers.end();
+
+   FATable< NavTrack > navtracks;
+   extract( iFrame.record( Stream::kEvent ), navtracks );
+   FATable< NavTrack >::const_iterator tracks_end = navtracks.end();
+
+   FAItem< TrackletBunchDecision > bunchDecision;
+   if ( m_getBunchData.value() )
+      extract( iFrame.record( Stream::kEvent ), bunchDecision );
+
+   FAItem< EventVertex > eventVertex;
+   if ( navtracks.size() > 2 )
+      extract( iFrame.record( Stream::kEvent ), eventVertex );
+
+   if ( m_lookForCosmics.value() )
+      if ( navtracks.size() == 2 ) {
+
+	 FATable< MuTrack > mutracks;
+	 extract( iFrame.record( Stream::kEvent ), mutracks );
+
+	 if ( mutracks.size() == 2 ) {
+
+	    FATable< MuTrack >::const_iterator secondMu = mutracks.begin();
+	    FATable< MuTrack >::const_iterator firstMu = secondMu;
+	    secondMu++;
+
+	    if ( firstMu->dpthmu() > 3.  &&
+		 secondMu->dpthmu() > 3.     ) {
+
+	       FATable< NavTrack >::const_iterator secondNav = navtracks.begin();
+	       FATable< NavTrack >::const_iterator firstNav = secondNav;
+	       secondNav++;
+
+	       if ( ! firstNav->pionQuality()->fitAbort()  &&
+		    ! secondNav->pionQuality()->fitAbort()     ) {
+
+		  if ( ! firstNav->seedQuality()->originUsed()  &&
+		       ! secondNav->seedQuality()->originUsed()     ) {
+
+		     int suspicious_showers( 0 );
+		     double suspicious_energy[2];
+		     for ( FATable< NavShower >::const_iterator shower_iter = navshowers.begin();
+			   shower_iter != showers_end;
+			   shower_iter++ ) {
+
+			double energy( shower_iter->attributes().energy() );
+
+			if ( cosmic_energy_low < energy && energy < cosmic_energy_high  &&
+			     ! shower_iter->attributes().hot()                          &&
+			     shower_iter->trackMatches().size() == 1                       ) {
+
+			   if ( suspicious_showers < 2 )
+			      suspicious_energy[ suspicious_showers ] = energy;
+			   suspicious_showers++;
+
+			}
+		     } // end loop over showers
+
+		     if ( suspicious_showers == 2 ) {
+
+			FAItem< TRHelixFit > firstHelix = firstNav->pionHelix();
+			FAItem< TRHelixFit > secondHelix = secondNav->pionHelix();
+
+			double phi0diff( firstHelix->phi0() - secondHelix->phi0() );
+			if ( phi0diff < 0. ) phi0diff *= -1.;
+			double d0sum( firstHelix->d0() + secondHelix->d0() );
+			double z0diff( firstHelix->z0() - secondHelix->z0() );
+			double cotThetadiff( firstHelix->cotTheta() + secondHelix->cotTheta() );
+
+			report( DEBUG, kFacilityString ) << "energy1 = " << suspicious_energy[0] << endl;
+			report( DEBUG, kFacilityString ) << "energy2 = " << suspicious_energy[1] << endl;
+			report( DEBUG, kFacilityString ) << "phi0diff = " << phi0diff << endl;
+			report( DEBUG, kFacilityString ) << "d0sum = " << d0sum << endl;
+			report( DEBUG, kFacilityString ) << "z0diff = " << z0diff << endl;
+			report( DEBUG, kFacilityString ) << "cotThetadiff = " << cotThetadiff << endl;
+
+			if ( cosmic_phi0diff_low < phi0diff         &&  phi0diff < cosmic_phi0diff_high         &&
+			     cosmic_d0sum_low < d0sum               &&  d0sum < cosmic_d0sum_high               &&
+			     cosmic_z0diff_low < z0diff             &&  z0diff < cosmic_z0diff_high             &&
+			     cosmic_cotThetadiff_low < cotThetadiff && cotThetadiff < cosmic_cotThetadiff_high     ) {
+
+			   isCosmic = true;
+
+			   m_cosmic_energy->fill( suspicious_energy[0] );
+			   m_cosmic_energy->fill( suspicious_energy[1] );
+			   m_cosmic_phi0diff->fill( phi0diff );
+			   m_cosmic_d0sum->fill( d0sum );
+			   m_cosmic_z0diff->fill( z0diff );
+			   m_cosmic_cotThetadiff->fill( cotThetadiff );
+
+			} } } } } } } // end tests for isCosmic
+
+   float v[kEntries];
+   for ( int i = 0;  i < kEntries;  i++ ) v[i] = 0.;
+   
+   double w_z0_denom( 0. );
+   double w_d0_denom( 0. );
+
+   // track loop
+   for ( FATable< NavTrack >::const_iterator track_iter = navtracks.begin();
+	 track_iter != tracks_end;
+	 track_iter++ )
+      if ( ! track_iter->pionQuality()->fitAbort()  &&
+	   ! track_iter->seedQuality()->originUsed()   ) {
+
+	 v[kNumTracks] += 1.;
+
+	 v[kChargedMomX] += track_iter->pionFit()->momentum().x();
+	 v[kChargedMomY] += track_iter->pionFit()->momentum().y();
+	 v[kChargedMomZ] += track_iter->pionFit()->momentum().z();
+
+	 if ( track_iter->pionHelix()->curvature() > 0. )
+	    v[kCharge] += 1.;
+	 else
+	    v[kCharge] -= 1.;
+
+	 report( DEBUG, kFacilityString )
+	    << "hasNullErrorMatrix() = " << track_iter->pionHelix()->hasNullErrorMatrix()
+	    << ", errorMatrix()[ kZ0 ][ kZ0 ] = "
+	    << track_iter->pionHelix()->errorMatrix()( KTHelix::kZ0, KTHelix::kZ0 )
+	    << ", z0 = " << track_iter->pionHelix()->z0() << endl;
+
+	 float z0err2( 1. );
+	 if ( ! track_iter->pionHelix()->hasNullErrorMatrix()  &&
+	      track_iter->pionHelix()->errorMatrix()( KTHelix::kZ0, KTHelix::kZ0 ) > 0. )
+	    z0err2 = track_iter->pionHelix()->errorMatrix()( KTHelix::kZ0, KTHelix::kZ0 );
+
+	 v[kWeightedZ0] += track_iter->pionHelix()->z0() / z0err2;
+	 w_z0_denom += 1. / z0err2;
+
+	 float d0err2( 1. );
+	 if ( ! track_iter->pionHelix()->hasNullErrorMatrix()  &&
+	      track_iter->pionHelix()->errorMatrix()( KTHelix::kD0, KTHelix::kD0 ) > 0. )
+	    d0err2 = track_iter->pionHelix()->errorMatrix()( KTHelix::kD0, KTHelix::kD0 );
+
+	 v[kWeightedD0] += abs( track_iter->pionHelix()->d0() ) / d0err2;
+	 w_d0_denom += 1. / d0err2;
+
+	 v[kTotalTrackMomentum] += track_iter->pionFit()->momentum().mag();
+	 if ( track_iter->pionFit()->momentum().mag() > v[kMaxTrackMomentum] )
+	    v[kMaxTrackMomentum] = track_iter->pionFit()->momentum().mag();
+
+	 v[kTotalTrackEnergy] += track_iter->pionFit()->energy();
+	 if ( track_iter->pionFit()->energy() > v[kMaxTrackEnergy] )
+	    v[kMaxTrackEnergy] = track_iter->pionFit()->energy();
+      } // end loop over tracks
+
+   if ( w_z0_denom != 0. )
+      v[kWeightedZ0] /= w_z0_denom;
+   
+   if ( w_d0_denom != 0. )
+      v[kWeightedD0] /= w_d0_denom;
+   
+   // shower loop
+   for ( FATable< NavShower >::const_iterator shower_iter = navshowers.begin();
+	 shower_iter != showers_end;
+	 shower_iter++ )
+      if ( ( shower_iter->attributes().goodBarrel()  ||
+	     shower_iter->attributes().goodEndcap()     )  &&
+	   ! shower_iter->attributes().hot()                   ) {
+	 const double energy = shower_iter->attributes().energy();
+
+	 v[kNumShowers] += 1.;
+	 v[kTotalShowerEnergy] += energy;
+
+	 if ( energy > v[kMaxShowerEnergy] ) v[kMaxShowerEnergy] = energy;
+
+	 if ( shower_iter->noTrackMatch() ) {
+
+	    v[kNumUnmatched] += 1.;
+	    v[kTotalUnmatchedEnergy] += energy;
+
+	    if ( energy > v[kMaxUnmatchedEnergy] ) v[kMaxUnmatchedEnergy] = energy;
+
+	    v[kNeutralMomX] += shower_iter->attributes().momentum().x();
+	    v[kNeutralMomY] += shower_iter->attributes().momentum().y();
+	    v[kNeutralMomZ] += shower_iter->attributes().momentum().z();
+
+	    if ( m_lookForCosmics.value()  &&  isCosmic )
+	       m_cosmic_un_cosTh->fill( shower_iter->attributes().theta() );
+	    else
+	       m_other_un_cosTh->fill( shower_iter->attributes().theta() );
+
+	 } // end if no track match
+      }
+
+   if ( m_getBunchData.value() )
+      if ( bunchDecision->numberOfTestedBunches() > 0 ) {
+	 v[kBunchWeightBest] = bunchDecision->bestBunchInfo().bweight();
+	 v[kBunchWeightNext] = bunchDecision->bunchInfo( 1 ).bweight();
+      }
+
+   if ( navtracks.size() > 2  &&
+	eventVertex->vertexType() == EventVertex::kGoodEvent ) {
+      v[kVertexX] = eventVertex->vertexPosition().x();
+      v[kVertexY] = eventVertex->vertexPosition().y();
+      v[kVertexZ] = eventVertex->vertexPosition().z();
+      v[kVertexChi2] = eventVertex->vertexChiSquare();
+      v[kVertexChi2perTrack] = ( eventVertex->vertexChiSquare() / 
+				 eventVertex->numTrackFinalVertex() );
+   }
+
+   for ( int j = 0;  j < kEntries;  j++ )
+      report( DEBUG, kFacilityString )
+	 << ntuple_labels[j] << " = " << v[j] << endl;
+
+   // put the variables into the ntuple
+   if ( m_lookForCosmics.value()  &&  isCosmic )
+      m_cosmic->fill( v );
+   else
+      m_other->fill( v );
+
+   return ActionBase::kPassed;
+}
+
+/*
+ActionBase::ActionResult
+BigNTuple::beginRun( Frame& iFrame )       // anal2 equiv.
+{
+   report( DEBUG, kFacilityString ) << "here in beginRun()" << endl;
+
+   return ActionBase::kPassed;
+}
+*/
+
+/*
+ActionBase::ActionResult
+BigNTuple::endRun( Frame& iFrame )         // anal4 equiv.
+{
+   report( DEBUG, kFacilityString ) << "here in endRun()" << endl;
+
+   return ActionBase::kPassed;
+}
+*/
+
+//
+// const member functions
+//
+
+//
+// static member functions
+//
+
+double BigNTuple::xsol1( double curva, double d0a, double phi0a,
+			 double curvb, double d0b, double phi0b )
+{
+   return
+      ((2*((3 + 2*curva*d0a)*d0b + 
+           curvb*(4*pow(d0a,2) + 16*curva*pow(d0a,3) + pow(d0b,2) + 
+		  54*curva*d0a*pow(d0b,2)))*cos(phi0a) + 
+        d0a*(-1 + curva*d0a)*cos(4*phi0a - 5*phi0b) + 
+        d0b*cos(3*phi0a - 4*phi0b) - 4*curva*d0a*d0b*cos(3*phi0a - 4*phi0b) - 
+        curvb*pow(d0b,2)*cos(3*phi0a - 4*phi0b) + 
+        4*curva*curvb*d0a*pow(d0b,2)*cos(3*phi0a - 4*phi0b) + 
+        d0b*cos(5*phi0a - 4*phi0b) - 
+        curvb*pow(d0b,2)*cos(5*phi0a - 4*phi0b) + 
+        4*d0a*cos(2*phi0a - 3*phi0b) + 
+        4*curvb*d0a*d0b*cos(2*phi0a - 3*phi0b) - 
+        20*curva*curvb*pow(d0a,2)*d0b*cos(2*phi0a - 3*phi0b) + 
+        4*curva*pow(d0b,2)*cos(2*phi0a - 3*phi0b) - 
+        8*curva*curvb*pow(d0b,3)*cos(2*phi0a - 3*phi0b) - 
+        d0a*cos(4*phi0a - 3*phi0b) + 
+        curva*pow(d0a,2)*cos(4*phi0a - 3*phi0b) + 
+        4*curvb*d0a*d0b*cos(4*phi0a - 3*phi0b) - 
+        4*curva*curvb*pow(d0a,2)*d0b*cos(4*phi0a - 3*phi0b) - 
+        4*curvb*pow(d0a,2)*cos(phi0a - 2*phi0b) + 
+        24*curva*curvb*pow(d0a,3)*cos(phi0a - 2*phi0b) - 
+        4*d0b*cos(phi0a - 2*phi0b) + 4*curva*d0a*d0b*cos(phi0a - 2*phi0b) + 
+        60*curva*curvb*d0a*pow(d0b,2)*cos(phi0a - 2*phi0b) - 
+        4*curvb*pow(d0a,2)*cos(3*phi0a - 2*phi0b) + 
+        8*curva*curvb*pow(d0a,3)*cos(3*phi0a - 2*phi0b) - 
+        4*d0b*cos(3*phi0a - 2*phi0b) - 
+        4*curva*d0a*d0b*cos(3*phi0a - 2*phi0b) + 
+        20*curva*curvb*d0a*pow(d0b,2)*cos(3*phi0a - 2*phi0b) + 
+        4*d0a*cos(2*phi0a - phi0b) - 4*curvb*d0a*d0b*cos(2*phi0a - phi0b) - 
+        60*curva*curvb*pow(d0a,2)*d0b*cos(2*phi0a - phi0b) + 
+        4*curva*pow(d0b,2)*cos(2*phi0a - phi0b) - 
+        24*curva*curvb*pow(d0b,3)*cos(2*phi0a - phi0b) - 6*d0a*cos(phi0b) - 
+        2*curva*pow(d0a,2)*cos(phi0b) - 4*curvb*d0a*d0b*cos(phi0b) - 
+        108*curva*curvb*pow(d0a,2)*d0b*cos(phi0b) - 
+        8*curva*pow(d0b,2)*cos(phi0b) - 
+        32*curva*curvb*pow(d0b,3)*cos(phi0b))*pow(sin(phi0a - phi0b),-5))/
+      16.;
+}
+
+double BigNTuple::xsol2( double curva, double d0a, double phi0a,
+			 double curvb, double d0b, double phi0b )
+{
+   return
+      -((4*curvb*(-5 - 4*curvb*d0b + 
+		  2*pow(curvb,2)*(4*pow(d0a,2) + pow(d0b,2)) + 
+		  2*curva*d0a*(5 + 12*curvb*d0b + 
+			       pow(curvb,2)*(16*pow(d0a,2) + 54*pow(d0b,2))))*cos(phi0a)
+	 + curva*pow(1 + 2*curvb*d0b,2)*cos(8*phi0a - 7*phi0b) + 
+         curvb*cos(5*phi0a - 6*phi0b) + 
+         2*pow(curvb,2)*d0b*cos(5*phi0a - 6*phi0b) + 
+         curvb*cos(7*phi0a - 6*phi0b) - 
+         4*curva*curvb*d0a*cos(7*phi0a - 6*phi0b) + 
+         2*pow(curvb,2)*d0b*cos(7*phi0a - 6*phi0b) - 
+         8*curva*pow(curvb,2)*d0a*d0b*cos(7*phi0a - 6*phi0b) + 
+         curva*cos(4*phi0a - 5*phi0b) - 6*curva*cos(6*phi0a - 5*phi0b) - 
+         4*pow(curvb,2)*d0a*cos(6*phi0a - 5*phi0b) + 
+         4*curva*pow(curvb,2)*pow(d0a,2)*cos(6*phi0a - 5*phi0b) - 
+         20*curva*curvb*d0b*cos(6*phi0a - 5*phi0b) - 
+         20*curva*pow(curvb,2)*pow(d0b,2)*cos(6*phi0a - 5*phi0b) - 
+         6*curvb*cos(3*phi0a - 4*phi0b) + 
+         4*curva*curvb*d0a*cos(3*phi0a - 4*phi0b) - 
+         8*pow(curvb,2)*d0b*cos(3*phi0a - 4*phi0b) - 
+         8*curva*pow(curvb,2)*d0a*d0b*cos(3*phi0a - 4*phi0b) - 
+         4*pow(curvb,3)*pow(d0b,2)*cos(3*phi0a - 4*phi0b) + 
+         16*curva*pow(curvb,3)*d0a*pow(d0b,2)*cos(3*phi0a - 4*phi0b) - 
+         6*curvb*cos(5*phi0a - 4*phi0b) + 
+         20*curva*curvb*d0a*cos(5*phi0a - 4*phi0b) - 
+         8*pow(curvb,2)*d0b*cos(5*phi0a - 4*phi0b) + 
+         40*curva*pow(curvb,2)*d0a*d0b*cos(5*phi0a - 4*phi0b) - 
+         4*pow(curvb,3)*pow(d0b,2)*cos(5*phi0a - 4*phi0b) - 
+         6*curva*cos(2*phi0a - 3*phi0b) - 
+         4*pow(curvb,2)*d0a*cos(2*phi0a - 3*phi0b) + 
+         20*curva*pow(curvb,2)*pow(d0a,2)*cos(2*phi0a - 3*phi0b) - 
+         4*curva*curvb*d0b*cos(2*phi0a - 3*phi0b) + 
+         16*pow(curvb,3)*d0a*d0b*cos(2*phi0a - 3*phi0b) - 
+         80*curva*pow(curvb,3)*pow(d0a,2)*d0b*cos(2*phi0a - 3*phi0b) + 
+         12*curva*pow(curvb,2)*pow(d0b,2)*cos(2*phi0a - 3*phi0b) - 
+         32*curva*pow(curvb,3)*pow(d0b,3)*cos(2*phi0a - 3*phi0b) + 
+         15*curva*cos(4*phi0a - 3*phi0b) + 
+         16*pow(curvb,2)*d0a*cos(4*phi0a - 3*phi0b) - 
+         16*curva*pow(curvb,2)*pow(d0a,2)*cos(4*phi0a - 3*phi0b) + 
+         40*curva*curvb*d0b*cos(4*phi0a - 3*phi0b) + 
+         16*pow(curvb,3)*d0a*d0b*cos(4*phi0a - 3*phi0b) - 
+         16*curva*pow(curvb,3)*pow(d0a,2)*d0b*cos(4*phi0a - 3*phi0b) + 
+         40*curva*pow(curvb,2)*pow(d0b,2)*cos(4*phi0a - 3*phi0b) + 
+         15*curvb*cos(phi0a - 2*phi0b) - 
+         20*curva*curvb*d0a*cos(phi0a - 2*phi0b) - 
+         16*pow(curvb,3)*pow(d0a,2)*cos(phi0a - 2*phi0b) + 
+         96*curva*pow(curvb,3)*pow(d0a,3)*cos(phi0a - 2*phi0b) + 
+         14*pow(curvb,2)*d0b*cos(phi0a - 2*phi0b) - 
+         24*curva*pow(curvb,2)*d0a*d0b*cos(phi0a - 2*phi0b) + 
+         240*curva*pow(curvb,3)*d0a*pow(d0b,2)*cos(phi0a - 2*phi0b) + 
+         15*curvb*cos(3*phi0a - 2*phi0b) - 
+         40*curva*curvb*d0a*cos(3*phi0a - 2*phi0b) - 
+         16*pow(curvb,3)*pow(d0a,2)*cos(3*phi0a - 2*phi0b) + 
+         32*curva*pow(curvb,3)*pow(d0a,3)*cos(3*phi0a - 2*phi0b) + 
+         14*pow(curvb,2)*d0b*cos(3*phi0a - 2*phi0b) - 
+         96*curva*pow(curvb,2)*d0a*d0b*cos(3*phi0a - 2*phi0b) + 
+         80*curva*pow(curvb,3)*d0a*pow(d0b,2)*cos(3*phi0a - 2*phi0b) - 
+         20*curva*cos(2*phi0a - phi0b) - 
+         24*pow(curvb,2)*d0a*cos(2*phi0a - phi0b) + 
+         40*curva*pow(curvb,2)*pow(d0a,2)*cos(2*phi0a - phi0b) - 
+         40*curva*curvb*d0b*cos(2*phi0a - phi0b) - 
+         16*pow(curvb,3)*d0a*d0b*cos(2*phi0a - phi0b) - 
+         240*curva*pow(curvb,3)*pow(d0a,2)*d0b*cos(2*phi0a - phi0b) - 
+         24*curva*pow(curvb,2)*pow(d0b,2)*cos(2*phi0a - phi0b) - 
+         96*curva*pow(curvb,3)*pow(d0b,3)*cos(2*phi0a - phi0b) + 
+         15*curva*cos(phi0b) + 16*pow(curvb,2)*d0a*cos(phi0b) - 
+         48*curva*pow(curvb,2)*pow(d0a,2)*cos(phi0b) + 
+         20*curva*curvb*d0b*cos(phi0b) - 
+         16*pow(curvb,3)*d0a*d0b*cos(phi0b) - 
+         432*curva*pow(curvb,3)*pow(d0a,2)*d0b*cos(phi0b) - 
+         12*curva*pow(curvb,2)*pow(d0b,2)*cos(phi0b) - 
+         128*curva*pow(curvb,3)*pow(d0b,3)*cos(phi0b))*
+	pow(sin(phi0a - phi0b),-5))/(64.*pow(curvb,2));
+}
+
+double BigNTuple::ysol1( double curva, double d0a, double phi0a,
+			 double curvb, double d0b, double phi0b )
+{
+   return
+      -(pow(sin(phi0a - phi0b),-5)*
+	(-2*((3 + 2*curva*d0a)*d0b + 
+	     curvb*(4*pow(d0a,2) + 16*curva*pow(d0a,3) + pow(d0b,2) + 
+		    54*curva*d0a*pow(d0b,2)))*sin(phi0a) + 
+         d0a*(-1 + curva*d0a)*sin(4*phi0a - 5*phi0b) + 
+         d0b*sin(3*phi0a - 4*phi0b) - 
+         4*curva*d0a*d0b*sin(3*phi0a - 4*phi0b) - 
+         curvb*pow(d0b,2)*sin(3*phi0a - 4*phi0b) + 
+         4*curva*curvb*d0a*pow(d0b,2)*sin(3*phi0a - 4*phi0b) - 
+         d0b*sin(5*phi0a - 4*phi0b) + 
+         curvb*pow(d0b,2)*sin(5*phi0a - 4*phi0b) + 
+         4*d0a*sin(2*phi0a - 3*phi0b) + 
+         4*curvb*d0a*d0b*sin(2*phi0a - 3*phi0b) - 
+         20*curva*curvb*pow(d0a,2)*d0b*sin(2*phi0a - 3*phi0b) + 
+         4*curva*pow(d0b,2)*sin(2*phi0a - 3*phi0b) - 
+         8*curva*curvb*pow(d0b,3)*sin(2*phi0a - 3*phi0b) + 
+         d0a*sin(4*phi0a - 3*phi0b) - 
+         curva*pow(d0a,2)*sin(4*phi0a - 3*phi0b) - 
+         4*curvb*d0a*d0b*sin(4*phi0a - 3*phi0b) + 
+         4*curva*curvb*pow(d0a,2)*d0b*sin(4*phi0a - 3*phi0b) - 
+         4*curvb*pow(d0a,2)*sin(phi0a - 2*phi0b) + 
+         24*curva*curvb*pow(d0a,3)*sin(phi0a - 2*phi0b) - 
+         4*d0b*sin(phi0a - 2*phi0b) + 4*curva*d0a*d0b*sin(phi0a - 2*phi0b) + 
+         60*curva*curvb*d0a*pow(d0b,2)*sin(phi0a - 2*phi0b) + 
+         4*curvb*pow(d0a,2)*sin(3*phi0a - 2*phi0b) - 
+         8*curva*curvb*pow(d0a,3)*sin(3*phi0a - 2*phi0b) + 
+         4*d0b*sin(3*phi0a - 2*phi0b) + 
+         4*curva*d0a*d0b*sin(3*phi0a - 2*phi0b) - 
+         20*curva*curvb*d0a*pow(d0b,2)*sin(3*phi0a - 2*phi0b) - 
+         4*d0a*sin(2*phi0a - phi0b) + 4*curvb*d0a*d0b*sin(2*phi0a - phi0b) + 
+         60*curva*curvb*pow(d0a,2)*d0b*sin(2*phi0a - phi0b) - 
+         4*curva*pow(d0b,2)*sin(2*phi0a - phi0b) + 
+         24*curva*curvb*pow(d0b,3)*sin(2*phi0a - phi0b) + 
+         6*d0a*sin(phi0b) + 2*curva*pow(d0a,2)*sin(phi0b) + 
+         4*curvb*d0a*d0b*sin(phi0b) + 
+         108*curva*curvb*pow(d0a,2)*d0b*sin(phi0b) + 
+         8*curva*pow(d0b,2)*sin(phi0b) + 
+         32*curva*curvb*pow(d0b,3)*sin(phi0b)))/16.;
+}
+
+double BigNTuple::ysol2( double curva, double d0a, double phi0a,
+			 double curvb, double d0b, double phi0b )
+{
+   return
+      (pow(sin(phi0a - phi0b),-5)*
+       (-4*curvb*(-5 - 4*curvb*d0b + 
+		  2*pow(curvb,2)*(4*pow(d0a,2) + pow(d0b,2)) + 
+		  2*curva*d0a*(5 + 12*curvb*d0b + 
+			       pow(curvb,2)*(16*pow(d0a,2) + 54*pow(d0b,2))))*sin(phi0a)\
+	- curva*pow(1 + 2*curvb*d0b,2)*sin(8*phi0a - 7*phi0b) + 
+        curvb*sin(5*phi0a - 6*phi0b) + 
+        2*pow(curvb,2)*d0b*sin(5*phi0a - 6*phi0b) - 
+        curvb*sin(7*phi0a - 6*phi0b) + 
+        4*curva*curvb*d0a*sin(7*phi0a - 6*phi0b) - 
+        2*pow(curvb,2)*d0b*sin(7*phi0a - 6*phi0b) + 
+        8*curva*pow(curvb,2)*d0a*d0b*sin(7*phi0a - 6*phi0b) + 
+        curva*sin(4*phi0a - 5*phi0b) + 6*curva*sin(6*phi0a - 5*phi0b) + 
+        4*pow(curvb,2)*d0a*sin(6*phi0a - 5*phi0b) - 
+        4*curva*pow(curvb,2)*pow(d0a,2)*sin(6*phi0a - 5*phi0b) + 
+        20*curva*curvb*d0b*sin(6*phi0a - 5*phi0b) + 
+        20*curva*pow(curvb,2)*pow(d0b,2)*sin(6*phi0a - 5*phi0b) - 
+        6*curvb*sin(3*phi0a - 4*phi0b) + 
+        4*curva*curvb*d0a*sin(3*phi0a - 4*phi0b) - 
+        8*pow(curvb,2)*d0b*sin(3*phi0a - 4*phi0b) - 
+        8*curva*pow(curvb,2)*d0a*d0b*sin(3*phi0a - 4*phi0b) - 
+        4*pow(curvb,3)*pow(d0b,2)*sin(3*phi0a - 4*phi0b) + 
+        16*curva*pow(curvb,3)*d0a*pow(d0b,2)*sin(3*phi0a - 4*phi0b) + 
+        6*curvb*sin(5*phi0a - 4*phi0b) - 
+        20*curva*curvb*d0a*sin(5*phi0a - 4*phi0b) + 
+        8*pow(curvb,2)*d0b*sin(5*phi0a - 4*phi0b) - 
+        40*curva*pow(curvb,2)*d0a*d0b*sin(5*phi0a - 4*phi0b) + 
+        4*pow(curvb,3)*pow(d0b,2)*sin(5*phi0a - 4*phi0b) - 
+        6*curva*sin(2*phi0a - 3*phi0b) - 
+        4*pow(curvb,2)*d0a*sin(2*phi0a - 3*phi0b) + 
+        20*curva*pow(curvb,2)*pow(d0a,2)*sin(2*phi0a - 3*phi0b) - 
+        4*curva*curvb*d0b*sin(2*phi0a - 3*phi0b) + 
+        16*pow(curvb,3)*d0a*d0b*sin(2*phi0a - 3*phi0b) - 
+        80*curva*pow(curvb,3)*pow(d0a,2)*d0b*sin(2*phi0a - 3*phi0b) + 
+        12*curva*pow(curvb,2)*pow(d0b,2)*sin(2*phi0a - 3*phi0b) - 
+        32*curva*pow(curvb,3)*pow(d0b,3)*sin(2*phi0a - 3*phi0b) - 
+        15*curva*sin(4*phi0a - 3*phi0b) - 
+        16*pow(curvb,2)*d0a*sin(4*phi0a - 3*phi0b) + 
+        16*curva*pow(curvb,2)*pow(d0a,2)*sin(4*phi0a - 3*phi0b) - 
+        40*curva*curvb*d0b*sin(4*phi0a - 3*phi0b) - 
+        16*pow(curvb,3)*d0a*d0b*sin(4*phi0a - 3*phi0b) + 
+        16*curva*pow(curvb,3)*pow(d0a,2)*d0b*sin(4*phi0a - 3*phi0b) - 
+        40*curva*pow(curvb,2)*pow(d0b,2)*sin(4*phi0a - 3*phi0b) + 
+        15*curvb*sin(phi0a - 2*phi0b) - 
+        20*curva*curvb*d0a*sin(phi0a - 2*phi0b) - 
+        16*pow(curvb,3)*pow(d0a,2)*sin(phi0a - 2*phi0b) + 
+        96*curva*pow(curvb,3)*pow(d0a,3)*sin(phi0a - 2*phi0b) + 
+        14*pow(curvb,2)*d0b*sin(phi0a - 2*phi0b) - 
+        24*curva*pow(curvb,2)*d0a*d0b*sin(phi0a - 2*phi0b) + 
+        240*curva*pow(curvb,3)*d0a*pow(d0b,2)*sin(phi0a - 2*phi0b) - 
+        15*curvb*sin(3*phi0a - 2*phi0b) + 
+        40*curva*curvb*d0a*sin(3*phi0a - 2*phi0b) + 
+        16*pow(curvb,3)*pow(d0a,2)*sin(3*phi0a - 2*phi0b) - 
+        32*curva*pow(curvb,3)*pow(d0a,3)*sin(3*phi0a - 2*phi0b) - 
+        14*pow(curvb,2)*d0b*sin(3*phi0a - 2*phi0b) + 
+        96*curva*pow(curvb,2)*d0a*d0b*sin(3*phi0a - 2*phi0b) - 
+        80*curva*pow(curvb,3)*d0a*pow(d0b,2)*sin(3*phi0a - 2*phi0b) + 
+        20*curva*sin(2*phi0a - phi0b) + 
+        24*pow(curvb,2)*d0a*sin(2*phi0a - phi0b) - 
+        40*curva*pow(curvb,2)*pow(d0a,2)*sin(2*phi0a - phi0b) + 
+        40*curva*curvb*d0b*sin(2*phi0a - phi0b) + 
+        16*pow(curvb,3)*d0a*d0b*sin(2*phi0a - phi0b) + 
+        240*curva*pow(curvb,3)*pow(d0a,2)*d0b*sin(2*phi0a - phi0b) + 
+        24*curva*pow(curvb,2)*pow(d0b,2)*sin(2*phi0a - phi0b) + 
+        96*curva*pow(curvb,3)*pow(d0b,3)*sin(2*phi0a - phi0b) - 
+        15*curva*sin(phi0b) - 16*pow(curvb,2)*d0a*sin(phi0b) + 
+        48*curva*pow(curvb,2)*pow(d0a,2)*sin(phi0b) - 
+        20*curva*curvb*d0b*sin(phi0b) + 
+        16*pow(curvb,3)*d0a*d0b*sin(phi0b) + 
+        432*curva*pow(curvb,3)*pow(d0a,2)*d0b*sin(phi0b) + 
+        12*curva*pow(curvb,2)*pow(d0b,2)*sin(phi0b) + 
+        128*curva*pow(curvb,3)*pow(d0b,3)*sin(phi0b)))/
+      (64.*pow(curvb,2));
+}
+
+double BigNTuple::dxsol1dd0a( double curva, double d0a, double phi0a,
+			      double curvb, double d0b, double phi0b )
+{
+   return
+      ((4*(curva*d0b + curvb*(4*d0a + 24*curva*pow(d0a,2) + 
+			      27*curva*pow(d0b,2)))*cos(phi0a) + 
+        (-1 + 2*curva*d0a)*cos(4*phi0a - 5*phi0b) - 
+        4*curva*d0b*cos(3*phi0a - 4*phi0b) + 
+        4*curva*curvb*pow(d0b,2)*cos(3*phi0a - 4*phi0b) + 
+        4*cos(2*phi0a - 3*phi0b) + 4*curvb*d0b*cos(2*phi0a - 3*phi0b) - 
+        40*curva*curvb*d0a*d0b*cos(2*phi0a - 3*phi0b) - 
+        cos(4*phi0a - 3*phi0b) + 2*curva*d0a*cos(4*phi0a - 3*phi0b) + 
+        4*curvb*d0b*cos(4*phi0a - 3*phi0b) - 
+        8*curva*curvb*d0a*d0b*cos(4*phi0a - 3*phi0b) - 
+        8*curvb*d0a*cos(phi0a - 2*phi0b) + 
+        72*curva*curvb*pow(d0a,2)*cos(phi0a - 2*phi0b) + 
+        4*curva*d0b*cos(phi0a - 2*phi0b) + 
+        60*curva*curvb*pow(d0b,2)*cos(phi0a - 2*phi0b) - 
+        8*curvb*d0a*cos(3*phi0a - 2*phi0b) + 
+        24*curva*curvb*pow(d0a,2)*cos(3*phi0a - 2*phi0b) - 
+        4*curva*d0b*cos(3*phi0a - 2*phi0b) + 
+        20*curva*curvb*pow(d0b,2)*cos(3*phi0a - 2*phi0b) + 
+        4*cos(2*phi0a - phi0b) - 4*curvb*d0b*cos(2*phi0a - phi0b) - 
+        120*curva*curvb*d0a*d0b*cos(2*phi0a - phi0b) - 6*cos(phi0b) - 
+        4*curva*d0a*cos(phi0b) - 4*curvb*d0b*cos(phi0b) - 
+        216*curva*curvb*d0a*d0b*cos(phi0b))*pow(sin(phi0a - phi0b),-5))/16.;
+}
+
+double BigNTuple::dxsol1dd0b( double curva, double d0a, double phi0a,
+			      double curvb, double d0b, double phi0b )
+{
+   return
+      (((6 + 4*curvb*d0b + 4*curva*(d0a + 54*curvb*d0a*d0b))*cos(phi0a) + 
+        (-1 + 4*curva*d0a)*(-1 + 2*curvb*d0b)*cos(3*phi0a - 4*phi0b) + 
+        cos(5*phi0a - 4*phi0b) - 2*curvb*d0b*cos(5*phi0a - 4*phi0b) + 
+        4*curvb*d0a*cos(2*phi0a - 3*phi0b) - 
+        20*curva*curvb*pow(d0a,2)*cos(2*phi0a - 3*phi0b) + 
+        8*curva*d0b*cos(2*phi0a - 3*phi0b) - 
+        24*curva*curvb*pow(d0b,2)*cos(2*phi0a - 3*phi0b) + 
+        4*curvb*d0a*cos(4*phi0a - 3*phi0b) - 
+        4*curva*curvb*pow(d0a,2)*cos(4*phi0a - 3*phi0b) - 
+        4*cos(phi0a - 2*phi0b) + 4*curva*d0a*cos(phi0a - 2*phi0b) + 
+        120*curva*curvb*d0a*d0b*cos(phi0a - 2*phi0b) - 
+        4*cos(3*phi0a - 2*phi0b) - 4*curva*d0a*cos(3*phi0a - 2*phi0b) + 
+        40*curva*curvb*d0a*d0b*cos(3*phi0a - 2*phi0b) - 
+        4*curvb*d0a*cos(2*phi0a - phi0b) - 
+        60*curva*curvb*pow(d0a,2)*cos(2*phi0a - phi0b) + 
+        8*curva*d0b*cos(2*phi0a - phi0b) - 
+        72*curva*curvb*pow(d0b,2)*cos(2*phi0a - phi0b) - 
+        4*curvb*d0a*cos(phi0b) - 108*curva*curvb*pow(d0a,2)*cos(phi0b) - 
+        16*curva*d0b*cos(phi0b) - 96*curva*curvb*pow(d0b,2)*cos(phi0b))*
+       pow(sin(phi0a - phi0b),-5))/16.;
+}
+
+double BigNTuple::dxsol1dphi0a( double curva, double d0a, double phi0a,
+				double curvb, double d0b, double phi0b )
+{
+   return
+      -((-2*(d0a + 24*curvb*d0a*d0b + 2*curva*pow(d0b,2)*(3 + 82*curvb*d0b) + 
+	     5*pow(d0a,2)*(curva + 96*curva*curvb*d0b))*cos(phi0a) + 
+         d0a*(-1 + curva*d0a)*cos(5*phi0a - 6*phi0b) + 
+         2*d0b*cos(4*phi0a - 5*phi0b) - 
+         8*curva*d0a*d0b*cos(4*phi0a - 5*phi0b) - 
+         2*curvb*pow(d0b,2)*cos(4*phi0a - 5*phi0b) + 
+         8*curva*curvb*d0a*pow(d0b,2)*cos(4*phi0a - 5*phi0b) + 
+         3*d0a*cos(3*phi0a - 4*phi0b) + 
+         9*curva*pow(d0a,2)*cos(3*phi0a - 4*phi0b) + 
+         12*curvb*d0a*d0b*cos(3*phi0a - 4*phi0b) - 
+         60*curva*curvb*pow(d0a,2)*d0b*cos(3*phi0a - 4*phi0b) + 
+         12*curva*pow(d0b,2)*cos(3*phi0a - 4*phi0b) - 
+         24*curva*curvb*pow(d0b,3)*cos(3*phi0a - 4*phi0b) - 
+         d0a*cos(5*phi0a - 4*phi0b) + 
+         curva*pow(d0a,2)*cos(5*phi0a - 4*phi0b) + 
+         4*curvb*d0a*d0b*cos(5*phi0a - 4*phi0b) - 
+         4*curva*curvb*pow(d0a,2)*d0b*cos(5*phi0a - 4*phi0b) - 
+         16*curvb*pow(d0a,2)*cos(2*phi0a - 3*phi0b) + 
+         96*curva*curvb*pow(d0a,3)*cos(2*phi0a - 3*phi0b) - 
+         8*d0b*cos(2*phi0a - 3*phi0b) - 
+         16*curva*d0a*d0b*cos(2*phi0a - 3*phi0b) - 
+         8*curvb*pow(d0b,2)*cos(2*phi0a - 3*phi0b) + 
+         272*curva*curvb*d0a*pow(d0b,2)*cos(2*phi0a - 3*phi0b) - 
+         8*curvb*pow(d0a,2)*cos(4*phi0a - 3*phi0b) + 
+         16*curva*curvb*pow(d0a,3)*cos(4*phi0a - 3*phi0b) + 
+         2*d0b*cos(4*phi0a - 3*phi0b) - 
+         8*curva*d0a*d0b*cos(4*phi0a - 3*phi0b) - 
+         10*curvb*pow(d0b,2)*cos(4*phi0a - 3*phi0b) + 
+         40*curva*curvb*d0a*pow(d0b,2)*cos(4*phi0a - 3*phi0b) - 
+         2*d0a*cos(phi0a - 2*phi0b) - 
+         10*curva*pow(d0a,2)*cos(phi0a - 2*phi0b) + 
+         8*curvb*d0a*d0b*cos(phi0a - 2*phi0b) - 
+         680*curva*curvb*pow(d0a,2)*d0b*cos(phi0a - 2*phi0b) - 
+         12*curva*pow(d0b,2)*cos(phi0a - 2*phi0b) - 
+         216*curva*curvb*pow(d0b,3)*cos(phi0a - 2*phi0b) + 
+         3*d0a*cos(3*phi0a - 2*phi0b) + 
+         9*curva*pow(d0a,2)*cos(3*phi0a - 2*phi0b) + 
+         24*curvb*d0a*d0b*cos(3*phi0a - 2*phi0b) - 
+         216*curva*curvb*pow(d0a,2)*d0b*cos(3*phi0a - 2*phi0b) + 
+         12*curva*pow(d0b,2)*cos(3*phi0a - 2*phi0b) - 
+         72*curva*curvb*pow(d0b,3)*cos(3*phi0a - 2*phi0b) + 
+         192*curva*curvb*pow(d0a,3)*cos(2*phi0a - phi0b) - 
+         8*d0b*cos(2*phi0a - phi0b) - 16*curva*d0a*d0b*cos(2*phi0a - phi0b) + 
+         8*curvb*pow(d0b,2)*cos(2*phi0a - phi0b) + 
+         592*curva*curvb*d0a*pow(d0b,2)*cos(2*phi0a - phi0b) + 
+         24*curvb*pow(d0a,2)*cos(phi0b) + 
+         336*curva*curvb*pow(d0a,3)*cos(phi0b) + 12*d0b*cos(phi0b) + 
+         48*curva*d0a*d0b*cos(phi0b) + 12*curvb*pow(d0b,2)*cos(phi0b) + 
+         1008*curva*curvb*d0a*pow(d0b,2)*cos(phi0b))*
+	pow(sin(phi0a - phi0b),-6))/32.;
+}
+
+double BigNTuple::dxsol1dphi0b( double curva, double d0a, double phi0a,
+				double curvb, double d0b, double phi0b )
+{
+   return
+      ((-12*(d0a + 4*curvb*d0a*d0b + 2*curva*pow(d0b,2)*(1 + 14*curvb*d0b) + 
+	     pow(d0a,2)*(curva + 84*curva*curvb*d0b))*cos(phi0a) + 
+        (-1 + 4*curva*d0a)*d0b*(-1 + curvb*d0b)*cos(4*phi0a - 5*phi0b) + 
+        d0b*cos(6*phi0a - 5*phi0b) - 
+        curvb*pow(d0b,2)*cos(6*phi0a - 5*phi0b) - 
+        2*d0a*cos(3*phi0a - 4*phi0b) + 
+        10*curva*pow(d0a,2)*cos(3*phi0a - 4*phi0b) + 
+        8*curvb*d0a*d0b*cos(3*phi0a - 4*phi0b) - 
+        40*curva*curvb*pow(d0a,2)*d0b*cos(3*phi0a - 4*phi0b) + 
+        8*curva*pow(d0b,2)*cos(3*phi0a - 4*phi0b) - 
+        16*curva*curvb*pow(d0b,3)*cos(3*phi0a - 4*phi0b) - 
+        2*d0a*cos(5*phi0a - 4*phi0b) + 
+        2*curva*pow(d0a,2)*cos(5*phi0a - 4*phi0b) + 
+        8*curvb*d0a*d0b*cos(5*phi0a - 4*phi0b) - 
+        8*curva*curvb*pow(d0a,2)*d0b*cos(5*phi0a - 4*phi0b) - 
+        12*curvb*pow(d0a,2)*cos(2*phi0a - 3*phi0b) + 
+        72*curva*curvb*pow(d0a,3)*cos(2*phi0a - 3*phi0b) - 
+        3*d0b*cos(2*phi0a - 3*phi0b) - 
+        24*curva*d0a*d0b*cos(2*phi0a - 3*phi0b) - 
+        9*curvb*pow(d0b,2)*cos(2*phi0a - 3*phi0b) + 
+        216*curva*curvb*d0a*pow(d0b,2)*cos(2*phi0a - 3*phi0b) - 
+        12*curvb*pow(d0a,2)*cos(4*phi0a - 3*phi0b) + 
+        24*curva*curvb*pow(d0a,3)*cos(4*phi0a - 3*phi0b) - 
+        3*d0b*cos(4*phi0a - 3*phi0b) - 
+        12*curva*d0a*d0b*cos(4*phi0a - 3*phi0b) - 
+        9*curvb*pow(d0b,2)*cos(4*phi0a - 3*phi0b) + 
+        60*curva*curvb*d0a*pow(d0b,2)*cos(4*phi0a - 3*phi0b) + 
+        8*d0a*cos(phi0a - 2*phi0b) - 
+        8*curva*pow(d0a,2)*cos(phi0a - 2*phi0b) + 
+        16*curvb*d0a*d0b*cos(phi0a - 2*phi0b) - 
+        592*curva*curvb*pow(d0a,2)*d0b*cos(phi0a - 2*phi0b) - 
+        192*curva*curvb*pow(d0b,3)*cos(phi0a - 2*phi0b) + 
+        8*d0a*cos(3*phi0a - 2*phi0b) + 
+        8*curva*pow(d0a,2)*cos(3*phi0a - 2*phi0b) + 
+        16*curvb*d0a*d0b*cos(3*phi0a - 2*phi0b) - 
+        272*curva*curvb*pow(d0a,2)*d0b*cos(3*phi0a - 2*phi0b) + 
+        16*curva*pow(d0b,2)*cos(3*phi0a - 2*phi0b) - 
+        96*curva*curvb*pow(d0b,3)*cos(3*phi0a - 2*phi0b) + 
+        12*curvb*pow(d0a,2)*cos(2*phi0a - phi0b) + 
+        216*curva*curvb*pow(d0a,3)*cos(2*phi0a - phi0b) + 
+        2*d0b*cos(2*phi0a - phi0b) - 8*curva*d0a*d0b*cos(2*phi0a - phi0b) + 
+        10*curvb*pow(d0b,2)*cos(2*phi0a - phi0b) + 
+        680*curva*curvb*d0a*pow(d0b,2)*cos(2*phi0a - phi0b) + 
+        12*curvb*pow(d0a,2)*cos(phi0b) + 
+        328*curva*curvb*pow(d0a,3)*cos(phi0b) + 2*d0b*cos(phi0b) + 
+        48*curva*d0a*d0b*cos(phi0b) + 10*curvb*pow(d0b,2)*cos(phi0b) + 
+        960*curva*curvb*d0a*pow(d0b,2)*cos(phi0b))*
+       pow(sin(phi0a - phi0b),-6))/32.;
+}
+
+double BigNTuple::dxsol1dcurva( double curva, double d0a, double phi0a,
+				double curvb, double d0b, double phi0b )
+{
+   return
+      ((-d0b + d0a*cos(phi0a - phi0b))*
+       (-(d0a*(1 + 40*curvb*d0b)*cos(phi0a)) + d0a*cos(3*phi0a - 4*phi0b) - 
+        2*d0b*cos(2*phi0a - 3*phi0b) + 
+        4*curvb*pow(d0b,2)*cos(2*phi0a - 3*phi0b) - 
+        d0a*cos(phi0a - 2*phi0b) - 20*curvb*d0a*d0b*cos(phi0a - 2*phi0b) + 
+        d0a*cos(3*phi0a - 2*phi0b) - 4*curvb*d0a*d0b*cos(3*phi0a - 2*phi0b) + 
+        8*curvb*pow(d0a,2)*cos(2*phi0a - phi0b) - 
+        2*d0b*cos(2*phi0a - phi0b) + 
+        12*curvb*pow(d0b,2)*cos(2*phi0a - phi0b) + 
+        24*curvb*pow(d0a,2)*cos(phi0b) + 4*d0b*cos(phi0b) + 
+        16*curvb*pow(d0b,2)*cos(phi0b))*pow(sin(phi0a - phi0b),-5))/8.;
+}
+
+double BigNTuple::dxsol1dcurvb( double curva, double d0a, double phi0a,
+				double curvb, double d0b, double phi0b )
+{
+   return
+      ((d0a - d0b*cos(phi0a - phi0b))*
+       (4*(d0a + 4*curva*pow(d0a,2) + 6*curva*pow(d0b,2))*cos(phi0a) + 
+        (d0b - 4*curva*d0a*d0b)*cos(2*phi0a - 3*phi0b) + 
+        d0b*cos(4*phi0a - 3*phi0b) - 2*d0a*cos(phi0a - 2*phi0b) + 
+        12*curva*pow(d0a,2)*cos(phi0a - 2*phi0b) + 
+        8*curva*pow(d0b,2)*cos(phi0a - 2*phi0b) - 
+        2*d0a*cos(3*phi0a - 2*phi0b) + 
+        4*curva*pow(d0a,2)*cos(3*phi0a - 2*phi0b) - 
+        d0b*cos(2*phi0a - phi0b) - 20*curva*d0a*d0b*cos(2*phi0a - phi0b) - 
+        d0b*cos(phi0b) - 40*curva*d0a*d0b*cos(phi0b))*
+       pow(sin(phi0a - phi0b),-5))/8.;
+}
+
+double BigNTuple::dxsol2dd0a( double curva, double d0a, double phi0a,
+			      double curvb, double d0b, double phi0b )
+{
+   return
+      ((-2*(8*pow(curvb,2)*d0a + 
+	    curva*(5 + 12*curvb*d0b + 
+		   pow(curvb,2)*(48*pow(d0a,2) + 54*pow(d0b,2))))*cos(phi0a)\
+	+ curva*(1 + 2*curvb*d0b)*cos(7*phi0a - 6*phi0b) + 
+        curvb*cos(6*phi0a - 5*phi0b) - 
+        2*curva*curvb*d0a*cos(6*phi0a - 5*phi0b) - 
+        curva*cos(3*phi0a - 4*phi0b) + 
+        2*curva*curvb*d0b*cos(3*phi0a - 4*phi0b) - 
+        4*curva*pow(curvb,2)*pow(d0b,2)*cos(3*phi0a - 4*phi0b) - 
+        5*curva*cos(5*phi0a - 4*phi0b) - 
+        10*curva*curvb*d0b*cos(5*phi0a - 4*phi0b) + 
+        curvb*cos(2*phi0a - 3*phi0b) - 
+        10*curva*curvb*d0a*cos(2*phi0a - 3*phi0b) - 
+        4*pow(curvb,2)*d0b*cos(2*phi0a - 3*phi0b) + 
+        40*curva*pow(curvb,2)*d0a*d0b*cos(2*phi0a - 3*phi0b) - 
+        4*curvb*cos(4*phi0a - 3*phi0b) + 
+        8*curva*curvb*d0a*cos(4*phi0a - 3*phi0b) - 
+        4*pow(curvb,2)*d0b*cos(4*phi0a - 3*phi0b) + 
+        8*curva*pow(curvb,2)*d0a*d0b*cos(4*phi0a - 3*phi0b) + 
+        5*curva*cos(phi0a - 2*phi0b) + 
+        8*pow(curvb,2)*d0a*cos(phi0a - 2*phi0b) - 
+        72*curva*pow(curvb,2)*pow(d0a,2)*cos(phi0a - 2*phi0b) + 
+        6*curva*curvb*d0b*cos(phi0a - 2*phi0b) - 
+        60*curva*pow(curvb,2)*pow(d0b,2)*cos(phi0a - 2*phi0b) + 
+        10*curva*cos(3*phi0a - 2*phi0b) + 
+        8*pow(curvb,2)*d0a*cos(3*phi0a - 2*phi0b) - 
+        24*curva*pow(curvb,2)*pow(d0a,2)*cos(3*phi0a - 2*phi0b) + 
+        24*curva*curvb*d0b*cos(3*phi0a - 2*phi0b) - 
+        20*curva*pow(curvb,2)*pow(d0b,2)*cos(3*phi0a - 2*phi0b) + 
+        6*curvb*cos(2*phi0a - phi0b) - 
+        20*curva*curvb*d0a*cos(2*phi0a - phi0b) + 
+        4*pow(curvb,2)*d0b*cos(2*phi0a - phi0b) + 
+        120*curva*pow(curvb,2)*d0a*d0b*cos(2*phi0a - phi0b) - 
+        4*curvb*cos(phi0b) + 24*curva*curvb*d0a*cos(phi0b) + 
+        4*pow(curvb,2)*d0b*cos(phi0b) + 
+        216*curva*pow(curvb,2)*d0a*d0b*cos(phi0b))*
+       pow(sin(phi0a - phi0b),-5))/(16.*curvb);
+}
+
+double BigNTuple::dxsol2dd0b( double curva, double d0a, double phi0a,
+			      double curvb, double d0b, double phi0b )
+{
+   return
+      ((-8*curvb*(-1 + curvb*d0b + 6*curva*(d0a + 9*curvb*d0a*d0b))*cos(phi0a) - 
+        2*curva*(1 + 2*curvb*d0b)*cos(8*phi0a - 7*phi0b) - 
+        curvb*cos(5*phi0a - 6*phi0b) - curvb*cos(7*phi0a - 6*phi0b) + 
+        4*curva*curvb*d0a*cos(7*phi0a - 6*phi0b) + 
+        10*curva*cos(6*phi0a - 5*phi0b) + 
+        20*curva*curvb*d0b*cos(6*phi0a - 5*phi0b) + 
+        4*curvb*cos(3*phi0a - 4*phi0b) + 
+        4*curva*curvb*d0a*cos(3*phi0a - 4*phi0b) + 
+        4*pow(curvb,2)*d0b*cos(3*phi0a - 4*phi0b) - 
+        16*curva*pow(curvb,2)*d0a*d0b*cos(3*phi0a - 4*phi0b) + 
+        4*curvb*cos(5*phi0a - 4*phi0b) - 
+        20*curva*curvb*d0a*cos(5*phi0a - 4*phi0b) + 
+        4*pow(curvb,2)*d0b*cos(5*phi0a - 4*phi0b) + 
+        2*curva*cos(2*phi0a - 3*phi0b) - 
+        8*pow(curvb,2)*d0a*cos(2*phi0a - 3*phi0b) + 
+        40*curva*pow(curvb,2)*pow(d0a,2)*cos(2*phi0a - 3*phi0b) - 
+        12*curva*curvb*d0b*cos(2*phi0a - 3*phi0b) + 
+        48*curva*pow(curvb,2)*pow(d0b,2)*cos(2*phi0a - 3*phi0b) - 
+        20*curva*cos(4*phi0a - 3*phi0b) - 
+        8*pow(curvb,2)*d0a*cos(4*phi0a - 3*phi0b) + 
+        8*curva*pow(curvb,2)*pow(d0a,2)*cos(4*phi0a - 3*phi0b) - 
+        40*curva*curvb*d0b*cos(4*phi0a - 3*phi0b) - 
+        7*curvb*cos(phi0a - 2*phi0b) + 
+        12*curva*curvb*d0a*cos(phi0a - 2*phi0b) - 
+        240*curva*pow(curvb,2)*d0a*d0b*cos(phi0a - 2*phi0b) - 
+        7*curvb*cos(3*phi0a - 2*phi0b) + 
+        48*curva*curvb*d0a*cos(3*phi0a - 2*phi0b) - 
+        80*curva*pow(curvb,2)*d0a*d0b*cos(3*phi0a - 2*phi0b) + 
+        20*curva*cos(2*phi0a - phi0b) + 
+        8*pow(curvb,2)*d0a*cos(2*phi0a - phi0b) + 
+        120*curva*pow(curvb,2)*pow(d0a,2)*cos(2*phi0a - phi0b) + 
+        24*curva*curvb*d0b*cos(2*phi0a - phi0b) + 
+        144*curva*pow(curvb,2)*pow(d0b,2)*cos(2*phi0a - phi0b) - 
+        10*curva*cos(phi0b) + 8*pow(curvb,2)*d0a*cos(phi0b) + 
+        216*curva*pow(curvb,2)*pow(d0a,2)*cos(phi0b) + 
+        12*curva*curvb*d0b*cos(phi0b) + 
+        192*curva*pow(curvb,2)*pow(d0b,2)*cos(phi0b))*
+       pow(sin(phi0a - phi0b),-5))/(32.*curvb);
+}
+
+double BigNTuple::dxsol2dphi0a( double curva, double d0a, double phi0a,
+				double curvb, double d0b, double phi0b )
+{
+   return
+      ((-((8*pow(curvb,2)*d0a*(11 + 24*curvb*d0b) + 
+	   curva*(65 + 180*curvb*d0b + 
+		  pow(curvb,2)*(-40*pow(d0a,2) + 228*pow(d0b,2)) + 
+		  32*pow(curvb,3)*(120*pow(d0a,2)*d0b + 41*pow(d0b,3))))*
+	  cos(phi0a)) - 3*curva*pow(1 + 2*curvb*d0b,2)*
+	cos(9*phi0a - 8*phi0b) - 2*curvb*cos(8*phi0a - 7*phi0b) + 
+        8*curva*curvb*d0a*cos(8*phi0a - 7*phi0b) - 
+        4*pow(curvb,2)*d0b*cos(8*phi0a - 7*phi0b) + 
+        16*curva*pow(curvb,2)*d0a*d0b*cos(8*phi0a - 7*phi0b) + 
+        curva*cos(5*phi0a - 6*phi0b) + 19*curva*cos(7*phi0a - 6*phi0b) + 
+        4*pow(curvb,2)*d0a*cos(7*phi0a - 6*phi0b) - 
+        4*curva*pow(curvb,2)*pow(d0a,2)*cos(7*phi0a - 6*phi0b) + 
+        72*curva*curvb*d0b*cos(7*phi0a - 6*phi0b) + 
+        72*curva*pow(curvb,2)*pow(d0b,2)*cos(7*phi0a - 6*phi0b) - 
+        2*curvb*cos(4*phi0a - 5*phi0b) + 
+        8*curva*curvb*d0a*cos(4*phi0a - 5*phi0b) + 
+        4*pow(curvb,2)*d0b*cos(4*phi0a - 5*phi0b) - 
+        16*curva*pow(curvb,2)*d0a*d0b*cos(4*phi0a - 5*phi0b) - 
+        8*pow(curvb,3)*pow(d0b,2)*cos(4*phi0a - 5*phi0b) + 
+        32*curva*pow(curvb,3)*d0a*pow(d0b,2)*cos(4*phi0a - 5*phi0b) + 
+        12*curvb*cos(6*phi0a - 5*phi0b) - 
+        48*curva*curvb*d0a*cos(6*phi0a - 5*phi0b) + 
+        24*pow(curvb,2)*d0b*cos(6*phi0a - 5*phi0b) - 
+        96*curva*pow(curvb,2)*d0a*d0b*cos(6*phi0a - 5*phi0b) - 
+        9*curva*cos(3*phi0a - 4*phi0b) - 
+        12*pow(curvb,2)*d0a*cos(3*phi0a - 4*phi0b) + 
+        60*curva*pow(curvb,2)*pow(d0a,2)*cos(3*phi0a - 4*phi0b) - 
+        12*curva*curvb*d0b*cos(3*phi0a - 4*phi0b) + 
+        48*pow(curvb,3)*d0a*d0b*cos(3*phi0a - 4*phi0b) - 
+        240*curva*pow(curvb,3)*pow(d0a,2)*d0b*cos(3*phi0a - 4*phi0b) + 
+        36*curva*pow(curvb,2)*pow(d0b,2)*cos(3*phi0a - 4*phi0b) - 
+        96*curva*pow(curvb,3)*pow(d0b,3)*cos(3*phi0a - 4*phi0b) - 
+        51*curva*cos(5*phi0a - 4*phi0b) - 
+        28*pow(curvb,2)*d0a*cos(5*phi0a - 4*phi0b) + 
+        28*curva*pow(curvb,2)*pow(d0a,2)*cos(5*phi0a - 4*phi0b) - 
+        180*curva*curvb*d0b*cos(5*phi0a - 4*phi0b) + 
+        16*pow(curvb,3)*d0a*d0b*cos(5*phi0a - 4*phi0b) - 
+        16*curva*pow(curvb,3)*pow(d0a,2)*d0b*cos(5*phi0a - 4*phi0b) - 
+        180*curva*pow(curvb,2)*pow(d0b,2)*cos(5*phi0a - 4*phi0b) + 
+        12*curvb*cos(2*phi0a - 3*phi0b) - 
+        48*curva*curvb*d0a*cos(2*phi0a - 3*phi0b) - 
+        64*pow(curvb,3)*pow(d0a,2)*cos(2*phi0a - 3*phi0b) + 
+        384*curva*pow(curvb,3)*pow(d0a,3)*cos(2*phi0a - 3*phi0b) - 
+        8*pow(curvb,2)*d0b*cos(2*phi0a - 3*phi0b) - 
+        160*curva*pow(curvb,2)*d0a*d0b*cos(2*phi0a - 3*phi0b) - 
+        32*pow(curvb,3)*pow(d0b,2)*cos(2*phi0a - 3*phi0b) + 
+        1088*curva*pow(curvb,3)*d0a*pow(d0b,2)*cos(2*phi0a - 3*phi0b) - 
+        30*curvb*cos(4*phi0a - 3*phi0b) + 
+        120*curva*curvb*d0a*cos(4*phi0a - 3*phi0b) - 
+        32*pow(curvb,3)*pow(d0a,2)*cos(4*phi0a - 3*phi0b) + 
+        64*curva*pow(curvb,3)*pow(d0a,3)*cos(4*phi0a - 3*phi0b) - 
+        52*pow(curvb,2)*d0b*cos(4*phi0a - 3*phi0b) + 
+        208*curva*pow(curvb,2)*d0a*d0b*cos(4*phi0a - 3*phi0b) - 
+        40*pow(curvb,3)*pow(d0b,2)*cos(4*phi0a - 3*phi0b) + 
+        160*curva*pow(curvb,3)*d0a*pow(d0b,2)*cos(4*phi0a - 3*phi0b) + 
+        33*curva*cos(phi0a - 2*phi0b) + 
+        52*pow(curvb,2)*d0a*cos(phi0a - 2*phi0b) - 
+        100*curva*pow(curvb,2)*pow(d0a,2)*cos(phi0a - 2*phi0b) + 
+        72*curva*curvb*d0b*cos(phi0a - 2*phi0b) + 
+        32*pow(curvb,3)*d0a*d0b*cos(phi0a - 2*phi0b) - 
+        2720*curva*pow(curvb,3)*pow(d0a,2)*d0b*cos(phi0a - 2*phi0b) + 
+        24*curva*pow(curvb,2)*pow(d0b,2)*cos(phi0a - 2*phi0b) - 
+        864*curva*pow(curvb,3)*pow(d0b,3)*cos(phi0a - 2*phi0b) + 
+        75*curva*cos(3*phi0a - 2*phi0b) + 
+        72*pow(curvb,2)*d0a*cos(3*phi0a - 2*phi0b) - 
+        24*curva*pow(curvb,2)*pow(d0a,2)*cos(3*phi0a - 2*phi0b) + 
+        240*curva*curvb*d0b*cos(3*phi0a - 2*phi0b) + 
+        96*pow(curvb,3)*d0a*d0b*cos(3*phi0a - 2*phi0b) - 
+        864*curva*pow(curvb,3)*pow(d0a,2)*d0b*cos(3*phi0a - 2*phi0b) + 
+        288*curva*pow(curvb,2)*pow(d0b,2)*cos(3*phi0a - 2*phi0b) - 
+        288*curva*pow(curvb,3)*pow(d0b,3)*cos(3*phi0a - 2*phi0b) + 
+        40*curvb*cos(2*phi0a - phi0b) - 
+        160*curva*curvb*d0a*cos(2*phi0a - phi0b) + 
+        768*curva*pow(curvb,3)*pow(d0a,3)*cos(2*phi0a - phi0b) + 
+        48*pow(curvb,2)*d0b*cos(2*phi0a - phi0b) - 
+        384*curva*pow(curvb,2)*d0a*d0b*cos(2*phi0a - phi0b) + 
+        32*pow(curvb,3)*pow(d0b,2)*cos(2*phi0a - phi0b) + 
+        2368*curva*pow(curvb,3)*d0a*pow(d0b,2)*cos(2*phi0a - phi0b) - 
+        30*curvb*cos(phi0b) + 120*curva*curvb*d0a*cos(phi0b) + 
+        96*pow(curvb,3)*pow(d0a,2)*cos(phi0b) + 
+        1344*curva*pow(curvb,3)*pow(d0a,3)*cos(phi0b) - 
+        12*pow(curvb,2)*d0b*cos(phi0b) + 
+        432*curva*pow(curvb,2)*d0a*d0b*cos(phi0b) + 
+        48*pow(curvb,3)*pow(d0b,2)*cos(phi0b) + 
+        4032*curva*pow(curvb,3)*d0a*pow(d0b,2)*cos(phi0b))*
+       pow(sin(phi0a - phi0b),-6))/(128.*pow(curvb,2));
+}
+
+double BigNTuple::dxsol2dphi0b( double curva, double d0a, double phi0a,
+				double curvb, double d0b, double phi0b )
+{
+   return
+      ((6*(8*pow(curvb,2)*d0a*(1 + 4*curvb*d0b) + 
+           curva*(5 + 20*curvb*d0b + 
+		  4*pow(curvb,2)*(2*pow(d0a,2) + 9*pow(d0b,2)) + 
+		  224*pow(curvb,3)*(3*pow(d0a,2)*d0b + pow(d0b,3))))*
+	cos(phi0a) + 2*curva*pow(1 + 2*curvb*d0b,2)*
+	cos(9*phi0a - 8*phi0b) + curvb*cos(6*phi0a - 7*phi0b) + 
+        2*pow(curvb,2)*d0b*cos(6*phi0a - 7*phi0b) + 
+        curvb*cos(8*phi0a - 7*phi0b) - 
+        4*curva*curvb*d0a*cos(8*phi0a - 7*phi0b) + 
+        2*pow(curvb,2)*d0b*cos(8*phi0a - 7*phi0b) - 
+        8*curva*pow(curvb,2)*d0a*d0b*cos(8*phi0a - 7*phi0b) - 
+        12*curva*cos(7*phi0a - 6*phi0b) - 
+        48*curva*curvb*d0b*cos(7*phi0a - 6*phi0b) - 
+        48*curva*pow(curvb,2)*pow(d0b,2)*cos(7*phi0a - 6*phi0b) - 
+        5*curvb*cos(4*phi0a - 5*phi0b) - 
+        4*curva*curvb*d0a*cos(4*phi0a - 5*phi0b) - 
+        14*pow(curvb,2)*d0b*cos(4*phi0a - 5*phi0b) + 
+        8*curva*pow(curvb,2)*d0a*d0b*cos(4*phi0a - 5*phi0b) + 
+        4*pow(curvb,3)*pow(d0b,2)*cos(4*phi0a - 5*phi0b) - 
+        16*curva*pow(curvb,3)*d0a*pow(d0b,2)*cos(4*phi0a - 5*phi0b) - 
+        5*curvb*cos(6*phi0a - 5*phi0b) + 
+        24*curva*curvb*d0a*cos(6*phi0a - 5*phi0b) - 
+        14*pow(curvb,2)*d0b*cos(6*phi0a - 5*phi0b) + 
+        48*curva*pow(curvb,2)*d0a*d0b*cos(6*phi0a - 5*phi0b) + 
+        4*pow(curvb,3)*pow(d0b,2)*cos(6*phi0a - 5*phi0b) + 
+        2*curva*cos(3*phi0a - 4*phi0b) + 
+        8*pow(curvb,2)*d0a*cos(3*phi0a - 4*phi0b) - 
+        40*curva*pow(curvb,2)*pow(d0a,2)*cos(3*phi0a - 4*phi0b) + 
+        8*curva*curvb*d0b*cos(3*phi0a - 4*phi0b) - 
+        32*pow(curvb,3)*d0a*d0b*cos(3*phi0a - 4*phi0b) + 
+        160*curva*pow(curvb,3)*pow(d0a,2)*d0b*cos(3*phi0a - 4*phi0b) - 
+        24*curva*pow(curvb,2)*pow(d0b,2)*cos(3*phi0a - 4*phi0b) + 
+        64*curva*pow(curvb,3)*pow(d0b,3)*cos(3*phi0a - 4*phi0b) + 
+        30*curva*cos(5*phi0a - 4*phi0b) + 
+        8*pow(curvb,2)*d0a*cos(5*phi0a - 4*phi0b) - 
+        8*curva*pow(curvb,2)*pow(d0a,2)*cos(5*phi0a - 4*phi0b) + 
+        120*curva*curvb*d0b*cos(5*phi0a - 4*phi0b) - 
+        32*pow(curvb,3)*d0a*d0b*cos(5*phi0a - 4*phi0b) + 
+        32*curva*pow(curvb,3)*pow(d0a,2)*d0b*cos(5*phi0a - 4*phi0b) + 
+        120*curva*pow(curvb,2)*pow(d0b,2)*cos(5*phi0a - 4*phi0b) + 
+        9*curvb*cos(2*phi0a - 3*phi0b) + 
+        24*curva*curvb*d0a*cos(2*phi0a - 3*phi0b) + 
+        48*pow(curvb,3)*pow(d0a,2)*cos(2*phi0a - 3*phi0b) - 
+        288*curva*pow(curvb,3)*pow(d0a,3)*cos(2*phi0a - 3*phi0b) + 
+        30*pow(curvb,2)*d0b*cos(2*phi0a - 3*phi0b) + 
+        144*curva*pow(curvb,2)*d0a*d0b*cos(2*phi0a - 3*phi0b) + 
+        36*pow(curvb,3)*pow(d0b,2)*cos(2*phi0a - 3*phi0b) - 
+        864*curva*pow(curvb,3)*d0a*pow(d0b,2)*cos(2*phi0a - 3*phi0b) + 
+        9*curvb*cos(4*phi0a - 3*phi0b) - 
+        60*curva*curvb*d0a*cos(4*phi0a - 3*phi0b) + 
+        48*pow(curvb,3)*pow(d0a,2)*cos(4*phi0a - 3*phi0b) - 
+        96*curva*pow(curvb,3)*pow(d0a,3)*cos(4*phi0a - 3*phi0b) + 
+        30*pow(curvb,2)*d0b*cos(4*phi0a - 3*phi0b) - 
+        72*curva*pow(curvb,2)*d0a*d0b*cos(4*phi0a - 3*phi0b) + 
+        36*pow(curvb,3)*pow(d0b,2)*cos(4*phi0a - 3*phi0b) - 
+        240*curva*pow(curvb,3)*d0a*pow(d0b,2)*cos(4*phi0a - 3*phi0b) - 
+        12*curva*cos(phi0a - 2*phi0b) - 
+        32*pow(curvb,2)*d0a*cos(phi0a - 2*phi0b) + 
+        32*curva*pow(curvb,2)*pow(d0a,2)*cos(phi0a - 2*phi0b) - 
+        48*curva*curvb*d0b*cos(phi0a - 2*phi0b) - 
+        64*pow(curvb,3)*d0a*d0b*cos(phi0a - 2*phi0b) + 
+        2368*curva*pow(curvb,3)*pow(d0a,2)*d0b*cos(phi0a - 2*phi0b) - 
+        48*curva*pow(curvb,2)*pow(d0b,2)*cos(phi0a - 2*phi0b) + 
+        768*curva*pow(curvb,3)*pow(d0b,3)*cos(phi0a - 2*phi0b) - 
+        40*curva*cos(3*phi0a - 2*phi0b) - 
+        32*pow(curvb,2)*d0a*cos(3*phi0a - 2*phi0b) - 
+        32*curva*pow(curvb,2)*pow(d0a,2)*cos(3*phi0a - 2*phi0b) - 
+        160*curva*curvb*d0b*cos(3*phi0a - 2*phi0b) - 
+        64*pow(curvb,3)*d0a*d0b*cos(3*phi0a - 2*phi0b) + 
+        1088*curva*pow(curvb,3)*pow(d0a,2)*d0b*cos(3*phi0a - 2*phi0b) - 
+        224*curva*pow(curvb,2)*pow(d0b,2)*cos(3*phi0a - 2*phi0b) + 
+        384*curva*pow(curvb,3)*pow(d0b,3)*cos(3*phi0a - 2*phi0b) - 
+        5*curvb*cos(2*phi0a - phi0b) + 
+        80*curva*curvb*d0a*cos(2*phi0a - phi0b) - 
+        48*pow(curvb,3)*pow(d0a,2)*cos(2*phi0a - phi0b) - 
+        864*curva*pow(curvb,3)*pow(d0a,3)*cos(2*phi0a - phi0b) - 
+        18*pow(curvb,2)*d0b*cos(2*phi0a - phi0b) + 
+        192*curva*pow(curvb,2)*d0a*d0b*cos(2*phi0a - phi0b) - 
+        40*pow(curvb,3)*pow(d0b,2)*cos(2*phi0a - phi0b) - 
+        2720*curva*pow(curvb,3)*d0a*pow(d0b,2)*cos(2*phi0a - phi0b) - 
+        5*curvb*cos(phi0b) - 60*curva*curvb*d0a*cos(phi0b) - 
+        48*pow(curvb,3)*pow(d0a,2)*cos(phi0b) - 
+        1312*curva*pow(curvb,3)*pow(d0a,3)*cos(phi0b) - 
+        18*pow(curvb,2)*d0b*cos(phi0b) - 
+        312*curva*pow(curvb,2)*d0a*d0b*cos(phi0b) - 
+        40*pow(curvb,3)*pow(d0b,2)*cos(phi0b) - 
+        3840*curva*pow(curvb,3)*d0a*pow(d0b,2)*cos(phi0b))*
+       pow(sin(phi0a - phi0b),-6))/(128.*pow(curvb,2));
+}
+
+double BigNTuple::dxsol2dcurva( double curva, double d0a, double phi0a,
+				double curvb, double d0b, double phi0b )
+{
+   return
+      -((8*curvb*d0a*(5 + 12*curvb*d0b + 
+		      pow(curvb,2)*(16*pow(d0a,2) + 54*pow(d0b,2)))*cos(phi0a) + 
+         pow(1 + 2*curvb*d0b,2)*cos(8*phi0a - 7*phi0b) - 
+         4*curvb*d0a*cos(7*phi0a - 6*phi0b) - 
+         8*pow(curvb,2)*d0a*d0b*cos(7*phi0a - 6*phi0b) + 
+         cos(4*phi0a - 5*phi0b) - 6*cos(6*phi0a - 5*phi0b) + 
+         4*pow(curvb,2)*pow(d0a,2)*cos(6*phi0a - 5*phi0b) - 
+         20*curvb*d0b*cos(6*phi0a - 5*phi0b) - 
+         20*pow(curvb,2)*pow(d0b,2)*cos(6*phi0a - 5*phi0b) + 
+         4*curvb*d0a*cos(3*phi0a - 4*phi0b) - 
+         8*pow(curvb,2)*d0a*d0b*cos(3*phi0a - 4*phi0b) + 
+         16*pow(curvb,3)*d0a*pow(d0b,2)*cos(3*phi0a - 4*phi0b) + 
+         20*curvb*d0a*cos(5*phi0a - 4*phi0b) + 
+         40*pow(curvb,2)*d0a*d0b*cos(5*phi0a - 4*phi0b) - 
+         6*cos(2*phi0a - 3*phi0b) + 
+         20*pow(curvb,2)*pow(d0a,2)*cos(2*phi0a - 3*phi0b) - 
+         4*curvb*d0b*cos(2*phi0a - 3*phi0b) - 
+         80*pow(curvb,3)*pow(d0a,2)*d0b*cos(2*phi0a - 3*phi0b) + 
+         12*pow(curvb,2)*pow(d0b,2)*cos(2*phi0a - 3*phi0b) - 
+         32*pow(curvb,3)*pow(d0b,3)*cos(2*phi0a - 3*phi0b) + 
+         15*cos(4*phi0a - 3*phi0b) - 
+         16*pow(curvb,2)*pow(d0a,2)*cos(4*phi0a - 3*phi0b) + 
+         40*curvb*d0b*cos(4*phi0a - 3*phi0b) - 
+         16*pow(curvb,3)*pow(d0a,2)*d0b*cos(4*phi0a - 3*phi0b) + 
+         40*pow(curvb,2)*pow(d0b,2)*cos(4*phi0a - 3*phi0b) - 
+         20*curvb*d0a*cos(phi0a - 2*phi0b) + 
+         96*pow(curvb,3)*pow(d0a,3)*cos(phi0a - 2*phi0b) - 
+         24*pow(curvb,2)*d0a*d0b*cos(phi0a - 2*phi0b) + 
+         240*pow(curvb,3)*d0a*pow(d0b,2)*cos(phi0a - 2*phi0b) - 
+         40*curvb*d0a*cos(3*phi0a - 2*phi0b) + 
+         32*pow(curvb,3)*pow(d0a,3)*cos(3*phi0a - 2*phi0b) - 
+         96*pow(curvb,2)*d0a*d0b*cos(3*phi0a - 2*phi0b) + 
+         80*pow(curvb,3)*d0a*pow(d0b,2)*cos(3*phi0a - 2*phi0b) - 
+         20*cos(2*phi0a - phi0b) + 
+         40*pow(curvb,2)*pow(d0a,2)*cos(2*phi0a - phi0b) - 
+         40*curvb*d0b*cos(2*phi0a - phi0b) - 
+         240*pow(curvb,3)*pow(d0a,2)*d0b*cos(2*phi0a - phi0b) - 
+         24*pow(curvb,2)*pow(d0b,2)*cos(2*phi0a - phi0b) - 
+         96*pow(curvb,3)*pow(d0b,3)*cos(2*phi0a - phi0b) + 
+         15*cos(phi0b) - 48*pow(curvb,2)*pow(d0a,2)*cos(phi0b) + 
+         20*curvb*d0b*cos(phi0b) - 
+         432*pow(curvb,3)*pow(d0a,2)*d0b*cos(phi0b) - 
+         12*pow(curvb,2)*pow(d0b,2)*cos(phi0b) - 
+         128*pow(curvb,3)*pow(d0b,3)*cos(phi0b))*
+	pow(sin(phi0a - phi0b),-5))/(64.*pow(curvb,2));
+}
+
+double BigNTuple::dxsol2dcurvb( double curva, double d0a, double phi0a,
+				double curvb, double d0b, double phi0b )
+{
+   return
+      ((-4*curvb*(5 + 2*pow(curvb,2)*(4*pow(d0a,2) + pow(d0b,2)) + 
+		  2*curva*d0a*(-5 + pow(curvb,2)*
+			       (16*pow(d0a,2) + 54*pow(d0b,2))))*cos(phi0a) + 
+        2*curva*(1 + 2*curvb*d0b)*cos(8*phi0a - 7*phi0b) + 
+        curvb*cos(5*phi0a - 6*phi0b) + curvb*cos(7*phi0a - 6*phi0b) - 
+        4*curva*curvb*d0a*cos(7*phi0a - 6*phi0b) + 
+        2*curva*cos(4*phi0a - 5*phi0b) - 12*curva*cos(6*phi0a - 5*phi0b) - 
+        20*curva*curvb*d0b*cos(6*phi0a - 5*phi0b) - 
+        6*curvb*cos(3*phi0a - 4*phi0b) + 
+        4*curva*curvb*d0a*cos(3*phi0a - 4*phi0b) + 
+        4*pow(curvb,3)*pow(d0b,2)*cos(3*phi0a - 4*phi0b) - 
+        16*curva*pow(curvb,3)*d0a*pow(d0b,2)*cos(3*phi0a - 4*phi0b) - 
+        6*curvb*cos(5*phi0a - 4*phi0b) + 
+        20*curva*curvb*d0a*cos(5*phi0a - 4*phi0b) + 
+        4*pow(curvb,3)*pow(d0b,2)*cos(5*phi0a - 4*phi0b) - 
+        12*curva*cos(2*phi0a - 3*phi0b) - 
+        4*curva*curvb*d0b*cos(2*phi0a - 3*phi0b) - 
+        16*pow(curvb,3)*d0a*d0b*cos(2*phi0a - 3*phi0b) + 
+        80*curva*pow(curvb,3)*pow(d0a,2)*d0b*cos(2*phi0a - 3*phi0b) + 
+        32*curva*pow(curvb,3)*pow(d0b,3)*cos(2*phi0a - 3*phi0b) + 
+        30*curva*cos(4*phi0a - 3*phi0b) + 
+        40*curva*curvb*d0b*cos(4*phi0a - 3*phi0b) - 
+        16*pow(curvb,3)*d0a*d0b*cos(4*phi0a - 3*phi0b) + 
+        16*curva*pow(curvb,3)*pow(d0a,2)*d0b*cos(4*phi0a - 3*phi0b) + 
+        15*curvb*cos(phi0a - 2*phi0b) - 
+        20*curva*curvb*d0a*cos(phi0a - 2*phi0b) + 
+        16*pow(curvb,3)*pow(d0a,2)*cos(phi0a - 2*phi0b) - 
+        96*curva*pow(curvb,3)*pow(d0a,3)*cos(phi0a - 2*phi0b) - 
+        240*curva*pow(curvb,3)*d0a*pow(d0b,2)*cos(phi0a - 2*phi0b) + 
+        15*curvb*cos(3*phi0a - 2*phi0b) - 
+        40*curva*curvb*d0a*cos(3*phi0a - 2*phi0b) + 
+        16*pow(curvb,3)*pow(d0a,2)*cos(3*phi0a - 2*phi0b) - 
+        32*curva*pow(curvb,3)*pow(d0a,3)*cos(3*phi0a - 2*phi0b) - 
+        80*curva*pow(curvb,3)*d0a*pow(d0b,2)*cos(3*phi0a - 2*phi0b) - 
+        40*curva*cos(2*phi0a - phi0b) - 
+        40*curva*curvb*d0b*cos(2*phi0a - phi0b) + 
+        16*pow(curvb,3)*d0a*d0b*cos(2*phi0a - phi0b) + 
+        240*curva*pow(curvb,3)*pow(d0a,2)*d0b*cos(2*phi0a - phi0b) + 
+        96*curva*pow(curvb,3)*pow(d0b,3)*cos(2*phi0a - phi0b) + 
+        30*curva*cos(phi0b) + 20*curva*curvb*d0b*cos(phi0b) + 
+        16*pow(curvb,3)*d0a*d0b*cos(phi0b) + 
+        432*curva*pow(curvb,3)*pow(d0a,2)*d0b*cos(phi0b) + 
+        128*curva*pow(curvb,3)*pow(d0b,3)*cos(phi0b))*
+       pow(sin(phi0a - phi0b),-5))/(64.*pow(curvb,3));
+}
+
+double BigNTuple::dysol1dd0a( double curva, double d0a, double phi0a,
+			      double curvb, double d0b, double phi0b )
+{
+   return
+      -(pow(sin(phi0a - phi0b),-5)*
+	(-4*(curva*d0b + curvb*(4*d0a + 24*curva*pow(d0a,2) + 
+				27*curva*pow(d0b,2)))*sin(phi0a) + 
+         (-1 + 2*curva*d0a)*sin(4*phi0a - 5*phi0b) - 
+         4*curva*d0b*sin(3*phi0a - 4*phi0b) + 
+         4*curva*curvb*pow(d0b,2)*sin(3*phi0a - 4*phi0b) + 
+         4*sin(2*phi0a - 3*phi0b) + 4*curvb*d0b*sin(2*phi0a - 3*phi0b) - 
+         40*curva*curvb*d0a*d0b*sin(2*phi0a - 3*phi0b) + 
+         sin(4*phi0a - 3*phi0b) - 2*curva*d0a*sin(4*phi0a - 3*phi0b) - 
+         4*curvb*d0b*sin(4*phi0a - 3*phi0b) + 
+         8*curva*curvb*d0a*d0b*sin(4*phi0a - 3*phi0b) - 
+         8*curvb*d0a*sin(phi0a - 2*phi0b) + 
+         72*curva*curvb*pow(d0a,2)*sin(phi0a - 2*phi0b) + 
+         4*curva*d0b*sin(phi0a - 2*phi0b) + 
+         60*curva*curvb*pow(d0b,2)*sin(phi0a - 2*phi0b) + 
+         8*curvb*d0a*sin(3*phi0a - 2*phi0b) - 
+         24*curva*curvb*pow(d0a,2)*sin(3*phi0a - 2*phi0b) + 
+         4*curva*d0b*sin(3*phi0a - 2*phi0b) - 
+         20*curva*curvb*pow(d0b,2)*sin(3*phi0a - 2*phi0b) - 
+         4*sin(2*phi0a - phi0b) + 4*curvb*d0b*sin(2*phi0a - phi0b) + 
+         120*curva*curvb*d0a*d0b*sin(2*phi0a - phi0b) + 6*sin(phi0b) + 
+         4*curva*d0a*sin(phi0b) + 4*curvb*d0b*sin(phi0b) + 
+         216*curva*curvb*d0a*d0b*sin(phi0b)))/16.;
+}
+
+double BigNTuple::dysol1dd0b( double curva, double d0a, double phi0a,
+			      double curvb, double d0b, double phi0b )
+{
+   return
+      -(pow(sin(phi0a - phi0b),-5)*
+	(-2*(3 + 2*curvb*d0b + 2*curva*(d0a + 54*curvb*d0a*d0b))*sin(phi0a) + 
+         (-1 + 4*curva*d0a)*(-1 + 2*curvb*d0b)*sin(3*phi0a - 4*phi0b) - 
+         sin(5*phi0a - 4*phi0b) + 2*curvb*d0b*sin(5*phi0a - 4*phi0b) + 
+         4*curvb*d0a*sin(2*phi0a - 3*phi0b) - 
+         20*curva*curvb*pow(d0a,2)*sin(2*phi0a - 3*phi0b) + 
+         8*curva*d0b*sin(2*phi0a - 3*phi0b) - 
+         24*curva*curvb*pow(d0b,2)*sin(2*phi0a - 3*phi0b) - 
+         4*curvb*d0a*sin(4*phi0a - 3*phi0b) + 
+         4*curva*curvb*pow(d0a,2)*sin(4*phi0a - 3*phi0b) - 
+         4*sin(phi0a - 2*phi0b) + 4*curva*d0a*sin(phi0a - 2*phi0b) + 
+         120*curva*curvb*d0a*d0b*sin(phi0a - 2*phi0b) + 
+         4*sin(3*phi0a - 2*phi0b) + 4*curva*d0a*sin(3*phi0a - 2*phi0b) - 
+         40*curva*curvb*d0a*d0b*sin(3*phi0a - 2*phi0b) + 
+         4*curvb*d0a*sin(2*phi0a - phi0b) + 
+         60*curva*curvb*pow(d0a,2)*sin(2*phi0a - phi0b) - 
+         8*curva*d0b*sin(2*phi0a - phi0b) + 
+         72*curva*curvb*pow(d0b,2)*sin(2*phi0a - phi0b) + 
+         4*curvb*d0a*sin(phi0b) + 108*curva*curvb*pow(d0a,2)*sin(phi0b) + 
+         16*curva*d0b*sin(phi0b) + 96*curva*curvb*pow(d0b,2)*sin(phi0b)))/
+      16.;
+}
+
+double BigNTuple::dysol1dphi0a( double curva, double d0a, double phi0a,
+				double curvb, double d0b, double phi0b )
+{
+   return
+      -(pow(sin(phi0a - phi0b),-6)*
+	(-2*(d0a + 24*curvb*d0a*d0b + 
+	     2*curva*pow(d0b,2)*(3 + 82*curvb*d0b) + 
+	     5*pow(d0a,2)*(curva + 96*curva*curvb*d0b))*sin(phi0a) - 
+         d0a*(-1 + curva*d0a)*sin(5*phi0a - 6*phi0b) - 
+         2*d0b*sin(4*phi0a - 5*phi0b) + 
+         8*curva*d0a*d0b*sin(4*phi0a - 5*phi0b) + 
+         2*curvb*pow(d0b,2)*sin(4*phi0a - 5*phi0b) - 
+         8*curva*curvb*d0a*pow(d0b,2)*sin(4*phi0a - 5*phi0b) - 
+         3*d0a*sin(3*phi0a - 4*phi0b) - 
+         9*curva*pow(d0a,2)*sin(3*phi0a - 4*phi0b) - 
+         12*curvb*d0a*d0b*sin(3*phi0a - 4*phi0b) + 
+         60*curva*curvb*pow(d0a,2)*d0b*sin(3*phi0a - 4*phi0b) - 
+         12*curva*pow(d0b,2)*sin(3*phi0a - 4*phi0b) + 
+         24*curva*curvb*pow(d0b,3)*sin(3*phi0a - 4*phi0b) - 
+         d0a*sin(5*phi0a - 4*phi0b) + 
+         curva*pow(d0a,2)*sin(5*phi0a - 4*phi0b) + 
+         4*curvb*d0a*d0b*sin(5*phi0a - 4*phi0b) - 
+         4*curva*curvb*pow(d0a,2)*d0b*sin(5*phi0a - 4*phi0b) + 
+         16*curvb*pow(d0a,2)*sin(2*phi0a - 3*phi0b) - 
+         96*curva*curvb*pow(d0a,3)*sin(2*phi0a - 3*phi0b) + 
+         8*d0b*sin(2*phi0a - 3*phi0b) + 
+         16*curva*d0a*d0b*sin(2*phi0a - 3*phi0b) + 
+         8*curvb*pow(d0b,2)*sin(2*phi0a - 3*phi0b) - 
+         272*curva*curvb*d0a*pow(d0b,2)*sin(2*phi0a - 3*phi0b) - 
+         8*curvb*pow(d0a,2)*sin(4*phi0a - 3*phi0b) + 
+         16*curva*curvb*pow(d0a,3)*sin(4*phi0a - 3*phi0b) + 
+         2*d0b*sin(4*phi0a - 3*phi0b) - 
+         8*curva*d0a*d0b*sin(4*phi0a - 3*phi0b) - 
+         10*curvb*pow(d0b,2)*sin(4*phi0a - 3*phi0b) + 
+         40*curva*curvb*d0a*pow(d0b,2)*sin(4*phi0a - 3*phi0b) + 
+         2*d0a*sin(phi0a - 2*phi0b) + 
+         10*curva*pow(d0a,2)*sin(phi0a - 2*phi0b) - 
+         8*curvb*d0a*d0b*sin(phi0a - 2*phi0b) + 
+         680*curva*curvb*pow(d0a,2)*d0b*sin(phi0a - 2*phi0b) + 
+         12*curva*pow(d0b,2)*sin(phi0a - 2*phi0b) + 
+         216*curva*curvb*pow(d0b,3)*sin(phi0a - 2*phi0b) + 
+         3*d0a*sin(3*phi0a - 2*phi0b) + 
+         9*curva*pow(d0a,2)*sin(3*phi0a - 2*phi0b) + 
+         24*curvb*d0a*d0b*sin(3*phi0a - 2*phi0b) - 
+         216*curva*curvb*pow(d0a,2)*d0b*sin(3*phi0a - 2*phi0b) + 
+         12*curva*pow(d0b,2)*sin(3*phi0a - 2*phi0b) - 
+         72*curva*curvb*pow(d0b,3)*sin(3*phi0a - 2*phi0b) + 
+         192*curva*curvb*pow(d0a,3)*sin(2*phi0a - phi0b) - 
+         8*d0b*sin(2*phi0a - phi0b) - 16*curva*d0a*d0b*sin(2*phi0a - phi0b) + 
+         8*curvb*pow(d0b,2)*sin(2*phi0a - phi0b) + 
+         592*curva*curvb*d0a*pow(d0b,2)*sin(2*phi0a - phi0b) + 
+         24*curvb*pow(d0a,2)*sin(phi0b) + 
+         336*curva*curvb*pow(d0a,3)*sin(phi0b) + 12*d0b*sin(phi0b) + 
+         48*curva*d0a*d0b*sin(phi0b) + 12*curvb*pow(d0b,2)*sin(phi0b) + 
+         1008*curva*curvb*d0a*pow(d0b,2)*sin(phi0b)))/32.;
+}
+
+double BigNTuple::dysol1dphi0b( double curva, double d0a, double phi0a,
+				double curvb, double d0b, double phi0b )
+{
+   return
+      (pow(sin(phi0a - phi0b),-6)*
+       (-12*(d0a + 4*curvb*d0a*d0b + 2*curva*pow(d0b,2)*(1 + 14*curvb*d0b) + 
+	     pow(d0a,2)*(curva + 84*curva*curvb*d0b))*sin(phi0a) - 
+        (-1 + 4*curva*d0a)*d0b*(-1 + curvb*d0b)*sin(4*phi0a - 5*phi0b) + 
+        d0b*sin(6*phi0a - 5*phi0b) - 
+        curvb*pow(d0b,2)*sin(6*phi0a - 5*phi0b) + 
+        2*d0a*sin(3*phi0a - 4*phi0b) - 
+        10*curva*pow(d0a,2)*sin(3*phi0a - 4*phi0b) - 
+        8*curvb*d0a*d0b*sin(3*phi0a - 4*phi0b) + 
+        40*curva*curvb*pow(d0a,2)*d0b*sin(3*phi0a - 4*phi0b) - 
+        8*curva*pow(d0b,2)*sin(3*phi0a - 4*phi0b) + 
+        16*curva*curvb*pow(d0b,3)*sin(3*phi0a - 4*phi0b) - 
+        2*d0a*sin(5*phi0a - 4*phi0b) + 
+        2*curva*pow(d0a,2)*sin(5*phi0a - 4*phi0b) + 
+        8*curvb*d0a*d0b*sin(5*phi0a - 4*phi0b) - 
+        8*curva*curvb*pow(d0a,2)*d0b*sin(5*phi0a - 4*phi0b) + 
+        12*curvb*pow(d0a,2)*sin(2*phi0a - 3*phi0b) - 
+        72*curva*curvb*pow(d0a,3)*sin(2*phi0a - 3*phi0b) + 
+        3*d0b*sin(2*phi0a - 3*phi0b) + 
+        24*curva*d0a*d0b*sin(2*phi0a - 3*phi0b) + 
+        9*curvb*pow(d0b,2)*sin(2*phi0a - 3*phi0b) - 
+        216*curva*curvb*d0a*pow(d0b,2)*sin(2*phi0a - 3*phi0b) - 
+        12*curvb*pow(d0a,2)*sin(4*phi0a - 3*phi0b) + 
+        24*curva*curvb*pow(d0a,3)*sin(4*phi0a - 3*phi0b) - 
+        3*d0b*sin(4*phi0a - 3*phi0b) - 
+        12*curva*d0a*d0b*sin(4*phi0a - 3*phi0b) - 
+        9*curvb*pow(d0b,2)*sin(4*phi0a - 3*phi0b) + 
+        60*curva*curvb*d0a*pow(d0b,2)*sin(4*phi0a - 3*phi0b) - 
+        8*d0a*sin(phi0a - 2*phi0b) + 
+        8*curva*pow(d0a,2)*sin(phi0a - 2*phi0b) - 
+        16*curvb*d0a*d0b*sin(phi0a - 2*phi0b) + 
+        592*curva*curvb*pow(d0a,2)*d0b*sin(phi0a - 2*phi0b) + 
+        192*curva*curvb*pow(d0b,3)*sin(phi0a - 2*phi0b) + 
+        8*d0a*sin(3*phi0a - 2*phi0b) + 
+        8*curva*pow(d0a,2)*sin(3*phi0a - 2*phi0b) + 
+        16*curvb*d0a*d0b*sin(3*phi0a - 2*phi0b) - 
+        272*curva*curvb*pow(d0a,2)*d0b*sin(3*phi0a - 2*phi0b) + 
+        16*curva*pow(d0b,2)*sin(3*phi0a - 2*phi0b) - 
+        96*curva*curvb*pow(d0b,3)*sin(3*phi0a - 2*phi0b) + 
+        12*curvb*pow(d0a,2)*sin(2*phi0a - phi0b) + 
+        216*curva*curvb*pow(d0a,3)*sin(2*phi0a - phi0b) + 
+        2*d0b*sin(2*phi0a - phi0b) - 8*curva*d0a*d0b*sin(2*phi0a - phi0b) + 
+        10*curvb*pow(d0b,2)*sin(2*phi0a - phi0b) + 
+        680*curva*curvb*d0a*pow(d0b,2)*sin(2*phi0a - phi0b) + 
+        12*curvb*pow(d0a,2)*sin(phi0b) + 
+        328*curva*curvb*pow(d0a,3)*sin(phi0b) + 2*d0b*sin(phi0b) + 
+        48*curva*d0a*d0b*sin(phi0b) + 10*curvb*pow(d0b,2)*sin(phi0b) + 
+        960*curva*curvb*d0a*pow(d0b,2)*sin(phi0b)))/32.;
+}
+
+double BigNTuple::dysol1dcurva( double curva, double d0a, double phi0a,
+				double curvb, double d0b, double phi0b )
+{
+   return
+      ((-d0b + d0a*cos(phi0a - phi0b))*pow(sin(phi0a - phi0b),-5)*
+       (-(d0a*(1 + 40*curvb*d0b)*sin(phi0a)) - d0a*sin(3*phi0a - 4*phi0b) + 
+        2*d0b*sin(2*phi0a - 3*phi0b) - 
+        4*curvb*pow(d0b,2)*sin(2*phi0a - 3*phi0b) + 
+        d0a*sin(phi0a - 2*phi0b) + 20*curvb*d0a*d0b*sin(phi0a - 2*phi0b) + 
+        d0a*sin(3*phi0a - 2*phi0b) - 4*curvb*d0a*d0b*sin(3*phi0a - 2*phi0b) + 
+        8*curvb*pow(d0a,2)*sin(2*phi0a - phi0b) - 
+        2*d0b*sin(2*phi0a - phi0b) + 
+        12*curvb*pow(d0b,2)*sin(2*phi0a - phi0b) + 
+        24*curvb*pow(d0a,2)*sin(phi0b) + 4*d0b*sin(phi0b) + 
+        16*curvb*pow(d0b,2)*sin(phi0b)))/8.;
+}
+
+double BigNTuple::dysol1dcurvb( double curva, double d0a, double phi0a,
+				double curvb, double d0b, double phi0b )
+{
+   return
+      ((-d0a + d0b*cos(phi0a - phi0b))*pow(sin(phi0a - phi0b),-5)*
+       (-4*(d0a + 4*curva*pow(d0a,2) + 6*curva*pow(d0b,2))*sin(phi0a) + 
+        (d0b - 4*curva*d0a*d0b)*sin(2*phi0a - 3*phi0b) - 
+        d0b*sin(4*phi0a - 3*phi0b) - 2*d0a*sin(phi0a - 2*phi0b) + 
+        12*curva*pow(d0a,2)*sin(phi0a - 2*phi0b) + 
+        8*curva*pow(d0b,2)*sin(phi0a - 2*phi0b) + 
+        2*d0a*sin(3*phi0a - 2*phi0b) - 
+        4*curva*pow(d0a,2)*sin(3*phi0a - 2*phi0b) + 
+        d0b*sin(2*phi0a - phi0b) + 20*curva*d0a*d0b*sin(2*phi0a - phi0b) + 
+        d0b*sin(phi0b) + 40*curva*d0a*d0b*sin(phi0b)))/8.;
+}
+
+double BigNTuple::dysol2dd0a( double curva, double d0a, double phi0a,
+			      double curvb, double d0b, double phi0b )
+{
+   return
+      -(pow(sin(phi0a - phi0b),-5)*
+	(2*(8*pow(curvb,2)*d0a + 
+            curva*(5 + 12*curvb*d0b + 
+		   pow(curvb,2)*(48*pow(d0a,2) + 54*pow(d0b,2))))*sin(phi0a)
+	 - curva*(1 + 2*curvb*d0b)*sin(7*phi0a - 6*phi0b) - 
+         curvb*sin(6*phi0a - 5*phi0b) + 
+         2*curva*curvb*d0a*sin(6*phi0a - 5*phi0b) - 
+         curva*sin(3*phi0a - 4*phi0b) + 
+         2*curva*curvb*d0b*sin(3*phi0a - 4*phi0b) - 
+         4*curva*pow(curvb,2)*pow(d0b,2)*sin(3*phi0a - 4*phi0b) + 
+         5*curva*sin(5*phi0a - 4*phi0b) + 
+         10*curva*curvb*d0b*sin(5*phi0a - 4*phi0b) + 
+         curvb*sin(2*phi0a - 3*phi0b) - 
+         10*curva*curvb*d0a*sin(2*phi0a - 3*phi0b) - 
+         4*pow(curvb,2)*d0b*sin(2*phi0a - 3*phi0b) + 
+         40*curva*pow(curvb,2)*d0a*d0b*sin(2*phi0a - 3*phi0b) + 
+         4*curvb*sin(4*phi0a - 3*phi0b) - 
+         8*curva*curvb*d0a*sin(4*phi0a - 3*phi0b) + 
+         4*pow(curvb,2)*d0b*sin(4*phi0a - 3*phi0b) - 
+         8*curva*pow(curvb,2)*d0a*d0b*sin(4*phi0a - 3*phi0b) + 
+         5*curva*sin(phi0a - 2*phi0b) + 
+         8*pow(curvb,2)*d0a*sin(phi0a - 2*phi0b) - 
+         72*curva*pow(curvb,2)*pow(d0a,2)*sin(phi0a - 2*phi0b) + 
+         6*curva*curvb*d0b*sin(phi0a - 2*phi0b) - 
+         60*curva*pow(curvb,2)*pow(d0b,2)*sin(phi0a - 2*phi0b) - 
+         10*curva*sin(3*phi0a - 2*phi0b) - 
+         8*pow(curvb,2)*d0a*sin(3*phi0a - 2*phi0b) + 
+         24*curva*pow(curvb,2)*pow(d0a,2)*sin(3*phi0a - 2*phi0b) - 
+         24*curva*curvb*d0b*sin(3*phi0a - 2*phi0b) + 
+         20*curva*pow(curvb,2)*pow(d0b,2)*sin(3*phi0a - 2*phi0b) - 
+         6*curvb*sin(2*phi0a - phi0b) + 
+         20*curva*curvb*d0a*sin(2*phi0a - phi0b) - 
+         4*pow(curvb,2)*d0b*sin(2*phi0a - phi0b) - 
+         120*curva*pow(curvb,2)*d0a*d0b*sin(2*phi0a - phi0b) + 
+         4*curvb*sin(phi0b) - 24*curva*curvb*d0a*sin(phi0b) - 
+         4*pow(curvb,2)*d0b*sin(phi0b) - 
+         216*curva*pow(curvb,2)*d0a*d0b*sin(phi0b)))/(16.*curvb);
+}
+
+double BigNTuple::dysol2dd0b( double curva, double d0a, double phi0a,
+			      double curvb, double d0b, double phi0b )
+{
+   return
+      (pow(sin(phi0a - phi0b),-5)*
+       (-8*curvb*(-1 + curvb*d0b + 6*curva*(d0a + 9*curvb*d0a*d0b))*
+	sin(phi0a) - 2*curva*(1 + 2*curvb*d0b)*sin(8*phi0a - 7*phi0b) + 
+        curvb*sin(5*phi0a - 6*phi0b) - curvb*sin(7*phi0a - 6*phi0b) + 
+        4*curva*curvb*d0a*sin(7*phi0a - 6*phi0b) + 
+        10*curva*sin(6*phi0a - 5*phi0b) + 
+        20*curva*curvb*d0b*sin(6*phi0a - 5*phi0b) - 
+        4*curvb*sin(3*phi0a - 4*phi0b) - 
+        4*curva*curvb*d0a*sin(3*phi0a - 4*phi0b) - 
+        4*pow(curvb,2)*d0b*sin(3*phi0a - 4*phi0b) + 
+        16*curva*pow(curvb,2)*d0a*d0b*sin(3*phi0a - 4*phi0b) + 
+        4*curvb*sin(5*phi0a - 4*phi0b) - 
+        20*curva*curvb*d0a*sin(5*phi0a - 4*phi0b) + 
+        4*pow(curvb,2)*d0b*sin(5*phi0a - 4*phi0b) - 
+        2*curva*sin(2*phi0a - 3*phi0b) + 
+        8*pow(curvb,2)*d0a*sin(2*phi0a - 3*phi0b) - 
+        40*curva*pow(curvb,2)*pow(d0a,2)*sin(2*phi0a - 3*phi0b) + 
+        12*curva*curvb*d0b*sin(2*phi0a - 3*phi0b) - 
+        48*curva*pow(curvb,2)*pow(d0b,2)*sin(2*phi0a - 3*phi0b) - 
+        20*curva*sin(4*phi0a - 3*phi0b) - 
+        8*pow(curvb,2)*d0a*sin(4*phi0a - 3*phi0b) + 
+        8*curva*pow(curvb,2)*pow(d0a,2)*sin(4*phi0a - 3*phi0b) - 
+        40*curva*curvb*d0b*sin(4*phi0a - 3*phi0b) + 
+        7*curvb*sin(phi0a - 2*phi0b) - 
+        12*curva*curvb*d0a*sin(phi0a - 2*phi0b) + 
+        240*curva*pow(curvb,2)*d0a*d0b*sin(phi0a - 2*phi0b) - 
+        7*curvb*sin(3*phi0a - 2*phi0b) + 
+        48*curva*curvb*d0a*sin(3*phi0a - 2*phi0b) - 
+        80*curva*pow(curvb,2)*d0a*d0b*sin(3*phi0a - 2*phi0b) + 
+        20*curva*sin(2*phi0a - phi0b) + 
+        8*pow(curvb,2)*d0a*sin(2*phi0a - phi0b) + 
+        120*curva*pow(curvb,2)*pow(d0a,2)*sin(2*phi0a - phi0b) + 
+        24*curva*curvb*d0b*sin(2*phi0a - phi0b) + 
+        144*curva*pow(curvb,2)*pow(d0b,2)*sin(2*phi0a - phi0b) - 
+        10*curva*sin(phi0b) + 8*pow(curvb,2)*d0a*sin(phi0b) + 
+        216*curva*pow(curvb,2)*pow(d0a,2)*sin(phi0b) + 
+        12*curva*curvb*d0b*sin(phi0b) + 
+        192*curva*pow(curvb,2)*pow(d0b,2)*sin(phi0b)))/(32.*curvb);
+}
+
+double BigNTuple::dysol2dphi0a( double curva, double d0a, double phi0a,
+				double curvb, double d0b, double phi0b )
+{
+   return
+      (pow(sin(phi0a - phi0b),-6)*
+       (-((8*pow(curvb,2)*d0a*(11 + 24*curvb*d0b) + 
+	   curva*(65 + 180*curvb*d0b + 
+		  pow(curvb,2)*(-40*pow(d0a,2) + 228*pow(d0b,2)) + 
+		  32*pow(curvb,3)*(120*pow(d0a,2)*d0b + 41*pow(d0b,3))))*
+	  sin(phi0a)) - 3*curva*pow(1 + 2*curvb*d0b,2)*
+	sin(9*phi0a - 8*phi0b) - 2*curvb*sin(8*phi0a - 7*phi0b) + 
+        8*curva*curvb*d0a*sin(8*phi0a - 7*phi0b) - 
+        4*pow(curvb,2)*d0b*sin(8*phi0a - 7*phi0b) + 
+        16*curva*pow(curvb,2)*d0a*d0b*sin(8*phi0a - 7*phi0b) - 
+        curva*sin(5*phi0a - 6*phi0b) + 19*curva*sin(7*phi0a - 6*phi0b) + 
+        4*pow(curvb,2)*d0a*sin(7*phi0a - 6*phi0b) - 
+        4*curva*pow(curvb,2)*pow(d0a,2)*sin(7*phi0a - 6*phi0b) + 
+        72*curva*curvb*d0b*sin(7*phi0a - 6*phi0b) + 
+        72*curva*pow(curvb,2)*pow(d0b,2)*sin(7*phi0a - 6*phi0b) + 
+        2*curvb*sin(4*phi0a - 5*phi0b) - 
+        8*curva*curvb*d0a*sin(4*phi0a - 5*phi0b) - 
+        4*pow(curvb,2)*d0b*sin(4*phi0a - 5*phi0b) + 
+        16*curva*pow(curvb,2)*d0a*d0b*sin(4*phi0a - 5*phi0b) + 
+        8*pow(curvb,3)*pow(d0b,2)*sin(4*phi0a - 5*phi0b) - 
+        32*curva*pow(curvb,3)*d0a*pow(d0b,2)*sin(4*phi0a - 5*phi0b) + 
+        12*curvb*sin(6*phi0a - 5*phi0b) - 
+        48*curva*curvb*d0a*sin(6*phi0a - 5*phi0b) + 
+        24*pow(curvb,2)*d0b*sin(6*phi0a - 5*phi0b) - 
+        96*curva*pow(curvb,2)*d0a*d0b*sin(6*phi0a - 5*phi0b) + 
+        9*curva*sin(3*phi0a - 4*phi0b) + 
+        12*pow(curvb,2)*d0a*sin(3*phi0a - 4*phi0b) - 
+        60*curva*pow(curvb,2)*pow(d0a,2)*sin(3*phi0a - 4*phi0b) + 
+        12*curva*curvb*d0b*sin(3*phi0a - 4*phi0b) - 
+        48*pow(curvb,3)*d0a*d0b*sin(3*phi0a - 4*phi0b) + 
+        240*curva*pow(curvb,3)*pow(d0a,2)*d0b*sin(3*phi0a - 4*phi0b) - 
+        36*curva*pow(curvb,2)*pow(d0b,2)*sin(3*phi0a - 4*phi0b) + 
+        96*curva*pow(curvb,3)*pow(d0b,3)*sin(3*phi0a - 4*phi0b) - 
+        51*curva*sin(5*phi0a - 4*phi0b) - 
+        28*pow(curvb,2)*d0a*sin(5*phi0a - 4*phi0b) + 
+        28*curva*pow(curvb,2)*pow(d0a,2)*sin(5*phi0a - 4*phi0b) - 
+        180*curva*curvb*d0b*sin(5*phi0a - 4*phi0b) + 
+        16*pow(curvb,3)*d0a*d0b*sin(5*phi0a - 4*phi0b) - 
+        16*curva*pow(curvb,3)*pow(d0a,2)*d0b*sin(5*phi0a - 4*phi0b) - 
+        180*curva*pow(curvb,2)*pow(d0b,2)*sin(5*phi0a - 4*phi0b) - 
+        12*curvb*sin(2*phi0a - 3*phi0b) + 
+        48*curva*curvb*d0a*sin(2*phi0a - 3*phi0b) + 
+        64*pow(curvb,3)*pow(d0a,2)*sin(2*phi0a - 3*phi0b) - 
+        384*curva*pow(curvb,3)*pow(d0a,3)*sin(2*phi0a - 3*phi0b) + 
+        8*pow(curvb,2)*d0b*sin(2*phi0a - 3*phi0b) + 
+        160*curva*pow(curvb,2)*d0a*d0b*sin(2*phi0a - 3*phi0b) + 
+        32*pow(curvb,3)*pow(d0b,2)*sin(2*phi0a - 3*phi0b) - 
+        1088*curva*pow(curvb,3)*d0a*pow(d0b,2)*sin(2*phi0a - 3*phi0b) - 
+        30*curvb*sin(4*phi0a - 3*phi0b) + 
+        120*curva*curvb*d0a*sin(4*phi0a - 3*phi0b) - 
+        32*pow(curvb,3)*pow(d0a,2)*sin(4*phi0a - 3*phi0b) + 
+        64*curva*pow(curvb,3)*pow(d0a,3)*sin(4*phi0a - 3*phi0b) - 
+        52*pow(curvb,2)*d0b*sin(4*phi0a - 3*phi0b) + 
+        208*curva*pow(curvb,2)*d0a*d0b*sin(4*phi0a - 3*phi0b) - 
+        40*pow(curvb,3)*pow(d0b,2)*sin(4*phi0a - 3*phi0b) + 
+        160*curva*pow(curvb,3)*d0a*pow(d0b,2)*sin(4*phi0a - 3*phi0b) - 
+        33*curva*sin(phi0a - 2*phi0b) - 
+        52*pow(curvb,2)*d0a*sin(phi0a - 2*phi0b) + 
+        100*curva*pow(curvb,2)*pow(d0a,2)*sin(phi0a - 2*phi0b) - 
+        72*curva*curvb*d0b*sin(phi0a - 2*phi0b) - 
+        32*pow(curvb,3)*d0a*d0b*sin(phi0a - 2*phi0b) + 
+        2720*curva*pow(curvb,3)*pow(d0a,2)*d0b*sin(phi0a - 2*phi0b) - 
+        24*curva*pow(curvb,2)*pow(d0b,2)*sin(phi0a - 2*phi0b) + 
+        864*curva*pow(curvb,3)*pow(d0b,3)*sin(phi0a - 2*phi0b) + 
+        75*curva*sin(3*phi0a - 2*phi0b) + 
+        72*pow(curvb,2)*d0a*sin(3*phi0a - 2*phi0b) - 
+        24*curva*pow(curvb,2)*pow(d0a,2)*sin(3*phi0a - 2*phi0b) + 
+        240*curva*curvb*d0b*sin(3*phi0a - 2*phi0b) + 
+        96*pow(curvb,3)*d0a*d0b*sin(3*phi0a - 2*phi0b) - 
+        864*curva*pow(curvb,3)*pow(d0a,2)*d0b*sin(3*phi0a - 2*phi0b) + 
+        288*curva*pow(curvb,2)*pow(d0b,2)*sin(3*phi0a - 2*phi0b) - 
+        288*curva*pow(curvb,3)*pow(d0b,3)*sin(3*phi0a - 2*phi0b) + 
+        40*curvb*sin(2*phi0a - phi0b) - 
+        160*curva*curvb*d0a*sin(2*phi0a - phi0b) + 
+        768*curva*pow(curvb,3)*pow(d0a,3)*sin(2*phi0a - phi0b) + 
+        48*pow(curvb,2)*d0b*sin(2*phi0a - phi0b) - 
+        384*curva*pow(curvb,2)*d0a*d0b*sin(2*phi0a - phi0b) + 
+        32*pow(curvb,3)*pow(d0b,2)*sin(2*phi0a - phi0b) + 
+        2368*curva*pow(curvb,3)*d0a*pow(d0b,2)*sin(2*phi0a - phi0b) - 
+        30*curvb*sin(phi0b) + 120*curva*curvb*d0a*sin(phi0b) + 
+        96*pow(curvb,3)*pow(d0a,2)*sin(phi0b) + 
+        1344*curva*pow(curvb,3)*pow(d0a,3)*sin(phi0b) - 
+        12*pow(curvb,2)*d0b*sin(phi0b) + 
+        432*curva*pow(curvb,2)*d0a*d0b*sin(phi0b) + 
+        48*pow(curvb,3)*pow(d0b,2)*sin(phi0b) + 
+        4032*curva*pow(curvb,3)*d0a*pow(d0b,2)*sin(phi0b)))/
+      (128.*pow(curvb,2));
+}
+
+double BigNTuple::dysol2dphi0b( double curva, double d0a, double phi0a,
+				double curvb, double d0b, double phi0b )
+{
+   return
+      -(pow(sin(phi0a - phi0b),-6)*
+	(-6*(8*pow(curvb,2)*d0a*(1 + 4*curvb*d0b) + 
+	     curva*(5 + 20*curvb*d0b + 
+		    4*pow(curvb,2)*(2*pow(d0a,2) + 9*pow(d0b,2)) + 
+		    224*pow(curvb,3)*(3*pow(d0a,2)*d0b + pow(d0b,3))))*
+	 sin(phi0a) - 2*curva*pow(1 + 2*curvb*d0b,2)*
+	 sin(9*phi0a - 8*phi0b) + curvb*sin(6*phi0a - 7*phi0b) + 
+         2*pow(curvb,2)*d0b*sin(6*phi0a - 7*phi0b) - 
+         curvb*sin(8*phi0a - 7*phi0b) + 
+         4*curva*curvb*d0a*sin(8*phi0a - 7*phi0b) - 
+         2*pow(curvb,2)*d0b*sin(8*phi0a - 7*phi0b) + 
+         8*curva*pow(curvb,2)*d0a*d0b*sin(8*phi0a - 7*phi0b) + 
+         12*curva*sin(7*phi0a - 6*phi0b) + 
+         48*curva*curvb*d0b*sin(7*phi0a - 6*phi0b) + 
+         48*curva*pow(curvb,2)*pow(d0b,2)*sin(7*phi0a - 6*phi0b) - 
+         5*curvb*sin(4*phi0a - 5*phi0b) - 
+         4*curva*curvb*d0a*sin(4*phi0a - 5*phi0b) - 
+         14*pow(curvb,2)*d0b*sin(4*phi0a - 5*phi0b) + 
+         8*curva*pow(curvb,2)*d0a*d0b*sin(4*phi0a - 5*phi0b) + 
+         4*pow(curvb,3)*pow(d0b,2)*sin(4*phi0a - 5*phi0b) - 
+         16*curva*pow(curvb,3)*d0a*pow(d0b,2)*sin(4*phi0a - 5*phi0b) + 
+         5*curvb*sin(6*phi0a - 5*phi0b) - 
+         24*curva*curvb*d0a*sin(6*phi0a - 5*phi0b) + 
+         14*pow(curvb,2)*d0b*sin(6*phi0a - 5*phi0b) - 
+         48*curva*pow(curvb,2)*d0a*d0b*sin(6*phi0a - 5*phi0b) - 
+         4*pow(curvb,3)*pow(d0b,2)*sin(6*phi0a - 5*phi0b) + 
+         2*curva*sin(3*phi0a - 4*phi0b) + 
+         8*pow(curvb,2)*d0a*sin(3*phi0a - 4*phi0b) - 
+         40*curva*pow(curvb,2)*pow(d0a,2)*sin(3*phi0a - 4*phi0b) + 
+         8*curva*curvb*d0b*sin(3*phi0a - 4*phi0b) - 
+         32*pow(curvb,3)*d0a*d0b*sin(3*phi0a - 4*phi0b) + 
+         160*curva*pow(curvb,3)*pow(d0a,2)*d0b*sin(3*phi0a - 4*phi0b) - 
+         24*curva*pow(curvb,2)*pow(d0b,2)*sin(3*phi0a - 4*phi0b) + 
+         64*curva*pow(curvb,3)*pow(d0b,3)*sin(3*phi0a - 4*phi0b) - 
+         30*curva*sin(5*phi0a - 4*phi0b) - 
+         8*pow(curvb,2)*d0a*sin(5*phi0a - 4*phi0b) + 
+         8*curva*pow(curvb,2)*pow(d0a,2)*sin(5*phi0a - 4*phi0b) - 
+         120*curva*curvb*d0b*sin(5*phi0a - 4*phi0b) + 
+         32*pow(curvb,3)*d0a*d0b*sin(5*phi0a - 4*phi0b) - 
+         32*curva*pow(curvb,3)*pow(d0a,2)*d0b*sin(5*phi0a - 4*phi0b) - 
+         120*curva*pow(curvb,2)*pow(d0b,2)*sin(5*phi0a - 4*phi0b) + 
+         9*curvb*sin(2*phi0a - 3*phi0b) + 
+         24*curva*curvb*d0a*sin(2*phi0a - 3*phi0b) + 
+         48*pow(curvb,3)*pow(d0a,2)*sin(2*phi0a - 3*phi0b) - 
+         288*curva*pow(curvb,3)*pow(d0a,3)*sin(2*phi0a - 3*phi0b) + 
+         30*pow(curvb,2)*d0b*sin(2*phi0a - 3*phi0b) + 
+         144*curva*pow(curvb,2)*d0a*d0b*sin(2*phi0a - 3*phi0b) + 
+         36*pow(curvb,3)*pow(d0b,2)*sin(2*phi0a - 3*phi0b) - 
+         864*curva*pow(curvb,3)*d0a*pow(d0b,2)*sin(2*phi0a - 3*phi0b) - 
+         9*curvb*sin(4*phi0a - 3*phi0b) + 
+         60*curva*curvb*d0a*sin(4*phi0a - 3*phi0b) - 
+         48*pow(curvb,3)*pow(d0a,2)*sin(4*phi0a - 3*phi0b) + 
+         96*curva*pow(curvb,3)*pow(d0a,3)*sin(4*phi0a - 3*phi0b) - 
+         30*pow(curvb,2)*d0b*sin(4*phi0a - 3*phi0b) + 
+         72*curva*pow(curvb,2)*d0a*d0b*sin(4*phi0a - 3*phi0b) - 
+         36*pow(curvb,3)*pow(d0b,2)*sin(4*phi0a - 3*phi0b) + 
+         240*curva*pow(curvb,3)*d0a*pow(d0b,2)*sin(4*phi0a - 3*phi0b) - 
+         12*curva*sin(phi0a - 2*phi0b) - 
+         32*pow(curvb,2)*d0a*sin(phi0a - 2*phi0b) + 
+         32*curva*pow(curvb,2)*pow(d0a,2)*sin(phi0a - 2*phi0b) - 
+         48*curva*curvb*d0b*sin(phi0a - 2*phi0b) - 
+         64*pow(curvb,3)*d0a*d0b*sin(phi0a - 2*phi0b) + 
+         2368*curva*pow(curvb,3)*pow(d0a,2)*d0b*sin(phi0a - 2*phi0b) - 
+         48*curva*pow(curvb,2)*pow(d0b,2)*sin(phi0a - 2*phi0b) + 
+         768*curva*pow(curvb,3)*pow(d0b,3)*sin(phi0a - 2*phi0b) + 
+         40*curva*sin(3*phi0a - 2*phi0b) + 
+         32*pow(curvb,2)*d0a*sin(3*phi0a - 2*phi0b) + 
+         32*curva*pow(curvb,2)*pow(d0a,2)*sin(3*phi0a - 2*phi0b) + 
+         160*curva*curvb*d0b*sin(3*phi0a - 2*phi0b) + 
+         64*pow(curvb,3)*d0a*d0b*sin(3*phi0a - 2*phi0b) - 
+         1088*curva*pow(curvb,3)*pow(d0a,2)*d0b*sin(3*phi0a - 2*phi0b) + 
+         224*curva*pow(curvb,2)*pow(d0b,2)*sin(3*phi0a - 2*phi0b) - 
+         384*curva*pow(curvb,3)*pow(d0b,3)*sin(3*phi0a - 2*phi0b) + 
+         5*curvb*sin(2*phi0a - phi0b) - 
+         80*curva*curvb*d0a*sin(2*phi0a - phi0b) + 
+         48*pow(curvb,3)*pow(d0a,2)*sin(2*phi0a - phi0b) + 
+         864*curva*pow(curvb,3)*pow(d0a,3)*sin(2*phi0a - phi0b) + 
+         18*pow(curvb,2)*d0b*sin(2*phi0a - phi0b) - 
+         192*curva*pow(curvb,2)*d0a*d0b*sin(2*phi0a - phi0b) + 
+         40*pow(curvb,3)*pow(d0b,2)*sin(2*phi0a - phi0b) + 
+         2720*curva*pow(curvb,3)*d0a*pow(d0b,2)*sin(2*phi0a - phi0b) + 
+         5*curvb*sin(phi0b) + 60*curva*curvb*d0a*sin(phi0b) + 
+         48*pow(curvb,3)*pow(d0a,2)*sin(phi0b) + 
+         1312*curva*pow(curvb,3)*pow(d0a,3)*sin(phi0b) + 
+         18*pow(curvb,2)*d0b*sin(phi0b) + 
+         312*curva*pow(curvb,2)*d0a*d0b*sin(phi0b) + 
+         40*pow(curvb,3)*pow(d0b,2)*sin(phi0b) + 
+         3840*curva*pow(curvb,3)*d0a*pow(d0b,2)*sin(phi0b)))/
+      (128.*pow(curvb,2));
+}
+
+double BigNTuple::dysol2dcurva( double curva, double d0a, double phi0a,
+				double curvb, double d0b, double phi0b )
+{
+   return
+      (pow(sin(phi0a - phi0b),-5)*
+       (-8*curvb*d0a*(5 + 12*curvb*d0b + 
+		      pow(curvb,2)*(16*pow(d0a,2) + 54*pow(d0b,2)))*sin(phi0a) - 
+        pow(1 + 2*curvb*d0b,2)*sin(8*phi0a - 7*phi0b) + 
+        4*curvb*d0a*sin(7*phi0a - 6*phi0b) + 
+        8*pow(curvb,2)*d0a*d0b*sin(7*phi0a - 6*phi0b) + 
+        sin(4*phi0a - 5*phi0b) + 6*sin(6*phi0a - 5*phi0b) - 
+        4*pow(curvb,2)*pow(d0a,2)*sin(6*phi0a - 5*phi0b) + 
+        20*curvb*d0b*sin(6*phi0a - 5*phi0b) + 
+        20*pow(curvb,2)*pow(d0b,2)*sin(6*phi0a - 5*phi0b) + 
+        4*curvb*d0a*sin(3*phi0a - 4*phi0b) - 
+        8*pow(curvb,2)*d0a*d0b*sin(3*phi0a - 4*phi0b) + 
+        16*pow(curvb,3)*d0a*pow(d0b,2)*sin(3*phi0a - 4*phi0b) - 
+        20*curvb*d0a*sin(5*phi0a - 4*phi0b) - 
+        40*pow(curvb,2)*d0a*d0b*sin(5*phi0a - 4*phi0b) - 
+        6*sin(2*phi0a - 3*phi0b) + 
+        20*pow(curvb,2)*pow(d0a,2)*sin(2*phi0a - 3*phi0b) - 
+        4*curvb*d0b*sin(2*phi0a - 3*phi0b) - 
+        80*pow(curvb,3)*pow(d0a,2)*d0b*sin(2*phi0a - 3*phi0b) + 
+        12*pow(curvb,2)*pow(d0b,2)*sin(2*phi0a - 3*phi0b) - 
+        32*pow(curvb,3)*pow(d0b,3)*sin(2*phi0a - 3*phi0b) - 
+        15*sin(4*phi0a - 3*phi0b) + 
+        16*pow(curvb,2)*pow(d0a,2)*sin(4*phi0a - 3*phi0b) - 
+        40*curvb*d0b*sin(4*phi0a - 3*phi0b) + 
+        16*pow(curvb,3)*pow(d0a,2)*d0b*sin(4*phi0a - 3*phi0b) - 
+        40*pow(curvb,2)*pow(d0b,2)*sin(4*phi0a - 3*phi0b) - 
+        20*curvb*d0a*sin(phi0a - 2*phi0b) + 
+        96*pow(curvb,3)*pow(d0a,3)*sin(phi0a - 2*phi0b) - 
+        24*pow(curvb,2)*d0a*d0b*sin(phi0a - 2*phi0b) + 
+        240*pow(curvb,3)*d0a*pow(d0b,2)*sin(phi0a - 2*phi0b) + 
+        40*curvb*d0a*sin(3*phi0a - 2*phi0b) - 
+        32*pow(curvb,3)*pow(d0a,3)*sin(3*phi0a - 2*phi0b) + 
+        96*pow(curvb,2)*d0a*d0b*sin(3*phi0a - 2*phi0b) - 
+        80*pow(curvb,3)*d0a*pow(d0b,2)*sin(3*phi0a - 2*phi0b) + 
+        20*sin(2*phi0a - phi0b) - 
+        40*pow(curvb,2)*pow(d0a,2)*sin(2*phi0a - phi0b) + 
+        40*curvb*d0b*sin(2*phi0a - phi0b) + 
+        240*pow(curvb,3)*pow(d0a,2)*d0b*sin(2*phi0a - phi0b) + 
+        24*pow(curvb,2)*pow(d0b,2)*sin(2*phi0a - phi0b) + 
+        96*pow(curvb,3)*pow(d0b,3)*sin(2*phi0a - phi0b) - 15*sin(phi0b) + 
+        48*pow(curvb,2)*pow(d0a,2)*sin(phi0b) - 20*curvb*d0b*sin(phi0b) + 
+        432*pow(curvb,3)*pow(d0a,2)*d0b*sin(phi0b) + 
+        12*pow(curvb,2)*pow(d0b,2)*sin(phi0b) + 
+        128*pow(curvb,3)*pow(d0b,3)*sin(phi0b)))/(64.*pow(curvb,2));
+}
+
+double BigNTuple::dysol2dcurvb( double curva, double d0a, double phi0a,
+				double curvb, double d0b, double phi0b )
+{
+   return
+      (pow(sin(phi0a - phi0b),-5)*
+       (-4*curvb*(5 + 2*pow(curvb,2)*(4*pow(d0a,2) + pow(d0b,2)) + 
+		  2*curva*d0a*(-5 + pow(curvb,2)*
+			       (16*pow(d0a,2) + 54*pow(d0b,2))))*sin(phi0a) + 
+        2*curva*(1 + 2*curvb*d0b)*sin(8*phi0a - 7*phi0b) - 
+        curvb*sin(5*phi0a - 6*phi0b) + curvb*sin(7*phi0a - 6*phi0b) - 
+        4*curva*curvb*d0a*sin(7*phi0a - 6*phi0b) - 
+        2*curva*sin(4*phi0a - 5*phi0b) - 12*curva*sin(6*phi0a - 5*phi0b) - 
+        20*curva*curvb*d0b*sin(6*phi0a - 5*phi0b) + 
+        6*curvb*sin(3*phi0a - 4*phi0b) - 
+        4*curva*curvb*d0a*sin(3*phi0a - 4*phi0b) - 
+        4*pow(curvb,3)*pow(d0b,2)*sin(3*phi0a - 4*phi0b) + 
+        16*curva*pow(curvb,3)*d0a*pow(d0b,2)*sin(3*phi0a - 4*phi0b) - 
+        6*curvb*sin(5*phi0a - 4*phi0b) + 
+        20*curva*curvb*d0a*sin(5*phi0a - 4*phi0b) + 
+        4*pow(curvb,3)*pow(d0b,2)*sin(5*phi0a - 4*phi0b) + 
+        12*curva*sin(2*phi0a - 3*phi0b) + 
+        4*curva*curvb*d0b*sin(2*phi0a - 3*phi0b) + 
+        16*pow(curvb,3)*d0a*d0b*sin(2*phi0a - 3*phi0b) - 
+        80*curva*pow(curvb,3)*pow(d0a,2)*d0b*sin(2*phi0a - 3*phi0b) - 
+        32*curva*pow(curvb,3)*pow(d0b,3)*sin(2*phi0a - 3*phi0b) + 
+        30*curva*sin(4*phi0a - 3*phi0b) + 
+        40*curva*curvb*d0b*sin(4*phi0a - 3*phi0b) - 
+        16*pow(curvb,3)*d0a*d0b*sin(4*phi0a - 3*phi0b) + 
+        16*curva*pow(curvb,3)*pow(d0a,2)*d0b*sin(4*phi0a - 3*phi0b) - 
+        15*curvb*sin(phi0a - 2*phi0b) + 
+        20*curva*curvb*d0a*sin(phi0a - 2*phi0b) - 
+        16*pow(curvb,3)*pow(d0a,2)*sin(phi0a - 2*phi0b) + 
+        96*curva*pow(curvb,3)*pow(d0a,3)*sin(phi0a - 2*phi0b) + 
+        240*curva*pow(curvb,3)*d0a*pow(d0b,2)*sin(phi0a - 2*phi0b) + 
+        15*curvb*sin(3*phi0a - 2*phi0b) - 
+        40*curva*curvb*d0a*sin(3*phi0a - 2*phi0b) + 
+        16*pow(curvb,3)*pow(d0a,2)*sin(3*phi0a - 2*phi0b) - 
+        32*curva*pow(curvb,3)*pow(d0a,3)*sin(3*phi0a - 2*phi0b) - 
+        80*curva*pow(curvb,3)*d0a*pow(d0b,2)*sin(3*phi0a - 2*phi0b) - 
+        40*curva*sin(2*phi0a - phi0b) - 
+        40*curva*curvb*d0b*sin(2*phi0a - phi0b) + 
+        16*pow(curvb,3)*d0a*d0b*sin(2*phi0a - phi0b) + 
+        240*curva*pow(curvb,3)*pow(d0a,2)*d0b*sin(2*phi0a - phi0b) + 
+        96*curva*pow(curvb,3)*pow(d0b,3)*sin(2*phi0a - phi0b) + 
+        30*curva*sin(phi0b) + 20*curva*curvb*d0b*sin(phi0b) + 
+        16*pow(curvb,3)*d0a*d0b*sin(phi0b) + 
+        432*curva*pow(curvb,3)*pow(d0a,2)*d0b*sin(phi0b) + 
+        128*curva*pow(curvb,3)*pow(d0b,3)*sin(phi0b)))/
+      (64.*pow(curvb,3));
+}

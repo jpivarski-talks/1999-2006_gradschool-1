@@ -1,0 +1,34 @@
+C For generating Y(3S) decays and writing to ups3.rp
+C Copied and modified by KB from ly3s_standalone.ctr 25 Apr 02
+C =======================================================================
+C    This is an example of generating Y(1S) --> X  using JETSET 7.3
+C    MODEL = 14
+C
+C        (Variables are defined as CHARCTER*6 strings.)
+C =======================================================================
+LIST
+C
+NDO     10
+NDUMP   100
+IRAN    0
+C                                          Default DECAY.DEC
+C  DEFDEC  'C$RUNFIL:DECAY.DEC'   on VAX
+C  DEFDEC  '$C_RUNFIL/decay.dec'  on UNIX
+C
+ECM     9.4603
+SPREAD  0.0046
+ENRGMN  9.420
+ENRGMX  9.500
+BFLDQQ  -14.88280
+C
+MODEL   14
+C                                         Default LUND decay table
+C  LUNDTB  'C$RUNFIL:LDECAY.TAB'   on VAX
+C  LUNDTB  '$C_RUNFIL/ldecay.tab'
+LUNDTB  '$C_RUNFIL/ldecay_ups1_mumu.tab'
+C
+LRESON  'UPS1'
+C  To switch on final state radiation:
+C  ADDPQQ  T
+C
+END

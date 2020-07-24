@@ -1,0 +1,22 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/nt_129071.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/acceptance/run5/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_DIR=rzn5
+export USER_RUN=129071
+export USER_HASB=0
+
+suez -f ntuple_data.tcl
+rm -f core
+
+export USER_HASB=0
+
+suez -f ntuple_trigger.tcl
+rm -f core
+
+exit

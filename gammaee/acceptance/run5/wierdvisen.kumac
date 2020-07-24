@@ -1,0 +1,90 @@
+nt/cr 1 ' ' 5 ! ! 'visen' 'decays' 'strange' 'baryon' 'particles'
+nt/read 1 /cdat/dafe/mccann/acceptance/rzn5/wierdvisen.ntuple
+
+opt logy
+nt/plot 1.visen
+nt/plot 1.visen particle==5 ! ! ! 's'
+nt/plot 1.visen particle==6 ! ! ! 's'
+nt/plot 1.visen particle==7 ! ! ! 's'
+nt/plot 1.visen particle==8 ! ! ! 's'
+nt/plot 1.visen particle==9 ! ! ! 's'
+nt/plot 1.visen particle==10 ! ! ! 's'
+nt/plot 1.visen particle==11 ! ! ! 's'
+nt/plot 1.visen particle==12 ! ! ! 's'
+nt/plot 1.visen particle==13 ! ! ! 's'
+nt/plot 1.visen particle==14 ! ! ! 's'
+
+opt liny
+h/cr/1d 100 'number of particles' 19 -0.5 18.5
+nt/plot 1.particle ! ! ! ! ! 100
+nt/plot 1.particle strange>0 ! ! ! 's' 100
+nt/plot 1.particle baryon>0 ! ! ! 's' 100
+
+
+
+
+h/cr/1d 100 'Number of decays between 5 mm and 5 cm' 101 -0.5 100.5
+h/cr/1d 101 'Number of decays between 5 mm and 5 cm' 101 -0.5 100.5
+h/cr/1d 102 'Number of decays between 5 mm and 5 cm' 101 -0.5 100.5
+h/cr/1d 103 'Number of decays between 5 mm and 5 cm' 101 -0.5 100.5
+nt/plot 1.decays ! ! ! ! 'N' 100
+nt/plot 1.decays visen<0.35 ! ! ! 'N' 101
+nt/plot 1.decays visen<0.35&&strange>0 ! ! ! 'N' 102
+nt/plot 1.decays visen<0.35&&baryon>0 ! ! ! 'N' 103
+opt logy
+min 100 0.1
+h/plot 100
+h/plot 101 's'
+h/plot 102 's'
+h/plot 103 's'
+
+opt sta
+set stat 0000100
+zone 1 2
+opt liny
+min 100 0
+h/plot 100
+h/plot 101
+
+
+opt logy
+zone 1 1
+h/cr/1d 100 'Visible energy' 60 0. 1.2
+nt/plot 1.visen ! ! ! ! ! 100
+nt/plot 1.visen strange>0 ! ! ! 's' 100
+nt/plot 1.visen baryon>0 ! ! ! 's' 100
+
+nt/plot 1.visen ! ! ! ! ! 100
+nt/plot 1.visen strange==0&&baryon==0 ! ! ! 's' 100
+nt/plot 1.visen strange==0 ! ! ! 's' 100
+nt/plot 1.visen baryon==0 ! ! ! 's' 100
+
+h/cr/1d 100 'Visible energy' 60 0. 1.2
+h/cr/1d 101 'Visible energy' 60 0. 1.2
+nt/plot 1.visen strange==0 ! ! ! 'N' 100
+nt/plot 1.visen+0.05 strange>0 ! ! ! 'N' 101
+normalize 100
+normalize 101
+h/plot 100
+h/plot 101 's'
+
+h/cr/1d 100 'Visible energy' 60 0. 1.2
+h/cr/1d 101 'Visible energy' 60 0. 1.2
+nt/plot 1.visen baryon==0 ! ! ! 'N' 100
+nt/plot 1.visen+0.1 baryon>0 ! ! ! 'N' 101
+normalize 100
+normalize 101
+h/plot 100
+h/plot 101 's'
+
+
+
+
+
+
+h/cr/1d 100 'Visible energy' 50 0 2
+nt/plot 1.visen ! ! ! ! ! 100
+ve/cr tmp(50)
+h/get_vect/contents 100 tmp
+ve/print tmp 0
+

@@ -1,0 +1,816 @@
+nt/chain tbge ../rzn3/trigger126828.rzn
+nt/chain tbge ../rzn3/trigger126920.rzn
+nt/chain tbge ../rzn3/trigger126922.rzn
+nt/chain tbge ../rzn3/trigger127014.rzn
+nt/chain tbgp ../rzn3/trigger126785.rzn
+nt/chain tcos ../rzn3/trigger128706.rzn
+nt/chain tcos ../rzn3/trigger128736.rzn
+nt/chain tcos ../rzn3/trigger128741.rzn
+nt/chain tcos ../rzn3/trigger128748.rzn
+
+* exec load_all1.kumac
+* exec load_db18.kumac
+* exec load_db19.kumac
+
+* exec load_all2.kumac
+* exec load_db21.kumac
+* exec load_db23.kumac
+
+exec load_all3.kumac
+* exec load_db16.kumac
+* exec load_db17.kumac
+
+***************************************************************
+*
+* "t1had", "t1rad", "t1el", "t1tt",
+* "tracks", "visen", "ccen",
+* "p2", "e1",
+* "ci", "wz", "d0close", "z0close",
+* "run", "ebeam", "neue", "q",
+* "axial", "stereo", "cblo", "cbmd",
+* "rawtk", "pmiss", "tr1", "tr2", "trperp1", "trperp2", "e2",
+* "shperp", "shdot",
+* "l4dec", "l4tracks",
+* "mctype",
+* "wpz", "cotthp"
+*
+***************************************************************
+
+* Analysis cuts
+nt/cuts $1 (t1had>0).or.(t1rad>0).or.(t1el>0)
+nt/cuts $2 e1<0.85
+nt/cuts $3 p2<0.85
+nt/cuts $4 visen>0.2
+nt/cuts $5 0.15<ccen<0.85
+nt/cuts $6 tracks>1
+nt/cuts $7 (l4dec>0).and.(ci<0.005).and.(abs(wz)<0.05)
+
+h/cr/1d 1000001 'e1' 60 0. 1.2
+h/cr/1d 1000002 'e1' 60 0. 1.2
+h/cr/1d 1000003 'e1' 60 0. 1.2
+h/cr/1d 1000004 'e1' 60 0. 1.2
+h/cr/1d 1000005 'e1' 60 0. 1.2
+nt/plot //mc/cuts/1.e1 $1 ! ! ! 'N' 1000001
+nt/plot //peak/cuts/1.e1 $1 ! ! ! 'N' 1000002
+nt/plot //cont/cuts/1.e1 $1 ! ! ! 'N' 1000003
+sub 1000001 1000001 1000005 $SIGMA(ptomc) 0. 'e'
+sub 1000002 1000003 1000004 1. $SIGMA(ptoc) 'e'
+min 1000005 -300
+max 1000005 3000
+h/plot 1000005 'hist'
+h/plot 1000004 's'
+set ltyp 3
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+h/cr/1d 2000001 'p2' 60 0. 1.2
+h/cr/1d 2000002 'p2' 60 0. 1.2
+h/cr/1d 2000003 'p2' 60 0. 1.2
+h/cr/1d 2000004 'p2' 60 0. 1.2
+h/cr/1d 2000005 'p2' 60 0. 1.2
+nt/plot //mc/cuts/1.p2 $1&&$2 ! ! ! 'N' 2000001
+nt/plot //peak/cuts/1.p2 $1&&$2 ! ! ! 'N' 2000002
+nt/plot //cont/cuts/1.p2 $1&&$2 ! ! ! 'N' 2000003
+sub 2000001 2000001 2000005 $SIGMA(ptomc) 0. 'e'
+sub 2000002 2000003 2000004 1. $SIGMA(ptoc) 'e'
+min 2000005 -300
+max 2000005 3000
+h/plot 2000005 'hist'
+h/plot 2000004 's'
+set ltyp 3
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+h/cr/1d 3000001 'visen' 60 0. 1.2
+h/cr/1d 3000002 'visen' 60 0. 1.2
+h/cr/1d 3000003 'visen' 60 0. 1.2
+h/cr/1d 3000004 'visen' 60 0. 1.2
+h/cr/1d 3000005 'visen' 60 0. 1.2
+nt/plot //mc/cuts/1.visen $1&&$2&&$3 ! ! ! 'N' 3000001
+nt/plot //peak/cuts/1.visen $1&&$2&&$3 ! ! ! 'N' 3000002
+nt/plot //cont/cuts/1.visen $1&&$2&&$3 ! ! ! 'N' 3000003
+sub 3000001 3000001 3000005 $SIGMA(ptomc) 0. 'e'
+sub 3000002 3000003 3000004 1. $SIGMA(ptoc) 'e'
+min 3000005 -300
+max 3000005 3000
+h/plot 3000005 'hist'
+h/plot 3000004 's'
+set ltyp 3
+dline 0.4 0.4 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+h/cr/1d 4000001 'ccen' 60 0. 1.2
+h/cr/1d 4000002 'ccen' 60 0. 1.2
+h/cr/1d 4000003 'ccen' 60 0. 1.2
+h/cr/1d 4000004 'ccen' 60 0. 1.2
+h/cr/1d 4000005 'ccen' 60 0. 1.2
+nt/plot //mc/cuts/1.ccen $1&&$2&&$3&&$4 ! ! ! 'N' 4000001
+nt/plot //peak/cuts/1.ccen $1&&$2&&$3&&$4 ! ! ! 'N' 4000002
+nt/plot //cont/cuts/1.ccen $1&&$2&&$3&&$4 ! ! ! 'N' 4000003
+sub 4000001 4000001 4000005 $SIGMA(ptomc) 0. 'e'
+sub 4000002 4000003 4000004 1. $SIGMA(ptoc) 'e'
+min 4000005 -300
+max 4000005 3000
+h/plot 4000005 'hist'
+h/plot 4000004 's'
+set ltyp 3
+dline 0.15 0.15 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 0.85 0.85 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+h/cr/1d 5000001 'tracks' 19 -0.5 18.5
+h/cr/1d 5000002 'tracks' 19 -0.5 18.5
+h/cr/1d 5000003 'tracks' 19 -0.5 18.5
+h/cr/1d 5000004 'tracks' 19 -0.5 18.5
+h/cr/1d 5000005 'tracks' 19 -0.5 18.5
+nt/plot //mc/cuts/1.tracks $1&&$2&&$3&&$4&&$5 ! ! ! 'N' 5000001
+nt/plot //peak/cuts/1.tracks $1&&$2&&$3&&$4&&$5 ! ! ! 'N' 5000002
+nt/plot //cont/cuts/1.tracks $1&&$2&&$3&&$4&&$5 ! ! ! 'N' 5000003
+sub 5000001 5000001 5000005 $SIGMA(ptomc) 0. 'e'
+sub 5000002 5000003 5000004 1. $SIGMA(ptoc) 'e'
+min 5000005 -300
+max 5000005 3000
+h/plot 5000005 'hist'
+h/plot 5000004 's'
+set ltyp 3
+dline 1.5 1.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+message $HINFO(5000004,'SUM') $HINFO(5000004,'OVERFLOW')
+
+
+
+* Bhabha luminosity cuts
+nt/cuts $8 (rawtk>=2).and.(tracks<=4).and.(pmiss<0.2).and.(abs(2-tr1-tr2-pmiss)<0.2).and.(visen>0.75).and.(ccen>0.75).and.(-1<=trperp2<-0.99995)
+nt/cuts $9 (abs(d0close)<0.005).and.(abs(z0close)<0.05)
+
+* Beamgas cuts: general, electrons, positrons
+nt/cut $20 (d0close<0.01).and.(0<ci<0.01).and.(0.1<abs(wz)<0.2).and.(pmiss>0.1)
+nt/cut $21 wpz<-2
+nt/cut $22 wpz>2
+* The beamgas/cosmic region
+nt/cut $30 0.04<d0close<0.1
+
+set ncol 16
+palette 0
+
+* Determine ptobge, ptobgp, ctobge, ctobgp
+zone 1 2
+h/cr/1d 100 'Z momentum of peak data, cut for beamgas' 20 -5. 5.
+h/cr/1d 101 'Z momentum of peak data, cut for beamgas' 20 -5. 5.
+h/cr/1d 102 'Z momentum of peak data, cut for beamgas' 20 -5. 5.
+h/cr/1d 110 'Z momentum of peak data, cut for beamgas' 20 -5. 5.
+h/cr/1d 120 'Z momentum of peak data, cut for beamgas' 20 -5. 5.
+h/cr/1d 111 'Z momentum of peak data, cut for beamgas' 20 -5. 5.
+h/cr/1d 122 'Z momentum of peak data, cut for beamgas' 20 -5. 5.
+nt/plot //peak/cuts/1.wpz $20 ! ! ! 'N' 100
+nt/plot //bge/cuts/1.wpz $20 ! ! ! 'N' 101
+nt/plot //bgp/cuts/1.wpz $20 ! ! ! 'N' 102
+nt/plot //peak/cuts/1.wpz $20&&$21 ! ! ! 'N' 110
+nt/plot //peak/cuts/1.wpz $20&&$22 ! ! ! 'N' 120
+nt/plot //bge/cuts/1.wpz $20&&$21 ! ! ! 'N' 111
+nt/plot //bgp/cuts/1.wpz $20&&$22 ! ! ! 'N' 122
+sigma ptobge = $HINFO(110,'ENTRIES')/$HINFO(111,'ENTRIES')
+sigma ptobgp = $HINFO(120,'ENTRIES')/$HINFO(122,'ENTRIES')
+h/delete 131
+h/delete 132
+sub 101 101 131 $SIGMA(ptobge) 0. 'e'
+sub 102 102 132 $SIGMA(ptobgp) 0. 'e'
+set dmod 1
+h/plot 100
+set dmod 2
+h/plot 131 's'
+set dmod 3
+h/plot 132 's'
+h/cr/1d 200 'Z momentum of cont data, cut for beamgas' 20 -5. 5.
+h/cr/1d 201 'Z momentum of cont data, cut for beamgas' 20 -5. 5.
+h/cr/1d 202 'Z momentum of cont data, cut for beamgas' 20 -5. 5.
+h/cr/1d 210 'Z momentum of cont data, cut for beamgas' 20 -5. 5.
+h/cr/1d 220 'Z momentum of cont data, cut for beamgas' 20 -5. 5.
+h/cr/1d 211 'Z momentum of cont data, cut for beamgas' 20 -5. 5.
+h/cr/1d 222 'Z momentum of cont data, cut for beamgas' 20 -5. 5.
+nt/plot //cont/cuts/1.wpz $20 ! ! ! 'N' 200
+nt/plot //bge/cuts/1.wpz $20 ! ! ! 'N' 201
+nt/plot //bgp/cuts/1.wpz $20 ! ! ! 'N' 202
+nt/plot //cont/cuts/1.wpz $20&&$21 ! ! ! 'N' 210
+nt/plot //cont/cuts/1.wpz $20&&$22 ! ! ! 'N' 220
+nt/plot //bge/cuts/1.wpz $20&&$21 ! ! ! 'N' 211
+nt/plot //bgp/cuts/1.wpz $20&&$22 ! ! ! 'N' 222
+sigma ctobge = $HINFO(210,'ENTRIES')/$HINFO(211,'ENTRIES')
+sigma ctobgp = $HINFO(220,'ENTRIES')/$HINFO(222,'ENTRIES')
+h/delete 231
+h/delete 232
+sub 201 201 231 $SIGMA(ctobge) 0. 'e'
+sub 202 202 232 $SIGMA(ctobgp) 0. 'e'
+set dmod 1
+h/plot 200
+set dmod 2
+h/plot 231 's'
+set dmod 3
+h/plot 232 's'
+set dmod 1
+
+* Determine ptomc, ptoc, ptocup, ptocdown
+zone 1 1
+h/cr/1d 300 'mc   through analysis' 10 -1. 1.
+h/cr/1d 301 'peak through analysis' 10 -1. 1.
+h/cr/1d 302 'cont through analysis' 10 -1. 1.
+h/cr/1d 350 'cos(theta) of bhabha-like resonance events' 10 -1. 1.
+h/cr/1d 351 'cos(theta) of bhabha-like resonance events' 10 -1. 1.
+h/cr/1d 352 'cos(theta) of bhabha-like resonance events' 10 -1. 1.
+h/cr/1d 399 'cos(theta) of bhabha-like resonance events' 10 -1. 1.
+nt/plot //mc/cuts/1.cotthp/sqrt(cotthp**2+1)   $1&&$2&&$3&&$4&&$5&&$6&&$7 ! ! ! 'N' 300
+nt/plot //peak/cuts/1.cotthp/sqrt(cotthp**2+1) $1&&$2&&$3&&$4&&$5&&$6&&$7 ! ! ! 'N' 301
+nt/plot //cont/cuts/1.cotthp/sqrt(cotthp**2+1) $1&&$2&&$3&&$4&&$5&&$6&&$7 ! ! ! 'N' 302
+nt/plot //mc/cuts/1.cotthp/sqrt(cotthp**2+1)   $1&&$8&&$9 ! ! ! 'N' 350
+nt/plot //peak/cuts/1.cotthp/sqrt(cotthp**2+1) $1&&$8&&$9 ! ! ! 'N' 351
+nt/plot //cont/cuts/1.cotthp/sqrt(cotthp**2+1) $1&&$8&&$9 ! ! ! 'N' 352
+sigma ma  = $HINFO(300,'ENTRIES')
+sigma pa  = $HINFO(301,'ENTRIES')
+sigma ca  = $HINFO(302,'ENTRIES')
+sigma mb  = $HINFO(350,'ENTRIES')
+sigma pb  = $HINFO(351,'ENTRIES')
+sigma cb  = $HINFO(352,'ENTRIES')
+sigma ptomc  = (pa - pb*ca/cb)/(ma - mb*ca/cb)
+sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+sigma ptocup = (pa*1.2*mb/ma - pb)/(ca*1.2*mb/ma - cb)
+sigma ptocdo = (pa*0.8*mb/ma - pb)/(ca*0.8*mb/ma - cb)
+h/delete 360
+h/delete 361
+h/delete 362
+h/delete 363
+sub 350 350 360 $SIGMA(ptomc) 0.
+sub 351 352 361 1. $SIGMA(ptoc) 'e'
+sub 351 352 362 1. $SIGMA(ptocup) 'e'
+sub 351 352 363 1. $SIGMA(ptocdo) 'e'
+h/fit 360(-0.79:0.79) p2 '0'
+sigma top = 6. * $HINFO(360,'MAX')
+sigma bot = -1. * $HINFO(360,'MAX')
+max 360 $SIGMA(top)
+min 360 $SIGMA(bot)
+set hcol 1407
+h/plot 360
+set hcol 9
+h/plot 362 'se2'
+h/plot 363 'se2'
+set hcol 1
+h/plot 361 'se1'
+set hcol 4
+h/plot 360 's'
+set hcol 1
+h/plot 399 's'
+box $GRAFINFO('WNXMIN') $GRAFINFO('WNXMAX') $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+* Determine scos
+zone 3 3
+ve/cr ptocy(9)
+ve/inp ptocy(1) $SIGMA(ptoc+1.28155*(ptocup-ptoc))
+ve/inp ptocy(2) $SIGMA(ptoc+0.84162*(ptocup-ptoc))
+ve/inp ptocy(3) $SIGMA(ptoc+0.52440*(ptocup-ptoc))
+ve/inp ptocy(4) $SIGMA(ptoc+0.25334*(ptocup-ptoc))
+ve/inp ptocy(5) $SIGMA(ptoc)
+ve/inp ptocy(6) $SIGMA(ptoc+0.25334*(ptocdo-ptoc))
+ve/inp ptocy(7) $SIGMA(ptoc+0.52440*(ptocdo-ptoc))
+ve/inp ptocy(8) $SIGMA(ptoc+0.84162*(ptocdo-ptoc))
+ve/inp ptocy(9) $SIGMA(ptoc+1.28155*(ptocdo-ptoc))
+h/cr/1d 400 'cosmic ccen' 100 0. 0.2
+h/cr/1d 401 'cosmic ccen' 100 0. 0.2
+h/cr/1d 402 'cosmic ccen' 100 0. 0.2
+h/cr/1d 403 'cosmic ccen' 100 0. 0.2
+h/cr/1d 404 'cosmic ccen' 100 0. 0.2
+nt/plot //peak/cuts/1.ccen $1&&$30 ! ! ! 'N' 400
+nt/plot //cont/cuts/1.ccen $1&&$30 ! ! ! 'N' 401
+nt/plot //bge/cuts/1.ccen $1&&$30 ! ! ! 'N' 402
+nt/plot //bgp/cuts/1.ccen $1&&$30 ! ! ! 'N' 403
+nt/plot //cos/cuts/1.ccen $1&&$30 ! ! ! 'N' 404
+ve/cr cosy(9)
+do i = 1, 9
+  h/delete $SIGMA(410+[i])
+  h/delete $SIGMA(420+[i])
+  h/delete $SIGMA(430+[i])
+  h/delete $SIGMA(440+[i])
+  sub 400 401 $SIGMA(410+[i]) 1. $SIGMA(ptocy([i])) 'e'
+  sub $SIGMA(410+[i]) 402 $SIGMA(420+[i]) 1. $SIGMA(ptobge-ptocy([i])*ctobge) 'e'
+  sub $SIGMA(420+[i]) 403 $SIGMA(430+[i]) 1. $SIGMA(ptobgp-ptocy([i])*ctobgp) 'e'
+  sigma scos = $HINFO($SIGMA(430+[i]),'SUM')/$HINFO(404,'SUM')
+  ve/inp cosy([i]) $SIGMA(scos)
+  sub 404 404 $SIGMA(440+[i]) $SIGMA(scos) 0. 'e'
+  sigma top = max($HINFO($SIGMA(430+[i]),'MAX'),$HINFO($SIGMA(440+[i]),'MAX'))
+  sigma bot = min($HINFO($SIGMA(430+[i]),'MIN'),$HINFO($SIGMA(440+[i]),'MIN'))
+  max $SIGMA(430+[i]) $SIGMA(top)
+  min $SIGMA(430+[i]) $SIGMA(1.2*bot)
+  set hcol 1
+  h/plot $SIGMA(430+[i])
+  set hcol 1505
+  h/plot $SIGMA(440+[i]) 'shist'
+  set hcol 1
+  h/plot $SIGMA(430+[i]) 's'
+enddo
+set hcol 1
+
+sigma ploted = 0
+* sigma ploted = 1
+
+* Trigger axial, stereo, cblo, cbmd
+zone 2 2
+sigma pre = 1000
+if ploted.eq.0 then
+  h/cr/1d $SIGMA(pre+01) 'Trigger AXIAL' 16 -0.5 15.5
+  h/cr/1d $SIGMA(pre+02) 'Trigger AXIAL' 16 -0.5 15.5
+  h/cr/1d $SIGMA(pre+03) 'Trigger AXIAL' 16 -0.5 15.5
+  h/cr/1d $SIGMA(pre+04) 'Trigger AXIAL' 16 -0.5 15.5
+  h/cr/1d $SIGMA(pre+05) 'Trigger AXIAL' 16 -0.5 15.5
+  h/cr/1d $SIGMA(pre+06) 'Trigger AXIAL' 16 -0.5 15.5
+  h/cr/1d $SIGMA(pre+07) 'Trigger AXIAL' 16 -0.5 15.5
+  h/cr/1d $SIGMA(pre+08) 'Trigger AXIAL' 16 -0.5 15.5
+  nt/plot //mc/cuts/1.axial $1 ! ! ! 'N' $SIGMA(pre+01)
+  nt/plot //mc/cuts/1.axial abs(mctype)>25&&$1 ! ! ! 'N' $SIGMA(pre+02)
+  nt/plot //tpeak/triggeronlyproc/1.axial $1 ! ! ! 'N' $SIGMA(pre+03)
+  nt/plot //tcont/triggeronlyproc/1.axial $1 ! ! ! 'N' $SIGMA(pre+04)
+  nt/plot //tbge/triggeronlyproc/1.axial $1 ! ! ! 'N' $SIGMA(pre+05)
+  nt/plot //tbgp/triggeronlyproc/1.axial $1 ! ! ! 'N' $SIGMA(pre+06)
+  nt/plot //tcos/triggeronlyproc/1.axial $1 ! ! ! 'N' $SIGMA(pre+07)
+endif
+sigma top = 0
+sigma bot = 0
+sigma left = 0
+sigma right = 0
+exec plot.kumac
+set ltyp 3
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 2.5 2.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma pre = 1100
+if ploted.eq.0 then
+  h/cr/1d $SIGMA(pre+01) 'Trigger STEREO' 16 -0.5 15.5
+  h/cr/1d $SIGMA(pre+02) 'Trigger STEREO' 16 -0.5 15.5
+  h/cr/1d $SIGMA(pre+03) 'Trigger STEREO' 16 -0.5 15.5
+  h/cr/1d $SIGMA(pre+04) 'Trigger STEREO' 16 -0.5 15.5
+  h/cr/1d $SIGMA(pre+05) 'Trigger STEREO' 16 -0.5 15.5
+  h/cr/1d $SIGMA(pre+06) 'Trigger STEREO' 16 -0.5 15.5
+  h/cr/1d $SIGMA(pre+07) 'Trigger STEREO' 16 -0.5 15.5
+  h/cr/1d $SIGMA(pre+08) 'Trigger STEREO' 16 -0.5 15.5
+  nt/plot //mc/cuts/1.stereo $1 ! ! ! 'N' $SIGMA(pre+01)
+  nt/plot //mc/cuts/1.stereo abs(mctype)>25&&$1 ! ! ! 'N' $SIGMA(pre+02)
+  nt/plot //tpeak/triggeronlyproc/1.stereo $1 ! ! ! 'N' $SIGMA(pre+03)
+  nt/plot //tcont/triggeronlyproc/1.stereo $1 ! ! ! 'N' $SIGMA(pre+04)
+  nt/plot //tbge/triggeronlyproc/1.stereo $1 ! ! ! 'N' $SIGMA(pre+05)
+  nt/plot //tbgp/triggeronlyproc/1.stereo $1 ! ! ! 'N' $SIGMA(pre+06)
+  nt/plot //tcos/triggeronlyproc/1.stereo $1 ! ! ! 'N' $SIGMA(pre+07)
+endif
+sigma top = 0
+sigma bot = 0
+sigma left = 0
+sigma right = 0
+exec plot.kumac
+set ltyp 3
+dline 1.5 1.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma pre = 1200
+if ploted.eq.0 then
+  h/cr/1d $SIGMA(pre+01) 'Trigger CBLO' 8 -0.5 7.5
+  h/cr/1d $SIGMA(pre+02) 'Trigger CBLO' 8 -0.5 7.5
+  h/cr/1d $SIGMA(pre+03) 'Trigger CBLO' 8 -0.5 7.5
+  h/cr/1d $SIGMA(pre+04) 'Trigger CBLO' 8 -0.5 7.5
+  h/cr/1d $SIGMA(pre+05) 'Trigger CBLO' 8 -0.5 7.5
+  h/cr/1d $SIGMA(pre+06) 'Trigger CBLO' 8 -0.5 7.5
+  h/cr/1d $SIGMA(pre+07) 'Trigger CBLO' 8 -0.5 7.5
+  h/cr/1d $SIGMA(pre+08) 'Trigger CBLO' 8 -0.5 7.5
+  nt/plot //mc/cuts/1.cblo $1 ! ! ! 'N' $SIGMA(pre+01)
+  nt/plot //mc/cuts/1.cblo abs(mctype)>25&&$1 ! ! ! 'N' $SIGMA(pre+02)
+  nt/plot //tpeak/triggeronlyproc/1.cblo $1 ! ! ! 'N' $SIGMA(pre+03)
+  nt/plot //tcont/triggeronlyproc/1.cblo $1 ! ! ! 'N' $SIGMA(pre+04)
+  nt/plot //tbge/triggeronlyproc/1.cblo $1 ! ! ! 'N' $SIGMA(pre+05)
+  nt/plot //tbgp/triggeronlyproc/1.cblo $1 ! ! ! 'N' $SIGMA(pre+06)
+  nt/plot //tcos/triggeronlyproc/1.cblo $1 ! ! ! 'N' $SIGMA(pre+07)
+endif
+sigma top = 0
+sigma bot = 0
+sigma left = 0
+sigma right = 0
+exec plot.kumac
+set ltyp 3
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 1.5 1.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma pre = 1300
+if ploted.eq.0 then
+  h/cr/1d $SIGMA(pre+01) 'Trigger CBMD' 8 -0.5 7.5
+  h/cr/1d $SIGMA(pre+02) 'Trigger CBMD' 8 -0.5 7.5
+  h/cr/1d $SIGMA(pre+03) 'Trigger CBMD' 8 -0.5 7.5
+  h/cr/1d $SIGMA(pre+04) 'Trigger CBMD' 8 -0.5 7.5
+  h/cr/1d $SIGMA(pre+05) 'Trigger CBMD' 8 -0.5 7.5
+  h/cr/1d $SIGMA(pre+06) 'Trigger CBMD' 8 -0.5 7.5
+  h/cr/1d $SIGMA(pre+07) 'Trigger CBMD' 8 -0.5 7.5
+  h/cr/1d $SIGMA(pre+08) 'Trigger CBMD' 8 -0.5 7.5
+  nt/plot //mc/cuts/1.cbmd $1 ! ! ! 'N' $SIGMA(pre+01)
+  nt/plot //mc/cuts/1.cbmd abs(mctype)>25&&$1 ! ! ! 'N' $SIGMA(pre+02)
+  nt/plot //tpeak/triggeronlyproc/1.cbmd $1 ! ! ! 'N' $SIGMA(pre+03)
+  nt/plot //tcont/triggeronlyproc/1.cbmd $1 ! ! ! 'N' $SIGMA(pre+04)
+  nt/plot //tbge/triggeronlyproc/1.cbmd $1 ! ! ! 'N' $SIGMA(pre+05)
+  nt/plot //tbgp/triggeronlyproc/1.cbmd $1 ! ! ! 'N' $SIGMA(pre+06)
+  nt/plot //tcos/triggeronlyproc/1.cbmd $1 ! ! ! 'N' $SIGMA(pre+07)
+endif
+sigma top = 0
+sigma bot = 0
+sigma left = 0
+sigma right = 0
+exec plot.kumac
+set ltyp 3
+dline 0.5 0.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* pict/print 'all3_trigger.eps'
+
+* Visible energy
+sigma pre = 1400
+if ploted.eq.0 then
+  h/cr/1d $SIGMA(pre+01) 'Visible energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+02) 'Visible energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+03) 'Visible energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+04) 'Visible energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+05) 'Visible energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+06) 'Visible energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+07) 'Visible energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+08) 'Visible energy' 60 0. 1.2
+  nt/plot //mc/cuts/1.visen $1 ! ! ! 'N' $SIGMA(pre+01)
+  nt/plot //mc/cuts/1.visen abs(mctype)>25&&$1 ! ! ! 'N' $SIGMA(pre+02)
+  nt/plot //peak/cuts/1.visen $1 ! ! ! 'N' $SIGMA(pre+03)
+  nt/plot //cont/cuts/1.visen $1 ! ! ! 'N' $SIGMA(pre+04)
+  nt/plot //bge/cuts/1.visen $1 ! ! ! 'N' $SIGMA(pre+05)
+  nt/plot //bgp/cuts/1.visen $1 ! ! ! 'N' $SIGMA(pre+06)
+  nt/plot //cos/cuts/1.visen $1 ! ! ! 'N' $SIGMA(pre+07)
+endif
+zone 1 2
+h/delete $SIGMA(pre+21)
+sub $SIGMA(pre+01) $SIGMA(pre+01) $SIGMA(pre+21) $SIGMA(ptomc) 0. 'e'
+sigma top = 1.2*$HINFO($SIGMA(pre+21),'MAX')
+sigma bot = -0.2*$HINFO($SIGMA(pre+21),'MAX')
+sigma left = 0
+sigma right = 0
+exec plot.kumac
+set ltyp 3
+dline 0.2 0.2 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+zone 2 2 3 s
+ve/cr tmp(60)
+h/get_vect/contents $SIGMA(pre+55) tmp
+sigma top = tmp(1)+0.3*(-1)*tmp(1)
+sigma bot = tmp(1)-0.3*(-1)*tmp(1)
+sigma left = -0.1
+sigma right = 0.1
+exec plot.kumac
+sigma top = 0.75*$HINFO($SIGMA(pre+21),'MAX')
+sigma bot = -0.25*$HINFO($SIGMA(pre+21),'MAX')
+sigma left = -0.1
+sigma right = 0.7
+exec plot.kumac
+set ltyp 3
+dline 0.2 0.2 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+sigma left = 0
+sigma right = 0
+* pict/print 'all3_visen.eps'
+
+* Neutral energy
+sigma pre = 1500
+zone 2 2
+if ploted.eq.0 then
+  h/cr/1d $SIGMA(pre+01) 'Neutral energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+02) 'Neutral energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+03) 'Neutral energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+04) 'Neutral energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+05) 'Neutral energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+06) 'Neutral energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+07) 'Neutral energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+08) 'Neutral energy' 60 0. 1.2
+  nt/plot //mc/cuts/1.neue $1 ! ! ! 'N' $SIGMA(pre+01)
+  nt/plot //mc/cuts/1.neue abs(mctype)>25&&$1 ! ! ! 'N' $SIGMA(pre+02)
+  nt/plot //peak/cuts/1.neue $1 ! ! ! 'N' $SIGMA(pre+03)
+  nt/plot //cont/cuts/1.neue $1 ! ! ! 'N' $SIGMA(pre+04)
+  nt/plot //bge/cuts/1.neue $1 ! ! ! 'N' $SIGMA(pre+05)
+  nt/plot //bgp/cuts/1.neue $1 ! ! ! 'N' $SIGMA(pre+06)
+  nt/plot //cos/cuts/1.neue $1 ! ! ! 'N' $SIGMA(pre+07)
+endif
+sigma top = 0
+sigma bot = 0
+sigma left = -0.1
+sigma right = 0.1
+exec plot.kumac
+sigma top = 1.2*$HINFO($SIGMA(pre+21),'MAX')
+sigma bot = -0.2*$HINFO($SIGMA(pre+21),'MAX')
+sigma left = 0
+sigma right = 0
+exec plot.kumac
+* Charged energy
+sigma pre = 1600
+if ploted.eq.0 then
+  h/cr/1d $SIGMA(pre+01) 'Charged energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+02) 'Charged energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+03) 'Charged energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+04) 'Charged energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+05) 'Charged energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+06) 'Charged energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+07) 'Charged energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+08) 'Charged energy' 60 0. 1.2
+  nt/plot //mc/cuts/1.(visen-neue)*1.02 $1 ! ! ! 'N' $SIGMA(pre+01)
+  nt/plot //mc/cuts/1.(visen-neue)*1.02 abs(mctype)>25&&$1 ! ! ! 'N' $SIGMA(pre+02)
+  nt/plot //peak/cuts/1.(visen-neue) $1 ! ! ! 'N' $SIGMA(pre+03)
+  nt/plot //cont/cuts/1.(visen-neue) $1 ! ! ! 'N' $SIGMA(pre+04)
+  nt/plot //bge/cuts/1.(visen-neue) $1 ! ! ! 'N' $SIGMA(pre+05)
+  nt/plot //bgp/cuts/1.(visen-neue) $1 ! ! ! 'N' $SIGMA(pre+06)
+  nt/plot //cos/cuts/1.(visen-neue) $1 ! ! ! 'N' $SIGMA(pre+07)
+endif
+sigma top = 0
+sigma bot = 0
+sigma left = -0.1
+sigma right = 0.1
+exec plot.kumac
+sigma top = 1.2*$HINFO($SIGMA(pre+21),'MAX')
+sigma bot = -0.2*$HINFO($SIGMA(pre+21),'MAX')
+sigma left = 0
+sigma right = 0
+exec plot.kumac
+* pict/print 'all3_visen2.eps'
+
+* CC total energy
+zone 1 2
+sigma pre = 1700
+if ploted.eq.0 then
+  h/cr/1d $SIGMA(pre+01) 'CC total energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+02) 'CC total energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+03) 'CC total energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+04) 'CC total energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+05) 'CC total energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+06) 'CC total energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+07) 'CC total energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+08) 'CC total energy' 60 0. 1.2
+  nt/plot //mc/cuts/1.ccen $1&&$2 ! ! ! 'N' $SIGMA(pre+01)
+  nt/plot //mc/cuts/1.ccen abs(mctype)>25&&$1&&$2 ! ! ! 'N' $SIGMA(pre+02)
+  nt/plot //peak/cuts/1.ccen $1&&$2 ! ! ! 'N' $SIGMA(pre+03)
+  nt/plot //cont/cuts/1.ccen $1&&$2 ! ! ! 'N' $SIGMA(pre+04)
+  nt/plot //bge/cuts/1.ccen $1&&$2 ! ! ! 'N' $SIGMA(pre+05)
+  nt/plot //bgp/cuts/1.ccen $1&&$2 ! ! ! 'N' $SIGMA(pre+06)
+  nt/plot //cos/cuts/1.ccen $1&&$2 ! ! ! 'N' $SIGMA(pre+07)
+endif
+sigma top = 0
+sigma bot = 0
+sigma left = 0
+sigma right = 0
+exec plot.kumac
+set ltyp 3
+dline 0.15 0.15 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 0.75 0.75 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* Biggest shower energy
+sigma pre = 1700
+if ploted.eq.0 then
+  h/cr/1d $SIGMA(pre+01) 'Biggest shower energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+02) 'Biggest shower energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+03) 'Biggest shower energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+04) 'Biggest shower energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+05) 'Biggest shower energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+06) 'Biggest shower energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+07) 'Biggest shower energy' 60 0. 1.2
+  h/cr/1d $SIGMA(pre+08) 'Biggest shower energy' 60 0. 1.2
+  nt/plot //mc/cuts/1.e1 $1&&$2 ! ! ! 'N' $SIGMA(pre+01)
+  nt/plot //mc/cuts/1.e1 abs(mctype)>25&&$1&&$2 ! ! ! 'N' $SIGMA(pre+02)
+  nt/plot //peak/cuts/1.e1 $1&&$2 ! ! ! 'N' $SIGMA(pre+03)
+  nt/plot //cont/cuts/1.e1 $1&&$2 ! ! ! 'N' $SIGMA(pre+04)
+  nt/plot //bge/cuts/1.e1 $1&&$2 ! ! ! 'N' $SIGMA(pre+05)
+  nt/plot //bgp/cuts/1.e1 $1&&$2 ! ! ! 'N' $SIGMA(pre+06)
+  nt/plot //cos/cuts/1.e1 $1&&$2 ! ! ! 'N' $SIGMA(pre+07)
+endif
+sigma top = 0
+sigma bot = 0
+sigma left = 0
+sigma right = 0
+exec plot.kumac
+set ltyp 3
+dline 0.75 0.75 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* pict/print 'all3_ccen.eps'
+
+* Number of tracks
+zone 1 1
+sigma pre = 1800
+if ploted.eq.0 then
+  h/cr/1d $SIGMA(pre+01) 'Number of Tracks' 19 -0.5 18.5
+  h/cr/1d $SIGMA(pre+02) 'Number of Tracks' 19 -0.5 18.5
+  h/cr/1d $SIGMA(pre+03) 'Number of Tracks' 19 -0.5 18.5
+  h/cr/1d $SIGMA(pre+04) 'Number of Tracks' 19 -0.5 18.5
+  h/cr/1d $SIGMA(pre+05) 'Number of Tracks' 19 -0.5 18.5
+  h/cr/1d $SIGMA(pre+06) 'Number of Tracks' 19 -0.5 18.5
+  h/cr/1d $SIGMA(pre+07) 'Number of Tracks' 19 -0.5 18.5
+  h/cr/1d $SIGMA(pre+08) 'Number of Tracks' 19 -0.5 18.5
+  nt/plot //mc/cuts/1.tracks $1&&$2&&$3&&$4 ! ! ! 'N' $SIGMA(pre+01)
+  nt/plot //mc/cuts/1.tracks abs(mctype)>25&&$1&&$2&&$3&&$4 ! ! ! 'N' $SIGMA(pre+02)
+  nt/plot //peak/cuts/1.tracks $1&&$2&&$3&&$4 ! ! ! 'N' $SIGMA(pre+03)
+  nt/plot //cont/cuts/1.tracks $1&&$2&&$3&&$4 ! ! ! 'N' $SIGMA(pre+04)
+  nt/plot //bge/cuts/1.tracks $1&&$2&&$3&&$4 ! ! ! 'N' $SIGMA(pre+05)
+  nt/plot //bgp/cuts/1.tracks $1&&$2&&$3&&$4 ! ! ! 'N' $SIGMA(pre+06)
+  nt/plot //cos/cuts/1.tracks $1&&$2&&$3&&$4 ! ! ! 'N' $SIGMA(pre+07)
+endif
+sigma top = 0
+sigma bot = 0
+sigma left = 0
+sigma right = 0
+exec plot.kumac
+set ltyp 3
+dline 2.5 2.5 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* pict/print 'all3_tracks.eps'
+
+* Event RPHI
+zone 1 2
+sigma pre = 1900
+if ploted.eq.0 then
+  h/cr/1d $SIGMA(pre+01) 'Event RPHI' 50 0. 0.01
+  h/cr/1d $SIGMA(pre+02) 'Event RPHI' 50 0. 0.01
+  h/cr/1d $SIGMA(pre+03) 'Event RPHI' 50 0. 0.01
+  h/cr/1d $SIGMA(pre+04) 'Event RPHI' 50 0. 0.01
+  h/cr/1d $SIGMA(pre+05) 'Event RPHI' 50 0. 0.01
+  h/cr/1d $SIGMA(pre+06) 'Event RPHI' 50 0. 0.01
+  h/cr/1d $SIGMA(pre+07) 'Event RPHI' 50 0. 0.01
+  h/cr/1d $SIGMA(pre+08) 'Event RPHI' 50 0. 0.01
+  nt/plot //mc/cuts/1.ci $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+01)
+  nt/plot //mc/cuts/1.ci abs(mctype)>25&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+02)
+  nt/plot //peak/cuts/1.ci $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+03)
+  nt/plot //cont/cuts/1.ci $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+04)
+  nt/plot //bge/cuts/1.ci $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+05)
+  nt/plot //bgp/cuts/1.ci $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+06)
+  nt/plot //cos/cuts/1.ci $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+07)
+endif
+sigma top = 0
+sigma bot = 0
+sigma left = 0
+sigma right = 0
+exec plot.kumac
+set ltyp 3
+dline 0.005 0.005 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* Event Z
+sigma pre = 2000
+if ploted.eq.0 then
+  h/cr/1d $SIGMA(pre+01) 'Event Z' 50 -0.10 0.10
+  h/cr/1d $SIGMA(pre+02) 'Event Z' 50 -0.10 0.10
+  h/cr/1d $SIGMA(pre+03) 'Event Z' 50 -0.10 0.10
+  h/cr/1d $SIGMA(pre+04) 'Event Z' 50 -0.10 0.10
+  h/cr/1d $SIGMA(pre+05) 'Event Z' 50 -0.10 0.10
+  h/cr/1d $SIGMA(pre+06) 'Event Z' 50 -0.10 0.10
+  h/cr/1d $SIGMA(pre+07) 'Event Z' 50 -0.10 0.10
+  h/cr/1d $SIGMA(pre+08) 'Event Z' 50 -0.10 0.10
+  nt/plot //mc/cuts/1.wz $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+01)
+  nt/plot //mc/cuts/1.wz abs(mctype)>25&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+02)
+  nt/plot //peak/cuts/1.wz $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+03)
+  nt/plot //cont/cuts/1.wz $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+04)
+  nt/plot //bge/cuts/1.wz $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+05)
+  nt/plot //bgp/cuts/1.wz $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+06)
+  nt/plot //cos/cuts/1.wz $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' $SIGMA(pre+07)
+endif
+sigma top = 0
+sigma bot = 0
+sigma left = 0
+sigma right = 0
+exec plot.kumac
+set ltyp 3
+dline -0.05 -0.05 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 0.05 0.05 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+* pict/print 'all3_ciwz.eps'
+
+* h/cr/1d 3000 'no cuts MCll' 1 0 1
+* h/cr/1d 3001 'no cuts MCother' 1 0 1
+* h/cr/1d 3010 'trigger MCll' 1 0 1
+* h/cr/1d 3011 'trigger MCother' 1 0 1
+* h/cr/1d 3012 'trigger data' 1 0 1
+* h/cr/1d 3013 'trigger e-beam' 1 0 1
+* h/cr/1d 3014 'trigger e+beam' 1 0 1
+* h/cr/1d 3015 'trigger nobeam' 1 0 1
+* h/cr/1d 3016 'trigger peak' 1 0 1
+* h/cr/1d 3017 'trigger cont' 1 0 1
+* h/cr/1d 3020 'visen MCll' 1 0 1
+* h/cr/1d 3021 'visen MCother' 1 0 1
+* h/cr/1d 3022 'visen data' 1 0 1
+* h/cr/1d 3023 'visen e-beam' 1 0 1
+* h/cr/1d 3024 'visen e+beam' 1 0 1
+* h/cr/1d 3025 'visen nobeam' 1 0 1
+* h/cr/1d 3026 'visen peak' 1 0 1
+* h/cr/1d 3027 'visen cont' 1 0 1
+* h/cr/1d 3030 'antimu MCll' 1 0 1
+* h/cr/1d 3031 'antimu MCother' 1 0 1
+* h/cr/1d 3032 'antimu data' 1 0 1
+* h/cr/1d 3033 'antimu e-beam' 1 0 1
+* h/cr/1d 3034 'antimu e+beam' 1 0 1
+* h/cr/1d 3035 'antimu nobeam' 1 0 1
+* h/cr/1d 3036 'antimu peak' 1 0 1
+* h/cr/1d 3037 'antimu cont' 1 0 1
+* h/cr/1d 3040 'antibha MCll' 1 0 1
+* h/cr/1d 3041 'antibha MCother' 1 0 1
+* h/cr/1d 3042 'antibha data' 1 0 1
+* h/cr/1d 3043 'antibha e-beam' 1 0 1
+* h/cr/1d 3044 'antibha e+beam' 1 0 1
+* h/cr/1d 3045 'antibha nobeam' 1 0 1
+* h/cr/1d 3046 'antibha peak' 1 0 1
+* h/cr/1d 3047 'antibha cont' 1 0 1
+* h/cr/1d 3050 'tracks MCll' 1 0 1
+* h/cr/1d 3051 'tracks MCother' 1 0 1
+* h/cr/1d 3052 'tracks data' 1 0 1
+* h/cr/1d 3053 'tracks e-beam' 1 0 1
+* h/cr/1d 3054 'tracks e+beam' 1 0 1
+* h/cr/1d 3055 'tracks nobeam' 1 0 1
+* h/cr/1d 3056 'tracks peak' 1 0 1
+* h/cr/1d 3057 'tracks cont' 1 0 1
+* h/cr/1d 3060 'L4 MCll' 1 0 1
+* h/cr/1d 3061 'L4 MCother' 1 0 1
+* h/cr/1d 3062 'L4 data' 1 0 1
+* h/cr/1d 3063 'L4 e-beam' 1 0 1
+* h/cr/1d 3064 'L4 e+beam' 1 0 1
+* h/cr/1d 3065 'L4 nobeam' 1 0 1
+* h/cr/1d 3066 'L4 peak' 1 0 1
+* h/cr/1d 3067 'L4 cont' 1 0 1
+* h/cr/1d 3070 'RPHI MCll' 1 0 1
+* h/cr/1d 3071 'RPHI MCother' 1 0 1
+* h/cr/1d 3072 'RPHI data' 1 0 1
+* h/cr/1d 3073 'RPHI e-beam' 1 0 1
+* h/cr/1d 3074 'RPHI e+beam' 1 0 1
+* h/cr/1d 3075 'RPHI nobeam' 1 0 1
+* h/cr/1d 3076 'RPHI peak' 1 0 1
+* h/cr/1d 3077 'RPHI cont' 1 0 1
+* h/cr/1d 3080 'Z MCll' 1 0 1
+* h/cr/1d 3081 'Z MCother' 1 0 1
+* h/cr/1d 3082 'Z data' 1 0 1
+* h/cr/1d 3083 'Z e-beam' 1 0 1
+* h/cr/1d 3084 'Z e+beam' 1 0 1
+* h/cr/1d 3085 'Z nobeam' 1 0 1
+* h/cr/1d 3086 'Z peak' 1 0 1
+* h/cr/1d 3087 'Z cont' 1 0 1
+* nt/plot //mc/cuts/1.tracks abs(mctype)<25 ! ! ! 'N' 3000
+* nt/plot //mc/cuts/1.tracks abs(mctype)>25 ! ! ! 'N' 3001
+* nt/plot //mc/cuts/1.tracks abs(mctype)<25&&$1 ! ! ! 'N' 3010
+* nt/plot //mc/cuts/1.tracks abs(mctype)>25&&$1 ! ! ! 'N' 3011
+* nt/plot //bge/cuts/1.tracks $1 ! ! ! 'N' 3013
+* nt/plot //bgp/cuts/1.tracks $1 ! ! ! 'N' 3014
+* nt/plot //cos/cuts/1.tracks $1 ! ! ! 'N' 3015
+* nt/plot //peak/cuts/1.tracks $1 ! ! ! 'N' 3016
+* nt/plot //cont/cuts/1.tracks $1 ! ! ! 'N' 3017
+* sub 3016 3017 3012 1. $SIGMA(ptoc)
+* nt/plot //mc/cuts/1.tracks abs(mctype)<25&&$1&&$2 ! ! ! 'N' 3020
+* nt/plot //mc/cuts/1.tracks abs(mctype)>25&&$1&&$2 ! ! ! 'N' 3021
+* nt/plot //bge/cuts/1.tracks $1&&$2 ! ! ! 'N' 3023
+* nt/plot //bgp/cuts/1.tracks $1&&$2 ! ! ! 'N' 3024
+* nt/plot //cos/cuts/1.tracks $1&&$2 ! ! ! 'N' 3025
+* nt/plot //peak/cuts/1.tracks $1&&$2 ! ! ! 'N' 3026
+* nt/plot //cont/cuts/1.tracks $1&&$2 ! ! ! 'N' 3027
+* sub 3026 3027 3022 1. $SIGMA(ptoc)
+* nt/plot //mc/cuts/1.tracks abs(mctype)<25&&$1&&$2&&$4 ! ! ! 'N' 3030
+* nt/plot //mc/cuts/1.tracks abs(mctype)>25&&$1&&$2&&$4 ! ! ! 'N' 3031
+* nt/plot //bge/cuts/1.tracks $1&&$2&&$4 ! ! ! 'N' 3033
+* nt/plot //bgp/cuts/1.tracks $1&&$2&&$4 ! ! ! 'N' 3034
+* nt/plot //cos/cuts/1.tracks $1&&$2&&$4 ! ! ! 'N' 3035
+* nt/plot //peak/cuts/1.tracks $1&&$2&&$4 ! ! ! 'N' 3036
+* nt/plot //cont/cuts/1.tracks $1&&$2&&$4 ! ! ! 'N' 3037
+* sub 3036 3037 3032 1. $SIGMA(ptoc)
+* nt/plot //mc/cuts/1.tracks abs(mctype)<25&&$1&&$2&&$3&&$4 ! ! ! 'N' 3040
+* nt/plot //mc/cuts/1.tracks abs(mctype)>25&&$1&&$2&&$3&&$4 ! ! ! 'N' 3041
+* nt/plot //bge/cuts/1.tracks $1&&$2&&$3&&$4 ! ! ! 'N' 3043
+* nt/plot //bgp/cuts/1.tracks $1&&$2&&$3&&$4 ! ! ! 'N' 3044
+* nt/plot //cos/cuts/1.tracks $1&&$2&&$3&&$4 ! ! ! 'N' 3045
+* nt/plot //peak/cuts/1.tracks $1&&$2&&$3&&$4 ! ! ! 'N' 3046
+* nt/plot //cont/cuts/1.tracks $1&&$2&&$3&&$4 ! ! ! 'N' 3047
+* sub 3046 3047 3042 1. $SIGMA(ptoc)
+* nt/plot //mc/cuts/1.tracks abs(mctype)<25&&$1&&$2&&$3&&$4&&$5 ! ! ! 'N' 3050
+* nt/plot //mc/cuts/1.tracks abs(mctype)>25&&$1&&$2&&$3&&$4&&$5 ! ! ! 'N' 3051
+* nt/plot //bge/cuts/1.tracks $1&&$2&&$3&&$4&&$5 ! ! ! 'N' 3053
+* nt/plot //bgp/cuts/1.tracks $1&&$2&&$3&&$4&&$5 ! ! ! 'N' 3054
+* nt/plot //cos/cuts/1.tracks $1&&$2&&$3&&$4&&$5 ! ! ! 'N' 3055
+* nt/plot //peak/cuts/1.tracks $1&&$2&&$3&&$4&&$5 ! ! ! 'N' 3056
+* nt/plot //cont/cuts/1.tracks $1&&$2&&$3&&$4&&$5 ! ! ! 'N' 3057
+* sub 3056 3057 3052 1. $SIGMA(ptoc)
+* nt/plot //mc/cuts/1.tracks abs(mctype)<25&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 3060
+* nt/plot //mc/cuts/1.tracks abs(mctype)>25&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 3061
+* nt/plot //bge/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 3063
+* nt/plot //bgp/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 3064
+* nt/plot //cos/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 3065
+* nt/plot //peak/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 3066
+* nt/plot //cont/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 3067
+* sub 3066 3067 3062 1. $SIGMA(ptoc)
+* nt/plot //mc/cuts/1.tracks abs(mctype)<25&&(ci<0.005)&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 3070
+* nt/plot //mc/cuts/1.tracks abs(mctype)>25&&(ci<0.005)&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 3071
+* nt/plot //bge/cuts/1.tracks (ci<0.005)&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 3073
+* nt/plot //bgp/cuts/1.tracks (ci<0.005)&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 3074
+* nt/plot //cos/cuts/1.tracks (ci<0.005)&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 3075
+* nt/plot //peak/cuts/1.tracks (ci<0.005)&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 3076
+* nt/plot //cont/cuts/1.tracks (ci<0.005)&&$1&&$2&&$3&&$4&&$5&&$6 ! ! ! 'N' 3077
+* sub 3076 3077 3072 1. $SIGMA(ptoc)
+* nt/plot //mc/cuts/1.tracks abs(mctype)<25&&$1&&$2&&$3&&$4&&$5&&$6&&$7 ! ! ! 'N' 3080
+* nt/plot //mc/cuts/1.tracks abs(mctype)>25&&$1&&$2&&$3&&$4&&$5&&$6&&$7 ! ! ! 'N' 3081
+* nt/plot //bge/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6&&$7 ! ! ! 'N' 3083
+* nt/plot //bgp/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6&&$7 ! ! ! 'N' 3084
+* nt/plot //cos/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6&&$7 ! ! ! 'N' 3085
+* nt/plot //peak/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6&&$7 ! ! ! 'N' 3086
+* nt/plot //cont/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6&&$7 ! ! ! 'N' 3087
+* sub 3086 3087 3082 1. $SIGMA(ptoc)
+
+* sigma en3012 = $HINFO(3012,'SUM')+$HINFO(3012,'UNDERFLOW')+$HINFO(3012,'OVERFLOW')
+* sigma en3022 = $HINFO(3022,'SUM')+$HINFO(3022,'UNDERFLOW')+$HINFO(3022,'OVERFLOW')
+* sigma en3032 = $HINFO(3032,'SUM')+$HINFO(3032,'UNDERFLOW')+$HINFO(3032,'OVERFLOW')
+* sigma en3042 = $HINFO(3042,'SUM')+$HINFO(3042,'UNDERFLOW')+$HINFO(3042,'OVERFLOW')
+* sigma en3052 = $HINFO(3052,'SUM')+$HINFO(3052,'UNDERFLOW')+$HINFO(3052,'OVERFLOW')
+* sigma en3062 = $HINFO(3062,'SUM')+$HINFO(3062,'UNDERFLOW')+$HINFO(3062,'OVERFLOW')
+* sigma en3072 = $HINFO(3072,'SUM')+$HINFO(3072,'UNDERFLOW')+$HINFO(3072,'OVERFLOW')
+* sigma en3082 = $HINFO(3082,'SUM')+$HINFO(3082,'UNDERFLOW')+$HINFO(3082,'OVERFLOW')
+* message ' & MC$\ell\ell$ & MCother & peak & cont & data & e$^-$beam & e$^+$beam & no-beam \\'
+* message 'scale factor &' $SIGMA(ptomc) '&' $SIGMA(ptomc) '& 1 &' $SIGMA(-ptoc) '& (peak $-$ cont) &' $SIGMA(ptobge-ptoc*ctobge) '&' $SIGMA(ptobgp-ptoc*ctobgp) '&' $SIGMA(cosy(5)) '\\\hline\hline'
+* message 'no cuts &' $HINFO(3000,'ENTRIES') '&' $HINFO(3001,'ENTRIES') '& {\it n/a} & {\it n/a} & {\it n/a} & {\it n/a} & {\it n/a} & {\it n/a} \\' 
+* message 'trigger &' $HINFO(3010,'ENTRIES') '&' $HINFO(3011,'ENTRIES') '&' $HINFO(3016,'ENTRIES') '&' $HINFO(3017,'ENTRIES') '&' $SIGMA(en3012) '&' $HINFO(3013,'ENTRIES') '&' $HINFO(3014,'ENTRIES') '&' $HINFO(3015,'ENTRIES') '\\'
+* message 'visible energy $>$ 20\% &' $HINFO(3020,'ENTRIES') '&' $HINFO(3021,'ENTRIES') '&' $HINFO(3026,'ENTRIES') '&' $HINFO(3027,'ENTRIES') '&' $SIGMA(en3022) '&' $HINFO(3023,'ENTRIES') '&' $HINFO(3024,'ENTRIES') '&' $HINFO(3025,'ENTRIES') '\\'
+* message 'anti-mupair &' $HINFO(3030,'ENTRIES') '&' $HINFO(3031,'ENTRIES') '&' $HINFO(3036,'ENTRIES') '&' $HINFO(3037,'ENTRIES') '&' $SIGMA(en3032) '&' $HINFO(3033,'ENTRIES') '&' $HINFO(3034,'ENTRIES') '&' $HINFO(3035,'ENTRIES') '\\'
+* message 'anti-bhabha &' $HINFO(3040,'ENTRIES') '&' $HINFO(3041,'ENTRIES') '&' $HINFO(3046,'ENTRIES') '&' $HINFO(3047,'ENTRIES') '&' $SIGMA(en3042) '&' $HINFO(3043,'ENTRIES') '&' $HINFO(3044,'ENTRIES') '&' $HINFO(3045,'ENTRIES') '\\\hline'
+* message 'tracks $\ge$ 3 &' $HINFO(3050,'ENTRIES') '&' $HINFO(3051,'ENTRIES') '&' $HINFO(3056,'ENTRIES') '&' $HINFO(3057,'ENTRIES') '&' $SIGMA(en3052) '&' $HINFO(3053,'ENTRIES') '&' $HINFO(3054,'ENTRIES') '&' $HINFO(3055,'ENTRIES') '\\'
+* message 'level 3 \& 4 &' $HINFO(3060,'ENTRIES') '&' $HINFO(3061,'ENTRIES') '&' $HINFO(3066,'ENTRIES') '&' $HINFO(3067,'ENTRIES') '&' $SIGMA(en3062) '&' $HINFO(3063,'ENTRIES') '&' $HINFO(3064,'ENTRIES') '&' $HINFO(3065,'ENTRIES') '\\'
+* message 'event RPHI &' $HINFO(3070,'ENTRIES') '&' $HINFO(3071,'ENTRIES') '&' $HINFO(3076,'ENTRIES') '&' $HINFO(3077,'ENTRIES') '&' $SIGMA(en3072) '&' $HINFO(3073,'ENTRIES') '&' $HINFO(3074,'ENTRIES') '&' $HINFO(3075,'ENTRIES') '\\'
+* message 'event Z &' $HINFO(3080,'ENTRIES') '&' $HINFO(3081,'ENTRIES') '&' $HINFO(3086,'ENTRIES') '&' $HINFO(3087,'ENTRIES') '&' $SIGMA(en3082) '&' $HINFO(3083,'ENTRIES') '&' $HINFO(3084,'ENTRIES') '&' $HINFO(3085,'ENTRIES') '\\\hline\hline'

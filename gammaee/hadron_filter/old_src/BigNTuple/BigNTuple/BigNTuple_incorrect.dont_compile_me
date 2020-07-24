@@ -1,0 +1,668 @@
+// -*- C++ -*-
+//
+// Package:     BigNTuple
+// Module:      BigNTuple
+// 
+// Description: <one line class summary>
+//
+// Implementation:
+//     <Notes on implementation>
+//
+// Author:      Jim McCann
+// Created:     Thu May 30 15:00:07 EDT 2002
+// $Id$
+//
+// Revision history
+//
+// $Log$
+//
+
+#include "Experiment/Experiment.h"
+
+// system include files
+
+// user include files
+#include "BigNTuple/BigNTuple.h"
+#include "Experiment/report.h"
+#include "Experiment/units.h"  // for converting to/from standard CLEO units
+
+#include "DataHandler/Record.h"
+#include "DataHandler/Frame.h"
+#include "FrameAccess/extract.h"
+#include "FrameAccess/FAItem.h"
+#include "FrameAccess/FATable.h"
+
+#include "Navigation/NavTrack.h"
+#include "TrackRoot/TRHelixFit.h"
+#include "TrackRoot/TRTrackFitQuality.h"
+#include "TrackRoot/TRSeedTrackQuality.h"
+#include "TrackDelivery/TDKinematicFit.h"
+
+#include "Navigation/NavTrack.h"
+#include "TrackRoot/TRHelixFit.h"
+#include "TrackRoot/TRTrackFitQuality.h"
+#include "TrackRoot/TRSeedTrackQuality.h"
+#include "TrackDelivery/TDKinematicFit.h"
+#include "C3Mu/MuTrack.h"
+#include "Navigation/NavShower.h"
+#include "C3cc/CcShowerAttributes.h"
+#include "Navigation/NavConReg.h"
+#include "KinematicTrajectory/KTKinematicData.h"
+#include "Navigation/NavTkShMatch.h"
+#include "C3cc/CcAssignedEnergyHit.h"
+#include "BunchFinder/BunchDecision.h"
+#include "TrackletBunchFinder/TrackletBunchDecision.h"
+#include "/home/mccann/hadron_filter/src/EventVertex/EventVertex/EventVertex.h"
+
+//RICH example 
+//Dedx example
+//Event Shape example
+
+
+// STL classes
+// You may have to uncomment some of these or other stl headers 
+// depending on what other header files you include (e.g. FrameAccess etc.)!
+//#include <string>
+//#include <vector>
+//#include <set>
+//#include <map>
+//#include <algorithm>
+//#include <utility>
+
+//
+// constants, enums and typedefs
+//
+static const char* const kFacilityString = "Processor.BigNTuple" ;
+
+// ---- cvs-based strings (Id and Tag with which file was checked out)
+static const char* const kIdString  = "$Id: processor.cc,v 1.30 2002/04/02 22:04:09 ajm36 Exp $";
+static const char* const kTagString = "$Name: v06_05_01 $";
+
+//
+// static data member definitions
+//
+
+
+
+//
+// constructors and destructor
+//
+BigNTuple::BigNTuple( void )               // anal1
+   : Processor( "BigNTuple" )
+   , m_lookForCosmics( "lookForCosmics", this, false )
+   , m_getBunchData( "getBunchData", this, true )
+{
+   report( DEBUG, kFacilityString ) << "here in ctor()" << endl;
+
+   // ---- bind a method to a stream -----
+   // These lines ARE VERY IMPORTANT! If you don't bind the 
+   // code you've just written (the "action") to a stream, 
+   // your code won't get executed!
+
+   bind( &BigNTuple::event,    Stream::kEvent );
+   //bind( &BigNTuple::beginRun, Stream::kBeginRun );
+   //bind( &BigNTuple::endRun,   Stream::kEndRun );
+
+   // do anything here that needs to be done at creation time
+   // (e.g. allocate resources etc.)
+
+}
+
+BigNTuple::~BigNTuple()                    // anal5
+{
+   report( DEBUG, kFacilityString ) << "here in dtor()" << endl;
+ 
+   // do anything here that needs to be done at desctruction time
+   // (e.g. close files, deallocate resources etc.)
+
+}
+
+//
+// member functions
+//
+
+// ------------ methods for beginning/end "Interactive" ------------
+// --------------------------- init method -------------------------
+void
+BigNTuple::init( void )          // anal1 "Interactive"
+{
+   report( DEBUG, kFacilityString ) << "here in init()" << endl;
+
+   // do any initialization here based on Parameter Input by User
+   // (e.g. run expensive algorithms that are based on parameters
+   //  specified by user at run-time)
+
+}
+
+// -------------------- terminate method ----------------------------
+void
+BigNTuple::terminate( void )     // anal5 "Interactive"
+{
+   report( DEBUG, kFacilityString ) << "here in terminate()" << endl;
+
+   // do anything here BEFORE New Parameter Change
+   // (e.g. write out result based on parameters from user-input)
+ 
+}
+
+const double cosmic_energy_low = 0.210-0.060;
+const double cosmic_energy_high = 0.210+0.060;
+
+const double cosmic_phi0diff_low = 3.1415926-0.005;
+const double cosmic_phi0diff_high = 3.1415926+0.005;
+
+const double cosmic_d0sum_low = -0.0005;
+const double cosmic_d0sum_high = 0.0005;
+		    
+const double cosmic_z0diff_low = -0.001;
+const double cosmic_z0diff_high = 0.001;
+		    
+const double cosmic_cotThetadiff_low = -0.015;
+const double cosmic_cotThetadiff_high = 0.015;
+
+const char* ntuple_labels[BigNTuple::kEntries] = {
+   "w_z0",
+   "w_d0",
+   "charge",
+   "ch_px",
+   "ch_py",
+   "ch_pz",
+   "n_px",
+   "n_py",
+   "n_pz",
+   "num_sh",
+   "num_un",
+   "num_tr",
+   "tot_sh_e",
+   "max_sh_e",
+   "tot_un_e",
+   "max_un_e",
+   "tot_tr_p",
+   "max_tr_p",
+   "tot_tr_e",
+   "max_tr_e",
+   "bw_best",
+   "bw_next",
+   "v_x",
+   "v_y",
+   "v_z",
+   "v_chi2",
+   "v_chi2pT",
+};
+
+// ---------------- standard place to book histograms ---------------
+void
+BigNTuple::hist_book( HIHistoManager& iHistoManager )
+{
+   report( DEBUG, kFacilityString ) << "here in hist_book()" << endl;
+
+   // book your histograms here
+
+   m_cosmic = iHistoManager.ntuple(
+      1, "cosmic", kEntries, 262144, ntuple_labels );
+
+   m_other = iHistoManager.ntuple(
+      2, "other", kEntries, 262144, ntuple_labels );
+
+   m_cosmic_energy = iHistoManager.histogram(
+      100, "cosmic energy", 100, cosmic_energy_low, cosmic_energy_high );
+   m_cosmic_phi0diff = iHistoManager.histogram(
+      200, "cosmic phi0diff", 100, cosmic_phi0diff_low, cosmic_phi0diff_high );
+   m_cosmic_d0sum = iHistoManager.histogram(
+      300, "cosmic d0sum", 100, cosmic_d0sum_low, cosmic_d0sum_high );
+   m_cosmic_z0diff = iHistoManager.histogram(
+      400, "cosmic z0diff", 100, cosmic_z0diff_low, cosmic_z0diff_high );
+   m_cosmic_cotThetadiff = iHistoManager.histogram(
+      500, "cosmic cotThetadiff", 100, cosmic_cotThetadiff_low, cosmic_cotThetadiff_high );
+
+   m_cosmic_un_cosTh = iHistoManager.histogram(
+      600, "cosmic unmatched shower cos(theta)", 100, -1., 1. );
+   m_other_un_cosTh = iHistoManager.histogram(
+      650, "other unmatched shower cos(theta)", 100, -1., 1. );
+}
+
+// --------------------- methods bound to streams -------------------
+ActionBase::ActionResult
+BigNTuple::event( Frame& iFrame )          // anal3 equiv.
+{
+   report( DEBUG, kFacilityString ) << "here in event()" << endl;
+
+   DABoolean isCosmic( false );
+
+   FATable< NavShower > navshowers;
+   extract( iFrame.record( Stream::kEvent ), navshowers );
+   FATable< NavShower >::const_iterator showers_end = navshowers.end();
+
+   FATable< NavTrack > navtracks;
+   extract( iFrame.record( Stream::kEvent ), navtracks );
+   FATable< NavTrack >::const_iterator tracks_end = navtracks.end();
+
+   FAItem< TrackletBunchDecision > bunchDecision;
+   if ( m_getBunchData.value() )
+      extract( iFrame.record( Stream::kEvent ), bunchDecision );
+
+   FAItem< EventVertex > eventVertex;
+   if ( navtracks.size() > 2 )
+      extract( iFrame.record( Stream::kEvent ), eventVertex );
+
+   if ( m_lookForCosmics.value() )
+      if ( navtracks.size() == 2 ) {
+
+	 FATable< MuTrack > mutracks;
+	 extract( iFrame.record( Stream::kEvent ), mutracks );
+
+	 if ( mutracks.size() == 2 ) {
+
+	    FATable< MuTrack >::const_iterator secondMu = mutracks.begin();
+	    FATable< MuTrack >::const_iterator firstMu = secondMu;
+	    secondMu++;
+
+	    if ( firstMu->dpthmu() > 3.  &&
+		 secondMu->dpthmu() > 3.     ) {
+
+	       FATable< NavTrack >::const_iterator secondNav = navtracks.begin();
+	       FATable< NavTrack >::const_iterator firstNav = secondNav;
+	       secondNav++;
+
+	       if ( ! firstNav->pionQuality()->fitAbort()  &&
+		    ! secondNav->pionQuality()->fitAbort()     ) {
+
+		  if ( ! firstNav->seedQuality()->originUsed()  &&
+		       ! secondNav->seedQuality()->originUsed()     ) {
+
+		     int suspicious_showers( 0 );
+		     double suspicious_energy[2];
+		     for ( FATable< NavShower >::const_iterator shower_iter = navshowers.begin();
+			   shower_iter != showers_end;
+			   shower_iter++ ) {
+
+			double energy( shower_iter->attributes().energy() );
+
+			if ( cosmic_energy_low < energy && energy < cosmic_energy_high  &&
+			     ! shower_iter->attributes().hot()                          &&
+			     shower_iter->trackMatches().size() == 1                       ) {
+
+			   if ( suspicious_showers < 2 )
+			      suspicious_energy[ suspicious_showers ] = energy;
+			   suspicious_showers++;
+
+			}
+		     } // end loop over showers
+
+		     if ( suspicious_showers == 2 ) {
+
+			FAItem< TRHelixFit > firstHelix = firstNav->pionHelix();
+			FAItem< TRHelixFit > secondHelix = secondNav->pionHelix();
+
+			double phi0diff( firstHelix->phi0() - secondHelix->phi0() );
+			if ( phi0diff < 0. ) phi0diff *= -1.;
+			double d0sum( firstHelix->d0() + secondHelix->d0() );
+			double z0diff( firstHelix->z0() - secondHelix->z0() );
+			double cotThetadiff( firstHelix->cotTheta() + secondHelix->cotTheta() );
+
+			report( DEBUG, kFacilityString ) << "energy1 = " << suspicious_energy[0] << endl;
+			report( DEBUG, kFacilityString ) << "energy2 = " << suspicious_energy[1] << endl;
+			report( DEBUG, kFacilityString ) << "phi0diff = " << phi0diff << endl;
+			report( DEBUG, kFacilityString ) << "d0sum = " << d0sum << endl;
+			report( DEBUG, kFacilityString ) << "z0diff = " << z0diff << endl;
+			report( DEBUG, kFacilityString ) << "cotThetadiff = " << cotThetadiff << endl;
+
+			if ( cosmic_phi0diff_low < phi0diff         &&  phi0diff < cosmic_phi0diff_high         &&
+			     cosmic_d0sum_low < d0sum               &&  d0sum < cosmic_d0sum_high               &&
+			     cosmic_z0diff_low < z0diff             &&  z0diff < cosmic_z0diff_high             &&
+			     cosmic_cotThetadiff_low < cotThetadiff && cotThetadiff < cosmic_cotThetadiff_high     ) {
+
+			   isCosmic = true;
+
+			   m_cosmic_energy->fill( suspicious_energy[0] );
+			   m_cosmic_energy->fill( suspicious_energy[1] );
+			   m_cosmic_phi0diff->fill( phi0diff );
+			   m_cosmic_d0sum->fill( d0sum );
+			   m_cosmic_z0diff->fill( z0diff );
+			   m_cosmic_cotThetadiff->fill( cotThetadiff );
+
+			} } } } } } } // end tests for isCosmic
+
+   float v[kEntries];
+   for ( int i = 0;  i < kEntries;  i++ ) v[i] = 0.;
+   
+   double w_z0_denom( 0. );
+   double w_d0_denom( 0. );
+
+   // track loop
+   for ( FATable< NavTrack >::const_iterator track_iter = navtracks.begin();
+	 track_iter != tracks_end;
+	 track_iter++ )
+      if ( ! track_iter->pionQuality()->fitAbort()  &&
+	   ! track_iter->seedQuality()->originUsed()   ) {
+
+	 v[kNumTracks] += 1.;
+
+	 v[kChargedMomX] += track_iter->pionFit()->momentum().x();
+	 v[kChargedMomY] += track_iter->pionFit()->momentum().y();
+	 v[kChargedMomZ] += track_iter->pionFit()->momentum().z();
+
+	 if ( track_iter->pionHelix()->curvature() > 0. )
+	    v[kCharge] += 1.;
+	 else
+	    v[kCharge] -= 1.;
+
+	 report( DEBUG, kFacilityString )
+	    << "hasNullErrorMatrix() = " << track_iter->pionHelix()->hasNullErrorMatrix()
+	    << ", errorMatrix()[ kZ0 ][ kZ0 ] = "
+	    << track_iter->pionHelix()->errorMatrix()( KTHelix::kZ0, KTHelix::kZ0 )
+	    << ", z0 = " << track_iter->pionHelix()->z0() << endl;
+
+	 float z0err2( 1. );
+	 if ( ! track_iter->pionHelix()->hasNullErrorMatrix()  &&
+	      track_iter->pionHelix()->errorMatrix()( KTHelix::kZ0, KTHelix::kZ0 ) > 0. )
+	    z0err2 = track_iter->pionHelix()->errorMatrix()( KTHelix::kZ0, KTHelix::kZ0 );
+
+	 v[kWeightedZ0] += track_iter->pionHelix()->z0() / z0err2;
+	 w_z0_denom += 1. / z0err2;
+
+	 float d0err2( 1. );
+	 if ( ! track_iter->pionHelix()->hasNullErrorMatrix()  &&
+	      track_iter->pionHelix()->errorMatrix()( KTHelix::kD0, KTHelix::kD0 ) > 0. )
+	    d0err2 = track_iter->pionHelix()->errorMatrix()( KTHelix::kD0, KTHelix::kD0 );
+
+	 v[kWeightedD0] += abs( track_iter->pionHelix()->d0() ) / d0err2;
+	 w_d0_denom += 1. / d0err2;
+
+	 v[kTotalTrackMomentum] += track_iter->pionFit()->momentum().mag();
+	 if ( track_iter->pionFit()->momentum().mag() > v[kMaxTrackMomentum] )
+	    v[kMaxTrackMomentum] = track_iter->pionFit()->momentum().mag();
+
+	 v[kTotalTrackEnergy] += track_iter->pionFit()->energy();
+	 if ( track_iter->pionFit()->energy() > v[kMaxTrackEnergy] )
+	    v[kMaxTrackEnergy] = track_iter->pionFit()->energy();
+      } // end loop over tracks
+
+   if ( w_z0_denom != 0. )
+      v[kWeightedZ0] /= w_z0_denom;
+   
+   if ( w_d0_denom != 0. )
+      v[kWeightedD0] /= w_d0_denom;
+   
+   // shower loop
+   for ( FATable< NavShower >::const_iterator shower_iter = navshowers.begin();
+	 shower_iter != showers_end;
+	 shower_iter++ )
+      if ( ( shower_iter->attributes().goodBarrel()  ||
+	     shower_iter->attributes().goodEndcap()     )  &&
+	   ! shower_iter->attributes().hot()                   ) {
+	 const double energy = shower_iter->attributes().energy();
+
+	 v[kNumShowers] += 1.;
+	 v[kTotalShowerEnergy] += energy;
+
+	 if ( energy > v[kMaxShowerEnergy] ) v[kMaxShowerEnergy] = energy;
+
+	 if ( shower_iter->noTrackMatch() ) {
+
+	    v[kNumUnmatched] += 1.;
+	    v[kTotalUnmatchedEnergy] += energy;
+
+	    if ( energy > v[kMaxUnmatchedEnergy] ) v[kMaxUnmatchedEnergy] = energy;
+
+	    v[kNeutralMomX] += shower_iter->attributes().momentum().x();
+	    v[kNeutralMomY] += shower_iter->attributes().momentum().y();
+	    v[kNeutralMomZ] += shower_iter->attributes().momentum().z();
+
+	    if ( m_lookForCosmics.value()  &&  isCosmic )
+	       m_cosmic_un_cosTh->fill( shower_iter->attributes().theta() );
+	    else
+	       m_other_un_cosTh->fill( shower_iter->attributes().theta() );
+
+	 } // end if no track match
+      }
+
+   if ( m_getBunchData.value() )
+      if ( bunchDecision->numberOfTestedBunches() > 0 ) {
+	 v[kBunchWeightBest] = bunchDecision->bestBunchInfo().bweight();
+	 v[kBunchWeightNext] = bunchDecision->bunchInfo( 1 ).bweight();
+      }
+
+   if ( navtracks.size() > 2  &&
+	eventVertex->vertexType() == EventVertex::kGoodEvent ) {
+      v[kVertexX] = eventVertex->vertexPosition().x();
+      v[kVertexY] = eventVertex->vertexPosition().y();
+      v[kVertexZ] = eventVertex->vertexPosition().z();
+      v[kVertexChi2] = eventVertex->vertexChiSquare();
+      v[kVertexChi2perTrack] = ( eventVertex->vertexChiSquare() / 
+				 eventVertex->numTrackFinalVertex() );
+   }
+
+   for ( int j = 0;  j < kEntries;  j++ )
+      report( DEBUG, kFacilityString )
+	 << ntuple_labels[j] << " = " << v[j] << endl;
+
+   // put the variables into the ntuple
+   if ( m_lookForCosmics.value()  &&  isCosmic )
+      m_cosmic->fill( v );
+   else
+      m_other->fill( v );
+
+   return ActionBase::kPassed;
+}
+
+/*
+ActionBase::ActionResult
+BigNTuple::beginRun( Frame& iFrame )       // anal2 equiv.
+{
+   report( DEBUG, kFacilityString ) << "here in beginRun()" << endl;
+
+   return ActionBase::kPassed;
+}
+*/
+
+/*
+ActionBase::ActionResult
+BigNTuple::endRun( Frame& iFrame )         // anal4 equiv.
+{
+   report( DEBUG, kFacilityString ) << "here in endRun()" << endl;
+
+   return ActionBase::kPassed;
+}
+*/
+
+//
+// const member functions
+//
+
+//
+// static member functions
+//
+
+DABoolean BigNTuple::calculate_crossing(
+   KTHelix& a, KTHelix& b,
+   double& x, double& dx, double& y, double& dy )
+{
+   // We'll do this in three stages of changing variables and
+   // propogating uncertainties, so that it doesn't look like a mess
+   // of algebra.
+
+   // This should be a little bit of a speed-up:
+   double sinphi0a( sin(a.phi0()) );
+   double cosphi0a( cos(a.phi0()) );
+   double sinphi0b( sin(b.phi0()) );
+   double cosphi0b( cos(b.phi0()) );
+
+   // Circles are normally expressed in terms of a center and a radius.
+   double Ra( 1. / 2. / a.curvature() );
+   double x0a( -(a.d0() + Ra)*sinphi0a );
+   double y0a( (a.d0() + Ra)*cosphi0a );
+
+   // Calculate all non-zero derivatives
+   double dRa_dcurva( -0.5 / sqr(a.curvature()) );
+
+   double dx0a_dd0a( -sinphi0a );
+   double dx0a_dcurva( -dRa_dcurva * sinphi0a );
+   double dx0a_dphi0a( -(a.d0() + Ra)*cosphi0a );
+
+   double dy0a_dd0a( cosphi0a );
+   double dy0a_dcurva( dRa_dcurva * cosphi0a );
+   double dy0a_dphi0a( -(a.d0() + Ra)*sinphi0a );
+
+   // and now for b...
+   double Rb( 1. / 2. / b.curvature() );
+   double x0b( -(b.d0() + Rb)*sinphi0b );
+   double y0b( (b.d0() + Rb)*cosphi0b );
+
+   // derivatives for b...
+   double dRb_dcurvb( -0.5 / sqr(b.curvature()) );
+
+   double dx0b_dd0b( -sinphi0b );
+   double dx0b_dcurvb( -dRb_dcurvb * sinphi0b );
+   double dx0b_dphi0b( -(b.d0() + Rb)*cosphi0b );
+
+   double dy0b_dd0b( cosphi0b );
+   double dy0b_dcurvb( dRb_dcurvb * cosphi0b );
+   double dy0b_dphi0b( -(b.d0() + Rb)*sinphi0b );
+
+   // The intersection comes from the solution of a quadratic which
+   // has a discriminant. If the discriminant is negative, return
+   // false (no intersection).
+   double preamble( -(pow(Ra,2)*y0a) + pow(Rb,2)*y0a + pow(x0a,2)*y0a - 2*x0a*x0b*y0a
+		    + pow(x0b,2)*y0a + pow(y0a,3) - pow(Ra,2)*y0b + pow(Rb,2)*y0b
+		    + pow(x0a,2)*y0b - 2*x0a*x0b*y0b + pow(x0b,2)*y0b + pow(y0a,2)*y0b
+		    - y0a*pow(y0b,2) - pow(y0b,3) );
+
+   double discriminant( -(pow(x0a - x0b,2)
+			  * (pow(Ra,4) + pow(Rb,4) + pow(x0a,4)
+			     - 4*pow(x0a,3)*x0b + 6*pow(x0a,2)*pow(x0b,2)
+			     - 4*x0a*pow(x0b,3) + pow(x0b,4)
+			     + 2*pow(x0a,2)*pow(y0a,2)
+			     - 4*x0a*x0b*pow(y0a,2)
+			     + 2*pow(x0b,2)*pow(y0a,2) + pow(y0a,4)
+			     + 2*pow(x0a,2)*pow(y0b,2) - 4*x0a*x0b*pow(y0b,2)
+			     + 2*pow(x0b,2)*pow(y0b,2) + 2*pow(y0a,2)*pow(y0b,2)
+			     + 8*y0a*pow(y0b,3) + 5*pow(y0b,4)
+			     - 2*pow(Ra,2)*(pow(Rb,2) + pow(x0a,2) - 2*x0a*x0b
+					    + pow(x0b,2) + pow(y0a,2) - pow(y0b,2))
+			     - 2*pow(Rb,2)*(pow(x0a,2) - 2*x0a*x0b + pow(x0b,2)
+					    + pow(y0a,2) + 4*y0a*y0b + 3*pow(y0b,2))
+			     )));
+   
+   double denominator( 2*(pow(x0a,2) - 2*x0a*x0b + pow(x0b,2) + pow(y0a + y0b,2)) );
+
+   if ( discriminant < 0. ) return false;
+   if ( denominator == 0. ) return false;
+
+   // We'll need derivatives for these to calculate uncertainties.
+   // (Now I defer completely to Mathematica.)
+   double dpreamble_dRa( -2*Ra*(y0a + y0b) );
+   double dpreamble_dx0a( 2*(x0a - x0b)*(y0a + y0b) );
+   double dpreamble_dy0a( 
+      -pow(Ra,2) + pow(Rb,2) + pow(x0a,2) - 2*x0a*x0b + pow(x0b,2) + 
+      3*pow(y0a,2) + 2*y0a*y0b - pow(y0b,2) );
+   double dpreamble_dRb( 2*Rb*(y0a + y0b) );
+   double dpreamble_dx0b( -2*(x0a - x0b)*(y0a + y0b) );
+   double dpreamble_dy0b( 
+      -pow(Ra,2) + pow(Rb,2) + pow(x0a,2) - 2*x0a*x0b + pow(x0b,2) + 
+      pow(y0a,2) - 2*y0a*y0b - 3*pow(y0b,2) );
+
+   double ddiscriminant_dRa( 
+      -(pow(x0a - x0b,2)*(4*pow(Ra,3) - 
+			  4*Ra*(pow(Rb,2) + pow(x0a,2) - 2*x0a*x0b + pow(x0b,2) + 
+				pow(y0a,2) - pow(y0b,2)))) );
+   double ddiscriminant_dx0a( 
+      -2*(x0a - x0b)*(pow(Ra,4) + pow(Rb,4) + 3*pow(x0a,4) - 
+		      12*pow(x0a,3)*x0b + 18*pow(x0a,2)*pow(x0b,2) - 
+		      12*x0a*pow(x0b,3) + 3*pow(x0b,4) + 4*pow(x0a,2)*pow(y0a,2) - 
+		      8*x0a*x0b*pow(y0a,2) + 4*pow(x0b,2)*pow(y0a,2) + pow(y0a,4) + 
+		      4*pow(x0a,2)*pow(y0b,2) - 8*x0a*x0b*pow(y0b,2) + 
+		      4*pow(x0b,2)*pow(y0b,2) + 2*pow(y0a,2)*pow(y0b,2) + 
+		      8*y0a*pow(y0b,3) + 5*pow(y0b,4) - 
+		      2*pow(Ra,2)*(pow(Rb,2) + 2*pow(x0a,2) - 4*x0a*x0b + 
+				   2*pow(x0b,2) + pow(y0a,2) - pow(y0b,2)) - 
+		      2*pow(Rb,2)*(2*pow(x0a,2) - 4*x0a*x0b + 2*pow(x0b,2) + 
+				   pow(y0a,2) + 4*y0a*y0b + 3*pow(y0b,2))) );
+   double ddiscriminant_dy0a( 
+      -4*pow(x0a - x0b,2)*(-(pow(Ra,2)*y0a) + pow(x0a,2)*y0a - 
+			   2*x0a*x0b*y0a + pow(x0b,2)*y0a + pow(y0a,3) + y0a*pow(y0b,2) + 
+			   2*pow(y0b,3) - pow(Rb,2)*(y0a + 2*y0b)) );
+   double ddiscriminant_dRb( 
+      4*Rb*pow(x0a - x0b,2)*(pow(Ra,2) - pow(Rb,2) + pow(x0a,2) - 
+			     2*x0a*x0b + pow(x0b,2) + pow(y0a,2) + 4*y0a*y0b + 3*pow(y0b,2)) );
+   double ddiscriminant_dx0b( 
+      2*(x0a - x0b)*(pow(Ra,4) + pow(Rb,4) + 3*pow(x0a,4) - 
+		     12*pow(x0a,3)*x0b + 18*pow(x0a,2)*pow(x0b,2) - 
+		     12*x0a*pow(x0b,3) + 3*pow(x0b,4) + 4*pow(x0a,2)*pow(y0a,2) - 
+		     8*x0a*x0b*pow(y0a,2) + 4*pow(x0b,2)*pow(y0a,2) + pow(y0a,4) + 
+		     4*pow(x0a,2)*pow(y0b,2) - 8*x0a*x0b*pow(y0b,2) + 
+		     4*pow(x0b,2)*pow(y0b,2) + 2*pow(y0a,2)*pow(y0b,2) + 
+		     8*y0a*pow(y0b,3) + 5*pow(y0b,4) - 
+		     2*pow(Ra,2)*(pow(Rb,2) + 2*pow(x0a,2) - 4*x0a*x0b + 
+				  2*pow(x0b,2) + pow(y0a,2) - pow(y0b,2)) - 
+		     2*pow(Rb,2)*(2*pow(x0a,2) - 4*x0a*x0b + 2*pow(x0b,2) + 
+				  pow(y0a,2) + 4*y0a*y0b + 3*pow(y0b,2))) );
+   double ddiscriminant_dy0b( 
+      -4*pow(x0a - x0b,2)*(-(pow(Rb,2)*(2*y0a + 3*y0b)) + 
+			   y0b*(pow(Ra,2) + pow(x0a,2) - 2*x0a*x0b + pow(x0b,2) + 
+				pow(y0a,2) + 6*y0a*y0b + 5*pow(y0b,2))) );
+
+   double ddenominator_dx0a( 4*(x0a - x0b) );
+   double ddenominator_dy0a( 4*(y0a + y0b) );
+   double ddenominator_dx0b( -4*x0a + 4*x0b );
+   double ddenominator_dy0b( 4*(y0a + y0b) );
+
+   // Now to calculate the uncertainties in terms of tracking parameters.
+   double dpreamble_dcurva( dpreamble_dRa * dRa_dcurva +
+			    dpreamble_dx0a * dx0a_dcurva +
+			    dpreamble_dy0a * dy0a_dcurva );
+   double dpreamble_dd0a(   dpreamble_dx0a * dx0a_dd0a +
+			    dpreamble_dy0a * dy0a_dd0a );
+   double dpreamble_dphi0a( dpreamble_dx0a * dx0a_dphi0a +
+			    dpreamble_dy0a * dy0a_dphi0a );
+   double dpreamble_dcurvb( dpreamble_dRb * dRb_dcurvb +
+			    dpreamble_dx0b * dx0b_dcurvb +
+			    dpreamble_dy0b * dy0b_dcurvb );
+   double dpreamble_dd0b(   dpreamble_dx0b * dx0b_dd0b +
+			    dpreamble_dy0b * dy0b_dd0b );
+   double dpreamble_dphi0b( dpreamble_dx0b * dx0b_dphi0b +
+			    dpreamble_dy0b * dy0b_dphi0b );
+
+   double ddiscriminant_dcurva( ddiscriminant_dRa *  dRa_dcurva +
+				ddiscriminant_dx0a * dx0a_dcurva +
+				ddiscriminant_dy0a * dy0a_dcurva );
+   double ddiscriminant_dd0a(   ddiscriminant_dx0a * dx0a_dd0a +
+				ddiscriminant_dy0a * dy0a_dd0a );
+   double ddiscriminant_phi0a(  ddiscriminant_dx0a * dx0a_dphi0a +
+				ddiscriminant_dy0a * dy0a_dphi0a );
+   double ddiscriminant_dcurvb( ddiscriminant_dRb *  dRb_dcurvb +
+				ddiscriminant_dx0b * dx0b_dcurvb +
+				ddiscriminant_dy0b * dy0b_dcurvb );
+   double ddiscriminant_dd0b(   ddiscriminant_dx0b * dx0b_dd0b +
+				ddiscriminant_dy0b * dy0b_dd0b );
+   double ddiscriminant_phi0b(  ddiscriminant_dx0b * dx0b_dphi0b +
+				ddiscriminant_dy0b * dy0b_dphi0b );
+
+   double ddenominator_dcurva( ddenominator_dx0a * dx0a_dcurva +
+			       ddenominator_dy0a * dy0a_dcurva );
+   double ddenominator_dd0a(   ddenominator_dx0a * dx0a_dd0a +
+			       ddenominator_dy0a * dy0a_dd0a );
+   double ddenominator_phi0a(  ddenominator_dx0a * dx0a_dphi0a +
+			       ddenominator_dy0a * dy0a_dphi0a );
+   double ddenominator_dcurvb( ddenominator_dx0b * dx0b_dcurvb +
+			       ddenominator_dy0b * dy0b_dcurvb );
+   double ddenominator_dd0b(   ddenominator_dx0b * dx0b_dd0b +
+			       ddenominator_dy0b * dy0b_dd0b );
+   double ddenominator_phi0b(  ddenominator_dx0b * dx0b_dphi0b +
+			       ddenominator_dy0b * dy0b_dphi0b );
+
+   // There are two solutions, I should start by calculating them both.
+   double y1( (preamble + sqrt(discriminant)) / denominator );
+   double y2( (preamble - sqrt(discriminant)) / denominator );
+   
+   double dy1_
+
+
+
+
+
+
+
+
+
+}

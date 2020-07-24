@@ -1,0 +1,464 @@
+%!PS-Adobe-1.0
+/$a2psdict 100 dict def
+$a2psdict begin
+% Initialize page description variables.
+/inch {72 mul} bind def
+/landscape false def
+/twinpage false def
+/sheetheight 11 inch def
+/sheetwidth 8.5 inch def
+/margin 1.2 inch def
+/noborder true def
+/noheader true def
+/headersize 0.0 def
+/bodyfontsize 9 def
+/lines 77 def
+/columns 96 def
+/date (Oct  6 2005 13:02:42) def
+%!  PostScript Source Code
+%
+%  File: imag:/users/local/a2ps/header.ps
+%  Created: Tue Nov 29 12:14:02 1988 by miguel@imag (Miguel Santana)
+%  Version: 2.0
+%  Description: PostScript prolog for a2ps ascii to PostScript program.
+% 
+%  Edit History:
+%  - Original version by evan@csli (Evan Kirshenbaum).
+%  - Modified by miguel@imag to:
+%    1) Correct an overflow bug when printing page number 10 (operator
+%	cvs).
+%    2) Define two other variables (sheetwidth, sheetheight) describing
+%	the physical page (by default A4 format).
+%    3) Minor changes (reorganization, comments, etc).
+%  - Modified by tullemans@apolloway.prl.philips.nl
+%    1) Correct stack overflows with regard to operators cvs and copy.
+%       The resulting substrings where in some cases not popped off 
+%       the stack, what can result in a stack overflow.
+%    2) Replaced copypage and erasepage by showpage. Page througput
+%       degrades severely (see red book page 140) on our ps-printer
+%       after printing sheet 16 (i.e. page 8) of a file which was 
+%       actually bigger. For this purpose the definitions of startdoc
+%       and startpage are changed.
+%  - Modified by Tim Clark <T.Clark@uk.ac.warwick> to:
+%    1) Print one page per sheet (portrait) as an option.
+%    2) Reduce size of file name heading, if it's too big.
+%    3) Save and restore PostScript state at begining/end. It now uses
+%	conventional %%Page %%Trailer markers.
+%    4) Print one wide page per sheet in landscape mode as an option.
+%  - Modified by miguel@imag.fr to
+%    1) Add new option to print n copies of a file.
+%    2) Add new option to suppress heading printing.
+%    3) Add new option to suppress page surrounding border printing.
+%    4) Add new option to change font size. Number of lines and columns
+%	are now automatically adjusted, depending on font size and
+%	printing mode used.
+%    5) Minor changes (best layout, usage message, etc).
+%
+
+% Copyright (c) 1988, Miguel Santana, miguel@imag.imag.fr
+%
+% Permission is granted to copy and distribute this file in modified
+% or unmodified form, for noncommercial use, provided (a) this copyright
+% notice is preserved, (b) no attempt is made to restrict redistribution
+% of this file, and (c) this file is not distributed as part of any
+% collection whose redistribution is restricted by a compilation copyright.
+%
+
+
+% General macros.
+/xdef {exch def} bind def
+/getfont {exch findfont exch scalefont} bind def
+
+% Page description variables and inch function are defined by a2ps program.
+
+% Character size for differents fonts.
+   landscape
+   { /filenamefontsize 12 def }
+   { /filenamefontsize 16 def }
+ifelse
+/datefontsize filenamefontsize 0.8 mul def
+/headermargin filenamefontsize 0.25 mul def
+/bodymargin bodyfontsize 0.7 mul def
+
+% Font assignment to differents kinds of "objects"
+/filenamefontname /Helvetica-Bold def
+/stdfilenamefont filenamefontname filenamefontsize getfont def
+/datefont /Helvetica datefontsize getfont def
+/bodyfont /Courier bodyfontsize getfont def
+
+% Logical page attributs (a half of a real page or sheet).
+/pagewidth
+   bodyfont setfont (0) stringwidth pop columns mul bodymargin dup add add
+   def
+/pageheight
+   bodyfontsize lines mul bodymargin dup add add headersize add
+   def
+
+% Coordinates for upper corner of a logical page and for sheet number.
+% Coordinates depend on format mode used.
+% In twinpage mode, coordinate x of upper corner is not the same for left
+% and right pages: upperx is an array of two elements, indexed by sheetside.
+/rightmargin margin 3 div def
+/leftmargin margin 2 mul 3 div def
+/topmargin margin twinpage {3} {2} ifelse div def
+landscape
+{  % Landscape format
+   /uppery rightmargin pageheight add bodymargin add def
+   /sheetnumbery sheetwidth leftmargin pageheight add datefontsize add sub def
+   twinpage
+   {  % Two logical pages
+      /upperx [ topmargin			% upperx for left page
+		dup 2 mul pagewidth add		% upperx for right page
+	      ] def
+      /sheetnumberx sheetheight topmargin sub def
+   }
+   {  /upperx [ topmargin dup ] def
+      /sheetnumberx sheetheight topmargin sub datefontsize sub def
+   }
+   ifelse
+}
+{  % Portrait format
+   /uppery topmargin pageheight add def
+   /upperx [ leftmargin dup ] def
+   /sheetnumberx sheetwidth rightmargin sub datefontsize sub def
+   /sheetnumbery
+	 sheetheight 
+	 topmargin pageheight add datefontsize add headermargin add
+      sub
+      def
+
+}
+ifelse
+
+% Strings used to make easy printing numbers
+/pnum 12 string def
+/empty 12 string def
+
+% Other initializations.
+/datewidth date stringwidth pop def
+/filenameroom
+         pagewidth
+	 filenamefontsize 4 mul datewidth add (Page 999) stringwidth pop add
+      sub
+   def
+
+
+% Function startdoc: initializes printer and global variables.
+/startdoc
+    { /sheetside 0 def			% sheet side that contains current page
+      /sheet 1 def			% sheet number
+   } bind def
+
+% Function newfile: init file name and reset page number for each new file.
+/newfile
+    { cleanup
+      /filename xdef
+      /filenamewidth filename stringwidth pop def
+      /filenamefont
+	 filenamewidth filenameroom gt
+	 {
+	       filenamefontname
+	       filenamefontsize filenameroom mul filenamewidth div
+	    getfont
+	 }
+	 {  stdfilenamefont }
+	 ifelse
+	 def
+      /pagenum 1 def
+    } bind def
+
+% Function printpage: Print a physical page.
+/printpage
+    { /sheetside 0 def
+      twinpage
+      {  noborder not
+	    { sheetnumber }
+	 if
+      }
+      {  noheader noborder not and
+	    { sheetnumber }
+	 if
+      }
+      ifelse
+      showpage 
+%      pagesave restore
+      /sheet sheet 1 add def
+    } bind def
+
+% Function cleanup: terminates printing, flushing last page if necessary.
+/cleanup
+    { twinpage sheetside 1 eq and
+         { printpage }
+      if
+    } bind def
+
+%
+% Function startpage: prints page header and page border and initializes
+% printing of the file lines.
+/startpage
+    { sheetside 0 eq
+	{ % /pagesave save def
+	  landscape
+	    { sheetwidth 0 inch translate	% new coordinates system origin
+	      90 rotate				% landscape format
+	    } if
+	} if
+      noborder not { printborder } if
+      noheader not { printheader } if
+	 upperx sheetside get  bodymargin  add
+	    uppery
+	    bodymargin bodyfontsize add  noheader {0} {headersize} ifelse  add
+	 sub
+      moveto
+      bodyfont setfont
+    } bind def
+
+% Function printheader: prints page header.
+/printheader
+    { upperx sheetside get  uppery headersize sub 1 add  moveto
+      datefont setfont
+      gsave
+        datefontsize headermargin rmoveto
+	date show					% date/hour
+      grestore
+      gsave
+	pagenum pnum cvs pop
+	   pagewidth (Page 999) stringwidth pop sub
+	   headermargin
+	rmoveto
+        (Page ) show pnum show				% page number
+      grestore
+      empty pnum copy pop
+      gsave
+        filenamefont setfont
+	      filenameroom filename stringwidth pop sub 2 div datewidth add
+	      bodymargin 2 mul 
+	   add 
+	   headermargin
+	rmoveto
+        filename show						% file name
+      grestore
+    } bind def
+
+% Function printborder: prints border page.
+/printborder 
+    { upperx sheetside get uppery moveto
+      gsave					% print the four sides
+        pagewidth 0 rlineto			% of the square
+        0 pageheight neg rlineto
+        pagewidth neg 0 rlineto
+        closepath stroke
+      grestore
+      noheader not
+         { 0 headersize neg rmoveto pagewidth 0 rlineto stroke }
+      if
+    } bind def
+
+%
+% Function endpage: adds a sheet number to the page (footnote) and prints
+% the formatted page (physical impression). Activated at the end of each
+% source page (lines reached or FF character).
+/endpage
+   { /pagenum pagenum 1 add def
+     twinpage  sheetside 0 eq  and
+        { /sheetside 1 def }
+        { printpage }
+     ifelse
+   } bind def
+
+% Function sheetnumber: prints the sheet number.
+/sheetnumber
+    { sheetnumberx sheetnumbery moveto
+      datefont setfont
+      sheet pnum cvs
+	 dup stringwidth pop (0) stringwidth pop sub neg 0 rmoveto show
+      empty pnum copy pop
+    } bind def
+
+% Function s: print a source line
+/s  { gsave
+        show
+      grestore
+      0 bodyfontsize neg rmoveto
+    } bind def
+%%EndProlog
+
+/docsave save def
+startdoc
+(nice_peak_list2.txt) newfile
+/sheet 1 def
+%%Page: 1 1
+startpage
+( first two numbers are min, max horizontal separator voltages) s
+( next two are min, max horizontal/hardbend current corrections) s
+( ) s
+( 3S_nov28 -----------------------------------------------------------------------------) s
+(    Wed Nov 28 23:08:04 2001    -5     4,     0     0 STANDARD 3S_ON HEP 77165 -> 77166) s
+(    Wed Nov 28 23:40:44 2001    -2     3,     0     0 STANDARD 3S_ON HEP 77166 -> 77167) s
+(    Thu Nov 29 12:25:39 2001     0     0,     0     0 STANDARD 3S_ON HEP 77167 -> 77170) s
+(    Fri Nov 30 14:27:16 2001   -39     3,     0     0 STANDARD 3S_ON HEP 77170 -> 77195) s
+(    Fri Nov 30 20:58:25 2001    -3    39,     0     0 STANDARD 3S_ON HEP 77195 -> 77170) s
+(    Sat Dec  1 09:47:00 2001    -4     4,  -128     0 STANDARD 3S_ON HEP 77170 -> 77200) s
+(    Sun Dec  2 11:55:38 2001    -7     7,     0     0 STANDARD 3S_ON HEP 77200 -> 77223) s
+(    Sun Dec  2 12:29:46 2001    -6     7,     0     0 STANDARD 3S_ON HEP 77223 -> 77225) s
+(    Sun Dec  2 13:42:49 2001     0     0,     0     0 STANDARD 3S_ON HEP 77225 -> 77226) s
+(    Sun Dec  2 15:13:27 2001    -2     2,     0     0 STANDARD 3S_ON HEP 77226 -> 77228) s
+(    Sun Dec  2 16:50:35 2001     0     0,     0     0 STANDARD 3S_ON HEP 77228 -> 77229) s
+(    Sun Dec  2 16:59:12 2001     0    18,     0     0 STANDARD 3S_ON HEP 77229 -> 77233) s
+(    Sun Dec  2 22:02:29 2001    -1     0,     0     0 STANDARD 3S_ON HEP 77233 -> 77236) s
+(    Sun Dec  2 22:14:47 2001   -25     0,     0     0 STANDARD 3S_ON HEP 77236 -> 77200) s
+(    Mon Dec  3 08:00:15 2001     0     0,  -359     0 STANDARD 3S_ON HEP 77200 -> 77239) s
+( 3S_dec05 -----------------------------------------------------------------------------) s
+(    Fri Dec  7 08:20:08 2001   -23    26,     0     0 STANDARD 3S_ON HEP 77307 -> 77322) s
+(    Fri Dec  7 14:09:26 2001   -14    12,  -249     0 STANDARD 3S_ON HEP 77322 -> 77330) s
+(    Fri Dec  7 15:36:36 2001    -1     2,     0     0 STANDARD 3S_ON HEP 77330 -> 77331) s
+(    Fri Dec  7 17:56:11 2001    -4     4,     0     0 STANDARD 3S_ON HEP 77331 -> 77327) s
+(    Sun Dec  9 13:23:50 2001   -12    70,     0     0 STANDARD 3S_ON HEP 77327 -> 77344) s
+(    Sun Dec  9 14:56:40 2001     0     9,     0     0 STANDARD 3S_ON HEP 77344 -> 77347) s
+(    Sun Dec  9 21:56:04 2001    -8     7,     0     0 STANDARD 3S_ON HEP 77347 -> 77350) s
+( 3S_dec12 -----------------------------------------------------------------------------) s
+(    Thu Dec 13 12:30:53 2001   -16    18,     0     0 STANDARD 3S_ON HEP 77350 -> 77454) s
+(    Thu Dec 13 21:16:52 2001    -5     4,     0     0 STANDARD 3S_ON HEP 77454 -> 77484) s
+(    Thu Dec 13 21:31:25 2001     0     1,     0     0 STANDARD 3S_ON HEP 77484 -> 77485) s
+(    Thu Dec 13 21:40:07 2001     0     0,     0     0 STANDARD 3S_ON HEP 77485 -> 77486) s
+(    Thu Dec 13 21:50:58 2001    -3     2,     0     0 STANDARD 3S_ON HEP 77486 -> 77488) s
+(    Thu Dec 13 22:19:25 2001     0     0,     0     0 STANDARD 3S_ON HEP 77488 -> 77490) s
+(    Thu Dec 13 23:06:23 2001     0     0,     0     0 STANDARD 3S_ON HEP 77490 -> 77491) s
+(    Fri Dec 14 04:10:58 2001    -9     8,     0     0 STANDARD 3S_ON HEP 77491 -> 77495) s
+(    Fri Dec 14 09:52:04 2001    -8     9,     0     0 STANDARD 3S_ON HEP 77495 -> 77491) s
+(    Fri Dec 14 10:23:33 2001   -16    14,     0     0 STANDARD 3S_ON HEP 77491 -> 77498) s
+(    Fri Dec 14 11:26:27 2001    -1     2,     0     0 STANDARD 3S_ON HEP 77498 -> 77499) s
+(    Fri Dec 14 12:29:03 2001    -3     3,     0     0 STANDARD 3S_ON HEP 77499 -> 77500) s
+(    Fri Dec 14 12:56:40 2001     0     0,  -262   262 STANDARD 3S_ON HEP 77500 -> 77502) s
+(    Sat Dec 15 18:56:48 2001     0     0,     0     0 STANDARD 3S_ON HEP 77502 -> 77513) s
+(    Sat Dec 15 20:15:43 2001    -5     0,     0     0 STANDARD 3S_ON HEP 77513 -> 77514) s
+(    Sat Dec 15 20:19:09 2001     0     5,     0     0 STANDARD 3S_ON HEP 77514 -> 77502) s
+( 3S_dec19 -----------------------------------------------------------------------------) s
+(    Fri Dec 21 15:55:01 2001    -4     5,     0     0 STANDARD 3S_ON HEP 77611 -> 77677) s
+(    Fri Dec 21 19:39:56 2001     0     0,     0     0 STANDARD 3S_ON HEP 77677 -> 77712) s
+(    Sat Dec 22 06:40:04 2001    -1     0,     0     0 STANDARD 3S_ON HEP 77712 -> 77713) s
+(    Sat Dec 22 20:21:27 2001   -24     0,     0     0 STANDARD 3S_ON HEP 77713 -> 77720) s
+(    Sun Dec 23 21:16:26 2001     0     0,     0     0 STANDARD 3S_ON HEP 77720 -> 77730) s
+(    Mon Dec 24 11:18:49 2001     0     0,     0     0 STANDARD 3S_ON HEP 77730 -> 77720) s
+(    Mon Dec 24 15:41:51 2001     0     0,     0     0 STANDARD 3S_ON HEP 77720 -> 77730) s
+(    Mon Dec 24 18:44:26 2001    -2     2,     0     0 STANDARD 3S_ON HEP 77730 -> 77764) s
+(    Mon Dec 24 19:19:49 2001    -4     3,     0     0 STANDARD 3S_ON HEP 77764 -> 77770) s
+( 3S_jan02 -----------------------------------------------------------------------------) s
+(    Fri Jan  4 09:38:23 2002    -4     4,     0     0 STANDARD 3S_ON HEP 77893 -> 77958) s
+(    Fri Jan  4 13:26:32 2002    -2     2,     0     0 STANDARD 3S_ON HEP 77958 -> 77968) s
+(    Sat Jan  5 13:51:33 2002    -3     2,     0     0 STANDARD 3S_ON HEP 77968 -> 77973) s
+(    Sun Jan  6 11:00:55 2002   -40     0,   -88   165 STANDARD 3S_ON HEP 77973 -> 77977) s
+(    Sun Jan  6 11:03:32 2002    -1     1,  -127   269 STANDARD 3S_ON HEP 77977 -> 77978) s
+(    Sun Jan  6 13:32:42 2002    -1    40,  -269   127 STANDARD 3S_ON HEP 77978 -> 77973) s
+(    Sun Jan  6 14:14:29 2002    -1     1,  -123   259 STANDARD 3S_ON HEP 77973 -> 77982) s
+( 3S_jan09 -----------------------------------------------------------------------------) s
+(    Thu Jan 10 22:30:29 2002     0     0,     0     0 STANDARD 3S_ON HEP 77982 -> 78156) s
+(    Fri Jan 11 15:26:06 2002    -2     2,     0     0 STANDARD 3S_ON HEP 78156 -> 78158) s
+( ) s
+( 1S_jan30 -----------------------------------------------------------------------------) s
+(    Thu Jan 31 12:34:57 2002     0     0,     0     0 STANDARD 1S_ON HEP 78654 -> 78779) s
+(    Sat Feb  2 05:37:33 2002    -1    22,     0     0 STANDARD 1S_ON HEP 78779 -> 78792) s
+(    Sat Feb  2 06:12:47 2002     0     0,     0     0 STANDARD 1S_ON HEP 78792 -> 78793) s
+( 1S_feb06 -----------------------------------------------------------------------------) s
+(    Fri Feb  8 09:42:07 2002    -5    22,     0     0 STANDARD 1S_ON HEP 78879 -> 78909) s
+(    Fri Feb  8 11:10:03 2002     0     0,     0     0 STANDARD 1S_ON HEP 78909 -> 78910) s
+(    Fri Feb  8 11:21:50 2002    -4     4,   -80   168 STANDARD 1S_ON HEP 78910 -> 78914) s
+(    Fri Feb  8 13:11:38 2002    -1     1,     0     0 STANDARD 1S_ON HEP 78914 -> 78915) s
+(    Fri Feb  8 13:27:08 2002    -1     1,     0     0 STANDARD 1S_ON HEP 78915 -> 78916) s
+( 1S_feb20 -----------------------------------------------------------------------------) s
+endpage
+%%Page: 2 2
+startpage
+(    Fri Feb 22 09:10:34 2002   -12    12,     0     0 STANDARD 1S_ON HEP 79216 -> 79231) s
+(    Fri Feb 22 09:20:10 2002    -2     2,     0     0 STANDARD 1S_ON HEP 79231 -> 79232) s
+(    Fri Feb 22 10:44:37 2002     0     0,     0     0 STANDARD 1S_ON HEP 79232 -> 79233) s
+(    Fri Feb 22 15:27:39 2002     0     0,     0     0 STANDARD 1S_ON HEP 79233 -> 79234) s
+( 1S_feb27 -----------------------------------------------------------------------------) s
+(    Fri Mar  1 10:35:54 2002    -4     4,     0     0 STANDARD 1S_ON HEP 79333 -> 79383) s
+(    Fri Mar  1 12:16:30 2002    -1     1,     0     0 STANDARD 1S_ON HEP 79383 -> 79388) s
+(    Fri Mar  1 15:14:06 2002    -9     0,     0     0 STANDARD 1S_ON HEP 79388 -> 79391) s
+(    Sat Mar  2 11:52:27 2002    -3     3,     0     0 STANDARD 1S_ON HEP 79391 -> 79406) s
+(    Sat Mar  2 13:26:43 2002     0     0,     0     0 STANDARD 1S_ON HEP 79406 -> 79408) s
+(    Sun Mar  3 10:16:51 2002    -6     6,     0     0 STANDARD 1S_ON HEP 79408 -> 79411) s
+(    Sun Mar  3 13:29:41 2002     0     0,     0     0 STANDARD 1S_ON HEP 79411 -> 79413) s
+(    Sun Mar  3 14:45:44 2002     0    34,  -116   216 STANDARD 1S_ON HEP 79413 -> 79415) s
+( 1S_mar06 -----------------------------------------------------------------------------) s
+(    Fri Mar  8 08:59:40 2002     0     0,     0     0 STANDARD 1S_ON HEP 79471 -> 79561) s
+(    Fri Mar  8 09:21:29 2002     0     0,     0     0 STANDARD 1S_ON HEP 79561 -> 79562) s
+(    Fri Mar  8 10:52:30 2002   -10    10,     0     0 STANDARD 1S_ON HEP 79562 -> 79567) s
+(    Fri Mar  8 12:01:43 2002    -4     4,     0     0 STANDARD 1S_ON HEP 79567 -> 79569) s
+(    Fri Mar  8 14:54:01 2002    -2     2,     0     0 STANDARD 1S_ON HEP 79569 -> 79577) s
+(    Fri Mar  8 16:14:35 2002     0     0,     0     0 STANDARD 1S_ON HEP 79577 -> 79578) s
+(    Sat Mar  9 08:46:03 2002    -1     1,     0     0 STANDARD 1S_ON HEP 79578 -> 79580) s
+(    Sat Mar  9 09:06:43 2002    -8     8,     0     0 STANDARD 1S_ON HEP 79580 -> 79581) s
+(    Sat Mar  9 09:09:07 2002    -8     8,     0     0 STANDARD 1S_ON HEP 79581 -> 79580) s
+(    Sat Mar  9 11:36:08 2002     0     0,    -1     0 STANDARD 1S_ON HEP 79580 -> 79585) s
+(    Sat Mar  9 12:08:30 2002    -1     1,     0     0 STANDARD 1S_ON HEP 79585 -> 79587) s
+( 1S_mar13 -----------------------------------------------------------------------------) s
+(    Fri Mar 15 10:04:49 2002   -13    13,     0     0 STANDARD 1S_ON HEP 79607 -> 79745) s
+(    Fri Mar 15 11:34:03 2002    -3     3,     0     0 STANDARD 1S_ON HEP 79745 -> 79746) s
+(    Fri Mar 15 12:45:58 2002     0     0,     0     0 STANDARD 1S_ON HEP 79746 -> 79749) s
+(    Fri Mar 15 14:08:38 2002    -1     1,     0     0 STANDARD 1S_ON HEP 79749 -> 79751) s
+(    Sat Mar 16 11:05:34 2002     0     0,     0     0 STANDARD 1S_ON HEP 79751 -> 79752) s
+(    Sun Mar 17 09:32:29 2002     0     0,     0     0 STANDARD 1S_ON HEP 79752 -> 79755) s
+( 1S_apr10 -----------------------------------------------------------------------------) s
+(    Thu Apr 11 09:11:09 2002   -11    11,     0     0 STANDARD 1S_ON HEP 80409 -> 80329) s
+(    Thu Apr 11 10:54:10 2002    -2     2,     0     0 STANDARD 1S_ON HEP 80329 -> 80500) s
+(    Thu Apr 11 21:35:00 2002    -5     5,     0     0 STANDARD 1S_ON HEP 80500 -> 80507) s
+(    Thu Apr 11 21:35:20 2002    -2     2,     0     0 STANDARD 1S_ON HEP 80507 -> 80508) s
+(    Thu Apr 11 21:51:59 2002    -2     2,     0     0 STANDARD 1S_ON HEP 80508 -> 80507) s
+(    Thu Apr 11 22:47:05 2002    -1     1,     0     0 STANDARD 1S_ON HEP 80507 -> 80510) s
+(    Fri Apr 12 12:56:29 2002     0     0,  -171   319 STANDARD 1S_ON HEP 80510 -> 80511) s
+(    Fri Apr 12 15:20:08 2002     0     0,  -319   171 STANDARD 1S_ON HEP 80511 -> 80510) s
+(    Fri Apr 12 16:39:39 2002     0     0,     0     0 STANDARD 1S_ON HEP 80510 -> 80520) s
+(    Fri Apr 12 18:06:24 2002    -6     6,     0     0 STANDARD 1S_ON HEP 80510 -> 80530) s
+(    Fri Apr 12 18:27:59 2002    -6     6,     0     0 STANDARD 1S_ON HEP 80530 -> 80533) s
+(    Sat Apr 13 16:33:47 2002    -2    26,     0     0 STANDARD 1S_ON HEP 80533 -> 80542) s
+(    Sun Apr 14 14:56:21 2002    -1     1,  -183   342 STANDARD 1S_ON HEP 80542 -> 80552) s
+( ) s
+( 2S_may29 -----------------------------------------------------------------------------) s
+(    Fri May 31 11:06:48 2002    -2     1,     0     0 STANDARD 2S_ON HEP 82454 -> 82614) s
+(    Fri May 31 11:07:10 2002     0     0,     0     0 STANDARD 2S_ON HEP 82614 -> 82615) s
+(    Fri May 31 12:52:39 2002   -10    11,     0     0 STANDARD 2S_ON HEP 82615 -> 82616) s
+(    Fri May 31 17:14:35 2002     0     0,     0     0 STANDARD 2S_ON HEP 82616 -> 82620) s
+(    Fri May 31 19:58:57 2002     0     0,     0     0 STANDARD 2S_ON HEP 82620 -> 82621) s
+(    Sun Jun  2 12:34:43 2002    -4     3,     0     0 STANDARD 2S_ON HEP 82621 -> 82634) s
+( 2S_jun12 -----------------------------------------------------------------------------) s
+(    Thu Jun 13 08:18:21 2002   -16    16,     0     0 STANDARD 2S_ON HEP 82923 -> 82874) s
+(    Fri Jun 14 08:43:31 2002    -3     3,     0     0 STANDARD 2S_ON HEP 82874 -> 83040) s
+(    Fri Jun 14 12:01:19 2002     0     0,     0     0 STANDARD 2S_ON HEP 83040 -> 83040) s
+(    Fri Jun 14 12:48:00 2002     0     0,     0     0 STANDARD 2S_ON HEP 83040 -> 83040) s
+(    Fri Jun 14 14:49:51 2002    -2     4,     0     0 STANDARD 2S_ON HEP 83040 -> 83057) s
+( ) s
+( lattice CESRC_3S_V2) s
+( 3S_nov28     0     0,     0     0) s
+( 3S_dec05  -105     0, -1380   841) s
+( 3S_dec12    -4    79,  -249     0) s
+( 3S_dec19     0   127,  -874   284) s
+( 3S_jan02   -27    14,  -252   871) s
+( 3S_jan09    -6     5,  -123   259) s
+( ) s
+( lattice CESRC_1S_V2) s
+( 1S_jan30     0     0,     0     0) s
+( 1S_feb06    -3    44,     0     0) s
+( 1S_feb20    -5     7,  -254    62) s
+( ) s
+( lattice 1S_V2) s
+( 1S_feb27     0     0,     0     0) s
+( 1S_mar06    -6    25,  -116   216) s
+endpage
+%%Page: 3 3
+startpage
+( 1S_mar13    -3     3,    -1     0) s
+( 1S_apr10    -3    93,  -427   483) s
+( ) s
+( lattice 2S) s
+( 2S_may29     0     0,     0     0) s
+( 2S_jun12    -8     8,   -95    27) s
+( ) s
+( ) s
+endpage
+
+%%Trailer
+cleanup
+docsave restore end

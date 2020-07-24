@@ -1,0 +1,2616 @@
+------- Setting ulimits -------
+core file size (blocks)     0
+data seg size (kbytes)      2097148
+file size (blocks)          unlimited
+open files                  1024
+pipe size (512 bytes)       10
+stack size (kbytes)         2097148
+cpu time (seconds)          unlimited
+max user processes          3941
+virtual memory (kbytes)     unlimited
+ %% INFO-Suez: 
+// -----------------------------------------------------------
+//  Welcome to Suez, the CLEO III data access program         
+// -----------------------------------------------------------
+
+ %% INFO-Suez: $Id: SuezMain.cc,v 1.67 2002/01/03 21:07:26 cdj Exp $
+
+ %% SYSTEM-Interpreter.TclInterpreter: 
+//  For a list of available commands, type "help".              
+//                                                                
+//  Since the command interpreter is based on a Tcl interpreter,  
+//  all Tcl commands are available.                               
+//  For info on tcl: "http://www.scriptics.com/resource/doc"    
+
+ %% SYSTEM-Interpreter.TclInterpreter: 
+// Renaming the following Tcl commands:
+//  (because they collide with Suez commands!)
+// -------------------------------------------
+//  source --> tcl_source
+//  proc   --> tcl_proc
+//  file   --> tcl_file
+
+ %% SYSTEM-Module: added command "summary" from SummaryModule
+ %% SYSTEM-Module: added command "source_format" from SourceFormatMap
+ %% SYSTEM-Module: added command "sink_format" from SinkFormatMap
+ %% SYSTEM-Module: added command "source" from SourceManager
+ %% SYSTEM-Module: added command "stream" from SourceManager
+ %% SYSTEM-Module: added command "sink" from SinkManager
+ %% SYSTEM-Module: added command "default" from DefaultModule
+ %% SYSTEM-Module: added command "prod" from MasterProducer
+ %% SYSTEM-Module: added command "proc" from MasterProcessor
+ %% SYSTEM-Module: added command "file" from FileModule
+ %% SYSTEM-Module: added command "emptysource" from EmptySourceModule
+Suez.test_mc> default prompt off
+off
+Suez.test_mc> exception continueEventLoop on
+on
+Suez.test_mc> module sel HbookHistogramModule
+ %% SYSTEM-Loader: trying to load "HbookHistogramModule"...
+ %% SYSTEM-Module: added command "hbook" from HbookHistogramModule
+Suez.test_mc> hbook file ../rzn/test_mc_10cmcut.rzn
+Suez.test_mc> hbook init
+Suez.test_mc> module sel CorbaModule
+ %% SYSTEM-Loader: trying to load "CorbaModule"...
+ %% SYSTEM-Module: added command "corba" from CorbaModule
+Suez.test_mc> corba init
+Suez.test_mc> module sel RunStatisticsSourceModule
+ %% SYSTEM-Loader: trying to load "RunStatisticsSourceModule"...
+ %% SYSTEM-Module: added command "runstatistics" from RunStatisticsSourceModule
+Suez.test_mc> runstatistics in
+ %% INFO-JobControl.SourceManager: creating Source Name "RunStatistics" 
+Suez.test_mc> module sel ConstantsModule
+ %% SYSTEM-Loader: trying to load "ConstantsModule"...
+ %% SYSTEM-Module: added command "constants" from ConstantsModule
+Suez.test_mc> constants in $env(C3_CONST) meta FieldMap MetaListRetrieval
+ %% INFO-JobControl.SourceManager: creating Source Name "Codi" 
+Suez.test_mc> source_format sel MagFudgeFileSourceFormat
+ %% SYSTEM-Loader: trying to load "MagFudgeFileSourceFormat"...
+Suez.test_mc> file in normal.magfudge
+ %% INFO-JobControl.FileModule: using default streams: magfudge
+ %% INFO-JobControl.SourceManager: creating Source Name "normal" 
+normal
+Suez.test_mc> prod sel NavigationProd
+ %% SYSTEM-Loader: trying to load "NavigationProd"...
+Suez.test_mc> prod sel TrackDeliveryProd
+ %% SYSTEM-Loader: trying to load "TrackDeliveryProd"...
+Suez.test_mc> prod sel C3ccProd
+ %% SYSTEM-Loader: trying to load "C3ccProd"...
+Suez.test_mc> prod sel MagFieldProd
+ %% SYSTEM-Loader: trying to load "MagFieldProd"...
+Suez.test_mc> prod sel DBEventHeaderProd
+ %% SYSTEM-Loader: trying to load "DBEventHeaderProd"...
+Suez.test_mc> prod sel CesrBeamEnergyProd
+ %% SYSTEM-Loader: trying to load "CesrBeamEnergyProd"...
+Suez.test_mc> prod sel EventPropertiesProd
+ %% SYSTEM-Loader: trying to load "EventPropertiesProd"...
+Suez.test_mc> source_format sel PDSSourceFormat
+ %% SYSTEM-Loader: trying to load "PDSSourceFormat"...
+Suez.test_mc> source create pdschain
+ %% INFO-JobControl.SourceManager: creating Source Name "pdschain" 
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121339-E261-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121340-E396-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121343-E315-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121344-E457-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121346-E501-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121347-E401-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121348-E761-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121349-E1635-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121361-E860-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121362-E417-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121365-E1539-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121369-E1109-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121370-E1677-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121373-E664-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121374-E1123-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121375-E944-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121378-E685-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121379-E909-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121381-E1923-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121382-E431-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121384-E805-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121385-E1993-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121387-E2077-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121390-E1721-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121391-E1825-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121394-E1997-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121395-E1892-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121396-E1929-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121397-E1985-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121398-E1979-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121399-E301-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121400-E651-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121401-E755-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121402-E1417-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121406-E2137-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121407-E1904-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121408-E2337-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121409-E2221-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121414-E1161-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121416-E2056-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121418-E351-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121419-E1725-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121420-E2264-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121421-E1373-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121422-E1075-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121424-E323-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121425-E1231-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121426-E977-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121427-E1353-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121428-E389-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121429-E1655-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121430-E860-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121432-E607-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121433-E1305-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121434-E2513-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121435-E1324-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121436-E1812-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121437-E1693-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121441-E289-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121442-E668-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121446-E1203-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121448-E2401-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121449-E2308-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121454-E1672-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121456-E1835-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121458-E2025-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121459-E929-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121474-E464-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121476-E2311-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121477-E2043-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121479-E2049-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121480-E799-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121519-E1733-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121523-E1495-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121525-E304-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121526-E1551-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121527-E2016-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121528-E1856-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121529-E1080-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121530-E1912-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121531-E1723-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121534-E1623-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121535-E2023-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121536-E2025-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121539-E925-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121540-E2037-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121542-E1161-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121543-E669-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121544-E2005-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121545-E2003-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121547-E1400-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121548-E1995-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121549-E2028-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121550-E1991-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121551-E1909-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121552-E899-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121553-E2433-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121554-E2424-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121555-E2493-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121556-E2537-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121557-E2389-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121558-E2656-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121559-E2417-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121560-E475-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121561-E2521-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121563-E2291-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121565-E2141-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121567-E1931-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121568-E1820-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121569-E2568-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121574-E969-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121576-E1819-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121579-E743-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121580-E1224-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121581-E2337-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121582-E316-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121585-E2020-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121588-E713-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121590-E400-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121592-E1779-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121593-E2225-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121595-E1883-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121608-E981-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121609-E1709-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121623-E357-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121624-E2236-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121628-E1719-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121631-E2105-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121633-E1825-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121636-E1792-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121637-E2319-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121638-E2188-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121639-E392-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121640-E2188-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121641-E1792-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121649-E731-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121650-E1433-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121651-E2323-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121652-E2368-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121653-E2053-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121656-E1160-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121678-E777-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121683-E2227-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121684-E2125-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121687-E989-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121688-E1203-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121689-E2443-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121694-E2465-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121698-E1485-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121704-E464-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> file add pdschain /cdat/sol221/disk5/c3mc/data16/cont/output/cont-Jun27_02_MC-MN-1-R121705-E512-pass2.pds event startrun beginrun endrun physics
+pdschain
+Suez.test_mc> proc sel EventTypeFilterProc
+ %% SYSTEM-Loader: trying to load "EventTypeFilterProc"...
+Suez.test_mc> param EventTypeFilterProc Hadron true
+ %% SYSTEM-Suez: DABoolean: true
+Suez.test_mc> proc sel ../build_SunOS/official/shlib/HadronFilterProc
+ %% SYSTEM-Loader: trying to load "../build_SunOS/official/shlib/HadronFilterProc"...
+Suez.test_mc> param HadronFilterProc explicitBeamSpot true
+ %% SYSTEM-Suez: DABoolean: true
+Suez.test_mc> param HadronFilterProc beamX 0.
+ %% SYSTEM-Suez: double: 0
+Suez.test_mc> param HadronFilterProc beamY 0.
+ %% SYSTEM-Suez: double: 0
+Suez.test_mc> # go 889128
+Suez.test_mc> go 100000
+ %% INFO-JobControl.SourceManager: Opened data source "RunStatistics".
+ %% INFO-JobControl.SourceManager: Opened data source "Codi".
+ %% INFO-JobControl.SourceManager: Opened data source "normal".
+ %% INFO-JobControl.SourceManager: Opened data source "pdschain".
+ %% WARNING-HbookHistogram.HbookHistDir: 
+directory name EventTypeFilterProc exceeds hbook size limit of 16
+name has been truncated to EventTypeFilterP
+ %% INFO-Processor.EventTypeFilterProc:  Only passing following events:
+
+        Hadron        
+
+
+ %% SYSTEM-JobControl.SourceManager: Stream "beginrun" can be supplied by more than one source.
+Please advise on which one to use (by number):
+ 1) RunStatistics
+*2) pdschain
+ %% INFO-JobControl.SourceManager: Using pdschain for active streams: beginrun event 
+ %% INFO-JobControl.SourceManager: Defined active streams.
+
+ >> Wed Oct 23 14:06:55 2002 Run:  121339 Event:       1 Stop: event << 
+ %% NOTICE-ConstantsMetaListDelivery.CMLConstantsProxy: DBSuperConductingQuadFieldMap using version 1.2
+
+ >> Wed Oct 23 14:07:06 2002 Run:  121339 Event:     107 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 99 out of 100 which is 99%.
+
+ >> Wed Oct 23 14:07:09 2002 Run:  121339 Event:     210 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 199 out of 200 which is 99.5%.
+
+ >> Wed Oct 23 14:07:19 2002 Run:  121340 Event:      23 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 55 0.000336213 0.00601207 0.00599146 0
+
+ >> Wed Oct 23 14:07:20 2002 Run:  121340 Event:      56 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 298 out of 300 which is 99.3333%.
+
+ >> Wed Oct 23 14:07:21 2002 Run:  121340 Event:      75 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.0222281 -0.00149691 0.0028518 5.6597
+
+ >> Wed Oct 23 14:07:24 2002 Run:  121340 Event:     159 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 397 out of 400 which is 99.25%.
+
+ >> Wed Oct 23 14:07:25 2002 Run:  121340 Event:     187 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.0193314 0.0125045 0.0114856 5.31857
+
+ >> Wed Oct 23 14:07:30 2002 Run:  121340 Event:     248 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 36 0.000178684 0.00276835 0.00270637 0
+
+ >> Wed Oct 23 14:07:30 2002 Run:  121340 Event:     262 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 495 out of 500 which is 99%.
+
+ >> Wed Oct 23 14:07:31 2002 Run:  121340 Event:     316 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 1000 1000 0.0623749 1.71123
+
+ >> Wed Oct 23 14:07:32 2002 Run:  121340 Event:     323 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.019533 -0.0149868 -0.00213302 4.36974
+
+ >> Wed Oct 23 14:07:33 2002 Run:  121340 Event:     363 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 593 out of 600 which is 98.8333%.
+
+ >> Wed Oct 23 14:08:15 2002 Run:  121343 Event:      36 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.011251 -0.0219441 -0.0263574 4.47101
+
+ >> Wed Oct 23 14:08:16 2002 Run:  121343 Event:      59 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.171941 0.13242 0.0247166 3.87176
+
+ >> Wed Oct 23 14:08:16 2002 Run:  121343 Event:      75 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 691 out of 700 which is 98.7143%.
+
+ >> Wed Oct 23 14:08:20 2002 Run:  121343 Event:     180 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 791 out of 800 which is 98.875%.
+
+ >> Wed Oct 23 14:08:22 2002 Run:  121343 Event:     286 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 891 out of 900 which is 99%.
+
+ >> Wed Oct 23 14:09:09 2002 Run:  121344 Event:      85 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 991 out of 1000 which is 99.1%.
+
+ >> Wed Oct 23 14:09:13 2002 Run:  121344 Event:     190 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 1091 out of 1100 which is 99.1818%.
+
+ >> Wed Oct 23 14:09:15 2002 Run:  121344 Event:     257 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.00519396 -0.00321468 -0.00795572 2.88798
+
+ >> Wed Oct 23 14:09:17 2002 Run:  121344 Event:     292 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 1190 out of 1200 which is 99.1667%.
+
+ >> Wed Oct 23 14:09:17 2002 Run:  121344 Event:     315 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.00686569 0.0164437 0.0134188 1.54503
+
+ >> Wed Oct 23 14:09:18 2002 Run:  121344 Event:     319 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.00160477 0.056264 0.030396 1.71257
+
+ >> Wed Oct 23 14:09:20 2002 Run:  121344 Event:     399 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 1288 out of 1300 which is 99.0769%.
+
+ >> Wed Oct 23 14:09:21 2002 Run:  121344 Event:     447 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.00741727 -0.00707421 -0.00890768 3.49751
+
+ >> Wed Oct 23 14:09:43 2002 Run:  121346 Event:      44 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 1387 out of 1400 which is 99.0714%.
+
+ >> Wed Oct 23 14:09:47 2002 Run:  121346 Event:     148 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 1487 out of 1500 which is 99.1333%.
+
+ >> Wed Oct 23 14:09:48 2002 Run:  121346 Event:     156 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0116256 -0.0156588 -0.0153212 2.78927
+
+ >> Wed Oct 23 14:09:51 2002 Run:  121346 Event:     252 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 1586 out of 1600 which is 99.125%.
+
+ >> Wed Oct 23 14:09:54 2002 Run:  121346 Event:     357 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 1686 out of 1700 which is 99.1765%.
+
+ >> Wed Oct 23 14:09:58 2002 Run:  121346 Event:     464 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 1786 out of 1800 which is 99.2222%.
+
+ >> Wed Oct 23 14:10:28 2002 Run:  121347 Event:      67 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 1886 out of 1900 which is 99.2632%.
+
+ >> Wed Oct 23 14:10:29 2002 Run:  121347 Event:      90 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 91 0.014187 0.0319104 0.013789 3.65217
+
+ >> Wed Oct 23 14:10:30 2002 Run:  121347 Event:     112 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.0054594 0.0185952 0.0304379 3.79161
+
+ >> Wed Oct 23 14:10:31 2002 Run:  121347 Event:     151 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.00580547 -0.00263666 -0.00695462 2.3561
+
+ >> Wed Oct 23 14:10:32 2002 Run:  121347 Event:     170 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 1983 out of 2000 which is 99.15%.
+
+ >> Wed Oct 23 14:10:35 2002 Run:  121347 Event:     272 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 2083 out of 2100 which is 99.1905%.
+
+ >> Wed Oct 23 14:10:39 2002 Run:  121347 Event:     378 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 2183 out of 2200 which is 99.2273%.
+
+ >> Wed Oct 23 14:10:39 2002 Run:  121347 Event:     388 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.000433799 0.0182179 0.0173013 5.71893
+
+ >> Wed Oct 23 14:11:36 2002 Run:  121348 Event:      81 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 2282 out of 2300 which is 99.2174%.
+
+ >> Wed Oct 23 14:11:40 2002 Run:  121348 Event:     182 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 2382 out of 2400 which is 99.25%.
+
+ >> Wed Oct 23 14:11:41 2002 Run:  121348 Event:     195 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.00600826 -0.0106555 -0.000710796 0.824358
+
+ >> Wed Oct 23 14:11:41 2002 Run:  121348 Event:     211 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.000912833 0.00832006 -0.0232533 0
+
+ >> Wed Oct 23 14:11:42 2002 Run:  121348 Event:     232 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 7.86073e-05 0.00409406 0.00408274 0
+
+ >> Wed Oct 23 14:11:44 2002 Run:  121348 Event:     288 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 2479 out of 2500 which is 99.16%.
+
+ >> Wed Oct 23 14:11:47 2002 Run:  121348 Event:     371 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.0183528 0.0116287 0.016376 1.39795
+
+ >> Wed Oct 23 14:11:48 2002 Run:  121348 Event:     390 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 2578 out of 2600 which is 99.1538%.
+
+ >> Wed Oct 23 14:11:51 2002 Run:  121348 Event:     466 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 210 0.000176854 0.00592744 0.00671486 0
+
+ >> Wed Oct 23 14:11:53 2002 Run:  121348 Event:     495 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 2677 out of 2700 which is 99.1481%.
+
+ >> Wed Oct 23 14:11:56 2002 Run:  121348 Event:     601 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 2777 out of 2800 which is 99.1786%.
+
+ >> Wed Oct 23 14:12:01 2002 Run:  121348 Event:     706 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.000164094 0.00685558 0.00684083 0
+
+ >> Wed Oct 23 14:12:01 2002 Run:  121348 Event:     710 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 2876 out of 2900 which is 99.1724%.
+
+ >> Wed Oct 23 14:12:54 2002 Run:  121349 Event:      52 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 2976 out of 3000 which is 99.2%.
+
+ >> Wed Oct 23 14:12:57 2002 Run:  121349 Event:     126 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.000980829 0.00251542 0.00272367 2.89492
+
+ >> Wed Oct 23 14:12:58 2002 Run:  121349 Event:     161 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 3075 out of 3100 which is 99.1935%.
+
+ >> Wed Oct 23 14:13:00 2002 Run:  121349 Event:     226 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.000465317 0.00155072 0.0014797 0
+
+ >> Wed Oct 23 14:13:02 2002 Run:  121349 Event:     268 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 3174 out of 3200 which is 99.1875%.
+
+ >> Wed Oct 23 14:13:05 2002 Run:  121349 Event:     373 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 3274 out of 3300 which is 99.2121%.
+
+ >> Wed Oct 23 14:13:09 2002 Run:  121349 Event:     476 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 3374 out of 3400 which is 99.2353%.
+
+ >> Wed Oct 23 14:13:09 2002 Run:  121349 Event:     486 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0334217 -0.0143041 0.0214731 3.78737
+
+ >> Wed Oct 23 14:13:12 2002 Run:  121349 Event:     583 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 3473 out of 3500 which is 99.2286%.
+
+ >> Wed Oct 23 14:13:15 2002 Run:  121349 Event:     688 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 3573 out of 3600 which is 99.25%.
+
+ >> Wed Oct 23 14:13:18 2002 Run:  121349 Event:     772 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.00827232 -0.0108408 -0.0010269 1.44007
+
+ >> Wed Oct 23 14:13:19 2002 Run:  121349 Event:     793 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 3672 out of 3700 which is 99.2432%.
+
+ >> Wed Oct 23 14:13:21 2002 Run:  121349 Event:     899 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 3772 out of 3800 which is 99.2632%.
+
+ >> Wed Oct 23 14:13:26 2002 Run:  121349 Event:    1002 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 3872 out of 3900 which is 99.2821%.
+
+ >> Wed Oct 23 14:13:29 2002 Run:  121349 Event:    1108 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 3972 out of 4000 which is 99.3%.
+
+ >> Wed Oct 23 14:13:32 2002 Run:  121349 Event:    1173 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.000417306 0.020288 0.0201653 3.21744
+
+ >> Wed Oct 23 14:13:33 2002 Run:  121349 Event:    1212 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 4071 out of 4100 which is 99.2927%.
+
+ >> Wed Oct 23 14:13:37 2002 Run:  121349 Event:    1318 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 4171 out of 4200 which is 99.3095%.
+
+ >> Wed Oct 23 14:13:42 2002 Run:  121349 Event:    1422 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 4271 out of 4300 which is 99.3256%.
+
+ >> Wed Oct 23 14:13:43 2002 Run:  121349 Event:    1456 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.000168358 0.00420468 0.0037934 0
+
+ >> Wed Oct 23 14:13:46 2002 Run:  121349 Event:    1526 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 4370 out of 4400 which is 99.3182%.
+
+ >> Wed Oct 23 14:13:49 2002 Run:  121349 Event:    1631 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 4470 out of 4500 which is 99.3333%.
+
+ >> Wed Oct 23 14:14:29 2002 Run:  121361 Event:      42 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.00230402 1000 0.00862047 1.90469
+
+ >> Wed Oct 23 14:14:30 2002 Run:  121361 Event:     104 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 4569 out of 4600 which is 99.3261%.
+
+ >> Wed Oct 23 14:14:31 2002 Run:  121361 Event:     207 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 4669 out of 4700 which is 99.3404%.
+
+ >> Wed Oct 23 14:14:31 2002 Run:  121361 Event:     224 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.00100958 -0.0544556 -0.0406604 3.28259
+
+ >> Wed Oct 23 14:14:32 2002 Run:  121361 Event:     310 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 4768 out of 4800 which is 99.3333%.
+
+ >> Wed Oct 23 14:14:32 2002 Run:  121361 Event:     346 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.0120124 -0.0136809 -0.00134058 2.95035
+
+ >> Wed Oct 23 14:14:33 2002 Run:  121361 Event:     400 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.000258254 0.0257986 0.0253893 0
+
+ >> Wed Oct 23 14:14:33 2002 Run:  121361 Event:     418 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 4866 out of 4900 which is 99.3061%.
+
+ >> Wed Oct 23 14:14:35 2002 Run:  121361 Event:     523 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 4966 out of 5000 which is 99.32%.
+
+ >> Wed Oct 23 14:14:36 2002 Run:  121361 Event:     614 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.000374053 0.0128782 0.0129479 0
+
+ >> Wed Oct 23 14:14:36 2002 Run:  121361 Event:     631 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 5065 out of 5100 which is 99.3137%.
+
+ >> Wed Oct 23 14:14:37 2002 Run:  121361 Event:     669 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.125323 1000 0.0259301 4.71019
+
+ >> Wed Oct 23 14:14:37 2002 Run:  121361 Event:     720 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.00518022 -0.0298642 -0.0225614 2.53425
+
+ >> Wed Oct 23 14:14:37 2002 Run:  121361 Event:     736 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 5163 out of 5200 which is 99.2885%.
+
+ >> Wed Oct 23 14:14:37 2002 Run:  121361 Event:     742 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.00503027 0.0041155 0.00235535 7.46396
+
+ >> Wed Oct 23 14:14:39 2002 Run:  121361 Event:     839 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 5262 out of 5300 which is 99.283%.
+
+ >> Wed Oct 23 14:14:43 2002 Run:  121362 Event:      83 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 5362 out of 5400 which is 99.2963%.
+
+ >> Wed Oct 23 14:14:46 2002 Run:  121362 Event:     187 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 5462 out of 5500 which is 99.3091%.
+
+ >> Wed Oct 23 14:14:47 2002 Run:  121362 Event:     294 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 5562 out of 5600 which is 99.3214%.
+
+ >> Wed Oct 23 14:14:48 2002 Run:  121362 Event:     400 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 5662 out of 5700 which is 99.3333%.
+
+ >> Wed Oct 23 14:14:50 2002 Run:  121362 Event:     403 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.0174045 1000 -0.103778 3.09365
+
+ >> Wed Oct 23 14:14:53 2002 Run:  121365 Event:      11 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.00134224 0.0540165 0.0126345 1.74743
+
+ >> Wed Oct 23 14:14:54 2002 Run:  121365 Event:      39 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.00311798 0.210741 -0.00368895 4.07536
+
+ >> Wed Oct 23 14:14:54 2002 Run:  121365 Event:      92 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 5759 out of 5800 which is 99.2931%.
+
+ >> Wed Oct 23 14:14:55 2002 Run:  121365 Event:     198 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 5859 out of 5900 which is 99.3051%.
+
+ >> Wed Oct 23 14:14:56 2002 Run:  121365 Event:     230 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.000216667 0.0305725 0.0306296 3.10976
+
+ >> Wed Oct 23 14:14:56 2002 Run:  121365 Event:     263 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.0297548 0.015352 -0.00596419 4.31659
+
+ >> Wed Oct 23 14:14:57 2002 Run:  121365 Event:     306 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 5957 out of 6000 which is 99.2833%.
+
+ >> Wed Oct 23 14:14:57 2002 Run:  121365 Event:     349 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0237221 0.0541271 0.013805 1.90065
+
+ >> Wed Oct 23 14:14:57 2002 Run:  121365 Event:     363 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.000335891 -0.0160367 -0.0163726 1.65895
+
+ >> Wed Oct 23 14:14:57 2002 Run:  121365 Event:     371 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.0236988 0.0622101 0.0735911 2.42153
+
+ >> Wed Oct 23 14:14:58 2002 Run:  121365 Event:     413 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 6054 out of 6100 which is 99.2459%.
+
+ >> Wed Oct 23 14:14:58 2002 Run:  121365 Event:     419 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.00790494 0.0180544 0.0130446 6.10113
+
+ >> Wed Oct 23 14:14:59 2002 Run:  121365 Event:     516 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 6153 out of 6200 which is 99.2419%.
+
+ >> Wed Oct 23 14:15:00 2002 Run:  121365 Event:     622 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 6253 out of 6300 which is 99.254%.
+
+ >> Wed Oct 23 14:15:01 2002 Run:  121365 Event:     648 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0126526 0.0173308 0.0106069 2.58843
+
+ >> Wed Oct 23 14:15:01 2002 Run:  121365 Event:     711 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.0168391 -0.0183919 -0.00958545 6.03444
+
+ >> Wed Oct 23 14:15:01 2002 Run:  121365 Event:     724 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 6351 out of 6400 which is 99.2344%.
+
+ >> Wed Oct 23 14:15:03 2002 Run:  121365 Event:     820 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 36 0.00557404 -0.00530212 -0.0107548 6.58323
+
+ >> Wed Oct 23 14:15:03 2002 Run:  121365 Event:     829 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 6450 out of 6500 which is 99.2308%.
+
+ >> Wed Oct 23 14:15:03 2002 Run:  121365 Event:     887 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.0118867 0.0317473 0.0879811 4.50741
+
+ >> Wed Oct 23 14:15:04 2002 Run:  121365 Event:     933 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 6549 out of 6600 which is 99.2273%.
+
+ >> Wed Oct 23 14:15:05 2002 Run:  121365 Event:    1035 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 6649 out of 6700 which is 99.2388%.
+
+ >> Wed Oct 23 14:15:06 2002 Run:  121365 Event:    1136 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 6749 out of 6800 which is 99.25%.
+
+ >> Wed Oct 23 14:15:08 2002 Run:  121365 Event:    1239 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 6849 out of 6900 which is 99.2609%.
+
+ >> Wed Oct 23 14:15:08 2002 Run:  121365 Event:    1272 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.00525444 0.0125691 0.0164215 1.79782
+
+ >> Wed Oct 23 14:15:09 2002 Run:  121365 Event:    1348 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 6948 out of 7000 which is 99.2571%.
+
+ >> Wed Oct 23 14:15:10 2002 Run:  121365 Event:    1430 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.0373669 1000 -0.0154157 3.14801
+
+ >> Wed Oct 23 14:15:10 2002 Run:  121365 Event:    1454 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 7047 out of 7100 which is 99.2535%.
+
+ >> Wed Oct 23 14:15:15 2002 Run:  121369 Event:      16 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 7147 out of 7200 which is 99.2639%.
+
+ >> Wed Oct 23 14:15:15 2002 Run:  121369 Event:      24 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.00941711 0.0118912 0.00186745 6.09509
+
+ >> Wed Oct 23 14:15:16 2002 Run:  121369 Event:     123 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 7246 out of 7300 which is 99.2603%.
+
+ >> Wed Oct 23 14:15:16 2002 Run:  121369 Event:     161 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0231804 -0.0596107 -0.0259702 3.1153
+
+ >> Wed Oct 23 14:15:17 2002 Run:  121369 Event:     222 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.00829099 -0.00123886 -0.00216038 3.88209
+
+ >> Wed Oct 23 14:15:17 2002 Run:  121369 Event:     225 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 7344 out of 7400 which is 99.2432%.
+
+ >> Wed Oct 23 14:15:18 2002 Run:  121369 Event:     330 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 7444 out of 7500 which is 99.2533%.
+
+ >> Wed Oct 23 14:15:18 2002 Run:  121369 Event:     332 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.0127843 0.0331619 0.00721896 5.85702
+
+ >> Wed Oct 23 14:15:19 2002 Run:  121369 Event:     350 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 45 0.00506833 -0.000108537 -0.00433261 2.05584
+
+ >> Wed Oct 23 14:15:20 2002 Run:  121369 Event:     434 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 7542 out of 7600 which is 99.2368%.
+
+ >> Wed Oct 23 14:15:21 2002 Run:  121369 Event:     537 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 7642 out of 7700 which is 99.2468%.
+
+ >> Wed Oct 23 14:15:25 2002 Run:  121369 Event:     595 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.127325 1000 0.00592331 2.02156
+
+ >> Wed Oct 23 14:15:26 2002 Run:  121369 Event:     643 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 7741 out of 7800 which is 99.2436%.
+
+ >> Wed Oct 23 14:15:27 2002 Run:  121369 Event:     699 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.00709123 -0.0296339 -0.0252248 2.0419
+
+ >> Wed Oct 23 14:15:27 2002 Run:  121369 Event:     750 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 7840 out of 7900 which is 99.2405%.
+
+ >> Wed Oct 23 14:15:29 2002 Run:  121369 Event:     856 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 7940 out of 8000 which is 99.25%.
+
+ >> Wed Oct 23 14:15:30 2002 Run:  121369 Event:     961 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 8040 out of 8100 which is 99.2593%.
+
+ >> Wed Oct 23 14:15:31 2002 Run:  121369 Event:    1066 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 8140 out of 8200 which is 99.2683%.
+
+ >> Wed Oct 23 14:15:36 2002 Run:  121370 Event:      60 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 8240 out of 8300 which is 99.2771%.
+
+ >> Wed Oct 23 14:15:37 2002 Run:  121370 Event:     163 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 8340 out of 8400 which is 99.2857%.
+
+ >> Wed Oct 23 14:15:38 2002 Run:  121370 Event:     268 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 8440 out of 8500 which is 99.2941%.
+
+ >> Wed Oct 23 14:15:39 2002 Run:  121370 Event:     299 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0323634 0.0148173 -0.00401551 3.53885
+
+ >> Wed Oct 23 14:15:40 2002 Run:  121370 Event:     373 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 8539 out of 8600 which is 99.2907%.
+
+ >> Wed Oct 23 14:15:40 2002 Run:  121370 Event:     420 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.0207896 -0.00353408 -0.0126124 3.5107
+
+ >> Wed Oct 23 14:15:41 2002 Run:  121370 Event:     476 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 8638 out of 8700 which is 99.2874%.
+
+ >> Wed Oct 23 14:15:42 2002 Run:  121370 Event:     580 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 8738 out of 8800 which is 99.2955%.
+
+ >> Wed Oct 23 14:15:43 2002 Run:  121370 Event:     634 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.00607114 0.0205081 -0.00426788 3.7092
+
+ >> Wed Oct 23 14:15:43 2002 Run:  121370 Event:     654 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.00013234 0.00459777 0.00706691 0
+
+ >> Wed Oct 23 14:15:44 2002 Run:  121370 Event:     683 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 8836 out of 8900 which is 99.2809%.
+
+ >> Wed Oct 23 14:15:45 2002 Run:  121370 Event:     763 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.00895829 0.0286816 0.0199755 4.31422
+
+ >> Wed Oct 23 14:15:45 2002 Run:  121370 Event:     788 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 8935 out of 9000 which is 99.2778%.
+
+ >> Wed Oct 23 14:15:46 2002 Run:  121370 Event:     893 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 9035 out of 9100 which is 99.2857%.
+
+ >> Wed Oct 23 14:15:47 2002 Run:  121370 Event:     921 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.388032 1000 0.0969317 1.69123
+
+ >> Wed Oct 23 14:15:47 2002 Run:  121370 Event:     934 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.224056 1000 -0.0771576 1.71693
+
+ >> Wed Oct 23 14:15:48 2002 Run:  121370 Event:    1002 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 9133 out of 9200 which is 99.2717%.
+
+ >> Wed Oct 23 14:15:48 2002 Run:  121370 Event:    1029 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 7.91502e-05 -0.00809885 -0.0101112 0
+
+ >> Wed Oct 23 14:15:48 2002 Run:  121370 Event:    1062 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 0 1000 1000 -0.00675712 7.8917
+
+ >> Wed Oct 23 14:15:49 2002 Run:  121370 Event:    1106 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 9231 out of 9300 which is 99.2581%.
+
+ >> Wed Oct 23 14:15:50 2002 Run:  121370 Event:    1211 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 9331 out of 9400 which is 99.266%.
+
+ >> Wed Oct 23 14:15:51 2002 Run:  121370 Event:    1266 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.000381639 -0.000992101 -0.00117178 5.43354
+
+ >> Wed Oct 23 14:15:52 2002 Run:  121370 Event:    1320 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 9430 out of 9500 which is 99.2632%.
+
+ >> Wed Oct 23 14:15:52 2002 Run:  121370 Event:    1350 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.00858646 -0.00665181 0.000498882 2.13828
+
+ >> Wed Oct 23 14:15:53 2002 Run:  121370 Event:    1426 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 9529 out of 9600 which is 99.2604%.
+
+ >> Wed Oct 23 14:15:53 2002 Run:  121370 Event:    1464 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.019328 1000 0.109793 3.1956
+
+ >> Wed Oct 23 14:15:53 2002 Run:  121370 Event:    1465 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 91 0.0129547 -0.00132212 0.018335 1.63674
+
+ >> Wed Oct 23 14:15:54 2002 Run:  121370 Event:    1527 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 9627 out of 9700 which is 99.2474%.
+
+ >> Wed Oct 23 14:15:54 2002 Run:  121370 Event:    1531 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.0427917 1000 0.00159449 3.15622
+
+ >> Wed Oct 23 14:15:55 2002 Run:  121370 Event:    1587 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.00122169 1000 -0.0282604 1.71189
+
+ >> Wed Oct 23 14:15:55 2002 Run:  121370 Event:    1608 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 36 0.00713805 -0.00418369 0.00898268 5.12065
+
+ >> Wed Oct 23 14:15:56 2002 Run:  121370 Event:    1633 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 9724 out of 9800 which is 99.2245%.
+
+ >> Wed Oct 23 14:16:00 2002 Run:  121373 Event:      59 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 9824 out of 9900 which is 99.2323%.
+
+ >> Wed Oct 23 14:16:01 2002 Run:  121373 Event:     163 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 9924 out of 10000 which is 99.24%.
+
+ >> Wed Oct 23 14:16:02 2002 Run:  121373 Event:     190 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 55 0.0146733 -0.0517276 -0.0427526 2.44567
+
+ >> Wed Oct 23 14:16:02 2002 Run:  121373 Event:     196 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 36 0.00083582 0.0995482 -0.0209267 3.59687
+
+ >> Wed Oct 23 14:16:03 2002 Run:  121373 Event:     270 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 10022 out of 10100 which is 99.2277%.
+
+ >> Wed Oct 23 14:16:04 2002 Run:  121373 Event:     376 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 10122 out of 10200 which is 99.2353%.
+
+ >> Wed Oct 23 14:16:05 2002 Run:  121373 Event:     481 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 10222 out of 10300 which is 99.2427%.
+
+ >> Wed Oct 23 14:16:06 2002 Run:  121373 Event:     582 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 10322 out of 10400 which is 99.25%.
+
+ >> Wed Oct 23 14:16:11 2002 Run:  121374 Event:      26 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 10422 out of 10500 which is 99.2571%.
+
+ >> Wed Oct 23 14:16:11 2002 Run:  121374 Event:      53 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.000525684 -0.0121757 -0.0137629 0
+
+ >> Wed Oct 23 14:16:12 2002 Run:  121374 Event:     127 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 10521 out of 10600 which is 99.2547%.
+
+ >> Wed Oct 23 14:16:13 2002 Run:  121374 Event:     234 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 10621 out of 10700 which is 99.2617%.
+
+ >> Wed Oct 23 14:16:15 2002 Run:  121374 Event:     340 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 10721 out of 10800 which is 99.2685%.
+
+ >> Wed Oct 23 14:16:15 2002 Run:  121374 Event:     347 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.000531837 0.00367178 0.00361587 3.37891
+
+ >> Wed Oct 23 14:16:16 2002 Run:  121374 Event:     444 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 10820 out of 10900 which is 99.2661%.
+
+ >> Wed Oct 23 14:16:17 2002 Run:  121374 Event:     523 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.000175435 0.0034762 0.00355731 2.21977
+
+ >> Wed Oct 23 14:16:17 2002 Run:  121374 Event:     549 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 10919 out of 11000 which is 99.2636%.
+
+ >> Wed Oct 23 14:16:19 2002 Run:  121374 Event:     649 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0406863 0.126274 0.0139009 0.999644
+
+ >> Wed Oct 23 14:16:19 2002 Run:  121374 Event:     655 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 11018 out of 11100 which is 99.2613%.
+
+ >> Wed Oct 23 14:16:20 2002 Run:  121374 Event:     760 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 11118 out of 11200 which is 99.2679%.
+
+ >> Wed Oct 23 14:16:20 2002 Run:  121374 Event:     783 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.022167 -0.0471637 -0.0338496 2.58188
+
+ >> Wed Oct 23 14:16:21 2002 Run:  121374 Event:     865 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 11217 out of 11300 which is 99.2655%.
+
+ >> Wed Oct 23 14:16:23 2002 Run:  121374 Event:     970 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 11317 out of 11400 which is 99.2719%.
+
+ >> Wed Oct 23 14:16:23 2002 Run:  121374 Event:     972 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 9.39625e-05 -0.0117599 -0.0110691 0
+
+ >> Wed Oct 23 14:16:24 2002 Run:  121374 Event:    1065 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.00594218 -0.0121676 -0.00467113 2.8947
+
+ >> Wed Oct 23 14:16:24 2002 Run:  121374 Event:    1076 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 11415 out of 11500 which is 99.2609%.
+
+ >> Wed Oct 23 14:16:28 2002 Run:  121375 Event:       4 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.000433828 0.00281971 0.0025655 2.39897
+
+ >> Wed Oct 23 14:16:28 2002 Run:  121375 Event:      47 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 3.31398 0.783011 0.00631524 2.86842
+
+ >> Wed Oct 23 14:16:28 2002 Run:  121375 Event:      62 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 11513 out of 11600 which is 99.25%.
+
+ >> Wed Oct 23 14:16:30 2002 Run:  121375 Event:     169 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 11613 out of 11700 which is 99.2564%.
+
+ >> Wed Oct 23 14:16:30 2002 Run:  121375 Event:     203 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 5.8795e-05 0.00401056 0.00394818 0
+
+ >> Wed Oct 23 14:16:30 2002 Run:  121375 Event:     206 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0064805 -0.0445369 -0.053933 0.839607
+
+ >> Wed Oct 23 14:16:31 2002 Run:  121375 Event:     274 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 11711 out of 11800 which is 99.2458%.
+
+ >> Wed Oct 23 14:16:31 2002 Run:  121375 Event:     288 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.00471221 1000 -0.0126567 5.28209
+
+ >> Wed Oct 23 14:16:32 2002 Run:  121375 Event:     379 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 11810 out of 11900 which is 99.2437%.
+
+ >> Wed Oct 23 14:16:33 2002 Run:  121375 Event:     468 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0639093 0.079236 -0.0101422 1.62531
+
+ >> Wed Oct 23 14:16:33 2002 Run:  121375 Event:     482 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 11909 out of 12000 which is 99.2417%.
+
+ >> Wed Oct 23 14:16:35 2002 Run:  121375 Event:     561 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.00130606 -0.00934251 -0.0101752 1.97106
+
+ >> Wed Oct 23 14:16:35 2002 Run:  121375 Event:     588 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 12008 out of 12100 which is 99.2397%.
+
+ >> Wed Oct 23 14:16:35 2002 Run:  121375 Event:     611 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.00513825 0.0226032 0.0159312 2.61908
+
+ >> Wed Oct 23 14:16:36 2002 Run:  121375 Event:     694 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 12107 out of 12200 which is 99.2377%.
+
+ >> Wed Oct 23 14:16:36 2002 Run:  121375 Event:     695 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.00259044 0.00501633 0.00318021 7.42525
+
+ >> Wed Oct 23 14:16:36 2002 Run:  121375 Event:     702 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.00798652 -0.0235851 -0.0203129 4.92322
+
+ >> Wed Oct 23 14:16:37 2002 Run:  121375 Event:     728 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.00170629 0.0649927 0.0292564 6.18643
+
+ >> Wed Oct 23 14:16:38 2002 Run:  121375 Event:     796 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 12204 out of 12300 which is 99.2195%.
+
+ >> Wed Oct 23 14:16:38 2002 Run:  121375 Event:     802 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0146984 0.0973587 -0.0323184 2.59174
+
+ >> Wed Oct 23 14:16:38 2002 Run:  121375 Event:     815 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.000350458 0.00861408 0.00881443 2.42166
+
+ >> Wed Oct 23 14:16:39 2002 Run:  121375 Event:     901 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 12302 out of 12400 which is 99.2097%.
+
+ >> Wed Oct 23 14:16:43 2002 Run:  121378 Event:      58 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 12402 out of 12500 which is 99.216%.
+
+ >> Wed Oct 23 14:16:44 2002 Run:  121378 Event:      84 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0287782 -0.235627 0.03997 1.91831
+
+ >> Wed Oct 23 14:16:45 2002 Run:  121378 Event:     165 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 12501 out of 12600 which is 99.2143%.
+
+ >> Wed Oct 23 14:16:45 2002 Run:  121378 Event:     191 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0156067 -0.00935218 -0.00703202 6.33493
+
+ >> Wed Oct 23 14:16:45 2002 Run:  121378 Event:     218 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.00564834 -0.028725 -0.0194633 5.09548
+
+ >> Wed Oct 23 14:16:46 2002 Run:  121378 Event:     275 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 12599 out of 12700 which is 99.2047%.
+
+ >> Wed Oct 23 14:16:46 2002 Run:  121378 Event:     313 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.00557964 -0.0447955 -0.013093 4.59658
+
+ >> Wed Oct 23 14:16:47 2002 Run:  121378 Event:     377 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 12698 out of 12800 which is 99.2031%.
+
+ >> Wed Oct 23 14:16:49 2002 Run:  121378 Event:     487 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 12798 out of 12900 which is 99.2093%.
+
+ >> Wed Oct 23 14:16:50 2002 Run:  121378 Event:     584 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 45 0.000427162 -0.0279685 -0.0512982 0
+
+ >> Wed Oct 23 14:16:50 2002 Run:  121378 Event:     593 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 12897 out of 13000 which is 99.2077%.
+
+ >> Wed Oct 23 14:16:57 2002 Run:  121379 Event:      11 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 12997 out of 13100 which is 99.2137%.
+
+ >> Wed Oct 23 14:16:57 2002 Run:  121379 Event:      49 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.021836 0.0304443 -0.015387 3.61291
+
+ >> Wed Oct 23 14:16:58 2002 Run:  121379 Event:     116 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 13096 out of 13200 which is 99.2121%.
+
+ >> Wed Oct 23 14:17:01 2002 Run:  121379 Event:     224 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 13196 out of 13300 which is 99.218%.
+
+ >> Wed Oct 23 14:17:01 2002 Run:  121379 Event:     230 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0124155 0.023796 0.00299052 0
+
+ >> Wed Oct 23 14:17:02 2002 Run:  121379 Event:     321 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.00504816 -0.00613831 -0.00523061 2.17807
+
+ >> Wed Oct 23 14:17:02 2002 Run:  121379 Event:     325 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 13294 out of 13400 which is 99.209%.
+
+ >> Wed Oct 23 14:17:03 2002 Run:  121379 Event:     397 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.000203014 -0.01073 -0.0107438 0
+
+ >> Wed Oct 23 14:17:03 2002 Run:  121379 Event:     403 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.0217916 0.0943698 0.0255274 1.33943
+
+ >> Wed Oct 23 14:17:04 2002 Run:  121379 Event:     432 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 13392 out of 13500 which is 99.2%.
+
+ >> Wed Oct 23 14:17:05 2002 Run:  121379 Event:     535 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 13492 out of 13600 which is 99.2059%.
+
+ >> Wed Oct 23 14:17:06 2002 Run:  121379 Event:     633 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 45 0.0242454 0.0308305 0.0255667 3.43396
+
+ >> Wed Oct 23 14:17:06 2002 Run:  121379 Event:     639 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 13591 out of 13700 which is 99.2044%.
+
+ >> Wed Oct 23 14:17:06 2002 Run:  121379 Event:     645 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0220743 1000 -0.085333 1.78916
+
+ >> Wed Oct 23 14:17:06 2002 Run:  121379 Event:     659 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.0130231 0.0318998 0.0199582 5.52124
+
+ >> Wed Oct 23 14:17:08 2002 Run:  121379 Event:     748 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 13689 out of 13800 which is 99.1957%.
+
+ >> Wed Oct 23 14:17:09 2002 Run:  121379 Event:     832 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.153208 -0.421332 -0.0158452 1.42354
+
+ >> Wed Oct 23 14:17:09 2002 Run:  121379 Event:     850 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 13788 out of 13900 which is 99.1942%.
+
+ >> Wed Oct 23 14:17:14 2002 Run:  121381 Event:      45 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 13888 out of 14000 which is 99.2%.
+
+ >> Wed Oct 23 14:17:14 2002 Run:  121381 Event:      47 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.0088502 -0.00312137 -0.000331435 2.93257
+
+ >> Wed Oct 23 14:17:14 2002 Run:  121381 Event:      48 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0557541 0.13023 0.0500766 1.16345
+
+ >> Wed Oct 23 14:17:14 2002 Run:  121381 Event:      86 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.00775056 1000 0.00418978 6.31618
+
+ >> Wed Oct 23 14:17:15 2002 Run:  121381 Event:     148 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 13985 out of 14100 which is 99.1844%.
+
+ >> Wed Oct 23 14:17:16 2002 Run:  121381 Event:     253 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 14085 out of 14200 which is 99.1901%.
+
+ >> Wed Oct 23 14:17:17 2002 Run:  121381 Event:     354 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 14185 out of 14300 which is 99.1958%.
+
+ >> Wed Oct 23 14:17:19 2002 Run:  121381 Event:     455 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 14285 out of 14400 which is 99.2014%.
+
+ >> Wed Oct 23 14:17:19 2002 Run:  121381 Event:     508 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.00649793 0.0126396 0.0120902 1.69858
+
+ >> Wed Oct 23 14:17:20 2002 Run:  121381 Event:     555 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.000435028 -0.00566735 -0.00585338 0
+
+ >> Wed Oct 23 14:17:20 2002 Run:  121381 Event:     558 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 14383 out of 14500 which is 99.1931%.
+
+ >> Wed Oct 23 14:17:21 2002 Run:  121381 Event:     639 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0264033 0.0118112 -0.000806037 5.08414
+
+ >> Wed Oct 23 14:17:21 2002 Run:  121381 Event:     662 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 14482 out of 14600 which is 99.1918%.
+
+ >> Wed Oct 23 14:17:22 2002 Run:  121381 Event:     766 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 14582 out of 14700 which is 99.1973%.
+
+ >> Wed Oct 23 14:17:23 2002 Run:  121381 Event:     874 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 14682 out of 14800 which is 99.2027%.
+
+ >> Wed Oct 23 14:17:24 2002 Run:  121381 Event:     882 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0167785 1000 0.0394106 4.55496
+
+ >> Wed Oct 23 14:17:25 2002 Run:  121381 Event:     979 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 14781 out of 14900 which is 99.2013%.
+
+ >> Wed Oct 23 14:17:26 2002 Run:  121381 Event:    1086 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 14881 out of 15000 which is 99.2067%.
+
+ >> Wed Oct 23 14:17:27 2002 Run:  121381 Event:    1165 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0191683 0.0362836 -0.00130341 2.60948
+
+ >> Wed Oct 23 14:17:28 2002 Run:  121381 Event:    1189 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 14980 out of 15100 which is 99.2053%.
+
+ >> Wed Oct 23 14:17:28 2002 Run:  121381 Event:    1235 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.0022443 0.00675123 0.00816909 1.97178
+
+ >> Wed Oct 23 14:17:29 2002 Run:  121381 Event:    1294 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 15079 out of 15200 which is 99.2039%.
+
+ >> Wed Oct 23 14:17:29 2002 Run:  121381 Event:    1302 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0351465 1000 0.0643051 1.43954
+
+ >> Wed Oct 23 14:17:29 2002 Run:  121381 Event:    1324 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.551531 -0.795502 0.00245406 4.28854
+
+ >> Wed Oct 23 14:17:30 2002 Run:  121381 Event:    1402 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 15177 out of 15300 which is 99.1961%.
+
+ >> Wed Oct 23 14:17:31 2002 Run:  121381 Event:    1508 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 15277 out of 15400 which is 99.2013%.
+
+ >> Wed Oct 23 14:17:31 2002 Run:  121381 Event:    1536 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.00690107 0.0486444 0.0262775 1.22482
+
+ >> Wed Oct 23 14:17:32 2002 Run:  121381 Event:    1567 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.0132711 0.0249475 0.0051757 0.833076
+
+ >> Wed Oct 23 14:17:33 2002 Run:  121381 Event:    1613 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 15375 out of 15500 which is 99.1935%.
+
+ >> Wed Oct 23 14:17:35 2002 Run:  121381 Event:    1718 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 15475 out of 15600 which is 99.1987%.
+
+ >> Wed Oct 23 14:17:36 2002 Run:  121381 Event:    1748 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0201583 -0.0836003 -0.0782099 0.795442
+
+ >> Wed Oct 23 14:17:36 2002 Run:  121381 Event:    1755 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.0120239 -0.00941665 -0.011011 3.90477
+
+ >> Wed Oct 23 14:17:37 2002 Run:  121381 Event:    1822 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 15573 out of 15700 which is 99.1911%.
+
+ >> Wed Oct 23 14:17:37 2002 Run:  121381 Event:    1842 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.20795 0.43151 0.00135114 4.09446
+
+ >> Wed Oct 23 14:17:41 2002 Run:  121382 Event:       2 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 15672 out of 15800 which is 99.1899%.
+
+ >> Wed Oct 23 14:17:42 2002 Run:  121382 Event:     108 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 15772 out of 15900 which is 99.195%.
+
+ >> Wed Oct 23 14:17:43 2002 Run:  121382 Event:     211 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 15872 out of 16000 which is 99.2%.
+
+ >> Wed Oct 23 14:17:45 2002 Run:  121382 Event:     315 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 15972 out of 16100 which is 99.205%.
+
+ >> Wed Oct 23 14:17:46 2002 Run:  121382 Event:     416 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 16072 out of 16200 which is 99.2099%.
+
+ >> Wed Oct 23 14:17:50 2002 Run:  121384 Event:      82 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0509903 -0.0348995 0.00841126 5.4641
+
+ >> Wed Oct 23 14:17:50 2002 Run:  121384 Event:      87 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 16171 out of 16300 which is 99.2086%.
+
+ >> Wed Oct 23 14:17:51 2002 Run:  121384 Event:     175 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0051924 -0.0140679 -0.0106111 3.70791
+
+ >> Wed Oct 23 14:17:51 2002 Run:  121384 Event:     191 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 16270 out of 16400 which is 99.2073%.
+
+ >> Wed Oct 23 14:17:52 2002 Run:  121384 Event:     291 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 16370 out of 16500 which is 99.2121%.
+
+ >> Wed Oct 23 14:17:53 2002 Run:  121384 Event:     343 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.00608586 0.00330265 -0.00421702 4.92433
+
+ >> Wed Oct 23 14:17:54 2002 Run:  121384 Event:     398 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 16469 out of 16600 which is 99.2108%.
+
+ >> Wed Oct 23 14:17:55 2002 Run:  121384 Event:     503 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 16569 out of 16700 which is 99.2156%.
+
+ >> Wed Oct 23 14:17:56 2002 Run:  121384 Event:     605 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 16669 out of 16800 which is 99.2202%.
+
+ >> Wed Oct 23 14:17:57 2002 Run:  121384 Event:     707 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 16769 out of 16900 which is 99.2249%.
+
+ >> Wed Oct 23 14:17:58 2002 Run:  121384 Event:     776 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0179555 -0.0673084 -0.00960388 5.3899
+
+ >> Wed Oct 23 14:18:01 2002 Run:  121385 Event:       7 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 16868 out of 17000 which is 99.2235%.
+
+ >> Wed Oct 23 14:18:03 2002 Run:  121385 Event:     111 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 16968 out of 17100 which is 99.2281%.
+
+ >> Wed Oct 23 14:18:04 2002 Run:  121385 Event:     217 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 17068 out of 17200 which is 99.2326%.
+
+ >> Wed Oct 23 14:18:05 2002 Run:  121385 Event:     325 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 17168 out of 17300 which is 99.237%.
+
+ >> Wed Oct 23 14:18:07 2002 Run:  121385 Event:     427 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.0180547 1000 -0.0477945 3.07181
+
+ >> Wed Oct 23 14:18:07 2002 Run:  121385 Event:     428 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 17267 out of 17400 which is 99.2356%.
+
+ >> Wed Oct 23 14:18:08 2002 Run:  121385 Event:     462 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 36 0.000161315 0.000710921 0.000731681 0
+
+ >> Wed Oct 23 14:18:09 2002 Run:  121385 Event:     523 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 1000 1000 -0.0254247 4.60456
+
+ >> Wed Oct 23 14:18:09 2002 Run:  121385 Event:     533 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 17365 out of 17500 which is 99.2286%.
+
+ >> Wed Oct 23 14:18:09 2002 Run:  121385 Event:     568 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.00647143 0.0557529 0.0606155 1.6509
+
+ >> Wed Oct 23 14:18:10 2002 Run:  121385 Event:     636 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 17464 out of 17600 which is 99.2273%.
+
+ >> Wed Oct 23 14:18:10 2002 Run:  121385 Event:     645 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.0642723 -0.137568 -0.00544789 1.28896
+
+ >> Wed Oct 23 14:18:11 2002 Run:  121385 Event:     745 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 17563 out of 17700 which is 99.226%.
+
+ >> Wed Oct 23 14:18:13 2002 Run:  121385 Event:     848 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 17663 out of 17800 which is 99.2303%.
+
+ >> Wed Oct 23 14:18:13 2002 Run:  121385 Event:     927 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.00978111 -0.0200198 -0.0169021 4.45878
+
+ >> Wed Oct 23 14:18:14 2002 Run:  121385 Event:     954 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 17762 out of 17900 which is 99.2291%.
+
+ >> Wed Oct 23 14:18:14 2002 Run:  121385 Event:     973 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.200715 1000 -0.0665646 0.745571
+
+ >> Wed Oct 23 14:18:15 2002 Run:  121385 Event:    1034 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.00277362 0.0771489 0.137359 2.36708
+
+ >> Wed Oct 23 14:18:15 2002 Run:  121385 Event:    1057 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 17860 out of 18000 which is 99.2222%.
+
+ >> Wed Oct 23 14:18:16 2002 Run:  121385 Event:    1102 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.000365967 0.00777644 0.00798195 0
+
+ >> Wed Oct 23 14:18:16 2002 Run:  121385 Event:    1141 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0184165 -0.0246352 -0.0103327 8.11615
+
+ >> Wed Oct 23 14:18:16 2002 Run:  121385 Event:    1159 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 17958 out of 18100 which is 99.2155%.
+
+ >> Wed Oct 23 14:18:16 2002 Run:  121385 Event:    1163 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 1000 1000 0.00871878 1.29112
+
+ >> Wed Oct 23 14:18:17 2002 Run:  121385 Event:    1250 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.0101151 0.00941826 0.00196963 0.984172
+
+ >> Wed Oct 23 14:18:17 2002 Run:  121385 Event:    1263 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 18056 out of 18200 which is 99.2088%.
+
+ >> Wed Oct 23 14:18:19 2002 Run:  121385 Event:    1368 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 18156 out of 18300 which is 99.2131%.
+
+ >> Wed Oct 23 14:18:20 2002 Run:  121385 Event:    1472 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 136 0.000125634 0.00620053 0.006718 0
+
+ >> Wed Oct 23 14:18:20 2002 Run:  121385 Event:    1473 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 18255 out of 18400 which is 99.212%.
+
+ >> Wed Oct 23 14:18:21 2002 Run:  121385 Event:    1561 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0225464 -0.00480523 0.00240076 5.77228
+
+ >> Wed Oct 23 14:18:21 2002 Run:  121385 Event:    1577 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 18354 out of 18500 which is 99.2108%.
+
+ >> Wed Oct 23 14:18:22 2002 Run:  121385 Event:    1681 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 18454 out of 18600 which is 99.2151%.
+
+ >> Wed Oct 23 14:18:24 2002 Run:  121385 Event:    1789 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 18554 out of 18700 which is 99.2193%.
+
+ >> Wed Oct 23 14:18:24 2002 Run:  121385 Event:    1829 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.547089 -0.40045 0.0197067 4.40521
+
+ >> Wed Oct 23 14:18:25 2002 Run:  121385 Event:    1885 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.000290423 0.00390254 0.00392764 2.28258
+
+ >> Wed Oct 23 14:18:25 2002 Run:  121385 Event:    1894 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 18652 out of 18800 which is 99.2128%.
+
+ >> Wed Oct 23 14:18:26 2002 Run:  121385 Event:    1970 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.00929988 -0.0042426 -0.00707977 3.36648
+
+ >> Wed Oct 23 14:18:29 2002 Run:  121387 Event:       6 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 18751 out of 18900 which is 99.2116%.
+
+ >> Wed Oct 23 14:18:29 2002 Run:  121387 Event:      40 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.24154 1000 -0.00984461 5.38435
+
+ >> Wed Oct 23 14:18:29 2002 Run:  121387 Event:      41 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.002565 1000 0.0181158 1.03603
+
+ >> Wed Oct 23 14:18:30 2002 Run:  121387 Event:     110 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 18849 out of 19000 which is 99.2053%.
+
+ >> Wed Oct 23 14:18:32 2002 Run:  121387 Event:     213 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 18949 out of 19100 which is 99.2094%.
+
+ >> Wed Oct 23 14:18:33 2002 Run:  121387 Event:     319 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 19049 out of 19200 which is 99.2135%.
+
+ >> Wed Oct 23 14:18:33 2002 Run:  121387 Event:     355 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.031443 -9.99012e-05 0.00888783 5.02229
+
+ >> Wed Oct 23 14:18:34 2002 Run:  121387 Event:     421 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 19148 out of 19300 which is 99.2124%.
+
+ >> Wed Oct 23 14:18:35 2002 Run:  121387 Event:     527 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 19248 out of 19400 which is 99.2165%.
+
+ >> Wed Oct 23 14:18:37 2002 Run:  121387 Event:     632 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 19348 out of 19500 which is 99.2205%.
+
+ >> Wed Oct 23 14:18:37 2002 Run:  121387 Event:     688 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0484276 -0.0500592 -0.0276104 4.07866
+
+ >> Wed Oct 23 14:18:37 2002 Run:  121387 Event:     706 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.00180779 -0.0238004 -0.0215608 1.65254
+
+ >> Wed Oct 23 14:18:38 2002 Run:  121387 Event:     738 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 19446 out of 19600 which is 99.2143%.
+
+ >> Wed Oct 23 14:18:39 2002 Run:  121387 Event:     822 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.0012328 -0.0201483 -0.0193018 7.12828
+
+ >> Wed Oct 23 14:18:40 2002 Run:  121387 Event:     841 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 19545 out of 19700 which is 99.2132%.
+
+ >> Wed Oct 23 14:18:42 2002 Run:  121387 Event:     945 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 19645 out of 19800 which is 99.2172%.
+
+ >> Wed Oct 23 14:18:42 2002 Run:  121387 Event:    1005 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.0618879 -0.0112239 -0.00933402 4.90357
+
+ >> Wed Oct 23 14:18:43 2002 Run:  121387 Event:    1050 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 19744 out of 19900 which is 99.2161%.
+
+ >> Wed Oct 23 14:18:43 2002 Run:  121387 Event:    1077 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.0219728 0.00549342 -0.00188301 1.59445
+
+ >> Wed Oct 23 14:18:44 2002 Run:  121387 Event:    1154 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.0270112 1000 -0.000537356 2.69961
+
+ >> Wed Oct 23 14:18:44 2002 Run:  121387 Event:    1157 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 19842 out of 20000 which is 99.21%.
+
+ >> Wed Oct 23 14:18:45 2002 Run:  121387 Event:    1253 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 45 0.000214467 0.00709138 0.00779811 0
+
+ >> Wed Oct 23 14:18:45 2002 Run:  121387 Event:    1260 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 19941 out of 20100 which is 99.209%.
+
+ >> Wed Oct 23 14:18:45 2002 Run:  121387 Event:    1266 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.00694655 -0.0309922 -0.023969 2.52696
+
+ >> Wed Oct 23 14:18:47 2002 Run:  121387 Event:    1356 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0306511 0.0248309 0.0179353 2.7582
+
+ >> Wed Oct 23 14:18:47 2002 Run:  121387 Event:    1368 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 20039 out of 20200 which is 99.203%.
+
+ >> Wed Oct 23 14:18:48 2002 Run:  121387 Event:    1476 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 20139 out of 20300 which is 99.2069%.
+
+ >> Wed Oct 23 14:18:50 2002 Run:  121387 Event:    1582 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 20239 out of 20400 which is 99.2108%.
+
+ >> Wed Oct 23 14:18:52 2002 Run:  121387 Event:    1691 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 20339 out of 20500 which is 99.2146%.
+
+ >> Wed Oct 23 14:18:54 2002 Run:  121387 Event:    1781 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.0051439 0.00837486 -0.0269259 1.20467
+
+ >> Wed Oct 23 14:18:54 2002 Run:  121387 Event:    1796 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 20438 out of 20600 which is 99.2136%.
+
+ >> Wed Oct 23 14:18:55 2002 Run:  121387 Event:    1901 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 20538 out of 20700 which is 99.2174%.
+
+ >> Wed Oct 23 14:18:56 2002 Run:  121387 Event:    1968 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.00550408 0.016809 0.0142901 2.04677
+
+ >> Wed Oct 23 14:18:56 2002 Run:  121387 Event:    2003 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 20637 out of 20800 which is 99.2163%.
+
+ >> Wed Oct 23 14:18:57 2002 Run:  121387 Event:    2065 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.00049641 1000 -0.0187869 0.631228
+
+ >> Wed Oct 23 14:18:57 2002 Run:  121387 Event:    2072 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.00662783 -0.0131017 -0.00795561 3.25834
+
+ >> Wed Oct 23 14:19:02 2002 Run:  121390 Event:      34 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 20735 out of 20900 which is 99.2105%.
+
+ >> Wed Oct 23 14:19:03 2002 Run:  121390 Event:     141 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 20835 out of 21000 which is 99.2143%.
+
+ >> Wed Oct 23 14:19:04 2002 Run:  121390 Event:     231 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.000193061 0.00878607 0.00882794 0
+
+ >> Wed Oct 23 14:19:05 2002 Run:  121390 Event:     249 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 20934 out of 21100 which is 99.2133%.
+
+ >> Wed Oct 23 14:19:06 2002 Run:  121390 Event:     355 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 21034 out of 21200 which is 99.217%.
+
+ >> Wed Oct 23 14:19:07 2002 Run:  121390 Event:     416 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 45 3.3869e-05 -0.00237062 -0.0177683 0
+
+ >> Wed Oct 23 14:19:07 2002 Run:  121390 Event:     425 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.00476971 0.00722926 0.00711855 6.31567
+
+ >> Wed Oct 23 14:19:07 2002 Run:  121390 Event:     457 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 21132 out of 21300 which is 99.2113%.
+
+ >> Wed Oct 23 14:19:08 2002 Run:  121390 Event:     564 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 21232 out of 21400 which is 99.215%.
+
+ >> Wed Oct 23 14:19:09 2002 Run:  121390 Event:     668 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 21332 out of 21500 which is 99.2186%.
+
+ >> Wed Oct 23 14:19:10 2002 Run:  121390 Event:     745 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.00216753 0.155234 0.0607437 0.7638
+
+ >> Wed Oct 23 14:19:11 2002 Run:  121390 Event:     776 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 21431 out of 21600 which is 99.2176%.
+
+ >> Wed Oct 23 14:19:14 2002 Run:  121390 Event:     879 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 21531 out of 21700 which is 99.2212%.
+
+ >> Wed Oct 23 14:19:15 2002 Run:  121390 Event:     927 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 36 0.0107057 -0.0218664 -0.00693834 2.26752
+
+ >> Wed Oct 23 14:19:16 2002 Run:  121390 Event:     983 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 21630 out of 21800 which is 99.2202%.
+
+ >> Wed Oct 23 14:19:16 2002 Run:  121390 Event:    1011 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0109594 0.00257352 0.00339478 1.9397
+
+ >> Wed Oct 23 14:19:17 2002 Run:  121390 Event:    1069 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0746453 -0.0990417 0.00139794 2.18471
+
+ >> Wed Oct 23 14:19:17 2002 Run:  121390 Event:    1091 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 21728 out of 21900 which is 99.2146%.
+
+ >> Wed Oct 23 14:19:18 2002 Run:  121390 Event:    1141 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0194437 -0.0203275 -0.00741719 2.2682
+
+ >> Wed Oct 23 14:19:19 2002 Run:  121390 Event:    1195 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 21827 out of 22000 which is 99.2136%.
+
+ >> Wed Oct 23 14:19:20 2002 Run:  121390 Event:    1255 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.00538989 -0.0246672 -0.0219315 3.87686
+
+ >> Wed Oct 23 14:19:21 2002 Run:  121390 Event:    1296 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.00364665 -0.0501404 -0.036474 2.18807
+
+ >> Wed Oct 23 14:19:21 2002 Run:  121390 Event:    1302 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 21925 out of 22100 which is 99.2081%.
+
+ >> Wed Oct 23 14:19:22 2002 Run:  121390 Event:    1328 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 45 0.000404321 0.0055346 0.0055851 0
+
+ >> Wed Oct 23 14:19:24 2002 Run:  121390 Event:    1405 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 22024 out of 22200 which is 99.2072%.
+
+ >> Wed Oct 23 14:19:24 2002 Run:  121390 Event:    1417 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.00827216 -0.00712471 -0.00781593 1.68574
+
+ >> Wed Oct 23 14:19:25 2002 Run:  121390 Event:    1500 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.0781229 -0.0527727 0.00152638 2.0615
+
+ >> Wed Oct 23 14:19:25 2002 Run:  121390 Event:    1508 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 22122 out of 22300 which is 99.2018%.
+
+ >> Wed Oct 23 14:19:26 2002 Run:  121390 Event:    1611 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 22222 out of 22400 which is 99.2054%.
+
+ >> Wed Oct 23 14:19:27 2002 Run:  121390 Event:    1712 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 22322 out of 22500 which is 99.2089%.
+
+ >> Wed Oct 23 14:19:32 2002 Run:  121391 Event:      96 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 22422 out of 22600 which is 99.2124%.
+
+ >> Wed Oct 23 14:19:34 2002 Run:  121391 Event:     206 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 22522 out of 22700 which is 99.2159%.
+
+ >> Wed Oct 23 14:19:35 2002 Run:  121391 Event:     259 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0193941 1000 0.0141049 2.54727
+
+ >> Wed Oct 23 14:19:35 2002 Run:  121391 Event:     311 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 22621 out of 22800 which is 99.2149%.
+
+ >> Wed Oct 23 14:19:37 2002 Run:  121391 Event:     415 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0920649 0.0152954 -0.0120331 2.43751
+
+ >> Wed Oct 23 14:19:37 2002 Run:  121391 Event:     419 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 22720 out of 22900 which is 99.214%.
+
+ >> Wed Oct 23 14:19:38 2002 Run:  121391 Event:     525 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 22820 out of 23000 which is 99.2174%.
+
+ >> Wed Oct 23 14:19:38 2002 Run:  121391 Event:     537 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.00732288 0.0116238 0.033683 4.52297
+
+ >> Wed Oct 23 14:19:39 2002 Run:  121391 Event:     629 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 22919 out of 23100 which is 99.2165%.
+
+ >> Wed Oct 23 14:19:39 2002 Run:  121391 Event:     636 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 45 0.000104036 -0.00193118 -0.000778111 0
+
+ >> Wed Oct 23 14:19:40 2002 Run:  121391 Event:     698 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.00936359 0.0296067 0.0380708 2.21229
+
+ >> Wed Oct 23 14:19:40 2002 Run:  121391 Event:     711 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 1000 1000 0.00503418 5.74591
+
+ >> Wed Oct 23 14:19:40 2002 Run:  121391 Event:     737 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 23016 out of 23200 which is 99.2069%.
+
+ >> Wed Oct 23 14:19:42 2002 Run:  121391 Event:     845 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 23116 out of 23300 which is 99.2103%.
+
+ >> Wed Oct 23 14:19:42 2002 Run:  121391 Event:     850 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0271718 0.056415 0.00691787 0.523335
+
+ >> Wed Oct 23 14:19:43 2002 Run:  121391 Event:     947 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 23215 out of 23400 which is 99.2094%.
+
+ >> Wed Oct 23 14:19:43 2002 Run:  121391 Event:     990 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.00514193 1000 -0.0136839 4.32599
+
+ >> Wed Oct 23 14:19:44 2002 Run:  121391 Event:    1052 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 23314 out of 23500 which is 99.2085%.
+
+ >> Wed Oct 23 14:19:45 2002 Run:  121391 Event:    1106 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 2.38841 -2.09506 0.00623324 1.98427
+
+ >> Wed Oct 23 14:19:46 2002 Run:  121391 Event:    1154 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 23413 out of 23600 which is 99.2076%.
+
+ >> Wed Oct 23 14:19:47 2002 Run:  121391 Event:    1223 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0949776 1000 -0.00557439 1.72211
+
+ >> Wed Oct 23 14:19:48 2002 Run:  121391 Event:    1258 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 23512 out of 23700 which is 99.2068%.
+
+ >> Wed Oct 23 14:19:49 2002 Run:  121391 Event:    1361 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 23612 out of 23800 which is 99.2101%.
+
+ >> Wed Oct 23 14:19:50 2002 Run:  121391 Event:    1451 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 66 0.00731102 0.00421159 0.0185999 1.94518
+
+ >> Wed Oct 23 14:19:50 2002 Run:  121391 Event:    1468 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 23711 out of 23900 which is 99.2092%.
+
+ >> Wed Oct 23 14:19:51 2002 Run:  121391 Event:    1573 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 23811 out of 24000 which is 99.2125%.
+
+ >> Wed Oct 23 14:19:53 2002 Run:  121391 Event:    1676 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 23911 out of 24100 which is 99.2158%.
+
+ >> Wed Oct 23 14:19:54 2002 Run:  121391 Event:    1784 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 24011 out of 24200 which is 99.219%.
+
+ >> Wed Oct 23 14:19:58 2002 Run:  121394 Event:      48 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.00773286 -0.000951677 0.0112626 2.01114
+
+ >> Wed Oct 23 14:19:58 2002 Run:  121394 Event:      63 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 24110 out of 24300 which is 99.2181%.
+
+ >> Wed Oct 23 14:19:59 2002 Run:  121394 Event:     167 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 24210 out of 24400 which is 99.2213%.
+
+ >> Wed Oct 23 14:20:01 2002 Run:  121394 Event:     271 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 24310 out of 24500 which is 99.2245%.
+
+ >> Wed Oct 23 14:20:01 2002 Run:  121394 Event:     349 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.020904 1000 0.0174664 1.46926
+
+ >> Wed Oct 23 14:20:02 2002 Run:  121394 Event:     375 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 24409 out of 24600 which is 99.2236%.
+
+ >> Wed Oct 23 14:20:03 2002 Run:  121394 Event:     479 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 24509 out of 24700 which is 99.2267%.
+
+ >> Wed Oct 23 14:20:04 2002 Run:  121394 Event:     583 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 24609 out of 24800 which is 99.2298%.
+
+ >> Wed Oct 23 14:20:05 2002 Run:  121394 Event:     690 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 24709 out of 24900 which is 99.2329%.
+
+ >> Wed Oct 23 14:20:05 2002 Run:  121394 Event:     692 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 66 3.7989e-05 -0.00372365 -0.00407226 0
+
+ >> Wed Oct 23 14:20:06 2002 Run:  121394 Event:     770 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 36 0.00517299 0.00849615 0.00857193 7.2301
+
+ >> Wed Oct 23 14:20:07 2002 Run:  121394 Event:     791 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 24807 out of 25000 which is 99.228%.
+
+ >> Wed Oct 23 14:20:07 2002 Run:  121394 Event:     800 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0350433 0.00192861 -0.000797035 3.58562
+
+ >> Wed Oct 23 14:20:07 2002 Run:  121394 Event:     828 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.0128743 8.25461e-05 0.0085053 2.89406
+
+ >> Wed Oct 23 14:20:07 2002 Run:  121394 Event:     831 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.0257627 0.0164672 0.0140732 5.50318
+
+ >> Wed Oct 23 14:20:07 2002 Run:  121394 Event:     872 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.00797099 -0.0205311 -0.0225553 4.75523
+
+ >> Wed Oct 23 14:20:08 2002 Run:  121394 Event:     903 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 24903 out of 25100 which is 99.2151%.
+
+ >> Wed Oct 23 14:20:08 2002 Run:  121394 Event:     939 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 1000 1000 -0.0273194 0.24476
+
+ >> Wed Oct 23 14:20:09 2002 Run:  121394 Event:    1004 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 25002 out of 25200 which is 99.2143%.
+
+ >> Wed Oct 23 14:20:10 2002 Run:  121394 Event:    1048 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0169534 0.00589973 -0.00321156 5.23179
+
+ >> Wed Oct 23 14:20:10 2002 Run:  121394 Event:    1112 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 25101 out of 25300 which is 99.2134%.
+
+ >> Wed Oct 23 14:20:12 2002 Run:  121394 Event:    1216 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 25201 out of 25400 which is 99.2165%.
+
+ >> Wed Oct 23 14:20:13 2002 Run:  121394 Event:    1319 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 25301 out of 25500 which is 99.2196%.
+
+ >> Wed Oct 23 14:20:13 2002 Run:  121394 Event:    1375 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.0118513 0.0182899 0.00521457 5.18859
+
+ >> Wed Oct 23 14:20:14 2002 Run:  121394 Event:    1386 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.00016143 0.000159568 4.36622e-05 2.00173
+
+ >> Wed Oct 23 14:20:14 2002 Run:  121394 Event:    1421 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 25399 out of 25600 which is 99.2148%.
+
+ >> Wed Oct 23 14:20:15 2002 Run:  121394 Event:    1484 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.0144015 0.00635638 0.0059976 3.30509
+
+ >> Wed Oct 23 14:20:15 2002 Run:  121394 Event:    1494 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.00973645 0.013101 0.0148985 5.85472
+
+ >> Wed Oct 23 14:20:15 2002 Run:  121394 Event:    1530 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 25497 out of 25700 which is 99.2101%.
+
+ >> Wed Oct 23 14:20:16 2002 Run:  121394 Event:    1635 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 25597 out of 25800 which is 99.2132%.
+
+ >> Wed Oct 23 14:20:19 2002 Run:  121394 Event:    1741 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 25697 out of 25900 which is 99.2162%.
+
+ >> Wed Oct 23 14:20:20 2002 Run:  121394 Event:    1847 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 25797 out of 26000 which is 99.2192%.
+
+ >> Wed Oct 23 14:20:20 2002 Run:  121394 Event:    1849 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.000308423 -0.0127494 -0.012567 1.22616
+
+ >> Wed Oct 23 14:20:22 2002 Run:  121394 Event:    1953 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 25896 out of 26100 which is 99.2184%.
+
+ >> Wed Oct 23 14:20:22 2002 Run:  121394 Event:    1993 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.032577 -0.0737644 -0.0139666 6.2514
+
+ >> Wed Oct 23 14:20:26 2002 Run:  121395 Event:      60 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 25995 out of 26200 which is 99.2176%.
+
+ >> Wed Oct 23 14:20:27 2002 Run:  121395 Event:     162 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 26095 out of 26300 which is 99.2205%.
+
+ >> Wed Oct 23 14:20:27 2002 Run:  121395 Event:     176 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 120 0.00789359 -0.0125223 0.00578776 4.79411
+
+ >> Wed Oct 23 14:20:28 2002 Run:  121395 Event:     270 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 26194 out of 26400 which is 99.2197%.
+
+ >> Wed Oct 23 14:20:30 2002 Run:  121395 Event:     375 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 26294 out of 26500 which is 99.2226%.
+
+ >> Wed Oct 23 14:20:31 2002 Run:  121395 Event:     466 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 6.74183e-05 0.00106716 0.00132895 0
+
+ >> Wed Oct 23 14:20:31 2002 Run:  121395 Event:     485 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 26393 out of 26600 which is 99.2218%.
+
+ >> Wed Oct 23 14:20:32 2002 Run:  121395 Event:     588 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 26493 out of 26700 which is 99.2247%.
+
+ >> Wed Oct 23 14:20:33 2002 Run:  121395 Event:     668 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.0315903 1000 -0.00642794 2.54865
+
+ >> Wed Oct 23 14:20:33 2002 Run:  121395 Event:     693 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 26592 out of 26800 which is 99.2239%.
+
+ >> Wed Oct 23 14:20:35 2002 Run:  121395 Event:     796 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 26692 out of 26900 which is 99.2268%.
+
+ >> Wed Oct 23 14:20:36 2002 Run:  121395 Event:     903 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 26792 out of 27000 which is 99.2296%.
+
+ >> Wed Oct 23 14:20:36 2002 Run:  121395 Event:     907 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 45 0.000155635 -0.00116887 -0.00110251 0
+
+ >> Wed Oct 23 14:20:37 2002 Run:  121395 Event:     989 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.145432 0.107976 -0.014713 1.78292
+
+ >> Wed Oct 23 14:20:37 2002 Run:  121395 Event:    1011 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 26890 out of 27100 which is 99.2251%.
+
+ >> Wed Oct 23 14:20:38 2002 Run:  121395 Event:    1054 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0314149 0.0280694 -0.0187351 5.34546
+
+ >> Wed Oct 23 14:20:38 2002 Run:  121395 Event:    1114 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 26989 out of 27200 which is 99.2243%.
+
+ >> Wed Oct 23 14:20:40 2002 Run:  121395 Event:    1214 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 27089 out of 27300 which is 99.2271%.
+
+ >> Wed Oct 23 14:20:40 2002 Run:  121395 Event:    1276 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0175631 -0.0157389 0.0116507 2.11023
+
+ >> Wed Oct 23 14:20:41 2002 Run:  121395 Event:    1318 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 27188 out of 27400 which is 99.2263%.
+
+ >> Wed Oct 23 14:20:42 2002 Run:  121395 Event:    1428 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 27288 out of 27500 which is 99.2291%.
+
+ >> Wed Oct 23 14:20:43 2002 Run:  121395 Event:    1536 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 27388 out of 27600 which is 99.2319%.
+
+ >> Wed Oct 23 14:20:44 2002 Run:  121395 Event:    1608 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.00222626 1000 0.0335792 1.47884
+
+ >> Wed Oct 23 14:20:44 2002 Run:  121395 Event:    1616 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0204973 0.040949 -0.000264536 1.00896
+
+ >> Wed Oct 23 14:20:44 2002 Run:  121395 Event:    1640 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 27486 out of 27700 which is 99.2274%.
+
+ >> Wed Oct 23 14:20:45 2002 Run:  121395 Event:    1718 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.000118988 0.00398029 0.00379345 0
+
+ >> Wed Oct 23 14:20:46 2002 Run:  121395 Event:    1744 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 27585 out of 27800 which is 99.2266%.
+
+ >> Wed Oct 23 14:20:46 2002 Run:  121395 Event:    1812 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.0237571 1000 -0.0541463 1.64325
+
+ >> Wed Oct 23 14:20:47 2002 Run:  121395 Event:    1822 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.0152748 0.00658882 0.00914578 3.61201
+
+ >> Wed Oct 23 14:20:47 2002 Run:  121395 Event:    1825 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.0205119 -0.0158036 -0.00951552 5.13228
+
+ >> Wed Oct 23 14:20:47 2002 Run:  121395 Event:    1845 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 27682 out of 27900 which is 99.2186%.
+
+ >> Wed Oct 23 14:20:53 2002 Run:  121396 Event:      55 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 27782 out of 28000 which is 99.2214%.
+
+ >> Wed Oct 23 14:20:54 2002 Run:  121396 Event:     157 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 27882 out of 28100 which is 99.2242%.
+
+ >> Wed Oct 23 14:20:55 2002 Run:  121396 Event:     263 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 27982 out of 28200 which is 99.227%.
+
+ >> Wed Oct 23 14:20:56 2002 Run:  121396 Event:     307 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.00855884 0.00457972 -0.0223276 4.77879
+
+ >> Wed Oct 23 14:20:56 2002 Run:  121396 Event:     369 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 28081 out of 28300 which is 99.2261%.
+
+ >> Wed Oct 23 14:20:56 2002 Run:  121396 Event:     378 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 36 0.0543971 0.134533 -0.0316812 1.67722
+
+ >> Wed Oct 23 14:20:58 2002 Run:  121396 Event:     474 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 28180 out of 28400 which is 99.2254%.
+
+ >> Wed Oct 23 14:20:58 2002 Run:  121396 Event:     529 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.0104811 0.0179772 0.00767562 1.13872
+
+ >> Wed Oct 23 14:20:59 2002 Run:  121396 Event:     566 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0153458 0.286373 0.0095267 3.784
+
+ >> Wed Oct 23 14:20:59 2002 Run:  121396 Event:     577 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 28278 out of 28500 which is 99.2211%.
+
+ >> Wed Oct 23 14:21:00 2002 Run:  121396 Event:     682 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 28378 out of 28600 which is 99.2238%.
+
+ >> Wed Oct 23 14:21:01 2002 Run:  121396 Event:     789 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 28478 out of 28700 which is 99.2265%.
+
+ >> Wed Oct 23 14:21:01 2002 Run:  121396 Event:     796 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.000255926 -0.00652055 -0.00667883 0
+
+ >> Wed Oct 23 14:21:02 2002 Run:  121396 Event:     898 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 28577 out of 28800 which is 99.2257%.
+
+ >> Wed Oct 23 14:21:04 2002 Run:  121396 Event:    1005 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 28677 out of 28900 which is 99.2284%.
+
+ >> Wed Oct 23 14:21:05 2002 Run:  121396 Event:    1111 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 28777 out of 29000 which is 99.231%.
+
+ >> Wed Oct 23 14:21:06 2002 Run:  121396 Event:    1216 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 28877 out of 29100 which is 99.2337%.
+
+ >> Wed Oct 23 14:21:07 2002 Run:  121396 Event:    1319 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 28977 out of 29200 which is 99.2363%.
+
+ >> Wed Oct 23 14:21:09 2002 Run:  121396 Event:    1421 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 29077 out of 29300 which is 99.2389%.
+
+ >> Wed Oct 23 14:21:10 2002 Run:  121396 Event:    1524 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 29177 out of 29400 which is 99.2415%.
+
+ >> Wed Oct 23 14:21:10 2002 Run:  121396 Event:    1556 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.521037 0.74524 -0.000821216 5.45478
+
+ >> Wed Oct 23 14:21:11 2002 Run:  121396 Event:    1629 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 29276 out of 29500 which is 99.2407%.
+
+ >> Wed Oct 23 14:21:12 2002 Run:  121396 Event:    1703 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.00995475 -0.0533521 -0.070592 1.19594
+
+ >> Wed Oct 23 14:21:12 2002 Run:  121396 Event:    1733 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 29375 out of 29600 which is 99.2399%.
+
+ >> Wed Oct 23 14:21:13 2002 Run:  121396 Event:    1839 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 29475 out of 29700 which is 99.2424%.
+
+ >> Wed Oct 23 14:21:14 2002 Run:  121396 Event:    1894 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0177773 -0.0219289 -0.00831382 5.39304
+
+ >> Wed Oct 23 14:21:18 2002 Run:  121397 Event:      13 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 29574 out of 29800 which is 99.2416%.
+
+ >> Wed Oct 23 14:21:19 2002 Run:  121397 Event:     115 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 29674 out of 29900 which is 99.2441%.
+
+ >> Wed Oct 23 14:21:20 2002 Run:  121397 Event:     222 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 29774 out of 30000 which is 99.2467%.
+
+ >> Wed Oct 23 14:21:21 2002 Run:  121397 Event:     310 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.000120701 0.002603 0.00214285 0
+
+ >> Wed Oct 23 14:21:21 2002 Run:  121397 Event:     325 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 29873 out of 30100 which is 99.2458%.
+
+ >> Wed Oct 23 14:21:22 2002 Run:  121397 Event:     359 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.0177109 0.00115839 0.0047513 3.44916
+
+ >> Wed Oct 23 14:21:22 2002 Run:  121397 Event:     414 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.0162841 0.00689134 -0.0147053 5.91802
+
+ >> Wed Oct 23 14:21:23 2002 Run:  121397 Event:     428 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 29971 out of 30200 which is 99.2417%.
+
+ >> Wed Oct 23 14:21:24 2002 Run:  121397 Event:     484 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0650457 -0.0776932 0.0154021 1.11166
+
+ >> Wed Oct 23 14:21:24 2002 Run:  121397 Event:     500 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.00948838 -0.00512694 -0.00208814 3.35382
+
+ >> Wed Oct 23 14:21:25 2002 Run:  121397 Event:     530 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 30069 out of 30300 which is 99.2376%.
+
+ >> Wed Oct 23 14:21:27 2002 Run:  121397 Event:     633 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 30169 out of 30400 which is 99.2401%.
+
+ >> Wed Oct 23 14:21:27 2002 Run:  121397 Event:     645 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 1000 1000 -0.00147699 3.04419
+
+ >> Wed Oct 23 14:21:28 2002 Run:  121397 Event:     691 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.363874 1000 0.00677702 3.08977
+
+ >> Wed Oct 23 14:21:28 2002 Run:  121397 Event:     692 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 66 0.000359333 0.00171393 0.00294633 0
+
+ >> Wed Oct 23 14:21:28 2002 Run:  121397 Event:     714 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.00508664 0.0066575 0.0297989 10.2501
+
+ >> Wed Oct 23 14:21:28 2002 Run:  121397 Event:     735 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 30265 out of 30500 which is 99.2295%.
+
+ >> Wed Oct 23 14:21:30 2002 Run:  121397 Event:     839 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 30365 out of 30600 which is 99.232%.
+
+ >> Wed Oct 23 14:21:31 2002 Run:  121397 Event:     921 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.0217777 0.480918 0.0900327 0
+
+ >> Wed Oct 23 14:21:32 2002 Run:  121397 Event:     941 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 30464 out of 30700 which is 99.2313%.
+
+ >> Wed Oct 23 14:21:33 2002 Run:  121397 Event:    1012 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.0406765 -0.0327226 -0.0860937 2.81219
+
+ >> Wed Oct 23 14:21:33 2002 Run:  121397 Event:    1045 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 30563 out of 30800 which is 99.2305%.
+
+ >> Wed Oct 23 14:21:34 2002 Run:  121397 Event:    1103 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0258049 -0.0617787 -0.0764798 2.83114
+
+ >> Wed Oct 23 14:21:34 2002 Run:  121397 Event:    1133 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.00011645 -0.00785694 -0.0079067 0
+
+ >> Wed Oct 23 14:21:35 2002 Run:  121397 Event:    1147 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 30661 out of 30900 which is 99.2265%.
+
+ >> Wed Oct 23 14:21:35 2002 Run:  121397 Event:    1174 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.00179411 1000 0.0372227 3.62139
+
+ >> Wed Oct 23 14:21:36 2002 Run:  121397 Event:    1243 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.0495689 -0.023117 -0.0140177 2.50852
+
+ >> Wed Oct 23 14:21:36 2002 Run:  121397 Event:    1253 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 30759 out of 31000 which is 99.2226%.
+
+ >> Wed Oct 23 14:21:37 2002 Run:  121397 Event:    1309 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.000106795 -0.00270515 -0.00270076 0.805573
+
+ >> Wed Oct 23 14:21:38 2002 Run:  121397 Event:    1359 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 30858 out of 31100 which is 99.2219%.
+
+ >> Wed Oct 23 14:21:38 2002 Run:  121397 Event:    1428 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.000179195 -0.00335412 -0.00365841 0
+
+ >> Wed Oct 23 14:21:39 2002 Run:  121397 Event:    1469 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 30957 out of 31200 which is 99.2212%.
+
+ >> Wed Oct 23 14:21:41 2002 Run:  121397 Event:    1574 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 31057 out of 31300 which is 99.2236%.
+
+ >> Wed Oct 23 14:21:42 2002 Run:  121397 Event:    1680 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 31157 out of 31400 which is 99.2261%.
+
+ >> Wed Oct 23 14:21:44 2002 Run:  121397 Event:    1785 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 31257 out of 31500 which is 99.2286%.
+
+ >> Wed Oct 23 14:21:44 2002 Run:  121397 Event:    1798 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 66 9.62535e-06 -0.0153014 -0.0165062 0
+
+ >> Wed Oct 23 14:21:45 2002 Run:  121397 Event:    1858 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.628576 -0.302869 0.000850029 5.37748
+
+ >> Wed Oct 23 14:21:45 2002 Run:  121397 Event:    1887 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 66 7.39367e-05 -0.0103931 -0.0103552 0
+
+ >> Wed Oct 23 14:21:45 2002 Run:  121397 Event:    1892 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 31354 out of 31600 which is 99.2215%.
+
+ >> Wed Oct 23 14:21:46 2002 Run:  121397 Event:    1964 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.00589109 -0.0128171 -0.00105856 6.71666
+
+ >> Wed Oct 23 14:21:51 2002 Run:  121398 Event:      12 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 31453 out of 31700 which is 99.2208%.
+
+ >> Wed Oct 23 14:21:52 2002 Run:  121398 Event:     114 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 31553 out of 31800 which is 99.2233%.
+
+ >> Wed Oct 23 14:21:54 2002 Run:  121398 Event:     215 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 31653 out of 31900 which is 99.2257%.
+
+ >> Wed Oct 23 14:21:54 2002 Run:  121398 Event:     278 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.000752641 0.003133 0.00333943 4.7048
+
+ >> Wed Oct 23 14:21:55 2002 Run:  121398 Event:     283 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 91 0.0135461 -0.0216818 -0.0159899 3.8435
+
+ >> Wed Oct 23 14:21:55 2002 Run:  121398 Event:     322 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 31751 out of 32000 which is 99.2219%.
+
+ >> Wed Oct 23 14:21:55 2002 Run:  121398 Event:     346 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.0056208 0.00430671 0.0027496 2.27967
+
+ >> Wed Oct 23 14:21:57 2002 Run:  121398 Event:     425 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 31850 out of 32100 which is 99.2212%.
+
+ >> Wed Oct 23 14:21:57 2002 Run:  121398 Event:     433 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.00110149 0.000159143 0.000679632 4.34388
+
+ >> Wed Oct 23 14:21:58 2002 Run:  121398 Event:     450 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 78 0.000210699 0.000531033 0.0014156 0
+
+ >> Wed Oct 23 14:22:00 2002 Run:  121398 Event:     505 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.00272487 0.00952379 0.0107778 5.75767
+
+ >> Wed Oct 23 14:22:00 2002 Run:  121398 Event:     530 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 31947 out of 32200 which is 99.2143%.
+
+ >> Wed Oct 23 14:22:00 2002 Run:  121398 Event:     554 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.00778801 -0.00043685 -0.000679559 3.60523
+
+ >> Wed Oct 23 14:22:01 2002 Run:  121398 Event:     605 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.00991636 -0.0158687 -0.00329182 4.77128
+
+ >> Wed Oct 23 14:22:01 2002 Run:  121398 Event:     639 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 32045 out of 32300 which is 99.2105%.
+
+ >> Wed Oct 23 14:22:03 2002 Run:  121398 Event:     744 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 32145 out of 32400 which is 99.213%.
+
+ >> Wed Oct 23 14:22:04 2002 Run:  121398 Event:     785 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 55 0.0110386 0.0413797 0.014545 4.49541
+
+ >> Wed Oct 23 14:22:04 2002 Run:  121398 Event:     797 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 36 7.95186e-05 -0.00491585 -0.00497067 0
+
+ >> Wed Oct 23 14:22:05 2002 Run:  121398 Event:     850 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 32243 out of 32500 which is 99.2092%.
+
+ >> Wed Oct 23 14:22:05 2002 Run:  121398 Event:     857 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0501976 -0.0594949 0.00231004 1.30977
+
+ >> Wed Oct 23 14:22:06 2002 Run:  121398 Event:     952 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 32342 out of 32600 which is 99.2086%.
+
+ >> Wed Oct 23 14:22:06 2002 Run:  121398 Event:     988 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.0182942 0.0424298 0.00253113 5.70687
+
+ >> Wed Oct 23 14:22:06 2002 Run:  121398 Event:     995 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0175595 1000 -0.0642322 1.76834
+
+ >> Wed Oct 23 14:22:07 2002 Run:  121398 Event:    1060 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 32440 out of 32700 which is 99.2049%.
+
+ >> Wed Oct 23 14:22:09 2002 Run:  121398 Event:    1163 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 32540 out of 32800 which is 99.2073%.
+
+ >> Wed Oct 23 14:22:12 2002 Run:  121398 Event:    1266 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 32640 out of 32900 which is 99.2097%.
+
+ >> Wed Oct 23 14:22:12 2002 Run:  121398 Event:    1289 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 1000 1000 0.00880317 3.76129
+
+ >> Wed Oct 23 14:22:14 2002 Run:  121398 Event:    1371 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 32739 out of 33000 which is 99.2091%.
+
+ >> Wed Oct 23 14:22:15 2002 Run:  121398 Event:    1478 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 32839 out of 33100 which is 99.2115%.
+
+ >> Wed Oct 23 14:22:16 2002 Run:  121398 Event:    1562 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.0058769 -0.00979336 -0.00405712 5.18022
+
+ >> Wed Oct 23 14:22:16 2002 Run:  121398 Event:    1573 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 0 1000 1000 -0.0105351 4.1891
+
+ >> Wed Oct 23 14:22:16 2002 Run:  121398 Event:    1585 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 32937 out of 33200 which is 99.2078%.
+
+ >> Wed Oct 23 14:22:17 2002 Run:  121398 Event:    1636 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.477164 1000 0.106989 4.00462
+
+ >> Wed Oct 23 14:22:18 2002 Run:  121398 Event:    1692 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 33036 out of 33300 which is 99.2072%.
+
+ >> Wed Oct 23 14:22:19 2002 Run:  121398 Event:    1800 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 33136 out of 33400 which is 99.2096%.
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0284666 0.0186622 0.0122071 6.67336
+
+ >> Wed Oct 23 14:22:20 2002 Run:  121398 Event:    1851 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0105061 0.00123225 -0.00242676 6.37861
+
+ >> Wed Oct 23 14:22:20 2002 Run:  121398 Event:    1897 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 66 0.035597 0.00460176 -0.0091832 3.70701
+
+ >> Wed Oct 23 14:22:20 2002 Run:  121398 Event:    1902 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 33233 out of 33500 which is 99.203%.
+
+ >> Wed Oct 23 14:22:20 2002 Run:  121398 Event:    1926 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.0565786 0.00392813 0.000914874 2.34272
+
+ >> Wed Oct 23 14:22:24 2002 Run:  121399 Event:      26 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 33332 out of 33600 which is 99.2024%.
+
+ >> Wed Oct 23 14:22:26 2002 Run:  121399 Event:     133 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 33432 out of 33700 which is 99.2047%.
+
+ >> Wed Oct 23 14:22:27 2002 Run:  121399 Event:     237 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 33532 out of 33800 which is 99.2071%.
+
+ >> Wed Oct 23 14:22:31 2002 Run:  121400 Event:      43 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 33632 out of 33900 which is 99.2094%.
+
+ >> Wed Oct 23 14:22:32 2002 Run:  121400 Event:     144 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 33732 out of 34000 which is 99.2118%.
+
+ >> Wed Oct 23 14:22:32 2002 Run:  121400 Event:     150 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0111541 0.0537948 0.0244262 3.03347
+
+ >> Wed Oct 23 14:22:33 2002 Run:  121400 Event:     193 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 78 0.0168497 -0.0131816 0.025975 1.62159
+
+ >> Wed Oct 23 14:22:34 2002 Run:  121400 Event:     219 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.0157557 1.01969 -0.0129411 1.5273
+
+ >> Wed Oct 23 14:22:35 2002 Run:  121400 Event:     251 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 33829 out of 34100 which is 99.2053%.
+
+ >> Wed Oct 23 14:22:38 2002 Run:  121400 Event:     357 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 33929 out of 34200 which is 99.2076%.
+
+ >> Wed Oct 23 14:22:41 2002 Run:  121400 Event:     462 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 34029 out of 34300 which is 99.2099%.
+
+ >> Wed Oct 23 14:22:44 2002 Run:  121400 Event:     568 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 34129 out of 34400 which is 99.2122%.
+
+ >> Wed Oct 23 14:22:51 2002 Run:  121401 Event:       1 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.00832774 -0.00329674 -0.0262898 0.428078
+
+ >> Wed Oct 23 14:22:51 2002 Run:  121401 Event:       5 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 66 0.00543512 0.0226004 0.00561195 1.37773
+
+ >> Wed Oct 23 14:22:52 2002 Run:  121401 Event:      25 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 34227 out of 34500 which is 99.2087%.
+
+ >> Wed Oct 23 14:22:53 2002 Run:  121401 Event:     130 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 34327 out of 34600 which is 99.211%.
+
+ >> Wed Oct 23 14:22:53 2002 Run:  121401 Event:     141 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.023608 -0.0731388 -0.0382333 3.80915
+
+ >> Wed Oct 23 14:22:54 2002 Run:  121401 Event:     235 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 34426 out of 34700 which is 99.2104%.
+
+ >> Wed Oct 23 14:22:55 2002 Run:  121401 Event:     340 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 34526 out of 34800 which is 99.2126%.
+
+ >> Wed Oct 23 14:22:55 2002 Run:  121401 Event:     347 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.00150261 1000 -0.0602233 4.20899
+
+ >> Wed Oct 23 14:22:55 2002 Run:  121401 Event:     354 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.00296455 0.00163564 -0.00238544 5.19219
+
+ >> Wed Oct 23 14:22:56 2002 Run:  121401 Event:     447 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 34624 out of 34900 which is 99.2092%.
+
+ >> Wed Oct 23 14:22:57 2002 Run:  121401 Event:     495 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 45 0.000136645 -0.0145854 -0.0146354 0
+
+ >> Wed Oct 23 14:22:57 2002 Run:  121401 Event:     530 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 1000 1000 -0.00336119 2.13268
+
+ >> Wed Oct 23 14:22:57 2002 Run:  121401 Event:     550 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 34722 out of 35000 which is 99.2057%.
+
+ >> Wed Oct 23 14:22:58 2002 Run:  121401 Event:     582 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.00984444 -0.0164266 0.00221666 3.30394
+
+ >> Wed Oct 23 14:22:58 2002 Run:  121401 Event:     601 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.00030542 -0.0239519 -0.0223805 0
+
+ >> Wed Oct 23 14:22:59 2002 Run:  121401 Event:     655 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 34820 out of 35100 which is 99.2023%.
+
+ >> Wed Oct 23 14:22:59 2002 Run:  121401 Event:     665 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.000303562 -0.00303916 -0.00312201 0
+
+ >> Wed Oct 23 14:22:59 2002 Run:  121401 Event:     709 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.000419412 0.0186875 0.0184546 2.03579
+
+ >> Wed Oct 23 14:23:05 2002 Run:  121402 Event:       2 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 34918 out of 35200 which is 99.1989%.
+
+ >> Wed Oct 23 14:23:07 2002 Run:  121402 Event:     108 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 35018 out of 35300 which is 99.2011%.
+
+ >> Wed Oct 23 14:23:08 2002 Run:  121402 Event:     216 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 35118 out of 35400 which is 99.2034%.
+
+ >> Wed Oct 23 14:23:09 2002 Run:  121402 Event:     246 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.00462412 1000 -0.00391621 1.63638
+
+ >> Wed Oct 23 14:23:11 2002 Run:  121402 Event:     320 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 35217 out of 35500 which is 99.2028%.
+
+ >> Wed Oct 23 14:23:12 2002 Run:  121402 Event:     388 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0569313 0.121192 0.00387216 1.28793
+
+ >> Wed Oct 23 14:23:12 2002 Run:  121402 Event:     427 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 35316 out of 35600 which is 99.2022%.
+
+ >> Wed Oct 23 14:23:13 2002 Run:  121402 Event:     519 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.00133369 -0.00143441 -0.00136729 8.05427
+
+ >> Wed Oct 23 14:23:14 2002 Run:  121402 Event:     534 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 35415 out of 35700 which is 99.2017%.
+
+ >> Wed Oct 23 14:23:15 2002 Run:  121402 Event:     640 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 35515 out of 35800 which is 99.2039%.
+
+ >> Wed Oct 23 14:23:16 2002 Run:  121402 Event:     747 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 35615 out of 35900 which is 99.2061%.
+
+ >> Wed Oct 23 14:23:17 2002 Run:  121402 Event:     851 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 35715 out of 36000 which is 99.2083%.
+
+ >> Wed Oct 23 14:23:18 2002 Run:  121402 Event:     955 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 35815 out of 36100 which is 99.2105%.
+
+ >> Wed Oct 23 14:23:19 2002 Run:  121402 Event:    1014 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.0639622 -0.0346398 -0.0586343 1.92081
+
+ >> Wed Oct 23 14:23:20 2002 Run:  121402 Event:    1061 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 35914 out of 36200 which is 99.2099%.
+
+ >> Wed Oct 23 14:23:21 2002 Run:  121402 Event:    1168 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 36014 out of 36300 which is 99.2121%.
+
+ >> Wed Oct 23 14:23:22 2002 Run:  121402 Event:    1276 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 36114 out of 36400 which is 99.2143%.
+
+ >> Wed Oct 23 14:23:23 2002 Run:  121402 Event:    1309 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0429065 0.173342 0.0242032 6.60977
+
+ >> Wed Oct 23 14:23:23 2002 Run:  121402 Event:    1363 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.0052084 -0.00550315 -0.00315056 3.70418
+
+ >> Wed Oct 23 14:23:24 2002 Run:  121402 Event:    1382 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 36212 out of 36500 which is 99.211%.
+
+ >> Wed Oct 23 14:23:27 2002 Run:  121406 Event:       7 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.000119793 -0.0110477 -0.0105689 0
+
+ >> Wed Oct 23 14:23:28 2002 Run:  121406 Event:      61 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.398229 1000 -0.0398997 0.711203
+
+ >> Wed Oct 23 14:23:28 2002 Run:  121406 Event:      68 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 36310 out of 36600 which is 99.2077%.
+
+ >> Wed Oct 23 14:23:29 2002 Run:  121406 Event:     172 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 36410 out of 36700 which is 99.2098%.
+
+ >> Wed Oct 23 14:23:30 2002 Run:  121406 Event:     275 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 36510 out of 36800 which is 99.212%.
+
+ >> Wed Oct 23 14:23:32 2002 Run:  121406 Event:     376 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 91 0.0108843 0.0457956 0.0475481 4.23095
+
+ >> Wed Oct 23 14:23:32 2002 Run:  121406 Event:     379 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 36609 out of 36900 which is 99.2114%.
+
+ >> Wed Oct 23 14:23:32 2002 Run:  121406 Event:     403 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.0108729 -0.00955403 0.00894511 0.834237
+
+ >> Wed Oct 23 14:23:32 2002 Run:  121406 Event:     411 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.168993 0.156628 -0.00286859 1.18419
+
+ >> Wed Oct 23 14:23:33 2002 Run:  121406 Event:     484 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 36707 out of 37000 which is 99.2081%.
+
+ >> Wed Oct 23 14:23:33 2002 Run:  121406 Event:     508 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0192029 -0.0116055 0.0032619 5.34808
+
+ >> Wed Oct 23 14:23:34 2002 Run:  121406 Event:     570 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.0218113 1000 0.0148172 1.38968
+
+ >> Wed Oct 23 14:23:34 2002 Run:  121406 Event:     584 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.000404263 0.00443512 0.00377262 0
+
+ >> Wed Oct 23 14:23:34 2002 Run:  121406 Event:     588 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 36804 out of 37100 which is 99.2022%.
+
+ >> Wed Oct 23 14:23:36 2002 Run:  121406 Event:     694 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 36904 out of 37200 which is 99.2043%.
+
+ >> Wed Oct 23 14:23:37 2002 Run:  121406 Event:     797 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 37004 out of 37300 which is 99.2064%.
+
+ >> Wed Oct 23 14:23:38 2002 Run:  121406 Event:     899 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 37104 out of 37400 which is 99.2086%.
+
+ >> Wed Oct 23 14:23:39 2002 Run:  121406 Event:    1001 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.00616391 -0.0202386 -0.0217361 4.28371
+
+ >> Wed Oct 23 14:23:39 2002 Run:  121406 Event:    1002 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 37203 out of 37500 which is 99.208%.
+
+ >> Wed Oct 23 14:23:41 2002 Run:  121406 Event:    1112 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 37303 out of 37600 which is 99.2101%.
+
+ >> Wed Oct 23 14:23:43 2002 Run:  121406 Event:    1218 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 37403 out of 37700 which is 99.2122%.
+
+ >> Wed Oct 23 14:23:44 2002 Run:  121406 Event:    1295 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.00629135 1000 -0.0240221 1.42514
+
+ >> Wed Oct 23 14:23:45 2002 Run:  121406 Event:    1319 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 37502 out of 37800 which is 99.2116%.
+
+ >> Wed Oct 23 14:23:45 2002 Run:  121406 Event:    1323 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.00530584 -0.00390009 -0.0083812 4.60413
+
+ >> Wed Oct 23 14:23:46 2002 Run:  121406 Event:    1421 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 37601 out of 37900 which is 99.2111%.
+
+ >> Wed Oct 23 14:23:46 2002 Run:  121406 Event:    1444 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.000245374 0.0237128 0.0227005 0
+
+ >> Wed Oct 23 14:23:47 2002 Run:  121406 Event:    1528 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 37700 out of 38000 which is 99.2105%.
+
+ >> Wed Oct 23 14:23:49 2002 Run:  121406 Event:    1636 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 37800 out of 38100 which is 99.2126%.
+
+ >> Wed Oct 23 14:23:49 2002 Run:  121406 Event:    1705 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 36 0.00682188 0.0120568 0.019203 4.70166
+
+ >> Wed Oct 23 14:23:50 2002 Run:  121406 Event:    1745 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 37899 out of 38200 which is 99.212%.
+
+ >> Wed Oct 23 14:23:51 2002 Run:  121406 Event:    1824 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.00511156 -0.00979867 -0.00542438 2.45285
+
+ >> Wed Oct 23 14:23:51 2002 Run:  121406 Event:    1851 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 37998 out of 38300 which is 99.2115%.
+
+ >> Wed Oct 23 14:23:52 2002 Run:  121406 Event:    1916 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 66 8.8414e-05 0.00529327 0.00343185 0
+
+ >> Wed Oct 23 14:23:52 2002 Run:  121406 Event:    1955 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 21 0.0431691 1000 0.0313578 1.03252
+
+ >> Wed Oct 23 14:23:52 2002 Run:  121406 Event:    1958 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 38096 out of 38400 which is 99.2083%.
+
+ >> Wed Oct 23 14:23:53 2002 Run:  121406 Event:    2047 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 10 0.0809051 0.0403154 0.00395897 3.80109
+
+ >> Wed Oct 23 14:23:53 2002 Run:  121406 Event:    2051 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.00709555 0.00508741 -0.0479976 4.31678
+
+ >> Wed Oct 23 14:23:54 2002 Run:  121406 Event:    2066 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 38194 out of 38500 which is 99.2052%.
+
+ >> Wed Oct 23 14:23:58 2002 Run:  121407 Event:      32 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 38294 out of 38600 which is 99.2073%.
+
+ >> Wed Oct 23 14:23:59 2002 Run:  121407 Event:      82 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 6 0.00521795 0.0182055 0.0149738 3.51752
+
+ >> Wed Oct 23 14:23:59 2002 Run:  121407 Event:      91 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 15 0.000187139 -0.00144384 -0.00284043 0
+
+ >> Wed Oct 23 14:24:00 2002 Run:  121407 Event:     135 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 38392 out of 38700 which is 99.2041%.
+
+ >> Wed Oct 23 14:24:01 2002 Run:  121407 Event:     237 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 38492 out of 38800 which is 99.2062%.
+
+ >> Wed Oct 23 14:24:02 2002 Run:  121407 Event:     339 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 38592 out of 38900 which is 99.2082%.
+
+ >> Wed Oct 23 14:24:03 2002 Run:  121407 Event:     419 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.00597065 0.00610756 0.00412004 4.18772
+
+ >> Wed Oct 23 14:24:04 2002 Run:  121407 Event:     444 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 38691 out of 39000 which is 99.2077%.
+
+ >> Wed Oct 23 14:24:05 2002 Run:  121407 Event:     546 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 38791 out of 39100 which is 99.2097%.
+
+ >> Wed Oct 23 14:24:05 2002 Run:  121407 Event:     552 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.0259861 0.0523188 0.00532161 3.06102
+
+ >> Wed Oct 23 14:24:06 2002 Run:  121407 Event:     649 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 38890 out of 39200 which is 99.2092%.
+
+ >> Wed Oct 23 14:24:07 2002 Run:  121407 Event:     737 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 78 0.000414118 0.0109604 0.0105214 0
+
+ >> Wed Oct 23 14:24:07 2002 Run:  121407 Event:     743 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 1 0.000753262 -0.0169117 -0.0169856 4.37381
+
+ >> Wed Oct 23 14:24:07 2002 Run:  121407 Event:     755 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 38988 out of 39300 which is 99.2061%.
+
+ >> Wed Oct 23 14:24:08 2002 Run:  121407 Event:     813 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 3 0.0181234 -0.0324973 -0.0289883 1.93652
+
+ >> Wed Oct 23 14:24:09 2002 Run:  121407 Event:     861 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 39087 out of 39400 which is 99.2056%.
+
+ >> Wed Oct 23 14:24:10 2002 Run:  121407 Event:     968 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 39187 out of 39500 which is 99.2076%.
+
+ >> Wed Oct 23 14:24:10 2002 Run:  121407 Event:     971 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: FAILED event; (num_tracks, closest_inter, weighted_ciz, weighted_z0, neutral_energy) = 28 0.000402543 -0.00389193 -0.00485771 0
+
+ >> Wed Oct 23 14:24:11 2002 Run:  121407 Event:    1073 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 39286 out of 39600 which is 99.2071%.
+
+ >> Wed Oct 23 14:24:13 2002 Run:  121407 Event:    1179 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 39386 out of 39700 which is 99.2091%.
+
+ >> Wed Oct 23 14:24:14 2002 Run:  121407 Event:    1281 Stop: event << 
+ %% INFO-Processor.HadronFilterProc: Passed 39486 out of 39800 which is 99.2111%.
+stop? (y/n)
+completely exit suez? (y/n)
+Suez.test_mc> hbook terminate
+Suez.test_mc> exit
+ %% SYSTEM-Processor.HadronFilterProc: Passed 39544 out of 39857 which is 99.2147%.
+ %% INFO-Processor.EventTypeFilterProc: 
+
+ ****** Summary from EventTypeFilterProc **** for    41813 events ******
+
+    **** # passed EventTypeFilterProc filtering =    39857 events ******
+
+
+      Type           Excl   Incl      Overlap (in %, use Incl # as denom)
+      ----           ----   ----      -----------------------------------
+
+T00 Hadron             32  39857  95% T02= 99 T03= 95 T01= 94 T04= 80 T16= 37
+T01 HadronTight         0  37566  90% T00=100 T02= 99 T03= 99 T04= 80 T16= 34
+T02 Tau                12  40295  96% T00= 98 T03= 94 T01= 92 T04= 80 T13= 38
+T03 Tau1vN              0  37761  90% T02=100 T00=100 T01= 98 T04= 81 T16= 35
+T04 TauLoBgd            0  32331  77% T02=100 T00= 98 T03= 95 T01= 93 T13= 39
+T05 MuPair              0    527   1% T02=100 T00= 97 T03= 95 T01= 94 T04= 71
+T06 RadMuP             16    179   0% T02= 89 T04= 72 T00= 59 T05= 11 T22=  3
+T07 BhabhaLoose         0      5   0% T00=100 T01=100 T02= 60 T03= 60 T09= 60
+T08 BhabhaTight         0      0   0%
+T09 RadBha              9   1394   3% T00= 98 T02= 97 T01= 97 T03= 95 T04= 73
+T10 GamGam              1      6   0% T11= 83
+T11 RadGam              0      5   0% T10=100
+T12 ElGamJunk         280    280   1%
+T13 LoPtLoose          31  15672  37% T02= 98 T16= 94 T00= 93 T03= 85 T01= 81
+T14 LoPtTwoTk           0    669   2% T13=100 T02= 84 T04= 47 T18=  4 T15=  2
+T15 LoPt2Leptons        0     15   0% T14=100 T13=100 T02= 93 T04= 53 T18=  7
+T16 LoPtGT2Tk           0  14790  35% T13=100 T02= 99 T00= 99 T03= 90 T01= 86
+T17 LoPt4Pions          0   1601   4% T16=100 T13=100 T02= 99 T03= 99 T00= 97
+T18 LoPtOneTag          4   1501   4% T02= 98 T00= 97 T03= 90 T01= 89 T13= 54
+T19 LoPtTwotag          0     52   0% T00=100 T02= 98 T01= 96 T03= 94 T04= 65
+T20 BeamGas             0      0   0%
+T21 Cosmic              0      0   0%
+T22 TranDiMuon          0     88   0% T02=100 T05=100 T00= 95 T01= 93 T03= 93
+T23 TranDiElec          0      3   0% T00=100 T01=100 T02=100 T03=100 T09=100
+T24 TranLepTk           0     89   0% T02=100 T03=100 T00= 99 T01= 99 T05= 96
+T25 HardGam             0      0   0%
+T32 Known               0  41384  99% T02= 97 T00= 96 T03= 91 T01= 91 T04= 78
+T33 Unknown           429    429   1%
+
+
+ %% INFO-JobControl.SummaryModule: 
+ ***** Summary Info *****
+
+ Stream beginrun : 36
+ Stream event : 41813
+   Processed 41849 stops.
+
+
+EDT: 10/23/2002 14:24:25.967064 | xitman.cxx:272: info: (C) xitman starts cleaning...
+EDT: 10/23/2002 14:24:25.980464 | runtime.cxx:135: info: (C) BDT checks out...
+EDT: 10/23/2002 14:24:25.986942 | runtime.cxx:140: info: (C) Removed basics::theDict.
+EDT: 10/23/2002 14:24:25.987834 | xitman.cxx:282: info: (C) xitman done!

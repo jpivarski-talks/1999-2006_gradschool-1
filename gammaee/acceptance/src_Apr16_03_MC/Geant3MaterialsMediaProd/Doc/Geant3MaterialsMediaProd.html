@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+<head>
+<title>Geant3MaterialsMediaProd Library</title>
+</head>
+<body bgcolor="#FFFFFF">
+<h1>Geant3MaterialsMediaProd</h1>
+
+This document explains the functioning of the 
+<CODE>Geant3MaterialsMediaProd</CODE> library.
+
+<P>
+This library is designed to work in tandem with the
+<A href="http://www.lns.cornell.edu/~cleo3/development/src/Geant3Interface/Doc/Geant3Interface.html">
+<CODE>Geant3Interface</CODE></A> library.
+It is a <CODE>Suez</CODE> producer and has proxies for
+<CODE>FATable&lt;DGConstMaterialPtr&gt;</CODE> (the
+<A href="http://www.lns.cornell.edu/restricted/CLEO/CLEO3/soft/LibraryDocs/DetectorGeometry.html">
+<CODE>DetectorGeometry</CODE></A> 
+store for material pointers) and
+<CODE>FATable&lt;<A
+href="http://www.lns.cornell.edu/~cleo3/development/src/Geant3Interface/Geant3Interface/G3iTrackingMedium.h">G3iTrackingMedium</A>&gt;</CODE> 
+(the store for Geant3 tracking media).
+</P>
+
+<P>
+  For an introduction to the use of materials, see the
+documentation for the 
+<A href="http://www.lns.cornell.edu/~cleo3/development/src/MaterialDelivery/Doc/MaterialDelivery.html">
+<CODE>MaterialDelivery</CODE></A> library.
+</P>
+
+<H3>Material Creation and Definition</A></H3>
+<P>
+The requirements on material specification and definition
+are set by both GEANT3 and Kalman tracking needs. On the
+one hand, the Kalman fitting of charged tracks needs
+to know the properties of all objects within the tracking volume;
+hence the requirement that each 
+<A href="http://www.lns.cornell.edu/restricted/CLEO/CLEO3/soft/LibraryDocs/DetectorGeometry.html">
+<CODE>DetectorGeometry</CODE></A> 
+shaped volume have a material specified. On the other hand
+GEANT3 must have all the materials defined and
+installed inside its common blocks via specific Fortran calls.
+</P>
+
+<P>
+   The creation of the source information for a <CODE>DGMaterialStore</CODE>
+is performed by
+<A href="http://www.lns.cornell.edu/~cleo3/development/src/Geant3MaterialsMediaProd/Class/DGConstMaterialPtrProxy.cc">
+<CODE>DGConstMaterialPtrProxy.cc</CODE></A>
+in this library. It fills the 
+<CODE>FAPtrTable&lt;DGConstMaterialPtr&gt;</CODE> from the member
+functions of the singleton object defined by
+<A href="http://www.lns.cornell.edu/~cleo3/development/src/Geant3MaterialsMediaProd/Geant3MaterialsMediaProd/G3iMakeMaterials.h">
+<CODE>G3iMakeMaterials.h</CODE></A>, which in turn makes
+Geant3 calls to determine material properties.
+</P>
+
+<P>
+The structure of <A href="http://www.lns.cornell.edu/~cleo3/development/src/Geant3MaterialsMediaProd/Geant3MaterialsMediaProd/G3iMakeMaterials.h">
+<CODE>G3iMakeMaterials.h</CODE></A> and
+ <A href="http://www.lns.cornell.edu/~cleo3/development/src/Geant3MaterialsMediaProd/Class/G3iMakeMaterials.cc">
+<CODE>G3iMakeMaterials.cc</CODE></A>
+deserves some explanation. First of all, the class is a singleton
+because the GEANT3 calls can be made exactly once without
+errors. Next, although there is the flexibility to create an
+arbitrary material with any radiation length, we have chosen
+in all cases (so far!) to define real materials with real
+elements and let GEANT3 compute the resulting radiation and
+absorption lengths. For each GEANT3 material one needs to
+specify the number of elements it is composed of, the
+atomic number and weight of each of those elements, the
+proportion of each element by weight or by atomic counting,
+and the density of the material. One must be careful not
+to create mixtures of other mixtures because in this case
+only the "weighted average" Z and A of the mixture is
+used in the computation of radiation and absorption lengths,
+*not* the actual Z's and A's of all the components of the
+mixture. For example, one can define Propane as 3 Carbons
+and 8 Hydrogens, and then 60-40 Helium-Propane as 60%
+Helium by partial pressure and 40% Propane, but this would
+be incorrect. One needs to define 60-40 Helium-Propane
+as the appropriately weighted mixture of Helium, Carbon, and
+Hydrogen. And get the density right.
+</P>
+
+<P><hr>
+<address><a href="mailto:bkh@mail.lns.cornell.edu/">Brian Heltsley &lt;bkh@lns.cornell.edu&gt;</a></address>
+<!-- hhmts start -->
+Last modified: Fri Jan 22 13:30:10 EST 1999
+<!-- hhmts end -->
+</body> </html>
+
+
+

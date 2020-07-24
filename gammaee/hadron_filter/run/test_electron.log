@@ -1,0 +1,125 @@
+------- Setting ulimits -------
+core file size (blocks)     0
+data seg size (kbytes)      2097148
+file size (blocks)          unlimited
+open files                  1024
+pipe size (512 bytes)       10
+stack size (kbytes)         2097148
+cpu time (seconds)          unlimited
+max user processes          3941
+virtual memory (kbytes)     unlimited
+ %% INFO-Suez: 
+// -----------------------------------------------------------
+//  Welcome to Suez, the CLEO III data access program         
+// -----------------------------------------------------------
+
+ %% INFO-Suez: $Id: SuezMain.cc,v 1.67 2002/01/03 21:07:26 cdj Exp $
+
+ %% SYSTEM-Interpreter.TclInterpreter: 
+//  For a list of available commands, type "help".              
+//                                                                
+//  Since the command interpreter is based on a Tcl interpreter,  
+//  all Tcl commands are available.                               
+//  For info on tcl: "http://www.scriptics.com/resource/doc"    
+
+ %% SYSTEM-Interpreter.TclInterpreter: 
+// Renaming the following Tcl commands:
+//  (because they collide with Suez commands!)
+// -------------------------------------------
+//  source --> tcl_source
+//  proc   --> tcl_proc
+//  file   --> tcl_file
+
+ %% SYSTEM-Module: added command "summary" from SummaryModule
+ %% SYSTEM-Module: added command "source_format" from SourceFormatMap
+ %% SYSTEM-Module: added command "sink_format" from SinkFormatMap
+ %% SYSTEM-Module: added command "source" from SourceManager
+ %% SYSTEM-Module: added command "stream" from SourceManager
+ %% SYSTEM-Module: added command "sink" from SinkManager
+ %% SYSTEM-Module: added command "default" from DefaultModule
+ %% SYSTEM-Module: added command "prod" from MasterProducer
+ %% SYSTEM-Module: added command "proc" from MasterProcessor
+ %% SYSTEM-Module: added command "file" from FileModule
+ %% SYSTEM-Module: added command "emptysource" from EmptySourceModule
+Suez.test_electron> default prompt off
+off
+Suez.test_electron> exception continueEventLoop on
+on
+Suez.test_electron> module sel HbookHistogramModule
+ %% SYSTEM-Loader: trying to load "HbookHistogramModule"...
+ %% SYSTEM-Module: added command "hbook" from HbookHistogramModule
+Suez.test_electron> hbook file ../rzn/test_electron_10cmcut.rzn
+Suez.test_electron> hbook init
+Suez.test_electron> module sel CorbaModule
+ %% SYSTEM-Loader: trying to load "CorbaModule"...
+ %% SYSTEM-Module: added command "corba" from CorbaModule
+Suez.test_electron> corba init
+Suez.test_electron> module sel RunStatisticsSourceModule
+ %% SYSTEM-Loader: trying to load "RunStatisticsSourceModule"...
+ %% SYSTEM-Module: added command "runstatistics" from RunStatisticsSourceModule
+Suez.test_electron> runstatistics in
+ %% INFO-JobControl.SourceManager: creating Source Name "RunStatistics" 
+Suez.test_electron> module sel ConstantsModule
+ %% SYSTEM-Loader: trying to load "ConstantsModule"...
+ %% SYSTEM-Module: added command "constants" from ConstantsModule
+Suez.test_electron> constants in $env(C3_CONST) meta FieldMap MetaListRetrieval
+ %% INFO-JobControl.SourceManager: creating Source Name "Codi" 
+Suez.test_electron> source_format sel MagFudgeFileSourceFormat
+ %% SYSTEM-Loader: trying to load "MagFudgeFileSourceFormat"...
+Suez.test_electron> file in normal.magfudge
+ %% INFO-JobControl.FileModule: using default streams: magfudge
+ %% INFO-JobControl.SourceManager: creating Source Name "normal" 
+normal
+Suez.test_electron> prod sel NavigationProd
+ %% SYSTEM-Loader: trying to load "NavigationProd"...
+Suez.test_electron> prod sel TrackDeliveryProd
+ %% SYSTEM-Loader: trying to load "TrackDeliveryProd"...
+Suez.test_electron> prod sel C3ccProd
+ %% SYSTEM-Loader: trying to load "C3ccProd"...
+Suez.test_electron> prod sel MagFieldProd
+ %% SYSTEM-Loader: trying to load "MagFieldProd"...
+Suez.test_electron> prod sel DBEventHeaderProd
+ %% SYSTEM-Loader: trying to load "DBEventHeaderProd"...
+Suez.test_electron> prod sel CesrBeamEnergyProd
+ %% SYSTEM-Loader: trying to load "CesrBeamEnergyProd"...
+Suez.test_electron> prod sel EventPropertiesProd
+ %% SYSTEM-Loader: trying to load "EventPropertiesProd"...
+Suez.test_electron> prod sel EventTypeProd
+ %% SYSTEM-Loader: trying to load "EventTypeProd"...
+Suez.test_electron> #  proc sel EventTypeFilterProc
+Suez.test_electron> #  param EventTypeFilterProc Hadron true
+Suez.test_electron> proc sel ../build_SunOS/official/shlib/HadronFilterProc
+ %% SYSTEM-Loader: trying to load "../build_SunOS/official/shlib/HadronFilterProc"...
+Suez.test_electron> param HadronFilterProc explicitBeamSpot true
+ %% SYSTEM-Suez: DABoolean: true
+Suez.test_electron> param HadronFilterProc beamX 0.
+ %% SYSTEM-Suez: double: 0
+Suez.test_electron> param HadronFilterProc beamY 0.
+ %% SYSTEM-Suez: double: 0
+Suez.test_electron> report level NOTICE
+NOTICE
+Suez.test_electron> source_format sel PDSSourceFormat
+ %% SYSTEM-Loader: trying to load "PDSSourceFormat"...
+Suez.test_electron> file in ../pds/electrons1.pds event startrun beginrun endrun
+electrons1
+Suez.test_electron> go 100000
+ %% SYSTEM-JobControl.SourceManager: Stream "beginrun" can be supplied by more than one source.
+Please advise on which one to use (by number):
+ 1) RunStatistics
+*2) ../pds/electrons1.pds
+
+ >> Wed Oct 23 14:06:28 2002 Run:  126828 Event:       2 Stop: event << 
+ %% NOTICE-ConstantsMetaListDelivery.CMLConstantsProxy: DBSuperConductingQuadFieldMap using version 1.2
+
+ >> Wed Oct 23 14:13:48 2002 Run:  126828 Event:   27983 Stop: event << 
+ %% ERROR-PackedDataStreamsDelivery.PDSSourceController: Read error in event record at run 126828, event 27984
+Read failed reached end of file while reading record body
+
+ >> Wed Oct 23 14:13:48 2002 Run:  126828 Stop: none << 
+ %% ERROR-JobControl.JobControl: FrameDeliverer::kNextStopProblemWithASource
+Suez> exit
+ %% SYSTEM-Processor.HadronFilterProc: Passed 2 out of 27983 which is 0.0071472%.
+EDT: 10/23/2002 14:16:49.081261 | xitman.cxx:272: info: (C) xitman starts cleaning...
+EDT: 10/23/2002 14:16:49.100104 | runtime.cxx:135: info: (C) BDT checks out...
+EDT: 10/23/2002 14:16:49.106959 | runtime.cxx:140: info: (C) Removed basics::theDict.
+EDT: 10/23/2002 14:16:49.107606 | xitman.cxx:282: info: (C) xitman done!

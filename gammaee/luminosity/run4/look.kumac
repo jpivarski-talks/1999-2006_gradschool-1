@@ -1,0 +1,178 @@
+nt/chain mc3 ../rzn4/cleo3mc.rzn
+nt/chain da3 ../rzn4/cleo3data.rzn
+nt/chain mcc ../rzn4/cleocmc.rzn
+nt/chain dac ../rzn4/cleocdata.rzn
+
+* "tracks", "oldtk", "trig", "ebeam",
+* "e1", "e1cos", "e1cot", "e1phi",
+* "e2", "e2cos", "e2cot", "e2phi", "acop",
+* "cnum", "cen", "cbig", "cang", "ccos", "cacop",
+* "epho", "mcvx", "mcvy", "mcvz",
+* "vchi2", "vx", "vy", "vz",
+
+* $1&&$2&&trig>0 are the Brian-Surik cuts
+nt/cuts $1 tracks<2&&acop<0.05&&(e1+e2)/2>0.9
+nt/cuts $2 (abs(e1cos)<0.766&&abs(e2cos)<0.707).or.(abs(e2cos)<0.766&&abs(e1cos)<0.707)
+nt/cuts $3 e1>0.9&&abs(e1cos)<0.4
+
+zone 1 3
+opt sta
+set stat 0000010
+
+nt/plot //mcc/convert/1.tracks $1&&$2&&$3&&epho/ebeam>0.75&&sqrt(mcvx**2+mcvy**2)<0.3
+nt/plot //mcc/convert/1.tracks $1&&$2&&$3&&epho/ebeam>0.75&&0.79<sqrt(mcvx**2+mcvy**2)<0.85
+nt/plot //mcc/convert/1.tracks $1&&$2&&$3
+
+nt/plot //mcc/convert/1.tracks $3&&epho/ebeam>0.75&&sqrt(mcvx**2+mcvy**2)<0.3
+nt/plot //mcc/convert/1.tracks $3&&epho/ebeam>0.75&&0.79<sqrt(mcvx**2+mcvy**2)<0.85
+nt/plot //mcc/convert/1.tracks $3
+
+
+
+nt/plot //mc3/convert/1.tracks $1&&$2&&$3&&epho/ebeam>0.75&&sqrt(mcvx**2+mcvy**2)<0.3
+nt/plot //mc3/convert/1.tracks $1&&$2&&$3&&epho/ebeam>0.75&&0.79<sqrt(mcvx**2+mcvy**2)<0.85
+nt/plot //mc3/convert/1.tracks $1&&$2&&$3
+
+nt/plot //mc3/convert/1.tracks $3&&epho/ebeam>0.75&&sqrt(mcvx**2+mcvy**2)<0.3
+nt/plot //mc3/convert/1.tracks $3&&epho/ebeam>0.75&&0.79<sqrt(mcvx**2+mcvy**2)<0.85
+nt/plot //mc3/convert/1.tracks $3
+
+
+**** what about that "gamgam MC has >=2 tracks ~5% of the time" comment?
+
+zone 1 2
+opt liny
+nt/plot //mc3/convert/1.oldtk 
+nt/plot //mc3/convert/1.oldtk oldtk>1
+* message just oldtk $SIGMA(3584./292450.)
+* message with Brian-Surik cuts other than ntrack $SIGMA(9./182493.)
+* message drop energy requirement $SIGMA(194./201346.)
+message drop acop requirement $SIGMA(681./212239.)
+
+nt/chain mc3 ../rzn4/cleo3mc_again.rzn
+nt/chain mcc ../rzn4/cleocmc_again.rzn
+
+* yes: 4% with these cuts
+
+
+
+
+
+
+
+*******************************************************************
+
+h/cr/2d 100 'E/Ebeam of showers 1 versus 2' 1 0 1.2 1 0 1.2
+nt/plot //mcc/convert/1.e1%e2 ! ! ! ! ! 100
+dline 0 1.2 0 1.2
+pict/print 'look_1.eps'
+
+
+* nt/plot //mc3/convert/1.e1 $1&&$2
+* message $HINFO(1000000,'ENTRIES')
+* nt/plot //da3/convert/1.e1 $1&&$2&&trig>0
+* message $HINFO(1000000,'ENTRIES')
+
+
+
+h/cr/1d 200 'Conversion radius for events that have them (data, MC, CLEO-c)' 30 0. 0.3
+h/cr/1d 201 'Conversion radius for events that have them (data, MC, CLEO-c)' 30 0. 0.3
+h/cr/1d 202 'Conversion radius MCtruth' 300 0. 0.3
+nt/plot //mcc/convert/1.sqrt(vx**2+vy**2) 0.1434*(vchi2>0&&e1>0.9&&abs(e1cos)<0.7) ! ! ! 'N' 200
+nt/plot //dac/convert/1.sqrt(vx**2+vy**2) trig>0&&vchi2>0&&e1>0.9&&abs(e1cos)<0.7 ! ! ! 'N' 201
+nt/plot //mcc/convert/1.sqrt(mcvx**2+mcvy**2) (epho/ebeam>0.75&&abs(e1cos)<0.7) ! ! ! 'N' 202
+zone 1 2
+max 201 50
+min 201 0
+opt liny
+h/plot 201 'e'
+h/plot 200 's'
+text 0.2 40 data=$hinfo(201,'sum') ! ! 'c'
+text 0.2 35 MC=$hinfo(200,'sum') ! ! 'c'
+opt logy
+h/plot 202
+pict/print 'look_2.eps'
+
+
+h/cr/1d 300 'Conversion radius for events that have them (data, MC, CLEO-III)' 30 0. 0.3
+h/cr/1d 301 'Conversion radius for events that have them (data, MC, CLEO-III)' 30 0. 0.3
+h/cr/1d 302 'Conversion radius MCtruth' 300 0. 0.3
+nt/plot //mc3/convert/1.sqrt(vx**2+vy**2) 0.4438*(vchi2>0&&e1>0.9&&abs(e1cos)<0.7) ! ! ! 'N' 300
+nt/plot //da3/convert/1.sqrt(vx**2+vy**2) trig>0&&vchi2>0&&e1>0.9&&abs(e1cos)<0.7 ! ! ! 'N' 301
+nt/plot //mc3/convert/1.sqrt(mcvx**2+mcvy**2) (epho/ebeam>0.75&&abs(e1cos)<0.7) ! ! ! 'N' 302
+zone 1 2
+max 301 25
+min 301 0
+opt liny
+h/plot 301 'e'
+h/plot 300 's'
+text 0.2 20 data=$hinfo(301,'sum') ! ! 'c'
+text 0.2 17.5 MC=$hinfo(300,'sum') ! ! 'c'
+opt logy
+h/plot 302
+pict/print 'look_3.eps'
+
+
+
+* opt logy
+* opt sta
+* zone 1 1
+* nt/plot //mc3/convert/1.tracks (e1>0.9&&abs(e1cos)<0.7) 
+* nt/plot //mc3/convert/1.tracks (e1>0.9&&abs(e1cos)<0.7)&&$1
+
+
+h/cr/1d 400 'MCtruth conversion radius in the outer DR/RICH' 60 0.79 0.85
+nt/plot //mcc/convert/1.sqrt(mcvx**2+mcvy**2) (epho/ebeam>0.75&&abs(e1cos)<0.7) ! ! ! ! 400
+pict/print 'look_4.eps'
+
+zone 1 2
+h/cr/1d 401 'MCtruth conversion cos([Q]) + biggest shower cos([Q])' 100 -0.1 0.1
+nt/plot //mcc/convert/1.mcvz/sqrt(mcvx**2+mcvy**2+mcvz**2)+e1cos (epho/ebeam>0.75&&abs(e1cos)<0.7&&0.79<sqrt(mcvx**2+mcvy**2)<0.85) ! ! ! ! 401
+h/cr/1d 402 'MCtruth conversion [f], biggest shower acoplanarity' 100 0. 0.1
+nt/plot //mcc/convert/1.abs(abs(atan2(mcvy,mcvx)-e1phi)-3.1415926) (epho/ebeam>0.75&&abs(e1cos)<0.7&&0.79<sqrt(mcvx**2+mcvy**2)<0.85) ! ! ! ! 402
+pict/print 'look_4.1.eps'
+
+zone 1 2
+h/cr/title 'given an MCtruth conversion in the outer DR/RICH...'
+h/cr/1d 403 'Number of showers in an 18 degree cone away from biggest shower' 5 -0.5 4.5
+opt logy
+nt/plot //mcc/convert/1.cnum (epho/ebeam>0.75&&abs(e1cos)<0.7&&0.79<sqrt(mcvx**2+mcvy**2)<0.85) ! ! ! ! 403
+h/cr/1d 404 'Shower energy in that cone/Ebeam' 60 0. 1.2
+opt liny
+nt/plot //mcc/convert/1.cen/ebeam (epho/ebeam>0.75&&abs(e1cos)<0.7&&0.79<sqrt(mcvx**2+mcvy**2)<0.85) ! ! ! ! 404
+pict/print 'look_4.2.eps'
+
+zone 1 2
+h/cr/1d 405 'Energy in showers other than the biggest one / ebeam' 100 0. 0.2
+opt sta
+set stat 0100010
+opt logy
+nt/plot //mcc/convert/1.(cen-cbig)/ebeam cnum>0&&(epho/ebeam>0.75&&abs(e1cos)<0.7&&0.79<sqrt(mcvx**2+mcvy**2)<0.85) ! ! ! ! 405
+h/cr/1d 406 'Acoplanarity using the biggest of these (dashed has NO conversion)' 100 0. 0.1
+h/cr/1d 407 'Acoplanarity using the biggest of these (dashed has NO conversion)' 100 0. 0.1
+opt liny
+nt/plot //mcc/convert/1.cacop cnum>0&&(epho/ebeam>0.75&&abs(e1cos)<0.7&&0.79<sqrt(mcvx**2+mcvy**2)<0.85) ! ! ! 'N' 406
+nt/plot //mcc/convert/1.cacop cnum>0&&abs(e1cos)<0.7&&!(epho/ebeam>0.75&&0.79<sqrt(mcvx**2+mcvy**2)<0.85) ! ! ! 'N' 407
+normalize 406
+normalize 407
+max 406 1700
+h/plot 406
+h/plot 407 's'
+set ltyp 3
+dline 0.05 0.05 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+pict/print 'look_4.3.eps'
+
+h/cr/title ' '
+
+
+opt sta
+set stat 0000010
+zone 1 6
+nt/plot //mc3/convert/1.tracks 
+nt/plot //mc3/convert/1.tracks $1&&$2
+
+nt/plot //mc3/convert/1.tracks (epho/ebeam>0.75&&0.79<sqrt(mcvx**2+mcvy**2)<0.85)
+nt/plot //mc3/convert/1.tracks (epho/ebeam>0.75&&0.79<sqrt(mcvx**2+mcvy**2)<0.85)&&$1&&$2
+
+nt/plot //mc3/convert/1.tracks (epho/ebeam>0.75&&sqrt(mcvx**2+mcvy**2)<0.3)
+nt/plot //mc3/convert/1.tracks (epho/ebeam>0.75&&sqrt(mcvx**2+mcvy**2)<0.3)&&$1&&$2

@@ -1,0 +1,378 @@
+* Monte Carlo
+h/file 1 ../rzn3/mcagain_y1s.rzn
+* h/file 1 ../rzn3/mcagain_y2s.rzn
+* h/file 1 ../rzn3/mcagain_y3s.rzn
+h/file 41 ../rzn3/mcoldrel_y1s.rzn
+* h/file 41 ../rzn3/mcoldrel_y2s.rzn
+* h/file 41 ../rzn3/mcoldrel_y3s.rzn
+
+* The Data
+h/file 3 ../rzn3/dataagain_y1s_peak.rzn
+h/file 4 ../rzn3/dataagain_y1s_cont.rzn
+* h/file 3 ../rzn3/dataagain_y2s_peak.rzn
+* h/file 4 ../rzn3/dataagain_y2s_cont.rzn
+* h/file 3 ../rzn3/dataagain_y3s_peak.rzn
+* h/file 4 ../rzn3/dataagain_y3s_cont.rzn
+
+* These are for subtracting background
+h/file 20 ../rzn3/bkgndagain_cos.rzn
+h/file 21 ../rzn3/bkgndagain_bge.rzn
+h/file 22 ../rzn3/bkgndagain_bgp.rzn
+
+* "t1had", "t1rad", "t1el", "t1tt",
+* "tracks", "visen", "ccen",
+* "p2", "e1",
+* "ci", "wz", "d0close", "z0close",
+* "run", "ebeam", "neue", "q",
+* "axial", "stereo", "cblo", "cbmd",
+* "rawtk", "pmiss", "tr1", "tr2", "trperp1", "trperp2", "e2",
+* "shperp", "shdot",
+* "l4dec", "l4tracks",
+* "mctype", "mctrack", "mcfid",
+* "wpz"
+
+* Analysis cuts
+nt/cuts $1 (t1had>0).or.(t1rad>0).or.(t1el>0)
+nt/cuts $2 visen>0.2
+nt/cuts $3 (tracks>=5).or.(ccen<0.75).or.(e1<0.75)
+nt/cuts $4 (tracks>=5).or.(ccen>0.15)
+nt/cuts $5 tracks>=3
+nt/cuts $6 l4dec>0
+nt/cuts $7 (ci<0.005).and.(abs(wz)<0.05)
+
+* Bhabha luminosity cuts
+nt/cuts $8 (rawtk>=2).and.(tracks<=4).and.(pmiss<0.2).and.(abs(2-tr1-tr2-pmiss)<0.2).and.(visen>0.75)
+nt/cuts $9 (abs(d0close)<0.005).and.(abs(z0close)<0.05)
+
+* GROM
+* * Beamgas electrons cut
+* nt/cut $21 (rawtk>0).and.(((ci==1000).and.(abs(d0close)<0.002)).or.((ci!=1000).and.(ci<0.005))).and.(((wz==1000).and.(abs(z0close)>0.2)).or.((wz!=1000).and.(abs(wz)>0.2))).and.(wpz<-0.5)
+* * Beamgas positrons cut
+* nt/cut $22 (rawtk>0).and.(((ci==1000).and.(abs(d0close)<0.002)).or.((ci!=1000).and.(ci<0.005))).and.(((wz==1000).and.(abs(z0close)>0.2)).or.((wz!=1000).and.(abs(wz)>0.2))).and.(wpz>0.5)
+* * Cosmics-only cut (note: it starts at RPHI of 5cm to avoid beam-wall)
+* nt/cut $20 (rawtk>0).and.(((ci==1000).and.(abs(d0close)>0.05)).or.((ci!=1000).and.(ci>0.05)))
+* END GROM
+
+* Beamgas electrons cut
+nt/cut $21 (ci!=1000).and.(wz!=1000).and.(ci<0.005).and.(abs(wz)>0.2).and.(wpz<-0.05)
+* Beamgas positrons cut
+nt/cut $22 (ci!=1000).and.(wz!=1000).and.(ci<0.005).and.(abs(wz)>0.2).and.(wpz>0.05)
+* Cosmics-only cut (note: it starts at RPHI of 5cm to avoid beam-wall)
+nt/cut $20 (rawtk>0).and.(abs(d0close)>0.05)
+
+set ncol 16
+palette 0
+
+* Determine ptoc, ptocup, ptocdown, and ptomc
+h/cr/1d 11 'peak | analysis' 1 -100. 100.
+h/cr/1d 12 'peak | bhabha'   1 -100. 100.
+h/cr/1d 13 'cont | analysis' 1 -100. 100.
+h/cr/1d 14 'cont | bhabha'   1 -100. 100.
+h/cr/1d 15 'mc   | analysis' 1 -100. 100.
+h/cr/1d 16 'mc   | bhabha'   1 -100. 100.
+h/cr/1d 17 'mc2  | analysis' 1 -100. 100.
+nt/plot //lun3/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6&&$7 ! ! ! 'N' 11
+nt/plot //lun3/cuts/1.tracks $8&&$9 ! ! ! 'N' 12
+nt/plot //lun4/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6&&$7 ! ! ! 'N' 13
+nt/plot //lun4/cuts/1.tracks $8&&$9 ! ! ! 'N' 14
+nt/plot //lun1/cuts/1.tracks $1&&$2&&$3&&$4&&$5&&$6&&$7 ! ! ! 'N' 15
+nt/plot //lun1/cuts/1.tracks $8&&$9 ! ! ! 'N' 16
+nt/plot //lun41/showersonly/1.tracks $1&&$2&&$3&&$4&&$5 ! ! ! 'N' 17
+* pa  $HINFO(11,'ENTRIES')
+* pb  $HINFO(12,'ENTRIES')
+* ca  $HINFO(13,'ENTRIES')
+* cb  $HINFO(14,'ENTRIES')
+* ma  $HINFO(15,'ENTRIES')
+* mb  $HINFO(16,'ENTRIES')
+* m2a $HINFO(17,'ENTRIES')
+sigma mbma = $HINFO(16,'ENTRIES')/$HINFO(15,'ENTRIES')
+sigma ptoc = ($HINFO(11,'ENTRIES')*mbma - $HINFO(12,'ENTRIES'))/($HINFO(13,'ENTRIES')*mbma - $HINFO(14,'ENTRIES'))
+sigma ptocup = ($HINFO(11,'ENTRIES')*1.2*mbma - $HINFO(12,'ENTRIES'))/($HINFO(13,'ENTRIES')*1.2*mbma - $HINFO(14,'ENTRIES'))
+sigma ptocdo = ($HINFO(11,'ENTRIES')*0.8*mbma - $HINFO(12,'ENTRIES'))/($HINFO(13,'ENTRIES')*0.8*mbma - $HINFO(14,'ENTRIES'))
+sigma ptomc = ($HINFO(11,'ENTRIES') - $HINFO(12,'ENTRIES')*$HINFO(13,'ENTRIES')/$HINFO(14,'ENTRIES'))/($HINFO(15,'ENTRIES') - $HINFO(16,'ENTRIES')*$HINFO(13,'ENTRIES')/$HINFO(14,'ENTRIES'))
+sigma ptomc2 = ($HINFO(11,'ENTRIES') - $HINFO(12,'ENTRIES')*$HINFO(13,'ENTRIES')/$HINFO(14,'ENTRIES'))/(1. - ($HINFO(13,'ENTRIES')/$HINFO(14,'ENTRIES'))*($HINFO(16,'ENTRIES')/$HINFO(15,'ENTRIES')))/$HINFO(17,'ENTRIES')
+
+
+h/cr/1d 21 'peak | bge' 20 -2. 2.
+h/cr/1d 22 'cont | bge' 20 -2. 2.
+h/cr/1d 23 'bge  | bge' 20 -2. 2.
+nt/plot //lun3/cuts/1.wz $21 ! ! ! 'N' 21
+nt/plot //lun4/cuts/1.wz $21 ! ! ! 'N' 22
+nt/plot //lun21/cuts/1.wz $21 ! ! ! 'N' 23
+sigma ptobge = $HINFO(21,'ENTRIES')/$HINFO(23,'ENTRIES')
+sigma ctobge = $HINFO(22,'ENTRIES')/$HINFO(23,'ENTRIES')
+h/cr/1d 31 'peak | bgp' 20 -2. 2.
+h/cr/1d 32 'cont | bgp' 20 -2. 2.
+h/cr/1d 33 'bge  | bgp' 20 -2. 2.
+h/cr/1d 34 'bgp  | bgp' 20 -2. 2.
+nt/plot //lun3/cuts/1.wz $22 ! ! ! 'N' 31
+nt/plot //lun4/cuts/1.wz $22 ! ! ! 'N' 32
+nt/plot //lun21/cuts/1.wz $22 ! ! ! 'N' 33
+nt/plot //lun22/cuts/1.wz $22 ! ! ! 'N' 34
+sigma ptobgp = ($HINFO(31,'ENTRIES')-ptobge*$HINFO(33,'ENTRIES'))/$HINFO(34,'ENTRIES')
+sigma ctobgp = ($HINFO(32,'ENTRIES')-ptobge*$HINFO(33,'ENTRIES'))/$HINFO(34,'ENTRIES')
+h/cr/1d 41 'peak | cos' 20 -2. 2.
+h/cr/1d 42 'cont | cos' 20 -2. 2.
+h/cr/1d 43 'bge  | cos' 20 -2. 2.
+h/cr/1d 44 'bgp  | cos' 20 -2. 2.
+h/cr/1d 45 'cos  | cos' 20 -2. 2.
+nt/plot //lun3/cuts/1.wz $20 ! ! ! 'N' 41
+nt/plot //lun4/cuts/1.wz $20 ! ! ! 'N' 42
+nt/plot //lun21/cuts/1.wz $20 ! ! ! 'N' 43
+nt/plot //lun22/cuts/1.wz $20 ! ! ! 'N' 44
+nt/plot //lun20/cuts/1.wz $20 ! ! ! 'N' 45
+sigma ptocos = ($HINFO(41,'ENTRIES')-ptobge*$HINFO(43,'ENTRIES')-ptobgp*$HINFO(44,'ENTRIES'))/$HINFO(45,'ENTRIES')
+sigma ctocos = ($HINFO(42,'ENTRIES')-ptobge*$HINFO(43,'ENTRIES')-ptobgp*$HINFO(44,'ENTRIES'))/$HINFO(45,'ENTRIES')
+
+* GROM
+
+* h/plot 41
+* h/plot 42
+* h/plot 43
+* h/plot 44
+* h/plot 45
+
+* h/delete 1000
+* h/delete 1001
+* h/delete 1002
+* sub 41 43 1000 1 $SIGMA(ptobge) 'e'
+* sub 1000 44 1001 1 $SIGMA(ptobgp) 'e'
+* sub 1001 45 1002 1 $SIGMA(ptocos) 'e'
+* h/plot 1002
+
+* END GROM
+
+* Do it like this:
+sigma pre = 100
+h/cr/1d $SIGMA(pre+01) 'Visible energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+02) 'Visible energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+03) 'Visible energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+04) 'Visible energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+05) 'Visible energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+06) 'Visible energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+07) 'Visible energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+18) 'Visible energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+28) 'Visible energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+38) 'Visible energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+48) 'Visible energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+58) 'Visible energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+68) 'Visible energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+78) 'Visible energy' 60 0. 1.2
+nt/plot //lun1/cuts/1.visen $1 ! ! ! 'N' $SIGMA(pre+01)
+nt/plot //lun1/cuts/1.visen $1&&mctype>1 ! ! ! 'N' $SIGMA(pre+02)
+nt/plot //lun3/cuts/1.visen $1 ! ! ! 'N' $SIGMA(pre+03)
+nt/plot //lun4/cuts/1.visen $1 ! ! ! 'N' $SIGMA(pre+04)
+nt/plot //lun21/cuts/1.visen $1 ! ! ! 'N' $SIGMA(pre+05)
+nt/plot //lun22/cuts/1.visen $1 ! ! ! 'N' $SIGMA(pre+06)
+nt/plot //lun20/cuts/1.visen $1 ! ! ! 'N' $SIGMA(pre+07)
+nt/plot //lun1/cuts/1.visen $1&&$2 ! ! ! 'N' $SIGMA(pre+18)
+nt/plot //lun1/cuts/1.visen $1&&$2&&mctype>1 ! ! ! 'N' $SIGMA(pre+28)
+nt/plot //lun3/cuts/1.visen $1&&$2 ! ! ! 'N' $SIGMA(pre+38)
+nt/plot //lun4/cuts/1.visen $1&&$2 ! ! ! 'N' $SIGMA(pre+48)
+nt/plot //lun21/cuts/1.visen $1&&$2 ! ! ! 'N' $SIGMA(pre+58)
+nt/plot //lun22/cuts/1.visen $1&&$2 ! ! ! 'N' $SIGMA(pre+68)
+nt/plot //lun20/cuts/1.visen $1&&$2 ! ! ! 'N' $SIGMA(pre+78)
+
+* this tells you the normalizations of bge and bgp
+zone 1 4
+opt sta
+set stat 0000010
+nt/plot //lun21/cuts/1.wpz 0.1<pmiss<10&&abs(wpz)<5&&0<ci<0.01&&abs(wz)>0.05
+nt/plot //lun22/cuts/1.wpz 0.1<pmiss<10&&abs(wpz)<5&&0<ci<0.01&&abs(wz)>0.05
+zone 2 4 5 s
+nt/plot //lun3/cuts/1.wpz 0.1<pmiss<10&&abs(wpz)<5&&0<ci<0.01&&abs(wz)>0.05&&wpz<0
+nt/plot //lun3/cuts/1.wpz 0.1<pmiss<10&&abs(wpz)<5&&0<ci<0.01&&abs(wz)>0.05&&wpz>0
+nt/plot //lun4/cuts/1.wpz 0.1<pmiss<10&&abs(wpz)<5&&0<ci<0.01&&abs(wz)>0.05&&wpz<0
+nt/plot //lun4/cuts/1.wpz 0.1<pmiss<10&&abs(wpz)<5&&0<ci<0.01&&abs(wz)>0.05&&wpz>0
+opt nsta
+
+* this tells you the normalizations of cosmic rays
+zone 1 3
+opt sta
+nt/plot //lun20/cuts/1.wz 0<pmiss<0.1&&abs(wz)<1&&0.05<ci
+nt/plot //lun3/cuts/1.wz 0<pmiss<0.1&&abs(wz)<1&&0.05<ci
+nt/plot //lun4/cuts/1.wz 0<pmiss<0.1&&abs(wz)<1&&0.05<ci
+opt nsta
+
+* this gets the first bin right, if ctoX are all zero
+* sigma ptocos = 0.95*(-2183.0 - 106410.0*ptobge - 20569.0*ptobgp)/126400.0
+
+sigma ptoc = 1.0*0.696375
+sigma ptobge = 645.0/1280.0
+sigma ptobgp = 810.0/881.0
+sigma ptocos = 3010.0/5430.0
+sigma ctobge = 1008.0/1280.0
+sigma ctobgp = 904.0/881.0
+sigma ctocos = 3469.0/5430.0
+h/delete $SIGMA(pre+10)
+h/delete $SIGMA(pre+20)
+h/delete $SIGMA(pre+31)
+h/delete $SIGMA(pre+32)
+h/delete $SIGMA(pre+33)
+h/delete $SIGMA(pre+41)
+h/delete $SIGMA(pre+42)
+h/delete $SIGMA(pre+43)
+h/delete $SIGMA(pre+80)
+h/delete $SIGMA(pre+81)
+h/delete $SIGMA(pre+82)
+h/delete $SIGMA(pre+90)
+h/delete $SIGMA(pre+91)
+h/delete $SIGMA(pre+92)
+h/delete $SIGMA(pre+19)
+h/delete $SIGMA(pre+29)
+h/delete $SIGMA(pre+39)
+h/delete $SIGMA(pre+49)
+h/delete $SIGMA(pre+46)
+h/delete $SIGMA(pre+47)
+h/delete $SIGMA(pre+59)
+h/delete $SIGMA(pre+69)
+h/delete $SIGMA(pre+79)
+sub $SIGMA(pre+01) $SIGMA(pre+01) $SIGMA(pre+10) $SIGMA(ptomc) 0.
+sub $SIGMA(pre+02) $SIGMA(pre+02) $SIGMA(pre+20) $SIGMA(ptomc) 0.
+sub $SIGMA(pre+03) $SIGMA(pre+05) $SIGMA(pre+31) 1. $SIGMA(ptobge) 'e'
+sub $SIGMA(pre+31) $SIGMA(pre+06) $SIGMA(pre+32) 1. $SIGMA(ptobgp) 'e'
+sub $SIGMA(pre+32) $SIGMA(pre+07) $SIGMA(pre+33) 1. $SIGMA(ptocos) 'e'
+sub $SIGMA(pre+04) $SIGMA(pre+05) $SIGMA(pre+41) 1. $SIGMA(ptobge) 'e'
+sub $SIGMA(pre+41) $SIGMA(pre+06) $SIGMA(pre+42) 1. $SIGMA(ptobgp) 'e'
+sub $SIGMA(pre+42) $SIGMA(pre+07) $SIGMA(pre+43) 1. $SIGMA(ptocos) 'e'
+sub $SIGMA(pre+03) $SIGMA(pre+04) $SIGMA(pre+80) 1. $SIGMA(ptoc)   'e'
+sub $SIGMA(pre+03) $SIGMA(pre+04) $SIGMA(pre+81) 1. $SIGMA(ptocup) 'e'
+sub $SIGMA(pre+03) $SIGMA(pre+04) $SIGMA(pre+82) 1. $SIGMA(ptocdo) 'e'
+sub $SIGMA(pre+33) $SIGMA(pre+43) $SIGMA(pre+90) 1. $SIGMA(ptoc)   'e'
+sub $SIGMA(pre+33) $SIGMA(pre+43) $SIGMA(pre+91) 1. $SIGMA(ptocup) 'e'
+sub $SIGMA(pre+33) $SIGMA(pre+43) $SIGMA(pre+92) 1. $SIGMA(ptocdo) 'e'
+sub $SIGMA(pre+05) $SIGMA(pre+05) $SIGMA(pre+50) $SIGMA(ptobge-ptoc*ctobge) 0.
+sub $SIGMA(pre+06) $SIGMA(pre+06) $SIGMA(pre+60) $SIGMA(ptobgp-ptoc*ctobgp) 0.
+sub $SIGMA(pre+07) $SIGMA(pre+07) $SIGMA(pre+70) $SIGMA(ptocos-ptoc*ctocos) 0.
+add $SIGMA(pre+50) $SIGMA(pre+60) $SIGMA(pre+61) 1. 1.
+add $SIGMA(pre+61) $SIGMA(pre+70) $SIGMA(pre+72) 1. 1.
+sub $SIGMA(pre+18) $SIGMA(pre+18) $SIGMA(pre+19) $SIGMA(ptomc) 0.
+sub $SIGMA(pre+28) $SIGMA(pre+28) $SIGMA(pre+29) $SIGMA(ptomc) 0.
+sub $SIGMA(pre+38) $SIGMA(pre+38) $SIGMA(pre+39) $SIGMA(1.) 0.
+sub $SIGMA(pre+48) $SIGMA(pre+48) $SIGMA(pre+49) $SIGMA(ptoc) 0.
+sub $SIGMA(pre+48) $SIGMA(pre+48) $SIGMA(pre+46) $SIGMA(ptocup) 0.
+sub $SIGMA(pre+48) $SIGMA(pre+48) $SIGMA(pre+47) $SIGMA(ptocdo) 0.
+sub $SIGMA(pre+58) $SIGMA(pre+58) $SIGMA(pre+59) $SIGMA(ptobge-ptoc*ctobge) 0.
+sub $SIGMA(pre+68) $SIGMA(pre+68) $SIGMA(pre+69) $SIGMA(ptobgp-ptoc*ctobgp) 0.
+sub $SIGMA(pre+78) $SIGMA(pre+78) $SIGMA(pre+79) $SIGMA(ptocos-ptoc*ctocos) 0.
+sigma pre = 100
+min $SIGMA(pre+10) -200
+max $SIGMA(pre+10) 2500
+set hcol 1407
+h/plot $SIGMA(pre+10)
+set hcol 1400
+h/plot $SIGMA(pre+20) 's'
+set hcol 9
+h/plot $SIGMA(pre+81) 'se2'
+h/plot $SIGMA(pre+82) 'se2'
+set hcol 1
+h/plot $SIGMA(pre+80) 'se0'
+set hcol 2
+set htyp 344
+h/plot $SIGMA(pre+72) 's'
+set htyp 0
+set hcol 4
+h/plot $SIGMA(pre+10) 's'
+h/plot $SIGMA(pre+20) 's'
+set hcol 1
+h/plot $SIGMA(pre+80) 'se0'
+dline $GRAFINFO('WNXMIN') $GRAFINFO('WNXMAX') 0. 0.
+dline $GRAFINFO('WNXMIN') $GRAFINFO('WNXMIN') $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+set ltyp 3
+dline 0.2 0.2 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+
+
+pict/print 'testrun1.eps'
+
+
+
+
+
+
+
+
+
+
+
+sigma pre = 200
+h/cr/1d $SIGMA(pre+01) 'CC Total energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+02) 'CC Total energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+15) 'CC Total energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+25) 'CC Total energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+03) 'CC Total energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+04) 'CC Total energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+05) 'CC Total energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+06) 'CC Total energy' 60 0. 1.2
+h/cr/1d $SIGMA(pre+07) 'CC Total energy' 60 0. 1.2
+nt/plot //lun1/cuts/1.ccen $1&&$2 ! ! ! 'N' $SIGMA(pre+01)
+nt/plot //lun1/cuts/1.ccen $1&&$2&&mctype>1 ! ! ! 'N' $SIGMA(pre+02)
+nt/plot //lun41/showersonly/1.ccen $1&&$2 ! ! ! 'N' $SIGMA(pre+15)
+nt/plot //lun3/cuts/1.ccen $1&&$2 ! ! ! 'N' $SIGMA(pre+03)
+nt/plot //lun4/cuts/1.ccen $1&&$2 ! ! ! 'N' $SIGMA(pre+04)
+nt/plot //lun21/cuts/1.ccen $1&&$2 ! ! ! 'N' $SIGMA(pre+05)
+nt/plot //lun22/cuts/1.ccen $1&&$2 ! ! ! 'N' $SIGMA(pre+06)
+nt/plot //lun20/cuts/1.ccen $1&&$2 ! ! ! 'N' $SIGMA(pre+07)
+h/delete $SIGMA(pre+10)
+h/delete $SIGMA(pre+20)
+h/delete $SIGMA(pre+31)
+h/delete $SIGMA(pre+32)
+h/delete $SIGMA(pre+33)
+h/delete $SIGMA(pre+41)
+h/delete $SIGMA(pre+42)
+h/delete $SIGMA(pre+43)
+h/delete $SIGMA(pre+80)
+h/delete $SIGMA(pre+81)
+h/delete $SIGMA(pre+82)
+h/delete $SIGMA(pre+90)
+h/delete $SIGMA(pre+91)
+h/delete $SIGMA(pre+92)
+sub $SIGMA(pre+01) $SIGMA(pre+01) $SIGMA(pre+10) $SIGMA(ptomc) 0.
+sub $SIGMA(pre+02) $SIGMA(pre+02) $SIGMA(pre+20) $SIGMA(ptomc) 0.
+sub $SIGMA(pre+15) $SIGMA(pre+15) $SIGMA(pre+16) $SIGMA(ptomc2) 0.
+sub $SIGMA(pre+03) $SIGMA(pre+05) $SIGMA(pre+31) 1. $SIGMA(ptobge) 'e'
+sub $SIGMA(pre+31) $SIGMA(pre+06) $SIGMA(pre+32) 1. $SIGMA(ptobgp) 'e'
+sub $SIGMA(pre+32) $SIGMA(pre+07) $SIGMA(pre+33) 1. $SIGMA(ptocos) 'e'
+sub $SIGMA(pre+04) $SIGMA(pre+05) $SIGMA(pre+41) 1. $SIGMA(ptobge) 'e'
+sub $SIGMA(pre+41) $SIGMA(pre+06) $SIGMA(pre+42) 1. $SIGMA(ptobgp) 'e'
+sub $SIGMA(pre+42) $SIGMA(pre+07) $SIGMA(pre+43) 1. $SIGMA(ptocos) 'e'
+sub $SIGMA(pre+03) $SIGMA(pre+04) $SIGMA(pre+80) 1. $SIGMA(ptoc)   'e'
+sub $SIGMA(pre+03) $SIGMA(pre+04) $SIGMA(pre+81) 1. $SIGMA(ptocup) 'e'
+sub $SIGMA(pre+03) $SIGMA(pre+04) $SIGMA(pre+82) 1. $SIGMA(ptocdo) 'e'
+sub $SIGMA(pre+33) $SIGMA(pre+43) $SIGMA(pre+90) 1. $SIGMA(ptoc)   'e'
+sub $SIGMA(pre+33) $SIGMA(pre+43) $SIGMA(pre+91) 1. $SIGMA(ptocup) 'e'
+sub $SIGMA(pre+33) $SIGMA(pre+43) $SIGMA(pre+92) 1. $SIGMA(ptocdo) 'e'
+sub $SIGMA(pre+05) $SIGMA(pre+05) $SIGMA(pre+50) $SIGMA(ptobge-ptoc*ctobge) 0.
+sub $SIGMA(pre+06) $SIGMA(pre+06) $SIGMA(pre+60) $SIGMA(ptobge-ptoc*ctobge) 0.
+sub $SIGMA(pre+07) $SIGMA(pre+07) $SIGMA(pre+70) $SIGMA(ptobge-ptoc*ctobge) 0.
+add $SIGMA(pre+50) $SIGMA(pre+60) $SIGMA(pre+61) 1. 1.
+add $SIGMA(pre+61) $SIGMA(pre+70) $SIGMA(pre+72) 1. 1.
+
+sigma pre = 200
+min $SIGMA(pre+10) -200
+max $SIGMA(pre+10) 3000
+set hcol 1407
+h/plot $SIGMA(pre+10)
+set hcol 1400
+h/plot $SIGMA(pre+20) 's'
+set hcol 9
+h/plot $SIGMA(pre+81) 'se2'
+h/plot $SIGMA(pre+82) 'se2'
+set hcol 1
+h/plot $SIGMA(pre+80) 'se0'
+set hcol 2
+set htyp 344
+h/plot $SIGMA(pre+72) 's'
+set htyp 0
+set hcol 4
+h/plot $SIGMA(pre+10) 's'
+h/plot $SIGMA(pre+20) 's'
+set dmod 2
+h/plot $SIGMA(pre+16) 's'
+set dmod 1
+set hcol 1
+h/plot $SIGMA(pre+80) 'se0'
+dline $GRAFINFO('WNXMIN') $GRAFINFO('WNXMAX') 0. 0.
+set ltyp 3
+dline 0.15 0.15 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline 0.75 0.75 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+pict/print 'testrun2.eps'

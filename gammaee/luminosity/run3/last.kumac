@@ -1,0 +1,127 @@
+*** Begin of history file: Thu May  5 11:31:48 2005
+nt/chain bb ../rzn2/ntuple_bhabha.rzn
+nt/chain da ../rzn2/ntuple_123817.rzn
+nt/chain da ../rzn2/ntuple_125176.rzn
+nt/chain da ../rzn2/ntuple_126473.rzn
+nt/chain da ../rzn2/ntuple_126488.rzn
+nt/chain da ../rzn2/ntuple_126835.rzn
+nt/chain da ../rzn2/ntuple_129071.rzn
+nt/chain da ../rzn2/ntuple_129845.rzn
+nt/chain da ../rzn2/ntuple_129848.rzn
+nt/chain da ../rzn2/ntuple_130427.rzn
+nt/chain da ../rzn2/ntuple_121899.rzn
+nt/chain da ../rzn2/ntuple_121904.rzn
+nt/chain da ../rzn2/ntuple_121906.rzn
+nt/chain da ../rzn2/ntuple_122080.rzn
+nt/chain da ../rzn2/ntuple_122081.rzn
+nt/chain da ../rzn2/ntuple_122083.rzn
+nt/chain da ../rzn2/ntuple_122418.rzn
+nt/chain da ../rzn2/ntuple_122429.rzn
+nt/chain da ../rzn2/ntuple_122586.rzn
+nt/chain da ../rzn2/ntuple_122587.rzn
+nt/chain da ../rzn2/ntuple_122594.rzn
+nt/chain da ../rzn2/ntuple_122800.rzn
+nt/chain da ../rzn2/ntuple_122802.rzn
+nt/chain da ../rzn2/ntuple_122091.rzn
+nt/chain da ../rzn2/ntuple_122430.rzn
+nt/print //bb/lumi2/1
+h/cr/1d 100 'E?COM! - E?t1! - E?t2! - |p?t1! + p?t2!|' 120 -0.2 1.
+nt/print //bb/lumi2/1.(2-epp1-epp2-pmiss)/2 ! ! ! ! ! 100
+nt/print //bb/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 ! ! ! ! ! 100
+nt/plot //bb/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 ! ! ! ! ! 100
+h/cr/1d 100 'E?COM! - E?t1! - E?t2! - "B#p?t1! + p?t2!"B#' 120 -0.2 1.
+nt/plot //bb/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 ! ! ! ! ! 100
+set tsiz 0.4
+set vsiz 0.3
+set ymgl 5.
+nt/plot //bb/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 ! ! ! ! ! 100
+h/cr/1d 100 'E?COM! - E?track 1! - E?track 2! - "B#p?track 1! + p?track 2!"B#' 120 -0.2 1.
+nt/plot //bb/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 ! ! ! ! ! 100
+set tsiz 0.6
+h/cr/1d 100 '(E?COM! - E?track 1! - E?track 2! - "B#p?track 1! + p?track 2!"B#)/E?COM!' 120 -0.2 1.
+nt/plot //bb/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 ! ! ! ! ! 100
+set tsiz 0.5
+h/cr/1d 100 '(E?COM! - E?track 1! - E?track 2! - "B#p?track 1! + p?track 2!"B#)/E?COM!' 120 -0.2 1.
+nt/plot //bb/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 ! ! ! ! ! 100
+nt/plot //da/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 ! ! ! ! ! 101
+h/cr/1d 100 '(E?COM! - E?track 1! - E?track 2! - "B#p?track 1! + p?track 2!"B#)/E?COM!' 150 -0.5 1.
+h/cr/1d 101 '(E?COM! - E?track 1! - E?track 2! - "B#p?track 1! + p?track 2!"B#)/E?COM!' 150 -0.5 1.
+nt/plot //da/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 ! ! ! ! ! 101
+opt logy
+h/plot 101
+nt/plot //da/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 abs(d0close)<0.005&&abs(z0close)<0.075&&visen>0.4 ! ! ! ! 101
+nt/print //bb/lumi2/1
+opt logy
+nt/plot //da/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 abs(d0close)<0.005&&abs(z0close)<0.075 ! ! ! ! 101
+nt/plot //bb/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 1.0*(abs(d0close)<0.005&&abs(z0close)<0.075) ! ! ! 's' 100
+h/plot 101
+h/plot 100 's'
+add 100 100 102 10. 0.
+h/plot 102 's'
+add 100 100 102 9. 0.
+h/plot 101
+h/plot 102 's'
+opt liny
+add 100 100 102 9. 0.
+h/plot 101
+h/plot 102 's'
+add 100 100 102 7. 0.
+h/plot 101
+h/plot 102 's'
+add 100 100 102 6. 0.
+h/plot 101
+h/plot 102 's'
+add 100 100 102 5. 0.
+h/plot 101
+h/plot 102 's'
+opt logy
+add 100 100 102 5. 0.
+h/plot 101
+h/plot 102 's'
+set logy 2
+sigma bot = $GRAFINFO('WNYMIN')
+sigma top = $GRAFINFO('WNYMAX')
+dline 0.2 0.2 $SIGMA(10**bot) $SIGMA(10**top)
+opt liny
+add 100 100 102 5. 0.
+h/plot 101
+h/plot 102 's'
+h/cr/1d 100 '(E?COM! - E?track 1! - E?track 2! - "B#p?track 1! + p?track 2!"B#)/E?COM!' 150 -0.5 1.
+h/cr/1d 101 '(E?COM! - E?track 1! - E?track 2! - "B#p?track 1! + p?track 2!"B#)/E?COM!' 150 -0.5 1.
+h/cr/1d 102 '(E?COM! - E?track 1! - E?track 2! - "B#p?track 1! + p?track 2!"B#)/E?COM!' 150 -0.5 1.
+opt logy
+nt/plot //da/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 abs(d0close)<0.005&&abs(z0close)<0.075&&p1>0.8 ! ! ! ! 100
+nt/plot //da/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 abs(d0close)<0.005&&abs(z0close)<0.075&&p1<0.8 ! ! ! ! 101
+nt/plot //bb/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 abs(d0close)<0.005&&abs(z0close)<0.075&&p1>0.8 ! ! ! ! 102
+h/cr/1d 100 '(E?COM! - E?track 1! - E?track 2! - "B#p?track 1! + p?track 2!"B#)/E?COM!' 150 -0.5 1.
+h/cr/1d 101 '(E?COM! - E?track 1! - E?track 2! - "B#p?track 1! + p?track 2!"B#)/E?COM!' 150 -0.5 1.
+h/cr/1d 102 '(E?COM! - E?track 1! - E?track 2! - "B#p?track 1! + p?track 2!"B#)/E?COM!' 150 -0.5 1.
+opt logy
+nt/plot //da/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 abs(d0close)<0.005&&abs(z0close)<0.075&&epp1>0.8 ! ! ! ! 100
+nt/plot //da/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 abs(d0close)<0.005&&abs(z0close)<0.075&&epp1<0.8 ! ! ! ! 101
+nt/plot //bb/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 abs(d0close)<0.005&&abs(z0close)<0.075&&epp1>0.8 ! ! ! ! 102
+nt/plot //bb/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 abs(d0close)<0.005&&abs(z0close)<0.075&&epp1>0.8 ! ! ! ! 102
+message $hinfo(102,'entries')
+nt/plot //da/lumi2/1.(2.0-epp1-epp2-pmiss)/2.0 abs(d0close)<0.005&&abs(z0close)<0.075&&epp1>0.8 170488 ! ! ! 100
+add 102 102 103 1. 0.
+h/plot 100 'e'
+h/plot 103 's'
+add 102 102 103 0.8 0.
+h/plot 100 'e'
+h/plot 103 's'
+add 102 102 103 0.1 0.
+h/plot 100 'e'
+h/plot 103 's'
+add 102 102 103 0.4 0.
+h/plot 100 'e'
+h/plot 103 's'
+opt liny
+h/plot 100 'e'
+h/plot 103 's'
+add 102 102 103 0.35 0.
+h/plot 100 'e'
+h/plot 103 's'
+opt logy
+add 102 102 103 0.38 0.
+h/plot 100 'e'
+*** End   of history file: Thu May  5 11:55:26 2005

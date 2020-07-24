@@ -1,0 +1,144 @@
+* (bmm) (arr) (gag) (bca) (bcm) (ptoc) (bge) (bgp) (cos) (ptomc)
+
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight [1]
+ve/cr mcvec(2)
+ve/cr mcerr(2)
+h/get_vect/contents [1]54 mcvec
+h/get_vect/errors   [1]54 mcerr
+sigma mceff = mcvec(2)/(mcvec(1)+mcvec(2))*100
+sigma mceer = sqrt(mcvec(2)**2*mcerr(1)**2+mcvec(1)**2*mcerr(2)**2)/(mcvec(1)+mcvec(2))**2*100
+message nominal MC: $SIGMA(mceff) +/- $SIGMA(mceer) %
+
+exec i_cant_believe_scales 1 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]54 mcvec
+sigma mceup = mcvec(2)/(mcvec(1)+mcvec(2))*100
+message +bmm: $SIGMA(mceff-mceup) %
+exec i_cant_believe_scales -1 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]54 mcvec
+sigma mceup = mcvec(2)/(mcvec(1)+mcvec(2))*100
+message -bmm: $SIGMA(mceff-mceup) %
+
+exec i_cant_believe_scales 0 1 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]54 mcvec
+sigma mceup = mcvec(2)/(mcvec(1)+mcvec(2))*100
+message +arr: $SIGMA(mceff-mceup) %
+exec i_cant_believe_scales 0 -1 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]54 mcvec
+sigma mceup = mcvec(2)/(mcvec(1)+mcvec(2))*100
+message -arr: $SIGMA(mceff-mceup) %
+
+exec i_cant_believe_scales 0 0 1 0 0 0 0 0 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]54 mcvec
+sigma mceup = mcvec(2)/(mcvec(1)+mcvec(2))*100
+message +gag: $SIGMA(mceff-mceup) %
+exec i_cant_believe_scales 0 0 -1 0 0 0 0 0 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]54 mcvec
+sigma mceup = mcvec(2)/(mcvec(1)+mcvec(2))*100
+message -gag: $SIGMA(mceff-mceup) %
+
+exec i_cant_believe_scales 0 0 0 1 0 0 0 0 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]54 mcvec
+sigma mceup = mcvec(2)/(mcvec(1)+mcvec(2))*100
+message +bca: $SIGMA(mceff-mceup) %
+exec i_cant_believe_scales 0 0 0 -1 0 0 0 0 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]54 mcvec
+sigma mceup = mcvec(2)/(mcvec(1)+mcvec(2))*100
+message -bca: $SIGMA(mceff-mceup) %
+
+exec i_cant_believe_scales 0 0 0 0 1 0 0 0 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]54 mcvec
+sigma mceup = mcvec(2)/(mcvec(1)+mcvec(2))*100
+message +bcm: $SIGMA(mceff-mceup) %
+exec i_cant_believe_scales 0 0 0 0 1 0 0 0 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]54 mcvec
+sigma mceup = mcvec(2)/(mcvec(1)+mcvec(2))*100
+message -bcm: $SIGMA(mceff-mceup) %
+
+* (bmm) (arr) (gag) (bca) (bcm) (ptoc) (bge) (bgp) (cos) (ptomc)
+
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight [1]
+ve/cr davec(2)
+ve/cr daerr(2)
+h/get_vect/contents [1]66 davec
+h/get_vect/errors   [1]66 daerr
+sigma daeff = davec(2)/(davec(1)+davec(2))*100
+sigma daeer = sqrt(davec(2)**2*daerr(1)**2+davec(1)**2*daerr(2)**2)/(davec(1)+davec(2))**2*100
+message nominal data: $SIGMA(daeff) +/- $SIGMA(daeer) %
+
+exec i_cant_believe_scales 0 0 0 0 0 1 0 0 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]66 davec
+sigma daeup = davec(2)/(davec(1)+davec(2))*100
+message +ptoc: $SIGMA(daeff-daeup) %
+exec i_cant_believe_scales 0 0 0 0 0 -1 0 0 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]66 davec
+sigma daeup = davec(2)/(davec(1)+davec(2))*100
+message -ptoc: $SIGMA(daeff-daeup) %
+
+exec i_cant_believe_scales 0 0 0 0 0 0 1 0 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]66 davec
+sigma daeup = davec(2)/(davec(1)+davec(2))*100
+message +bge: $SIGMA(daeff-daeup) %
+exec i_cant_believe_scales 0 0 0 0 0 0 -1 0 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]66 davec
+sigma daeup = davec(2)/(davec(1)+davec(2))*100
+message -bge: $SIGMA(daeff-daeup) %
+
+exec i_cant_believe_scales 0 0 0 0 0 0 0 1 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]66 davec
+sigma daeup = davec(2)/(davec(1)+davec(2))*100
+message +bgp: $SIGMA(daeff-daeup) %
+exec i_cant_believe_scales 0 0 0 0 0 0 0 -1 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]66 davec
+sigma daeup = davec(2)/(davec(1)+davec(2))*100
+message -bgp: $SIGMA(daeff-daeup) %
+
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 1 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]66 davec
+sigma daeup = davec(2)/(davec(1)+davec(2))*100
+message +cos: $SIGMA(daeff-daeup) %
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 -1 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]66 davec
+sigma daeup = davec(2)/(davec(1)+davec(2))*100
+message -cos: $SIGMA(daeff-daeup) %
+
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 1
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]66 davec
+sigma daeup = davec(2)/(davec(1)+davec(2))*100
+message +ptomc: $SIGMA(daeff-daeup) %
+exec i_cant_believe_scales 0 0 0 0 0 0 0 0 0 -1
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]66 davec
+sigma daeup = davec(2)/(davec(1)+davec(2))*100
+message -ptomc: $SIGMA(daeff-daeup) %
+
+exec i_cant_believe_scales 1 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]66 davec
+sigma daeup = davec(2)/(davec(1)+davec(2))*100
+message +bmm: $SIGMA(daeff-daeup) %
+exec i_cant_believe_scales -1 0 0 0 0 0 0 0 0 0
+exec i_cant_believe_weight [1]
+h/get_vect/contents [1]66 davec
+sigma daeup = davec(2)/(davec(1)+davec(2))*100
+message -bmm: $SIGMA(daeff-daeup) %

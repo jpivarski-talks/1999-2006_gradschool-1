@@ -1,0 +1,293 @@
+***************************************************************
+*
+* "t1had", "t1rad", "t1el", "t1tt",
+* "tracks", "visen", "ccen",
+* "p2", "e1",
+* "ci", "wz", "d0close", "z0close",
+* "run", "ebeam", "neue", "q",
+* "axial", "stereo", "cblo", "cbmd",
+* "rawtk", "pmiss", "tr1", "tr2", "trperp1", "trperp2", "e2",
+* "shperp", "shdot",
+* "l4dec", "l4tracks",
+* "mctype",
+* "wpz", "cotthp"
+*
+***************************************************************
+
+sigma mc16ld = 0
+sigma which = 1
+if $SIGMA(which).eq.1 then
+  exec load_all1.kumac
+  sigma ptobge = 0.775	 
+  sigma ptobgp = 0.807666
+  sigma ctobge = 0.578646
+  sigma ctobgp = 0.642509
+  sigma ma = 140209
+  sigma pa = 105060
+  sigma ca = 23000 
+  sigma mb = 2525  
+  sigma pb = 81188 
+  sigma cb = 65674 
+  sigma ptomc  = (pa - pb*ca/cb)/(ma - mb*ca/cb)
+  sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  sigma ptocup = (pa*1.5*mb/ma - pb)/(ca*1.5*mb/ma - cb)
+  sigma ptocdo = (pa*0.5*mb/ma - pb)/(ca*0.5*mb/ma - cb)
+  ve/cr ptocy(3)
+  ve/inp ptocy $SIGMA(ptocup) $SIGMA(ptoc) $SIGMA(ptocdo)
+  ve/cr ptomcy(3)
+  ve/inp ptomcy 0.551738 0.549987 0.548247
+  ve/cr cosy(3)
+  ve/inp cosy -0.230925 -0.22559 -0.220286
+endif
+if $SIGMA(which).eq.2 then
+  exec load_all2.kumac
+  sigma ptobge = 2.96563
+  sigma ptobgp = 8.58676
+  sigma ctobge = 2.39375
+  sigma ctobgp = 8.95192
+  sigma ma = 168282
+  sigma pa = 228821
+  sigma ca = 92612 
+  sigma mb = 2654	 
+  sigma pb = 306556
+  sigma cb = 252568
+  sigma ptomc  = (pa - pb*ca/cb)/(ma - mb*ca/cb)
+  sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  sigma ptocup = (pa*1.5*mb/ma - pb)/(ca*1.5*mb/ma - cb)
+  sigma ptocdo = (pa*0.5*mb/ma - pb)/(ca*0.5*mb/ma - cb)
+  ve/cr ptocy(3)
+  ve/inp ptocy $SIGMA(ptocup) $SIGMA(ptoc) $SIGMA(ptocdo)
+  ve/cr ptomcy(3) 0.697823 0.695797 0.693778
+  ve/inp ptomcy 
+  ve/cr cosy(3)
+  ve/inp cosy 0.189363 0.203774 0.218146
+endif
+if $SIGMA(which).eq.3 then
+  exec load_all3.kumac
+  sigma ptobge = 6.67031
+  sigma ptobgp = 10.3596
+  sigma ctobge = 5.41458
+  sigma ctobgp = 8.87526
+  sigma ma = 94296
+  sigma pa = 265640
+  sigma ca = 141741
+  sigma mb = 1464
+  sigma pb = 383254
+  sigma cb = 324028
+  sigma ptomc  = (pa - pb*ca/cb)/(ma - mb*ca/cb)
+  sigma ptoc   = (pa*1.0*mb/ma - pb)/(ca*1.0*mb/ma - cb)
+  sigma ptocup = (pa*1.5*mb/ma - pb)/(ca*1.5*mb/ma - cb)
+  sigma ptocdo = (pa*0.5*mb/ma - pb)/(ca*0.5*mb/ma - cb)
+  ve/cr ptocy(3)
+  ve/inp ptocy $SIGMA(ptocup) $SIGMA(ptoc) $SIGMA(ptocdo)
+  ve/cr ptomcy(3)
+  ve/inp ptomcy 1.04988 1.0463 1.04274
+  ve/cr cosy(3)
+  ve/inp cosy -1.16454 -1.1469 -1.12934
+endif
+nt/chain bge /home/mccann/acceptance/rzn5/bgneg.rzn
+nt/chain bgp /home/mccann/acceptance/rzn5/bgpos.rzn
+nt/chain cos /home/mccann/acceptance/rzn5/cosmic.rzn
+
+nt/plot //mc/cuts/1.tracks ((t1had>0).or.(t1rad>0).or.(t1el>0))&&e1<0.85&&p2<0.85&&visen>0.35&&ccen<0.85&&tracks>1&&l4dec>0 ! ! ! 's' 100
+
+
+
+h/cr/1d 100 'axial tracks' 30 -0.5 29.5
+nt/plot //mc/cuts/1.axial ((t1had>0).or.(t1rad>0).or.(t1el>0))&&e1<0.85&&p2<0.85&&visen>0.35&&ccen<0.85&&tracks>1&&l4dec>0 ! ! ! ! 100
+ve/cr hist(30)
+ve/cr errs(30)
+h/get_vect/contents 100 hist
+h/get_vect/errors 100 errs
+ve/print hist 0
+*  HIST( 1) = 0
+*  HIST( 2) = 90
+*  HIST( 3) = 2560
+*  HIST( 4) = 3992
+*  HIST( 5) = 10223
+*  HIST( 6) = 15869
+*  HIST( 7) = 23282
+*  HIST( 8) = 24688
+*  HIST( 9) = 22745
+*  HIST(10) = 16563
+*  HIST(11) = 10629
+*  HIST(12) = 5694
+*  HIST(13) = 2757
+*  HIST(14) = 1093
+*  HIST(15) = 400
+*  HIST(16) = 233
+*  HIST(17) = 0
+*  HIST(18) = 0
+*  HIST(19) = 0
+*  HIST(20) = 0
+*  HIST(21) = 0
+*  HIST(22) = 0
+*  HIST(23) = 0
+*  HIST(24) = 0
+*  HIST(25) = 0
+*  HIST(26) = 0
+*  HIST(27) = 0
+*  HIST(28) = 0
+*  HIST(29) = 0
+*  HIST(30) = 0
+ve/print errs 0
+*  ERRS( 1) = 0
+*  ERRS( 2) = 9.48683
+*  ERRS( 3) = 50.5964
+*  ERRS( 4) = 63.1823
+*  ERRS( 5) = 101.109
+*  ERRS( 6) = 125.972
+*  ERRS( 7) = 152.584
+*  ERRS( 8) = 157.124
+*  ERRS( 9) = 150.814
+*  ERRS(10) = 128.697
+*  ERRS(11) = 103.097
+*  ERRS(12) = 75.4586
+*  ERRS(13) = 52.5071
+*  ERRS(14) = 33.0606
+*  ERRS(15) = 20
+*  ERRS(16) = 15.2643
+*  ERRS(17) = 0
+*  ERRS(18) = 0
+*  ERRS(19) = 0
+*  ERRS(20) = 0
+*  ERRS(21) = 0
+*  ERRS(22) = 0
+*  ERRS(23) = 0
+*  ERRS(24) = 0
+*  ERRS(25) = 0
+*  ERRS(26) = 0
+*  ERRS(27) = 0
+*  ERRS(28) = 0
+*  ERRS(29) = 0
+*  ERRS(30) = 0
+
+
+
+ve/print hist 0
+*  HIST( 1) = 0
+*  HIST( 2) = 60
+*  HIST( 3) = 2356
+*  HIST( 4) = 3906
+*  HIST( 5) = 9678
+*  HIST( 6) = 15964
+*  HIST( 7) = 24442
+*  HIST( 8) = 28356
+*  HIST( 9) = 27902
+*  HIST(10) = 22502
+*  HIST(11) = 16038
+*  HIST(12) = 9225
+*  HIST(13) = 4832
+*  HIST(14) = 2221
+*  HIST(15) = 955
+*  HIST(16) = 508
+*  HIST(17) = 0
+*  HIST(18) = 0
+*  HIST(19) = 0
+*  HIST(20) = 0
+*  HIST(21) = 0
+*  HIST(22) = 0
+*  HIST(23) = 0
+*  HIST(24) = 0
+*  HIST(25) = 0
+*  HIST(26) = 0
+*  HIST(27) = 0
+*  HIST(28) = 0
+*  HIST(29) = 0
+*  HIST(30) = 0
+ve/print errs 0
+*  ERRS( 1) = 0
+*  ERRS( 2) = 7.74597
+*  ERRS( 3) = 48.5386
+*  ERRS( 4) = 62.498
+*  ERRS( 5) = 98.3768
+*  ERRS( 6) = 126.349
+*  ERRS( 7) = 156.339
+*  ERRS( 8) = 168.392
+*  ERRS( 9) = 167.039
+*  ERRS(10) = 150.007
+*  ERRS(11) = 126.641
+*  ERRS(12) = 96.0469
+*  ERRS(13) = 69.5126
+*  ERRS(14) = 47.1275
+*  ERRS(15) = 30.9031
+*  ERRS(16) = 22.5389
+*  ERRS(17) = 0
+*  ERRS(18) = 0
+*  ERRS(19) = 0
+*  ERRS(20) = 0
+*  ERRS(21) = 0
+*  ERRS(22) = 0
+*  ERRS(23) = 0
+*  ERRS(24) = 0
+*  ERRS(25) = 0
+*  ERRS(26) = 0
+*  ERRS(27) = 0
+*  ERRS(28) = 0
+*  ERRS(29) = 0
+*  ERRS(30) = 0
+
+
+
+ve/print hist 0
+*  HIST( 1) = 0
+*  HIST( 2) = 74
+*  HIST( 3) = 1297
+*  HIST( 4) = 2444
+*  HIST( 5) = 5845
+*  HIST( 6) = 9697
+*  HIST( 7) = 14115
+*  HIST( 8) = 15961
+*  HIST( 9) = 15587
+*  HIST(10) = 12103
+*  HIST(11) = 8170
+*  HIST(12) = 4742
+*  HIST(13) = 2379
+*  HIST(14) = 989
+*  HIST(15) = 441
+*  HIST(16) = 216
+*  HIST(17) = 0
+*  HIST(18) = 0
+*  HIST(19) = 0
+*  HIST(20) = 0
+*  HIST(21) = 0
+*  HIST(22) = 0
+*  HIST(23) = 0
+*  HIST(24) = 0
+*  HIST(25) = 0
+*  HIST(26) = 0
+*  HIST(27) = 0
+*  HIST(28) = 0
+*  HIST(29) = 0
+*  HIST(30) = 0
+ve/print errs 0
+*  ERRS( 1) = 0
+*  ERRS( 2) = 8.60233
+*  ERRS( 3) = 36.0139
+*  ERRS( 4) = 49.4368
+*  ERRS( 5) = 76.4526
+*  ERRS( 6) = 98.4733
+*  ERRS( 7) = 118.807
+*  ERRS( 8) = 126.337
+*  ERRS( 9) = 124.848
+*  ERRS(10) = 110.014
+*  ERRS(11) = 90.3881
+*  ERRS(12) = 68.8622
+*  ERRS(13) = 48.775
+*  ERRS(14) = 31.4484
+*  ERRS(15) = 21
+*  ERRS(16) = 14.6969
+*  ERRS(17) = 0
+*  ERRS(18) = 0
+*  ERRS(19) = 0
+*  ERRS(20) = 0
+*  ERRS(21) = 0
+*  ERRS(22) = 0
+*  ERRS(23) = 0
+*  ERRS(24) = 0
+*  ERRS(25) = 0
+*  ERRS(26) = 0
+*  ERRS(27) = 0
+*  ERRS(28) = 0
+*  ERRS(29) = 0
+*  ERRS(30) = 0

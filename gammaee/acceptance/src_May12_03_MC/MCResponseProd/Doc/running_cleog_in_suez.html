@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title> Running Cleog in Suez </title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+
+<h1> Running Cleog in Suez </h1> <hr>
+See
+<a href="http://www.lns.cornell.edu/restricted/CLEO/CLEO3/soft/cleog3/suezCleogexe.html#howtorun">
+How to run Cleog under Suez</a>
+<p>
+<br>
+
+
+<h1> Example Scripts </h1>
+See the script to run <strong>suezCleog.exe</strong> - Cleog under suez 
+<a href="http://www.lns.cornell.edu/~cleo3/scripts/cleo3mc">
+/nfs/cleo3/scripts/cleo3mc</a>.
+
+This scripts calls the tcl script to setup the Suez commands to run the
+Monte Carlo,
+<a href="http://www.lns.cornell.edu/~cleo3/development/src/SuezScripts/cleog.tcl">
+$C3_CVSSRC/SuezScripts/cleog.tcl</a>
+<p>
+<br>
+
+
+<h1> Info on How Cleog Runs Under Suez </h1>
+The run number and number of events that <code>suezCleog.exe</code> uses
+is triggered externally to Cleog.  Cleog is a producer and will produce what
+it's ordered to do.  The run number is set by QQ, currently Cleog reads
+in a roar file from QQ but in the future QQ will run within Suez.
+<p>
+<br>
+
+
+<h1> User Interface  </h1>
+Suez/Tcl is the "main" user interface/job control.
+Users can optionally use the FFREAD and KUIP user
+interfaces by setting optional Suez run-time parameters.
+These allow "experts" to specify additional commands.
+We want to continue to convert these switches to Suez
+run-time parameters so that we can completely remove
+these packages.  We want all CLEO-III software to use
+a common framework and user interface.
+Note - when using KUIP you must enter 'quit' from the kuip prompt and
+not exit (a message is printed telling you to do this) as exit
+will exit the program - I didn't figure out how to disable this.
+<p>
+<br>
+
+
+<h1> MCResponseProd's Suez Run-Time Parameters </h1>
+
+How to change MCResponseProd's Suez Run-Time Parameters: <br>
+<code> Suez> prod sel MCResponseProd </code> <br>
+<code> Suez> prod inter MCResponseProd</code> <br>
+<code> Suez> change parameter here </code> <br>
+<code> Suez> exit</code>  <br>
+
+<ul>
+  <li> <code>UseKuip</code> - Boolean to call KUIP at the begining of the
+       job to access Cleog interactive commands.  The default value is false.
+       <p>
+       
+  <li> <code>KuipEveryEvent</code> - Boolean to call KUIP before each event
+       The default value is false.  If you specify KuipEveryEvent you do not have to set
+       UseKuip, if you do you'll call KUIP twice before the 1st event.
+       <p>
+
+
+  <li> <code>UseFFRead</code> - Boolean to call FFREAD user interface package.
+       The default value is false.
+
+  <li> <code>GeantBatch</code> - Boolean to set Geant BATCH mode.  Default is true.
+       When BATCH mode is set, Geant doesn't prompt the user for the workstation
+       type to open a higz window.  If the user is running interactively and wants
+       to open the higz window, set this parameter to false.
+
+  <li> <code> PrintGeantBanks </code> Boolean to dump the Geant data structures
+       at the begining of the job.  The default is true.
+</ul>
+<p>
+<br>
+
+
+<h1> KUIP </h1>
+The kuip prompt is turned on by setting the Suez run time parameters
+<code>UseKuip</code> or <code>KuipEveryEvent</code>.  See above.
+<p>
+<br>
+
+
+<h1> FFREAD </h1>
+Reading FFREAD cards is turned on by setting the Suez run-time parameter
+<code>UseFFRead</code> true.
+<p>
+<br>
+
+
+
+<hr>
+Go back to <a href="MCResponseProd.html">
+MCResponseProd</a> documentation
+
+<hr>
+<address><a href="http://w4.lns.cornell.edu/~jjo/">John O'Neill &lt;jjo@mail.lns.cornell.edu &gt;</a></address>
+
+$Id: running_cleog_in_suez.html,v 1.6 2000/05/22 16:01:01 jjo Exp $
+<!-- 
+$Log: running_cleog_in_suez.html,v $
+Revision 1.6  2000/05/22 16:01:01  jjo
+Update for new FFREAD and BATCH behavior
+
+Revision 1.5  1999/10/13 17:51:56  jjo
+Update documentation
+
+Revision 1.4  1999/05/05 15:57:11  jjo
+Add file on BuildGeantGeometry object
+
+Revision 1.3  1999/05/03 20:21:22  jjo
+Reorganize code to make running Cleog under Suez more robust
+
+Revision 1.2  1999/04/19 19:20:12  jjo
+Add figure of geant calls by the producer
+
+-->
+
+<br>
+<!-- hhmts start -->
+Last modified: Tue May  9 19:31:42 EDT 2000
+<!-- hhmts end -->
+</body> </html>

@@ -1,0 +1,13 @@
+#$ -l u5
+#$ -o /cdat/tem/mccann/count_db16.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/acceptance/run4/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Dec10_03
+
+export USER_DB=16
+
+suez -f count_events_16b.tcl
+rm -f core

@@ -1,0 +1,354 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+
+\usepackage[pdftex]{graphicx}
+%\usepackage{graphicx}
+
+\begin{document}
+
+\newcommand{\subs}[1]{{\mbox{\scriptsize #1}}}
+\newcommand{\inputfile}[1]{\noindent {\bf Filename: #1} \setlength{\baselineskip}{0 cm} \input{files/#1} \normalspacing \vspace{0.5 cm}}
+\newcommand{\inputfilenoname}[1]{\noindent \setlength{\baselineskip}{0 cm} \input{files/#1} \normalspacing \vspace{0.5 cm}}
+
+\newcommand{\dxy}{$d_{XY}$}
+\newcommand{\dz}{$d_Z$}
+\newcommand{\pone}{$|\vec{p}_1|$}
+\newcommand{\ptwo}{$|\vec{p}_2|$}
+\newcommand{\eone}{$E_1$}
+\newcommand{\etwo}{$E_2$}
+\newcommand{\ethree}{$E_3$}
+\newcommand{\eisr}{$E_{\mbox{\scriptsize ISR}}$}
+\newcommand{\visen}{$E_{\mbox{\scriptsize vis}}$}
+\newcommand{\hotvisen}{$E_{\mbox{\scriptsize vis}}^{\mbox{\scriptsize hot}}$}
+\newcommand{\lfourdec}{L4$_{\mbox{\scriptsize dec}}$}
+\newcommand{\pdotp}{$|\vec{p}_1\cdot\vec{p}_2|$}
+\newcommand{\ebeam}{$E_{\mbox{\scriptsize beam}}$}
+\newcommand{\ecom}{$E_{\mbox{\scriptsize COM}}$}
+\newcommand{\pz}{$\sum p_z$}
+
+\newcommand{\scosmic}{$s_{\mbox{\scriptsize cosmic}}$}
+
+\begin{center}
+  \Huge $\Gamma_{ee}$ Paper Summary (for Paper Committee, not PRL)
+\end{center}
+
+\section{The Goal}
+
+To measure $\Gamma_{ee}$, I will need to produce very accurate plots
+of $\Upsilon$ cross-section versus beam energy (lineshape scans).  To
+get $\Gamma_{ee}$, I can fit the following function to the scans:
+\begin{multline}
+  \sigma_\subs{apparent}(E) = (\mbox{Breit-Wigner} \, \otimes \,
+  \mbox{Radiative corrections} \\ \otimes \, \mbox{Beam-energy
+  resolution}) \, + \, \mbox{backgrounds}
+\end{multline}
+where $\otimes$ is a convolution operator.  Extracting the area of the
+Breit-Wigner, I can relate it to $\Gamma_{ee}$ through
+\begin{equation}
+  \Gamma_{ee} = \left(\frac{{M_\Upsilon}^2}{6 \pi^2}\right)
+  \mbox{(area of the Breit-Wigner).}
+\end{equation}
+
+The data for these scans are in the CLEO-III database (approximately
+November 2001 -- September 2002), but what I need to do is produce a
+convincing argument that I know the $\Upsilon$ cross-section at every
+point very well.  By ``knowing well,'' I mean both that the
+uncertainty is small and that the argument justifying the uncertainty
+is rigorous.  (This is why I had difficulty quoting partial results
+for the past few years: I didn't have a rigorous argument for even a
+large uncertainty.)
+
+(To avoid large backgrounds that can distort the lineshape, I measure
+the hadronic cross-section and multiply by $(1 -
+3\mathcal{B}_{\mu\mu})$.  Although this features prominently in the
+PDG's description of this measurement (page 837 in the big orange
+book), it is a technical detail.  Quoting the hadronic version of
+$\Gamma_{ee}$, written as
+$\Gamma_{ee}\Gamma_\subs{had}/\Gamma_\subs{tot}$, is a way of avoiding
+dependence on lepton universality until the last step.  Even before
+Istvan's measurement, the fractional uncertainty in $(1 -
+3\mathcal{B}_{\mu\mu})$ was only about half a percent.)
+
+\section{Relative and Absolute Cross-Section}
+
+I will break this argument into two parts.  First, I argue that I
+understand the fractional differences in cross-section from one energy
+point to the next (this gives me lineshapes that I can fit), and I
+call this the relative cross-section.  Second, I will argue that I
+understand the normalization of all energy points (to translate my fit
+result into the true area of the Breit-Wigner, and therefore the true
+$\Gamma_{ee}$).  I call this the absolute cross-section.
+
+These two arguments have been interleaved somewhat in the paper
+because they share a lot of technology.  (The primary consideration in
+organizing the paper was to make it causal: I must never use terms
+that I haven't yet defined.)  The luminosity calibration (turning a
+number of counts into a number of inverse nanobarns) and hadronic
+efficiency measurement are always absolute cross-section issues: the
+first sets the vertical axis in the lineshape scan plots and the
+second translates a fitted Breit-Wigner area into a true Breit-Wigner
+area.  Backgrounds are an issue for relative cross-sections
+(subtracting the right amount from every run) and an issue for
+absolute cross-sections (subtracting the right amount from the data
+used to compare/check the hadronic efficiency measurement).
+
+Once I believe that there are no backgrounds in my count of hadrons
+(other than what will be subtracted in the fit) or in my count of
+gamgams ($e^+e^- \to \gamma\gamma$), and that the efficiency of each
+of these is constant with respect to run number/energy, I can
+calculate relative cross-sections.  I do this in the simplest way
+possible:
+\begin{equation}
+  \sigma_\subs{relative} = \frac{\mbox{\# hadrons}}{\mbox{\# gamgams}}
+  \, \times \, 1/s\mbox{.} \label{o_great_equation}
+\end{equation}
+(The factor of $1/s$ is the ``beam-energy correction.'')  The units of
+$\sigma_\subs{relative}$ are related to inverse nanobarns by a factor
+that can be determined by comparing my continuum gamgam count with a
+standard luminosity measurement for these events.
+
+Here is how the two arguments figure into each chapter:
+\begin{enumerate}
+\setcounter{enumi}{3}
+
+  \item {\bf Event Selection Criteria:} I define event types that I
+    will count, preceded by motivation for why I need to count them.
+    This is foundational, necessary for both arguments.
+
+  \item {\bf Datasets, Scale Factors and Backgrounds:} This is where I
+    describe the data that are available to me (datasets), how
+    background samples are normalized before subtraction (scale
+    factors), and what these scale factors imply about the size of the
+    backgrounds I'm subtracting (backgrounds).  The ``database
+    dataset'' will be used to create the lineshape scans, so scale
+    factors and backgrounds in this dataset are important for the
+    relative cross-section.  The ``unfiltered dataset'' will be
+    used in the argument justifying hadronic efficiency, so everything
+    related to this dataset is relevant for absolute cross-section.
+
+  \item {\bf Signal Monte Carlo:} It seemed to me that I should have a
+    Monte Carlo chapter, so that I could defer Monte Carlo discussion
+    to one place.  (When I wrote it (last), I could find little to
+    say, so this chapter has a dubious future.)  Monte Carlo will only
+    ever be relevant for absolute cross-section: for hadronic
+    efficiency and for luminosity calibration.
+
+  \item {\bf Upsilons from Di-Pion Cascades:} This is a special
+    technique for measuring hadronic efficiency, which compliments the
+    use of the unfiltered dataset.  It therefore only concerns the
+    absolute cross-section.
+
+  \item {\bf Trigger Efficiency:} This chapter is split into two
+    sections.  The first is a set of in-depth studies of the trigger
+    efficiency for hadrons, which is for absolute cross-section.  The
+    second is a study of how the trigger for gamgams varies from one
+    run to the next, which is strictly for relative cross-section.
+
+  \item {\bf Signal Efficiency:} Here is where I use the unfiltered
+    dataset and collect what I have learned from the Di-Pion Cascades
+    and Trigger studies to quote a final hadronic efficiency.  It's
+    for absolute cross-section.
+
+  \item {\bf Search for Gamgam Backgrounds:} I chose to measure
+    relative luminosity by counting gamgams because $\Upsilon \not\to
+    \gamma\gamma$.  But, in principle at least, $\chi_b$ can decay to
+    $\gamma\gamma$ and $\Upsilon$ can decay to $\chi_b\gamma$, where
+    the third photon is very small ($\sim$100 MeV).  These
+    three-photon events might be an energy-dependent background to the
+    gamgam count, so I searched for them.  I didn't find any.
+
+  \item {\bf Run-by-Run Dependence of Hadronic Cross-Section:} This is
+    a battery of tests to check for any bad runs that would distort
+    the relative cross-section.  The first two are concerned with the
+    CC counting gamgams while the DR has ceased to count hadrons, and
+    vice-versa.  The rest are sanity checks of relative hadronic
+    cross-section: it should be constant during each run, and constant
+    for constant beam energy.
+
+  \item {\bf Lineshape Fitting:} All that I need to fit the
+    lineshapes, measure systematic errors in the lineshape, and
+    determine if the beam energy calibration is varying during a scan
+    is the relative cross-section.  I've just completed this study and
+    I'm writing it up now.
+
+  \item {\bf Luminosity Calibration:} This is not yet written--- I
+    need to re-connect with Surik about the CLEO-III luminosity
+    measurement.  It's the last step in the absolute cross-section
+    measurement which will translate my fit results into
+    $\Gamma_{ee}$.
+
+\end{enumerate}
+
+\section{A summary of Hadronic $\Upsilon$ Counting}
+
+This involves only the database dataset and yields only relative
+cross-sections.
+
+To make them easily understood, I made the hadronic cuts as loose and
+as simple as possible.  A hadronic event must pass
+\begin{itemize}
+  \item any relevant trigger line, \label{wonderfulcuts}
+  \item the event vertex must be close to beamspot (cut well beyond
+    5$\sigma$),
+  \item $e^+e^-$ and $\mu^+\mu^-$ are rejected with a cut on the
+    largest track momentum (very stable),
+  \item two-photon and junk are rejected with visible energy $>$ 40\%
+    the center-of-mass energy (carefully studied), and
+  \item the level 4 trigger, \lfourdec\ (very efficient after
+    everything else).
+\end{itemize}
+These cuts were designed to be highly efficient for $\Upsilon \to$
+hadrons; their efficiency for continuum hadrons is unknown.  To gauge
+how the efficiency for continuum hadrons changes with beam energy, I
+fit for its dependence on the three continuum points (in Chapter 12,
+not yet written).
+
+I count the number of hadrons in each run, the number of beam-gas
+events, and the number of cosmic rays.  Because I have samples of
+no-beam and single-beam data (Chapter 5), I can translate these
+beam-gas and cosmic ray counts into a number of beam-gas and cosmic
+ray events expected to feed into my raw hadron count.  The beam-gas
+background is small (0.3\%) but poorly measured (it looks like
+two-photon events feed into my beam-gas cuts: Figures 5.2 and 5.6-b),
+and the cosmic ray background is somewhat larger (0.5\%) and
+well-measured.  Therefore, in subtracting non-beam-beam backgrounds
+from my hadron count, I apply all of the cosmic ray correction,
+propagating statistical errors only, and 50\% $\pm$ 50\% of the
+beam-gas correction.  This is ``\# hadrons'' in Equation
+\ref{o_great_equation} (of this document).
+
+For relative luminosities, I count a subset of gamgams, avoiding
+regions with tiles that are unresponsive for part of the $\Upsilon$
+running, so that the trigger efficiency is constant.  I assume that
+the trigger efficiency is the only gamgam cut that may be susceptible
+to run-by-run variations: the rest are cuts on the geometry of the two
+largest showers (hot showers are not rejected) and a lower bound on
+the second-biggest shower energy.  (An upper bound might suffer from
+intermittent inefficiencies if the photon lands in a noisy crystal.  I
+haven't checked for the possibility that some crystals may
+intermittently fail to read out, but Brian assured me that this is
+remote.)  In Chapter 10, I search for a background to gamgam counting,
+but don't find it.  The raw gamgam count is ``\# gamgams'' in Equation
+\ref{o_great_equation} (of this document).  (I don't explicitly apply
+the run-by-run trigger efficiency correction described on page 75 for
+a technical reason.)
+
+For every energy point, I calculate $\sigma_\subs{relative}$ (for the
+continuum and high-energy points far from the resonance, I combine all
+available data).  The background level is meaningless but allowed to
+float in the fit (and it is very well measured with 0.1 fb$^{-1}$ of
+data).  The vertical scale is meaningless until luminosity is
+calibrated, and the areas of the $\Upsilon$ peaks need to be corrected
+for hadronic efficiency.
+
+\section{A Summary of the Hadronic Efficiency Measurement}
+
+This is the most difficult part of the work because a priori, half of
+all $\Upsilon$ decays might be to neutrinos, and if I didn't know
+that, $\Gamma_{ee}$ would be wrong by a factor of two.  There are
+three major parts:
+\begin{enumerate}
+  \item the study of $\Upsilon(2S) \to \pi^+\pi^- \Upsilon(1S)$
+    (di-pion cascades), which is used to put limits on these invisible
+    decays in the form of ``validity errors'' on the Monte Carlo
+    (Chapter 7).
+  \item Extra studies of $\Upsilon(1S)$, $\Upsilon(2S)$,
+    $\Upsilon(3S)$ trigger efficiency, because the cascades study
+    isn't conclusive enough.  (While the cascades study would find
+    invisible decay modes, it can't be trusted to measure the details
+    of the trigger, only an upper and a lower limit.  Technical issue:
+    if TriggerData were available after pass2, it would be possible.)
+    This is the first of two sections in Chapter 8.
+  \item Comparisons of the unfiltered dataset with Monte Carlo, to
+    argue that the validity of the Monte Carlo measured in
+    $\Upsilon(1S)$ through cascades applies to the $\Upsilon(2S)$ and
+    $\Upsilon(3S)$ as well.  Here I explicitly assume that the
+    invisible decays that prompted me to do the cascades study aren't
+    peculiar to the $\Upsilon(2S)$ and $\Upsilon(3S)$.  This is part
+    of Chapter 9: the rest is a combination of these results and a
+    summary.
+\end{enumerate}
+
+The di-pion cascades study is an inclusive search for $\Upsilon(2S)
+\to \pi^+\pi^- \Upsilon(1S)$, where very stringent requirements are
+placed on the two pions to guarantee that the event passed trigger and
+database filters solely because of the pions: the $\Upsilon(1S)$ can
+decay any way it likes.  In choosing the two pion combination, I don't
+take the pair of tracks whose recoil mass is closest to
+$M_{\Upsilon(1S)}$, but randomly choose from those that are within 20
+MeV of $M_{\Upsilon(1S)}$.  This way, I can be sure that the
+combinatoric background is flat under the peak, and I fit it with a
+set of orthogonal polynomials.  This fit is used to normalize the
+sideband events before subtracting them from the peak events, yielding
+unbiased distributions of $\Upsilon(1S)$.  The fit uncertainties are a
+source of systematic error.
+
+The cascades study was performed twice, with two datasets: a
+``little'' dataset, which required the TwoTrack trigger (two tracks
+and a prescale), and a ``big'' dataset, which required the Hadron
+trigger (three tracks and a 150 MeV shower).  The little cascades
+study is completely unbiased, and the big study requires that the
+$\Upsilon(1S)$ generated one track and a 150 MeV shower.  This is
+actually desirable, since I want to measure cut efficiencies given the
+trigger, and this one track, one shower requirement is a necessary
+condition for the trigger.  For a sufficient condition, to bound the
+trigger efficiency between a necessary and a sufficient condition, I
+had to do more work.  This got complicated.
+
+The bottom line for the cascades study was a comparison of data and
+Monte Carlo cut efficiencies for each of the cuts described on page
+\pageref{wonderfulcuts} (of this document), applied cumulatively.
+Monte Carlo was generated for the di-pion mode and passed through all
+the same machinery as data.  A ``validity error'' was assigned to each
+cut by adding the data--Monte Carlo difference to their errors in
+quadrature.  Because of the large validity error for the trigger, and
+the fact that there were technical difficulties in defining it, I
+leave the trigger efficiency for the following chapter.  The rest of
+the validity errors are added as systematic errors in the efficiency
+measurement, except for the cuts on visible energy and \lfourdec,
+which are handled in a special way that I will describe later.
+
+The trigger efficiency is studied by dividing the trigger into a
+tracking part and a calorimeter part.  For the calorimeter part, I
+accept events using only the TwoTrack trigger, and then compare data
+and Monte Carlo efficiencies.  Again, the systematic error is taken to
+be the data--Monte Carlo difference plus errors in quadrature.  For
+the tracking part, there is no unbiased neutral trigger in CLEO-III,
+so I study the trigger efficiency by modeling it in a toy Monte Carlo.
+Input distributions to this toy Monte Carlo are varied to quantify all
+the systematic errors.  Finally, I also plot data/Monte Carlo overlays
+of the four variables that are used in the trigger decision as a
+sanity check.  Their distributions agree moderately well, and I have
+already claimed a trigger uncertainty which is 3 times its
+inefficiency.
+
+The unfiltered dataset used to extend the $\Upsilon(1S)$ validity
+errors to the $\Upsilon(2S)$ and $\Upsilon(3S)$ is a set of runs that
+I have pass2'ed myself.  I do this because events in the database have
+been filtered according to event type, and I want to do a fair
+data/Monte Carlo comparison.  (This also gives me access to
+TriggerData, which I use to plot trigger variables in Chapter 8.)  I
+subtract continuum, beam-gas, and cosmic rays from these datasets
+(this procedure is described in Chapter 5, with the other background
+subtractions), and overlay data and Monte Carlo for each cut variable,
+cumulatively.
+
+The ``special way'' that the visible energy and \lfourdec\ cut
+efficiencies are measured also partially involves the unfiltered
+dataset.  The fraction of events that fail the 40\% visible energy cut
+is the sum of those that fail 0--30\% and those that fail 30--40\%.
+Because of large two-photon backgrounds in the 0--30\% region (which
+are particularly hard to control because they upset the $1/s$ scaling
+in the continuum subtraction), the di-pion cascade study is preferred
+for measuring this part of the spectrum.  Because the 30--40\% part is
+significantly non-zero (0.5\% $\pm$ 0.1\%) and varies a little from
+resonance to resonance, this part should be measured in the unfiltered
+dataset.  These two disjoint contributions are added together.  Since
+\lfourdec\ is very efficient after all other cuts (100\% $\pm$
+0.03\%), it is simply measured by counting failures in the unfiltered
+dataset.
+
+These efficiencies and systematic errors, derived from different
+techniques, are all combined in Tables 9.5 and 9.6.
+
+\end{document}

@@ -1,0 +1,536 @@
+* nt/chain data ../rzn/ntuple_121899.rzn
+* nt/chain data ../rzn/ntuple_122080.rzn
+* nt/chain data ../rzn/ntuple_122133.rzn
+* nt/chain data ../rzn/ntuple_122147.rzn
+* nt/chain data ../rzn/ntuple_122418.rzn
+* nt/chain data ../rzn/ntuple_123817.rzn
+* nt/chain data ../rzn/ntuple_123853.rzn
+* nt/chain data ../rzn/ntuple_124684.rzn
+* nt/chain data ../rzn/ntuple_125176.rzn
+* nt/chain data ../rzn/ntuple_126488.rzn
+* nt/chain data ../rzn/ntuple_126870.rzn
+* nt/chain data ../rzn/ntuple_129564.rzn
+* nt/chain data ../rzn/ntuple_129572.rzn
+h/file 30 ../rzn/ntuple_121899.rzn
+h/file 31 ../rzn/ntuple_122080.rzn
+h/file 32 ../rzn/ntuple_122133.rzn
+h/file 33 ../rzn/ntuple_122147.rzn
+h/file 34 ../rzn/ntuple_122418.rzn
+h/file 35 ../rzn/ntuple_123817.rzn
+h/file 36 ../rzn/ntuple_123853.rzn
+h/file 37 ../rzn/ntuple_124684.rzn
+h/file 38 ../rzn/ntuple_125176.rzn
+h/file 39 ../rzn/ntuple_126488.rzn
+h/file 40 ../rzn/ntuple_126870.rzn
+h/file 41 ../rzn/ntuple_129564.rzn
+h/file 42 ../rzn/ntuple_129572.rzn
+h/file 50 ../rzn/ntuple_gamgam.rzn
+h/file 51 ../rzn/ntuple_bhabha.rzn
+nt/cuts $1 ntk==2&&pmiss<0.2&&abs(2-p1-p2-pmiss)<0.2&&e2*ebeam>0.5&&(pos1-0.5)*(pos2-0.5)<0
+nt/cuts $2 abs((t1costh*pos1+t2costh*pos2)+(t1costh*(1-pos1)+t2costh*(1-pos2)))<0.005
+nt/cuts $3 abs((t1costh*pos1+t2costh*pos2)+(t1costh*(1-pos1)+t2costh*(1-pos2))+0.01)<0.005
+
+nt/plot //lun30/lumi/1.e1%e2 ntk==2&&pmiss<0.2&&abs(2-p1-p2-pmiss)<0.2&&(pos1-0.5)*(pos2-0.5)<0&&ccen<0.2
+dline 0.04 0.04 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+dline $GRAFINFO('WNXMIN') $GRAFINFO('WNXMAX') 0.04 0.04
+
+nt/plot //lun31/lumi/1.e2 ntk==2&&pmiss<0.2&&abs(2-p1-p2-pmiss)<0.2&&(pos1-0.5)*(pos2-0.5)<0&&abs(s1costh)<0.9&&abs(s2costh)<0.9
+nt/plot //lun31/lumi/1.e2 ntk==2&&pmiss<0.05&&abs(2-p1-p2-pmiss)<0.2&&(pos1-0.5)*(pos2-0.5)<0&&abs(s1costh)<0.9&&abs(s2costh)<0.9 ! ! ! 's'
+
+
+
+* l1tt, l1rt, l1el, l1bb, l1eb,
+* rawtk, ntk, ebeam, e1, e2, p1, p2, ccen, neue, chen,
+* pos1, pos2,
+* s1costh, s2costh, s1phi, s2phi,
+* t1costh, t2costh, t1phi, t2phi,
+* d0close, z0close, pmiss
+
+* nt/cuts $15 (rawtk>=2).and.(tracks<=4).and.(pmiss<0.2).and.(abs(2-tr1-tr2-pmiss)<0.2).and.(visen>0.75).and.(ccen>0.75).and.(abs(d0close)<0.005).and.(abs(z0close)<0.05)
+
+* nt/plot //data/lumi/1.sin((t1phi*pos1+t2phi*pos2)-(t1phi*(1-pos1)+t2phi*(1-pos2))) $1
+* nt/plot //data/lumi/1.(t1costh*pos1+t2costh*pos2) $1
+* nt/plot //data/lumi/1.(t1costh*pos1+t2costh*pos2)+(t1costh*(1-pos1)+t2costh*(1-pos2)) $1
+
+* nt/plot //data/lumi/1.(s1phi-s2phi-3.1415926)*(abs(s1phi-s2phi-3.1415926)<1)+(s1phi-s2phi+3.1415926)*(abs(s1phi-s2phi+3.1415926)<1) $1
+* * where 2pi/8 = 0.78 is the tolerence for phi back-to-backness
+
+* h/cr/1d 100 'denominator cos[Q]?p!' 100 -1. 1.
+* h/cr/1d 101 'numer 2CBHI efficiency versus cos[Q]?p!' 100 -1. 1.
+* h/cr/1d 102 'numer 2CEHI efficiency versus cos[Q]?p!' 100 -1. 1.
+* h/cr/1d 111 '2CBHI efficiency versus cos[Q]?p!' 100 -1. 1.
+* h/cr/1d 112 '2CEHI efficiency versus cos[Q]?p!' 100 -1. 1.
+* zone 1 3
+* do i = 30, 42
+*   nt/project 100 //lun[i]/lumi/1.(t1costh*pos1+t2costh*pos2) l1rt==1&&$1&&$2
+*   nt/project 101 //lun[i]/lumi/1.(t1costh*pos1+t2costh*pos2) l1rt==1&&$1&&$2&&l1bb==1
+*   nt/project 102 //lun[i]/lumi/1.(t1costh*pos1+t2costh*pos2) l1rt==1&&$1&&$2&&l1eb==1
+*   h/plot 100
+*   h/plot 101
+*   h/plot 102
+* enddo
+* ve/cr numb(100)
+* ve/cr nume(100)
+* ve/cr den(100)
+* h/get_vect/contents 100 den
+* h/get_vect/contents 101 numb
+* h/get_vect/contents 102 nume
+* ve/cr b(100)
+* ve/cr e(100)
+* ve/cr berr(100)
+* ve/cr eerr(100)
+* do i = 1, 100
+*   ve/inp b([i]) $SIGMA(numb([i])/den([i]))
+*   ve/inp e([i]) $SIGMA(nume([i])/den([i]))
+*   ve/inp berr([i]) $SIGMA(sqrt(b([i])*(1.-b([i]))/numb([i])))
+*   ve/inp eerr([i]) $SIGMA(sqrt(e([i])*(1.-e([i]))/nume([i])))
+* enddo
+* h/put_vect/contents 111 b
+* h/put_vect/errors 111 berr
+* h/put_vect/contents 112 e
+* h/put_vect/errors 112 eerr
+* zone 1 1
+* h/plot 111
+* h/plot 112 's'
+
+
+
+
+
+h/cr/1d 100 'denominator cos[Q]?p!' 100 -1. 1.
+h/cr/1d 101 'numer 2CBHI efficiency versus cos[Q]?p!' 100 -1. 1.
+h/cr/1d 111 '2CBHI efficiency versus cos[Q]?p!' 100 -1. 1.
+zone 1 2
+do i = 30, 42
+  nt/project 100 //lun[i]/lumi/1.(t1costh*pos1+t2costh*pos2) l1rt==1&&$1&&$2
+  nt/project 101 //lun[i]/lumi/1.(t1costh*pos1+t2costh*pos2) l1rt==1&&$1&&$2&&l1bb==1
+  h/plot 100
+  h/plot 101
+enddo
+ve/cr numb(100)
+ve/cr den(100)
+h/get_vect/contents 100 den
+h/get_vect/contents 101 numb
+ve/cr b(100)
+ve/cr berr(100)
+do i = 1, 100
+  ve/inp b([i]) $SIGMA(numb([i])/den([i]))
+  ve/inp berr([i]) $SIGMA(sqrt(b([i])*(1.-b([i]))/numb([i])))
+enddo
+h/put_vect/contents 111 b
+h/put_vect/errors 111 berr
+zone 1 1
+h/plot 111
+
+
+
+h/cr/1d 200 'denominator cos[Q]?p!' 100 -1. 1.
+h/cr/1d 201 'numer 2CBHI efficiency versus cos[Q]?p!' 100 -1. 1.
+h/cr/1d 211 '2CBHI efficiency versus cos[Q]?p!' 100 -1. 1.
+zone 1 2
+do i = 30, 42
+  nt/project 200 //lun[i]/lumi/1.(t1costh*pos1+t2costh*pos2) l1rt==1&&$1&&$3
+  nt/project 201 //lun[i]/lumi/1.(t1costh*pos1+t2costh*pos2) l1rt==1&&$1&&$3&&l1bb==1
+  h/plot 200
+  h/plot 201
+enddo
+ve/cr numb(100)
+ve/cr den(100)
+h/get_vect/contents 200 den
+h/get_vect/contents 201 numb
+ve/cr b(100)
+ve/cr berr(100)
+do i = 1, 100
+  ve/inp b([i]) $SIGMA(numb([i])/den([i]))
+  ve/inp berr([i]) $SIGMA(sqrt(b([i])*(1.-b([i]))/numb([i])))
+enddo
+h/put_vect/contents 211 b
+h/put_vect/errors 211 berr
+zone 1 1
+h/plot 211
+
+set hcol 2
+h/plot 111
+set hcol 4
+h/plot 211 's'
+
+
+
+
+h/cr/1d 300 'denominator cos[Q]?p!' 100 0.8 1.
+h/cr/1d 301 'numer 2CBHI efficiency versus cos[Q]?p!' 100 0.8 1.
+nt/project 300 //lun31/lumi/1.(t1costh*pos1+t2costh*pos2) l1tt==1&&$1&&$2
+nt/project 301 //lun31/lumi/1.(t1costh*pos1+t2costh*pos2) l1tt==1&&$1&&$2&&l1bb==1
+h/plot 300
+dline 0.9 0.9 0 100
+h/plot 301
+
+
+h/cr/1d 300 'denominator cos[Q]?p!' 100 -1. 1.
+h/cr/1d 301 'numer 2CBHI efficiency versus cos[Q]?p!' 100 -1. 1.
+h/cr/1d 311 '2CBHI efficiency versus cos[Q]?p!' 100 -1. 1.
+zone 1 2
+do i = 30, 42
+  nt/project 300 //lun[i]/lumi/1.(t1costh*pos1+t2costh*pos2) l1tt==1&&$1&&$3
+  nt/project 301 //lun[i]/lumi/1.(t1costh*pos1+t2costh*pos2) l1tt==1&&$1&&$3&&l1bb==1
+  h/plot 300
+  h/plot 301
+enddo
+ve/cr numb(100)
+ve/cr den(100)
+h/get_vect/contents 300 den
+h/get_vect/contents 301 numb
+ve/cr b(100)
+ve/cr berr(100)
+do i = 1, 100
+  ve/inp b([i]) $SIGMA(numb([i])/den([i]))
+  ve/inp berr([i]) $SIGMA(sqrt(b([i])*(1.-b([i]))/numb([i])))
+enddo
+h/put_vect/contents 311 b
+h/put_vect/errors 311 berr
+zone 1 1
+h/plot 311
+
+
+
+
+h/cr/1d 400 'denominator shower cos[Q]' 200 0. 1.
+h/cr/1d 401 'numer 2CBHI efficiency versus shower cos[Q]' 200 0. 1.
+h/cr/1d 411 '2CBHI efficiency versus shower cos[Q]' 200 0. 1.
+zone 1 2
+do i = 30, 42
+  nt/project 400 //lun[i]/lumi/1.s1costh*(s1costh>0)+s2costh*(s1costh<=0) (l1rt==1.or.l1el==1)&&$1&&$2
+  nt/project 401 //lun[i]/lumi/1.s1costh*(s1costh>0)+s2costh*(s1costh<=0) (l1rt==1.or.l1el==1)&&$1&&$2&&l1bb==1
+  h/plot 400
+  h/plot 401
+enddo
+ve/cr numb(200)
+ve/cr den(200)
+h/get_vect/contents 400 den
+h/get_vect/contents 401 numb
+ve/cr b(200)
+ve/cr berr(200)
+do i = 1, 200
+  ve/inp b([i]) $SIGMA(numb([i])/den([i]))
+  ve/inp berr([i]) $SIGMA(sqrt(b([i])*(1.-b([i]))/numb([i])))
+enddo
+h/put_vect/contents 411 b
+h/put_vect/errors 411 berr
+zone 1 1
+h/plot 411
+
+h/cr/1d 500 'denominator shower cos[Q]' 200 0. 1.
+h/cr/1d 501 'numer 2CBHI efficiency versus shower cos[Q]' 200 0. 1.
+h/cr/1d 511 '2CBHI efficiency versus shower cos[Q]' 200 0. 1.
+zone 1 2
+do i = 30, 42
+  nt/project 500 //lun[i]/lumi/1.s1costh*(s1costh>0)+s2costh*(s1costh<=0) (l1rt==1.or.l1el==1)&&$1&&$3
+  nt/project 501 //lun[i]/lumi/1.s1costh*(s1costh>0)+s2costh*(s1costh<=0) (l1rt==1.or.l1el==1)&&$1&&$3&&l1bb==1
+  h/plot 500
+  h/plot 501
+enddo
+ve/cr numb(200)
+ve/cr den(200)
+h/get_vect/contents 500 den
+h/get_vect/contents 501 numb
+ve/cr b(200)
+ve/cr berr(200)
+do i = 1, 200
+  ve/inp b([i]) $SIGMA(numb([i])/den([i]))
+  ve/inp berr([i]) $SIGMA(sqrt(b([i])*(1.-b([i]))/numb([i])))
+enddo
+h/put_vect/contents 511 b
+h/put_vect/errors 511 berr
+zone 1 1
+h/plot 511
+
+min 411 0.7
+max 411 1.05
+set hcol 2
+h/plot 411
+set hcol 4
+h/plot 511 's'
+pict/print 'ggtrig1.ps'
+
+h/cr/1d 600 'denominator shower [F]' 200 0. 6.2831853
+h/cr/1d 601 'numer 2CBHI efficiency versus shower [F]' 200 0. 6.2831853
+h/cr/1d 611 'A. 2CBHI efficiency versus shower [F]' 200 0. 6.2831853
+zone 1 2
+do i = 30, 42
+  nt/project 600 //lun[i]/lumi/1.s2phi (l1rt==1.or.l1el==1)&&$1&&$2&&0.18<(s1costh*(s1costh>0)+s2costh*(s1costh<=0))<0.35
+  nt/project 601 //lun[i]/lumi/1.s2phi (l1rt==1.or.l1el==1)&&$1&&$2&&0.18<(s1costh*(s1costh>0)+s2costh*(s1costh<=0))<0.35&&l1bb==1
+  nt/project 600 //lun[i]/lumi/1.s1phi (l1rt==1.or.l1el==1)&&$1&&$2&&0.18<(s1costh*(s1costh>0)+s2costh*(s1costh<=0))<0.35
+  nt/project 601 //lun[i]/lumi/1.s1phi (l1rt==1.or.l1el==1)&&$1&&$2&&0.18<(s1costh*(s1costh>0)+s2costh*(s1costh<=0))<0.35&&l1bb==1
+  h/plot 600
+  h/plot 601
+enddo
+ve/cr numb(200)
+ve/cr den(200)
+h/get_vect/contents 600 den
+h/get_vect/contents 601 numb
+ve/cr b(200)
+ve/cr berr(200)
+do i = 1, 200
+  ve/inp b([i]) $SIGMA(numb([i])/den([i]))
+  ve/inp berr([i]) $SIGMA(sqrt(b([i])*(1.-b([i]))/numb([i])))
+enddo
+h/put_vect/contents 611 b
+h/put_vect/errors 611 berr
+zone 1 1
+h/plot 611
+
+h/cr/1d 700 'denominator shower [F]' 200 0. 6.2831853
+h/cr/1d 701 'numer 2CBHI efficiency versus shower [F]' 200 0. 6.2831853
+h/cr/1d 711 'B. 2CBHI efficiency versus shower [F]' 200 0. 6.2831853
+zone 1 2
+nt/cuts $4 0.38<(s1costh*(s1costh>0)+s2costh*(s1costh<=0))<0.50
+do i = 30, 42
+  nt/project 700 //lun[i]/lumi/1.s2phi (l1rt==1.or.l1el==1)&&$1&&$2&&$4
+  nt/project 701 //lun[i]/lumi/1.s2phi (l1rt==1.or.l1el==1)&&$1&&$2&&$4&&l1bb==1
+  nt/project 700 //lun[i]/lumi/1.s1phi (l1rt==1.or.l1el==1)&&$1&&$2&&$4
+  nt/project 701 //lun[i]/lumi/1.s1phi (l1rt==1.or.l1el==1)&&$1&&$2&&$4&&l1bb==1
+  h/plot 700
+  h/plot 701
+enddo
+ve/cr numb(200)
+ve/cr den(200)
+h/get_vect/contents 700 den
+h/get_vect/contents 701 numb
+ve/cr b(200)
+ve/cr berr(200)
+do i = 1, 200
+  ve/inp b([i]) $SIGMA(numb([i])/den([i]))
+  ve/inp berr([i]) $SIGMA(sqrt(b([i])*(1.-b([i]))/numb([i])))
+enddo
+h/put_vect/contents 711 b
+h/put_vect/errors 711 berr
+zone 1 1
+h/plot 711
+
+h/cr/1d 800 'denominator shower [F]' 200 0. 6.2831853
+h/cr/1d 801 'numer 2CBHI efficiency versus shower [F]' 200 0. 6.2831853
+h/cr/1d 811 'C. 2CBHI efficiency versus shower [F]' 200 0. 6.2831853
+zone 1 2
+nt/cuts $4 0.50<(s1costh*(s1costh>0)+s2costh*(s1costh<=0))<0.53
+do i = 30, 42
+  nt/project 800 //lun[i]/lumi/1.s2phi (l1rt==1.or.l1el==1)&&$1&&$2&&$4
+  nt/project 801 //lun[i]/lumi/1.s2phi (l1rt==1.or.l1el==1)&&$1&&$2&&$4&&l1bb==1
+  nt/project 800 //lun[i]/lumi/1.s1phi (l1rt==1.or.l1el==1)&&$1&&$2&&$4
+  nt/project 801 //lun[i]/lumi/1.s1phi (l1rt==1.or.l1el==1)&&$1&&$2&&$4&&l1bb==1
+  h/plot 800
+  h/plot 801
+enddo
+ve/cr numb(200)
+ve/cr den(200)
+h/get_vect/contents 800 den
+h/get_vect/contents 801 numb
+ve/cr b(200)
+ve/cr berr(200)
+do i = 1, 200
+  ve/inp b([i]) $SIGMA(numb([i])/den([i]))
+  ve/inp berr([i]) $SIGMA(sqrt(b([i])*(1.-b([i]))/numb([i])))
+enddo
+h/put_vect/contents 811 b
+h/put_vect/errors 811 berr
+zone 1 1
+h/plot 811
+
+h/cr/1d 900 'denominator shower [F]' 200 0. 6.2831853
+h/cr/1d 901 'numer 2CBHI efficiency versus shower [F]' 200 0. 6.2831853
+h/cr/1d 911 'D. 2CBHI efficiency versus shower [F]' 200 0. 6.2831853
+zone 1 2
+nt/cuts $4 0.62<(s1costh*(s1costh>0)+s2costh*(s1costh<=0))<0.66
+do i = 30, 42
+  nt/project 900 //lun[i]/lumi/1.s2phi (l1rt==1.or.l1el==1)&&$1&&$2&&$4
+  nt/project 901 //lun[i]/lumi/1.s2phi (l1rt==1.or.l1el==1)&&$1&&$2&&$4&&l1bb==1
+  nt/project 900 //lun[i]/lumi/1.s1phi (l1rt==1.or.l1el==1)&&$1&&$2&&$4
+  nt/project 901 //lun[i]/lumi/1.s1phi (l1rt==1.or.l1el==1)&&$1&&$2&&$4&&l1bb==1
+  h/plot 900
+  h/plot 901
+enddo
+ve/cr numb(200)
+ve/cr den(200)
+h/get_vect/contents 900 den
+h/get_vect/contents 901 numb
+ve/cr b(200)
+ve/cr berr(200)
+do i = 1, 200
+  ve/inp b([i]) $SIGMA(numb([i])/den([i]))
+  ve/inp berr([i]) $SIGMA(sqrt(b([i])*(1.-b([i]))/numb([i])))
+enddo
+h/put_vect/contents 911 b
+h/put_vect/errors 911 berr
+zone 1 1
+h/plot 911
+
+h/cr/1d 1000 'denominator shower [F]' 200 0. 6.2831853
+h/cr/1d 1001 'numer 2CBHI efficiency versus shower [F]' 200 0. 6.2831853
+h/cr/1d 1011 'E. 2CBHI efficiency versus shower [F]' 200 0. 6.2831853
+zone 1 2
+nt/cuts $4 0.75<(s1costh*(s1costh>0)+s2costh*(s1costh<=0))<0.81
+do i = 30, 42
+  nt/project 1000 //lun[i]/lumi/1.s2phi (l1rt==1.or.l1el==1)&&$1&&$2&&$4
+  nt/project 1001 //lun[i]/lumi/1.s2phi (l1rt==1.or.l1el==1)&&$1&&$2&&$4&&l1bb==1
+  nt/project 1000 //lun[i]/lumi/1.s1phi (l1rt==1.or.l1el==1)&&$1&&$2&&$4
+  nt/project 1001 //lun[i]/lumi/1.s1phi (l1rt==1.or.l1el==1)&&$1&&$2&&$4&&l1bb==1
+  h/plot 1000
+  h/plot 1001
+enddo
+ve/cr numb(200)
+ve/cr den(200)
+h/get_vect/contents 1000 den
+h/get_vect/contents 1001 numb
+ve/cr b(200)
+ve/cr berr(200)
+do i = 1, 200
+  ve/inp b([i]) $SIGMA(numb([i])/den([i]))
+  ve/inp berr([i]) $SIGMA(sqrt(b([i])*(1.-b([i]))/numb([i])))
+enddo
+h/put_vect/contents 1011 b
+h/put_vect/errors 1011 berr
+zone 1 1
+h/plot 1011
+
+zone 2 3
+set hcol 0
+h/plot 411
+set ltyp 2
+dline 0.18 0.18 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+set ltyp 1
+dline 0.18 0.35 0.8 0.8
+set ltyp 2
+dline 0.35 0.35 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+text $SIGMA((0.18+0.35)/2.) 0.81 'A' 0.28 ! 'c'
+set ltyp 2
+dline 0.38 0.38 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+set ltyp 1
+dline 0.38 0.50 0.8 0.8
+set ltyp 2
+dline 0.50 0.50 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+text $SIGMA((0.38+0.50)/2.) 0.81 'B' 0.28 ! 'c'
+set ltyp 2
+dline 0.50 0.50 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+set ltyp 1
+dline 0.50 0.53 0.8 0.8
+set ltyp 2
+dline 0.53 0.53 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+text $SIGMA((0.50+0.53)/2.) 0.81 'C' 0.28 ! 'c'
+set ltyp 2
+dline 0.62 0.62 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+set ltyp 1
+dline 0.62 0.66 0.8 0.8
+set ltyp 2
+dline 0.66 0.66 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+text $SIGMA((0.62+0.66)/2.) 0.81 'D' 0.28 ! 'c'
+set ltyp 2
+dline 0.75 0.75 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+set ltyp 1
+dline 0.75 0.81 0.8 0.8
+set ltyp 2
+dline 0.81 0.81 $GRAFINFO('WNYMIN') $GRAFINFO('WNYMAX')
+text $SIGMA((0.75+0.81)/2.) 0.81 'E' 0.28 ! 'c'
+h/plot 611(1:100)
+h/plot 711(1:100)
+h/plot 811(1:100)
+h/plot 911(1:100)
+h/plot 1011(1:100)
+pict/print 'ggtrig2.ps'
+
+
+
+
+
+
+nt/plot //lun50/lumi/1.ntk l1bb==1
+
+h/cr/1d 1100 'denominator cos[Q]?p!' 200 0. 1.
+h/cr/1d 1101 'numer 2CBHI efficiency versus cos[Q]?p!' 200 0. 1.
+h/cr/1d 1111 '2CBHI efficiency versus cos[Q]?p!' 200 0. 1.
+zone 1 2
+do i = 50, 50
+  nt/project 1100 //lun[i]/lumi/1.s1costh*(s1costh>0)+s2costh*(s1costh<=0)
+  nt/project 1101 //lun[i]/lumi/1.s1costh*(s1costh>0)+s2costh*(s1costh<=0) l1bb==1
+  h/plot 1100
+  h/plot 1101
+enddo
+ve/cr numb(200)
+ve/cr den(200)
+h/get_vect/contents 1100 den
+h/get_vect/contents 1101 numb
+ve/cr b(200)
+ve/cr berr(200)
+do i = 1, 200
+  ve/inp b([i]) $SIGMA(numb([i])/den([i]))
+  ve/inp berr([i]) $SIGMA(sqrt(b([i])*(1.-b([i]))/numb([i])))
+enddo
+h/put_vect/contents 1111 b
+h/put_vect/errors 1111 berr
+zone 1 1
+h/plot 1111
+
+* l1tt, l1rt, l1el, l1bb, l1eb,
+* rawtk, ntk, ebeam, e1, e2, p1, p2, ccen, neue, chen,
+* s1costh, s2costh, s1phi, s2phi,
+
+nt/plot //lun50/lumi/1.rawtk 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8
+nt/plot //lun50/lumi/1.rawtk 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8&&l1bb==1 ! ! ! 's'
+nt/plot //lun50/lumi/1.ntk 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8
+nt/plot //lun50/lumi/1.ntk 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8&&l1bb==1 ! ! ! 's'
+nt/plot //lun50/lumi/1.s1costh 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8
+nt/plot //lun50/lumi/1.s1costh 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8&&l1bb==1 ! ! ! 's'
+nt/plot //lun50/lumi/1.e1 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8
+nt/plot //lun50/lumi/1.e1 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8&&l1bb==1 ! ! ! 's'
+nt/plot //lun50/lumi/1.e2 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8
+nt/plot //lun50/lumi/1.e2 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8&&l1bb==1 ! ! ! 's'
+nt/plot //lun50/lumi/1.e1+e2 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8
+nt/plot //lun50/lumi/1.e1+e2 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8&&l1bb==1 ! ! ! 's'
+nt/plot //lun50/lumi/1.ccen 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8
+nt/plot //lun50/lumi/1.ccen 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8&&l1bb==1 ! ! ! 's'
+nt/plot //lun50/lumi/1.neue 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8
+nt/plot //lun50/lumi/1.neue 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8&&l1bb==1 ! ! ! 's'
+nt/plot //lun50/lumi/1.chen 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8
+nt/plot //lun50/lumi/1.chen 0.1<abs(s1costh)<0.8&&0.1<abs(s2costh)<0.8&&l1bb==1 ! ! ! 's'
+
+
+
+h/cr/1d 1200 '[D] cos[Q] of two showers for bhabha (red) and gamgam (blue) (no cuts)' 100 -0.1 0.1
+h/cr/1d 1201 '[D] cos[Q] of two showers for bhabha (red) and gamgam (blue) (no cuts)' 100 -0.1 0.1
+nt/plot //lun50/lumi/1.s1costh+s2costh abs(s1costh+s2costh)<0.1 ! ! ! 'N' 1200
+nt/plot //lun51/lumi/1.s1costh+s2costh abs(s1costh+s2costh)<0.1 ! ! ! 'N' 1201
+h/cr/1d 1210 '[D] cos[Q] of two showers for bhabha (red) and gamgam (blue) (cos[Q] "l# 0.1)' 100 -0.1 0.1
+h/cr/1d 1211 '[D] cos[Q] of two showers for bhabha (red) and gamgam (blue) (cos[Q] "l# 0.1)' 100 -0.1 0.1
+nt/plot //lun50/lumi/1.s1costh+s2costh abs(s1costh+s2costh)<0.1&&abs(s1costh)<0.1&&abs(s2costh)<0.1 ! ! ! 'N' 1210
+nt/plot //lun51/lumi/1.s1costh+s2costh abs(s1costh+s2costh)<0.1&&abs(s1costh)<0.1&&abs(s2costh)<0.1 ! ! ! 'N' 1211
+
+normalize 1201
+normalize 1200
+normalize 1211
+normalize 1210
+zone 1 2
+set dmod 1
+set hcol 2
+h/plot 1201
+set dmod 2
+set hcol 4
+h/plot 1200 's'
+set txci 2
+text 0.05 0.14 'trunc RMS =  ' 0.3 ! 'r'
+text 0.05 0.14 $HINFO(1201,'RMS') 0.3 ! 'l'
+set txci 4
+text 0.05 0.12 'trunc RMS =  ' 0.3 ! 'r'
+text 0.05 0.12 $HINFO(1200,'RMS') 0.3 ! 'l'
+set txci 1
+set hcol 2
+set dmod 1
+h/plot 1211
+set dmod 2
+set hcol 4
+h/plot 1210 's'
+set txci 2
+text 0.05 0.14 'trunc RMS =  ' 0.3 ! 'r'
+text 0.05 0.14 $HINFO(1211,'RMS') 0.3 ! 'l'
+set txci 4
+text 0.05 0.12 'trunc RMS =  ' 0.3 ! 'r'
+text 0.05 0.12 $HINFO(1210,'RMS') 0.3 ! 'l'
+set txci 1
+pict/print 'ggtrig3.ps'

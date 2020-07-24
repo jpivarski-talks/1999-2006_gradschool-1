@@ -1,0 +1,46 @@
+#$ -l sigmc=1
+#$ -o /cdat/tem/mccann/y2ee0_129576.log
+#$ -S /bin/bash
+#$ -j y
+
+cd /home/mccann/mcsuper/run/
+. /nfs/cleo3/scripts/cleo3defs
+c3rel Mar04_04_MC
+export C3_SHLIB=../build_SunOS/shlib:$C3_SHLIB
+
+export USER_RUN=129576
+export USER_GEN=../pds/generator_y2ee0_129576.pds
+export USER_DEC=y2ee0.dec
+export USER_EBEAM=5.01163
+export USER_RES=10.02326
+export USER_WIDE=0.000044
+
+rm -f $USER_GEN
+
+rm -f core
+suez -f generate.tcl
+rm -f core
+
+c3rel Apr16_03_MC
+export C3_SHLIB=../build_$CMLIB/shlib:$C3_SHLIB
+export C3_SCRIPTS=/home/mccann/mcsuper/run/scripts_$CMLIB
+export USER_CLEOG=../pds/cleog_y2ee0_129576_db21.pds
+export USER_MCPASS2=../pds/mcpass2_y2ee0_129576_db21.pds
+rm -f $USER_CLEOG
+rm -f $USER_MCPASS2
+suez -f cleog.tcl
+rm -f core
+suez -f mcpass2.tcl
+rm -f core
+
+c3rel Jun13_03_MC
+export C3_SHLIB=../build_$CMLIB/shlib:$C3_SHLIB
+export C3_SCRIPTS=/home/mccann/mcsuper/run/scripts_$CMLIB
+export USER_CLEOG=../pds/cleog_y2ee0_129576_db23.pds
+export USER_MCPASS2=../pds/mcpass2_y2ee0_129576_db23.pds
+rm -f $USER_CLEOG
+rm -f $USER_MCPASS2
+suez -f cleog.tcl
+rm -f core
+suez -f mcpass2.tcl
+rm -f core
